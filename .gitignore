@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Data
+data/*.duckdb
+data/*.duckdb.wal
+backend/data/*.duckdb
+backend/data/*.duckdb.wal
+
+# Environment
+.env
+.env.local
+
+# Build
+frontend/dist/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
