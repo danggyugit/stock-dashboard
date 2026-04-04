@@ -234,6 +234,55 @@ def search_stocks(
         raise HTTPException(status_code=500, detail="Failed to search stocks.")
 
 
+@router.get("/stock/{ticker}/close")
+def get_close_price(
+    ticker: str,
+    date: str = Query(description="Date in YYYY-MM-DD format"),
+) -> dict:
+    """Get closing price for a stock on a specific date.
+
+    Uses yfinance with date range to fetch the exact day's close.
+
+    Args:
+        ticker: Stock ticker symbol.
+        date: Target date (YYYY-MM-DD).
+
+    Returns:
+        Dict with ticker, date, and close price.
+    """
+    try:
+        import yfinance as yf
+        from datetime import datetime, timedelta
+
+        target = datetime.strptime(date[:10], "%Y-%m-%d")
+        # Fetch a 7-day window around the target to handle weekends/holidays
+        start = (target - timedelta(days=5)).strftime("%Y-%m-%d")
+        end = (target + timedelta(days=1)).strftime("%Y-%m-%d")
+
+        stock = yf.Ticker(ticker.upper())
+        df = stock.history(start=start, end=end)
+
+        if df.empty:
+            return {"ticker": ticker.upper(), "date": date, "close": None}
+
+        # Get the closest date <= target
+        df = df.reset_index()
+        best_price = None
+        for _, row in df.iterrows():
+            row_date = row["Date"].strftime("%Y-%m-%d") if hasattr(row["Date"], "strftime") else str(row["Date"])[:10]
+            if row_date <= date[:10]:
+                best_price = float(row["Close"])
+
+        return {
+            "ticker": ticker.upper(),
+            "date": date,
+            "close": round(best_price, 2) if best_price else None,
+        }
+    except Exception:
+        logger.exception("Error fetching close price for %s on %s.", ticker, date)
+        return {"ticker": ticker.upper(), "date": date, "close": None}
+
+
 @router.post("/refresh")
 def refresh_market_data() -> dict:
     """Manually trigger market data refresh.

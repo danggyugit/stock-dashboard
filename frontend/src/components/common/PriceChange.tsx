@@ -9,6 +9,9 @@ interface PriceChangeProps {
 }
 
 const PriceChange = ({ value, percent, showIcon = true, className }: PriceChangeProps) => {
+  if (value == null && percent == null) {
+    return <span className="text-muted-foreground">--</span>;
+  }
   const isPositive = (percent ?? value ?? 0) > 0;
   const isNegative = (percent ?? value ?? 0) < 0;
   const isNeutral = !isPositive && !isNegative;

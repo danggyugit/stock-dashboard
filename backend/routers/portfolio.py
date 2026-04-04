@@ -6,7 +6,7 @@ allocation, performance, dividends, and tax calculation.
 
 import logging
 
-from fastapi import APIRouter, HTTPException, Query, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
 
 from models.portfolio import (
     AllocationResponse,
@@ -21,6 +21,7 @@ from models.portfolio import (
     TradeUpdate,
 )
 from services.portfolio_service import PortfolioService
+from auth import get_current_user, get_optional_user
 
 logger = logging.getLogger(__name__)
 
@@ -38,22 +39,22 @@ def _get_service() -> PortfolioService:
 
 
 @router.get("")
-def get_portfolios() -> list[dict]:
-    """Get all portfolios with summary information.
+def get_portfolios(user_id: int | None = Depends(get_optional_user)) -> list[dict]:
+    """Get portfolios for the authenticated user (or all if not logged in).
 
     Returns:
         List of portfolio summaries.
     """
     try:
         service = _get_service()
-        return service.get_portfolios()
+        return service.get_portfolios(user_id=user_id)
     except Exception:
         logger.exception("Error fetching portfolios.")
         raise HTTPException(status_code=500, detail="Failed to fetch portfolios.")
 
 
 @router.post("", response_model=PortfolioResponse)
-def create_portfolio(data: PortfolioCreate) -> dict:
+def create_portfolio(data: PortfolioCreate, user_id: int | None = Depends(get_optional_user)) -> dict:
     """Create a new portfolio.
 
     Args:
@@ -64,7 +65,7 @@ def create_portfolio(data: PortfolioCreate) -> dict:
     """
     try:
         service = _get_service()
-        return service.create_portfolio(name=data.name, description=data.description)
+        return service.create_portfolio(name=data.name, description=data.description, user_id=user_id)
     except Exception:
         logger.exception("Error creating portfolio.")
         raise HTTPException(status_code=500, detail="Failed to create portfolio.")

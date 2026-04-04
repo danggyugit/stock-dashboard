@@ -16,6 +16,63 @@ logger = logging.getLogger(__name__)
 _scheduler: BackgroundScheduler | None = None
 
 
+def _warm_all_caches() -> None:
+    """Job: Pre-warm all data caches so user requests are instant."""
+    import time
+    from services.market_service import MarketService
+    from services.portfolio_service import PortfolioService
+    from services.sentiment_service import SentimentService
+    from providers.data_provider import MarketDataProvider
+    from db import get_connection
+
+    start = time.time()
+    provider = MarketDataProvider()
+
+    # 1. Index chart data (DOW, NASDAQ, S&P500, VIX) — intraday
+    for ticker in ["^DJI", "^IXIC", "^GSPC", "^VIX"]:
+        try:
+            provider.get_daily_prices(ticker, period="1d", interval="5m")
+        except Exception:
+            logger.warning("Cache warm failed for %s chart.", ticker)
+
+    # 2. Index info (get_indices uses individual Ticker.info)
+    try:
+        provider.get_indices()
+    except Exception:
+        logger.warning("Cache warm failed for indices.")
+
+    # 3. Heatmap data (503 tickers batch download)
+    try:
+        market_svc = MarketService()
+        market_svc.get_heatmap_data(period="1d")
+    except Exception:
+        logger.warning("Cache warm failed for heatmap.")
+
+    # 4. Portfolio holdings + performance for all portfolios
+    try:
+        conn = get_connection()
+        portfolio_ids = [r[0] for r in conn.execute("SELECT id FROM portfolios").fetchall()]
+        port_svc = PortfolioService()
+        for pid in portfolio_ids:
+            try:
+                port_svc.get_holdings(pid)
+                for period in ["1m", "3m"]:
+                    port_svc.get_performance(pid, period=period)
+            except Exception:
+                logger.warning("Cache warm failed for portfolio %d.", pid)
+    except Exception:
+        logger.warning("Cache warm failed for portfolios.")
+
+    # 5. Fear & Greed
+    try:
+        SentimentService().get_fear_greed()
+    except Exception:
+        logger.warning("Cache warm failed for Fear & Greed.")
+
+    elapsed = time.time() - start
+    logger.info("Cache warm completed in %.1fs.", elapsed)
+
+
 def _refresh_market_data() -> None:
     """Job: Refresh market data from providers."""
     from services.market_service import MarketService
@@ -84,8 +141,16 @@ def start_scheduler() -> BackgroundScheduler:
 
     _scheduler = BackgroundScheduler()
 
-    # Market data refresh every 15 minutes during trading hours
-    # US market: Mon-Fri, ~14:30-21:00 UTC
+    # Cache warm: every 5 minutes (keeps all dashboard data fresh)
+    _scheduler.add_job(
+        _warm_all_caches,
+        trigger=IntervalTrigger(minutes=5),
+        id="warm_caches",
+        name="Warm all data caches (5min interval)",
+        replace_existing=True,
+    )
+
+    # Market data refresh (stock list + market caps) every 15 min during trading hours
     _scheduler.add_job(
         _refresh_market_data,
         trigger=CronTrigger(

@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Plus, Trash2, Upload } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, Upload, Loader2 } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -32,6 +32,7 @@ import {
   deleteTrade,
   importTrades,
 } from "@/api/portfolio";
+import { getClosePrice } from "@/api/market";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import type { Portfolio, Trade, TradeCreate } from "@/types";
 
@@ -51,6 +52,33 @@ const Trades = () => {
     trade_date: new Date().toISOString().split("T")[0],
     note: "",
   });
+  const [priceLoading, setPriceLoading] = useState(false);
+  const [priceAutoFilled, setPriceAutoFilled] = useState(false);
+
+  // Auto-fetch close price when ticker + date are set
+  const fetchClosePrice = useCallback(async (ticker: string, date: string) => {
+    if (!ticker || !date) return;
+    setPriceLoading(true);
+    try {
+      const result = await getClosePrice(ticker, date);
+      if (result.close != null) {
+        setTradeForm((f) => ({ ...f, price: result.close! }));
+        setPriceAutoFilled(true);
+      }
+    } catch {
+      // ignore - user can enter manually
+    } finally {
+      setPriceLoading(false);
+    }
+  }, []);
+
+  // Trigger price fetch when ticker or date changes
+  useEffect(() => {
+    if (tradeForm.ticker && tradeForm.trade_date) {
+      setPriceAutoFilled(false);
+      fetchClosePrice(tradeForm.ticker, tradeForm.trade_date);
+    }
+  }, [tradeForm.ticker, tradeForm.trade_date, fetchClosePrice]);
 
   const { data: portfolios, isLoading: portfoliosLoading } = useQuery<
     Portfolio[]
@@ -233,7 +261,7 @@ const Trades = () => {
             onValueChange={(v) => setSelectedPortfolioId(Number(v))}
           >
             <SelectTrigger className="w-56">
-              <SelectValue placeholder="Select portfolio" />
+              <span>{portfolios.find((p) => p.id === activeId)?.name ?? "Select portfolio"}</span>
             </SelectTrigger>
             <SelectContent>
               {portfolios.map((p) => (
@@ -256,25 +284,9 @@ const Trades = () => {
                 <DialogHeader>
                   <DialogTitle>Add Trade</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4 mt-2">
+                <div className="space-y-3 mt-2">
+                  {/* Row 1: Type + Ticker */}
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <Label>Ticker</Label>
-                      <TickerSearch
-                        onSelect={(ticker) =>
-                          setTradeForm((f) => ({ ...f, ticker }))
-                        }
-                        placeholder="Search ticker..."
-                      />
-                      {tradeForm.ticker && (
-                        <p className="text-xs text-muted-foreground">
-                          Selected:{" "}
-                          <span className="font-medium">
-                            {tradeForm.ticker}
-                          </span>
-                        </p>
-                      )}
-                    </div>
                     <div className="space-y-1.5">
                       <Label>Type</Label>
                       <Select
@@ -287,7 +299,7 @@ const Trades = () => {
                         }
                       >
                         <SelectTrigger>
-                          <SelectValue />
+                          <span>{tradeForm.trade_type === "BUY" ? "Buy" : "Sell"}</span>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="BUY">Buy</SelectItem>
@@ -295,36 +307,23 @@ const Trades = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <Label>Quantity</Label>
-                      <Input
-                        type="number"
-                        value={tradeForm.quantity || ""}
-                        onChange={(e) =>
-                          setTradeForm((f) => ({
-                            ...f,
-                            quantity: Number(e.target.value),
-                          }))
+                      <Label>Ticker</Label>
+                      <TickerSearch
+                        onSelect={(ticker) =>
+                          setTradeForm((f) => ({ ...f, ticker }))
                         }
+                        placeholder="Search ticker..."
                       />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Price ($)</Label>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        value={tradeForm.price || ""}
-                        onChange={(e) =>
-                          setTradeForm((f) => ({
-                            ...f,
-                            price: Number(e.target.value),
-                          }))
-                        }
-                      />
+                      {tradeForm.ticker && (
+                        <p className="text-xs text-muted-foreground">
+                          Selected: <span className="font-medium">{tradeForm.ticker}</span>
+                        </p>
+                      )}
                     </div>
                   </div>
+
+                  {/* Row 2: Date + Price */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <Label>Date</Label>
@@ -335,6 +334,45 @@ const Trades = () => {
                           setTradeForm((f) => ({
                             ...f,
                             trade_date: e.target.value,
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="flex items-center gap-1.5">
+                        Price ($)
+                        {priceLoading && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+                        {priceAutoFilled && !priceLoading && (
+                          <span className="text-[10px] text-green-600 font-normal">auto</span>
+                        )}
+                      </Label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={tradeForm.price || ""}
+                        onChange={(e) => {
+                          setPriceAutoFilled(false);
+                          setTradeForm((f) => ({
+                            ...f,
+                            price: Number(e.target.value),
+                          }));
+                        }}
+                        placeholder={priceLoading ? "Loading..." : "0.00"}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Row 3: Quantity + Commission */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label>Quantity</Label>
+                      <Input
+                        type="number"
+                        value={tradeForm.quantity || ""}
+                        onChange={(e) =>
+                          setTradeForm((f) => ({
+                            ...f,
+                            quantity: Number(e.target.value),
                           }))
                         }
                       />
@@ -354,6 +392,8 @@ const Trades = () => {
                       />
                     </div>
                   </div>
+
+                  {/* Row 4: Note */}
                   <div className="space-y-1.5">
                     <Label>Note (optional)</Label>
                     <Input
@@ -364,6 +404,17 @@ const Trades = () => {
                       placeholder="e.g. earnings play"
                     />
                   </div>
+
+                  {/* Total preview */}
+                  {tradeForm.price > 0 && tradeForm.quantity > 0 && (
+                    <div className="rounded-md bg-muted/50 px-3 py-2 text-sm flex justify-between">
+                      <span className="text-muted-foreground">Total</span>
+                      <span className="font-semibold">
+                        {formatCurrency(tradeForm.price * tradeForm.quantity + (tradeForm.commission ?? 0))}
+                      </span>
+                    </div>
+                  )}
+
                   <Button
                     onClick={() => addMutation.mutate()}
                     disabled={

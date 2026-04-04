@@ -300,9 +300,11 @@ const Sentiment = () => {
                         <span className="text-xs text-muted-foreground">
                           {article.source}
                         </span>
-                        <span className="text-xs text-muted-foreground">
-                          {formatDate(article.published_at)}
-                        </span>
+                        {article.published_at && (
+                          <span className="text-xs text-muted-foreground">
+                            {formatDate(article.published_at)}
+                          </span>
+                        )}
                         {article.ticker && (
                           <span className="text-xs font-medium">
                             {article.ticker}
@@ -318,7 +320,7 @@ const Sentiment = () => {
                         </p>
                       )}
                     </div>
-                    {article.sentiment !== undefined && (
+                    {article.sentiment != null && (
                       <div className="text-right flex-shrink-0">
                         <span
                           className={`text-sm font-bold ${

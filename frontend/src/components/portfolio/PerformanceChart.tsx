@@ -7,8 +7,9 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import type { PerformancePoint } from "@/types";
 
 interface PerformanceChartProps {
@@ -32,7 +33,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
       <p className="font-medium mb-1">{formatDate(label, "MMM dd, yyyy")}</p>
       {payload.map((entry) => (
         <p key={entry.name} style={{ color: entry.color }}>
-          {entry.name}: {formatCurrency(entry.value)}
+          {entry.name}: {entry.value != null ? `${entry.value >= 0 ? "+" : ""}${entry.value.toFixed(2)}%` : "--"}
         </p>
       ))}
     </div>
@@ -53,11 +54,12 @@ const PerformanceChart = ({ data }: PerformanceChartProps) => {
           className="text-muted-foreground"
         />
         <YAxis
-          tickFormatter={(v: number) => `$${v.toLocaleString()}`}
+          tickFormatter={(v: number) => `${v >= 0 ? "+" : ""}${v}%`}
           tick={{ fontSize: 11 }}
           className="text-muted-foreground"
-          width={80}
+          width={60}
         />
+        <ReferenceLine y={0} stroke="#9CA3AF" strokeDasharray="3 3" />
         <Tooltip content={<CustomTooltip />} />
         <Legend
           verticalAlign="top"
@@ -68,22 +70,32 @@ const PerformanceChart = ({ data }: PerformanceChartProps) => {
         />
         <Line
           type="monotone"
-          dataKey="value"
+          dataKey="gain_pct"
           name="Portfolio"
           stroke="#3B82F6"
-          strokeWidth={2}
+          strokeWidth={2.5}
           dot={false}
           activeDot={{ r: 4 }}
         />
         <Line
           type="monotone"
-          dataKey="benchmark_value"
-          name="S&P 500"
-          stroke="#9CA3AF"
+          dataKey="spy_pct"
+          name="SPY"
+          stroke="#10B981"
           strokeWidth={1.5}
-          strokeDasharray="5 5"
           dot={false}
-          activeDot={{ r: 4 }}
+          activeDot={{ r: 3 }}
+          connectNulls
+        />
+        <Line
+          type="monotone"
+          dataKey="qqq_pct"
+          name="QQQ"
+          stroke="#F97316"
+          strokeWidth={1.5}
+          dot={false}
+          activeDot={{ r: 3 }}
+          connectNulls
         />
       </LineChart>
     </ResponsiveContainer>

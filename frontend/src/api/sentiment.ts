@@ -25,9 +25,10 @@ export const getFearGreedHistory = async (
 export const getNews = async (
   ticker?: string,
   page = 1,
+  pageSize = 20,
 ): Promise<NewsResponse> => {
   const { data } = await apiClient.get<NewsResponse>("/sentiment/news", {
-    params: { ticker, page },
+    params: { ticker, page, page_size: pageSize },
   });
   return data;
 };

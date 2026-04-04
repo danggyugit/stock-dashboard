@@ -246,12 +246,99 @@ class SentimentService:
             for r in rows
         ]
 
+    def backfill_fear_greed(self, days: int = 30) -> int:
+        """Backfill Fear & Greed history using historical S&P 500 / VIX data.
+
+        Estimates past F&G scores from daily VIX and S&P 500 price data.
+
+        Args:
+            days: Number of days to backfill.
+
+        Returns:
+            Number of days backfilled.
+        """
+        conn = get_connection()
+
+        # Get historical VIX
+        vix_df = self._data_provider.get_daily_prices("^VIX", period="3mo")
+        sp_df = self._data_provider.get_daily_prices("^GSPC", period="6mo")
+
+        if vix_df.empty or sp_df.empty:
+            logger.warning("Cannot backfill F&G: no VIX or S&P data.")
+            return 0
+
+        vix_map = {str(r["date"])[:10]: float(r["close"]) for _, r in vix_df.iterrows()}
+        sp_close = pd.to_numeric(sp_df["close"], errors="coerce").dropna()
+        sp_dates = [str(d)[:10] for d in sp_df["date"]]
+
+        filled = 0
+        for i in range(len(sp_dates) - 1, max(len(sp_dates) - days - 1, 0), -1):
+            d = sp_dates[i]
+
+            # Check if already exists
+            existing = conn.execute(
+                "SELECT 1 FROM fear_greed_history WHERE date = ?", [d]
+            ).fetchone()
+            if existing:
+                continue
+
+            # VIX score
+            vix_val = vix_map.get(d)
+            vix_score = max(0, min(100, ((40 - vix_val) / 28) * 100)) if vix_val else None
+
+            # Momentum: current vs trailing MA
+            ma_window = min(125, i + 1)
+            if ma_window >= 10:
+                current = float(sp_close.iloc[i])
+                ma = float(sp_close.iloc[max(0, i - ma_window + 1):i + 1].mean())
+                pct_diff = ((current - ma) / ma) * 100 if ma else 0
+                momentum_score = max(0, min(100, 50 + pct_diff * 5))
+            else:
+                momentum_score = None
+
+            # Volume score (simplified from surrounding days)
+            if i >= 5:
+                recent = sp_df.iloc[i - 5:i + 1]
+                closes = pd.to_numeric(recent["close"], errors="coerce")
+                volumes = pd.to_numeric(recent["volume"], errors="coerce")
+                changes = closes.diff()
+                up_vol = volumes[changes > 0].sum()
+                down_vol = volumes[changes < 0].sum()
+                if down_vol > 0:
+                    ratio = up_vol / down_vol
+                    volume_score = max(0, min(100, (ratio - 0.5) * 100))
+                else:
+                    volume_score = 70.0
+            else:
+                volume_score = None
+
+            # Combine
+            valid = [s for s in [vix_score, momentum_score, volume_score] if s is not None]
+            overall = round(sum(valid) / len(valid), 1) if valid else 50.0
+            label = _score_to_label(overall)
+
+            try:
+                conn.execute(
+                    """INSERT OR IGNORE INTO fear_greed_history
+                       (date, score, label, vix_score, momentum_score, volume_score)
+                       VALUES (?, ?, ?, ?, ?, ?)""",
+                    [d, overall, label, vix_score, momentum_score, volume_score],
+                )
+                filled += 1
+            except Exception:
+                pass
+
+        logger.info("Backfilled %d F&G history points.", filled)
+        return filled
+
     # --- News ---
 
     def get_news(
         self, ticker: str | None = None, page: int = 1, page_size: int = 20
     ) -> dict:
         """Get news articles with sentiment data.
+
+        Automatically fetches fresh news if DB is empty.
 
         Args:
             ticker: Optional ticker filter. None for market-wide news.
@@ -262,6 +349,21 @@ class SentimentService:
             Dict with articles list, total count, and pagination.
         """
         conn = get_connection()
+
+        # Auto-fetch if no news in DB (or no news for this ticker)
+        if ticker:
+            ticker_count = conn.execute(
+                "SELECT COUNT(*) FROM news_articles WHERE ticker = ?", [ticker]
+            ).fetchone()[0]
+            if ticker_count == 0:
+                logger.info("No news for %s, auto-fetching...", ticker)
+                self._fetch_and_store_news(ticker=ticker)
+        else:
+            total_in_db = conn.execute("SELECT COUNT(*) FROM news_articles").fetchone()[0]
+            if total_in_db == 0:
+                logger.info("No news in DB, auto-fetching...")
+                self._fetch_and_store_news(ticker=None)
+
         offset = (page - 1) * page_size
 
         if ticker:
@@ -315,6 +417,92 @@ class SentimentService:
             "page": page,
             "page_size": page_size,
         }
+
+    @staticmethod
+    def _quick_sentiment(headline: str) -> tuple[float, str]:
+        """Fast keyword-based sentiment scoring (no LLM needed).
+
+        Args:
+            headline: News headline text.
+
+        Returns:
+            Tuple of (score -1..1, label).
+        """
+        hl = headline.lower()
+        pos = ["surge", "soar", "rally", "jump", "gain", "record", "beat",
+               "upgrade", "bullish", "strong", "outperform", "buy", "boom",
+               "profit", "growth", "optimis", "recover", "upside", "high"]
+        neg = ["crash", "plunge", "drop", "fall", "loss", "miss", "downgrade",
+               "bearish", "weak", "underperform", "sell", "slump", "decline",
+               "fear", "risk", "cut", "layoff", "recession", "warn", "worst"]
+
+        p = sum(1 for w in pos if w in hl)
+        n = sum(1 for w in neg if w in hl)
+
+        if p + n == 0:
+            return 0.0, "Neutral"
+
+        score = round((p - n) / (p + n), 2)
+        if score > 0.3:
+            label = "Bullish"
+        elif score < -0.3:
+            label = "Bearish"
+        else:
+            label = "Neutral"
+        return score, label
+
+    def _fetch_and_store_news(self, ticker: str | None = None) -> int:
+        """Fetch news from providers, auto-score sentiment, and store in DB.
+
+        Args:
+            ticker: Optional ticker for stock-specific news.
+
+        Returns:
+            Number of articles stored.
+        """
+        if ticker:
+            articles = self._news_provider.get_stock_news(ticker)
+        else:
+            articles = self._news_provider.get_market_news()
+
+        if not articles:
+            return 0
+
+        conn = get_connection()
+        stored = 0
+        for article in articles:
+            headline = article.get("headline", "")
+            if not headline:
+                continue
+
+            # Auto-score with keyword sentiment
+            score, label = self._quick_sentiment(headline)
+
+            new_id = conn.execute("SELECT nextval('seq_news_id')").fetchone()[0]
+            try:
+                conn.execute(
+                    """INSERT INTO news_articles
+                       (id, ticker, headline, summary, source, url, published_at,
+                        sentiment, sentiment_label, analyzed_at)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp)""",
+                    [
+                        new_id,
+                        article.get("ticker"),
+                        headline,
+                        article.get("summary"),
+                        article.get("source"),
+                        article.get("url"),
+                        article.get("published_at"),
+                        score,
+                        label,
+                    ],
+                )
+                stored += 1
+            except Exception:
+                pass
+
+        logger.info("Stored %d news articles with auto-sentiment.", stored)
+        return stored
 
     def analyze_news(self, ticker: str | None = None) -> dict:
         """Fetch and analyze news sentiment using LLM.

@@ -160,6 +160,9 @@ export interface Portfolio {
   total_cost: number | null;
   total_gain: number | null;
   total_gain_pct: number | null;
+  total_unrealized_gain: number | null;
+  total_unrealized_gain_pct: number | null;
+  realized_gain: number | null;
   holdings?: Holding[];
 }
 
@@ -214,14 +217,18 @@ export interface AllocationResponse {
 
 export interface PerformancePoint {
   date: string;
-  value: number;
-  benchmark_value: number;
+  portfolio_value: number;
+  total_cost: number;
+  gain_pct: number;
+  spy_pct: number | null;
+  qqq_pct: number | null;
 }
 
 export interface PerformanceResponse {
-  data_points: PerformancePoint[];
-  total_return: number;
-  benchmark_return: number;
+  points: PerformancePoint[];
+  total_return_pct: number;
+  spy_return_pct: number | null;
+  qqq_return_pct: number | null;
 }
 
 export interface DividendEvent {

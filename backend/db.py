@@ -5,6 +5,7 @@ All table schemas follow the TRD specification.
 """
 
 import logging
+import threading
 from pathlib import Path
 
 import duckdb
@@ -13,26 +14,36 @@ from config import get_settings
 
 logger = logging.getLogger(__name__)
 
-_connection: duckdb.DuckDBPyConnection | None = None
+_local = threading.local()
+_db_path: str | None = None
+_db_lock = threading.Lock()
 
 
 def get_connection() -> duckdb.DuckDBPyConnection:
-    """Return the singleton DuckDB connection.
+    """Return a thread-local DuckDB connection.
 
-    Creates a new connection if one doesn't exist. Ensures the data
-    directory exists before connecting.
+    Each thread gets its own connection to avoid concurrency issues
+    between API handlers and background scheduler threads.
 
     Returns:
-        DuckDBPyConnection: Active database connection.
+        DuckDBPyConnection: Active database connection for this thread.
     """
-    global _connection  # noqa: PLW0603
-    if _connection is None:
-        settings = get_settings()
-        db_path = Path(settings.DUCKDB_PATH)
-        db_path.parent.mkdir(parents=True, exist_ok=True)
-        _connection = duckdb.connect(str(db_path))
-        logger.info("DuckDB connection established: %s", db_path)
-    return _connection
+    global _db_path  # noqa: PLW0603
+
+    if _db_path is None:
+        with _db_lock:
+            if _db_path is None:
+                settings = get_settings()
+                db_path = Path(settings.DUCKDB_PATH)
+                db_path.parent.mkdir(parents=True, exist_ok=True)
+                _db_path = str(db_path)
+
+    conn = getattr(_local, "connection", None)
+    if conn is None:
+        conn = duckdb.connect(_db_path)
+        _local.connection = conn
+        logger.info("DuckDB connection established for thread %s", threading.current_thread().name)
+    return conn
 
 
 def init_db() -> None:
@@ -42,6 +53,29 @@ def init_db() -> None:
     already exist. Safe to call multiple times.
     """
     conn = get_connection()
+
+    # --- Users Table ---
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id           INTEGER PRIMARY KEY,
+            google_id    VARCHAR UNIQUE,
+            email        VARCHAR UNIQUE NOT NULL,
+            name         VARCHAR,
+            avatar_url   VARCHAR,
+            created_at   TIMESTAMP DEFAULT current_timestamp
+        )
+    """)
+    _create_sequence_if_not_exists(conn, "seq_user_id")
+
+    # Add user_id to portfolios if not exists
+    try:
+        conn.execute("SELECT user_id FROM portfolios LIMIT 0")
+    except Exception:
+        try:
+            conn.execute("ALTER TABLE portfolios ADD COLUMN user_id INTEGER")
+            logger.info("Added user_id column to portfolios table.")
+        except Exception:
+            pass
 
     # --- Market Data Tables ---
     conn.execute("""
@@ -195,9 +229,9 @@ def _create_sequence_if_not_exists(
 
 
 def close_connection() -> None:
-    """Close the singleton DuckDB connection if open."""
-    global _connection  # noqa: PLW0603
-    if _connection is not None:
-        _connection.close()
-        _connection = None
-        logger.info("DuckDB connection closed.")
+    """Close the current thread's DuckDB connection if open."""
+    conn = getattr(_local, "connection", None)
+    if conn is not None:
+        conn.close()
+        _local.connection = None
+        logger.info("DuckDB connection closed for thread %s", threading.current_thread().name)

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueries, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Briefcase,
   Plus,
@@ -22,13 +22,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import MetricCard from "@/components/common/MetricCard";
@@ -37,12 +30,12 @@ import DataTable from "@/components/common/DataTable";
 import ChartContainer from "@/components/common/ChartContainer";
 import AllocationChart from "@/components/portfolio/AllocationChart";
 import PerformanceChart from "@/components/portfolio/PerformanceChart";
+import PortfolioMultiSelect from "@/components/common/PortfolioMultiSelect";
 import {
   getPortfolios,
   createPortfolio,
   getPortfolioDetail,
   deletePortfolio,
-  getAllocation,
   getPerformance,
 } from "@/api/portfolio";
 import { formatCurrency } from "@/lib/utils";
@@ -63,11 +56,14 @@ const PERF_PERIODS: { label: string; value: Period }[] = [
   { label: "1Y", value: "1y" },
 ];
 
+const ALLOC_COLORS = [
+  "#3B82F6", "#EF4444", "#10B981", "#F59E0B", "#8B5CF6",
+  "#EC4899", "#06B6D4", "#F97316", "#14B8A6", "#6366F1",
+];
+
 const Portfolio = () => {
   const queryClient = useQueryClient();
-  const [selectedPortfolioId, setSelectedPortfolioId] = useState<
-    number | null
-  >(null);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -82,29 +78,98 @@ const Portfolio = () => {
     staleTime: 60_000,
   });
 
-  const activeId = selectedPortfolioId ?? portfolios?.[0]?.id ?? null;
+  useEffect(() => {
+    if (portfolios && portfolios.length > 0 && selectedIds.length === 0) {
+      setSelectedIds(portfolios.map((p) => p.id));
+    }
+  }, [portfolios, selectedIds.length]);
 
-  const { data: portfolio, isLoading: detailLoading } =
-    useQuery<PortfolioType>({
-      queryKey: ["portfolioDetail", activeId],
-      queryFn: () => getPortfolioDetail(activeId!),
-      enabled: activeId !== null,
+  // Fetch details for all selected portfolios
+  const detailQueries = useQueries({
+    queries: selectedIds.map((id) => ({
+      queryKey: ["portfolioDetail", id],
+      queryFn: () => getPortfolioDetail(id),
       staleTime: 60_000,
+      enabled: true,
+    })),
+  });
+
+  const detailLoading = detailQueries.some((q) => q.isLoading);
+  const allDetails = detailQueries.map((q) => q.data).filter(Boolean) as PortfolioType[];
+
+  // Merge holdings
+  const holdings = useMemo(() => {
+    const map = new Map<string, Holding>();
+    for (const p of allDetails) {
+      for (const h of p.holdings ?? []) {
+        const existing = map.get(h.ticker);
+        if (existing) {
+          const totalQty = existing.quantity + h.quantity;
+          const totalCostVal = existing.quantity * existing.avg_cost + h.quantity * h.avg_cost;
+          const totalMv = (existing.market_value ?? 0) + (h.market_value ?? 0);
+          const totalUg = (existing.unrealized_gain ?? 0) + (h.unrealized_gain ?? 0);
+          map.set(h.ticker, {
+            ...existing,
+            quantity: totalQty,
+            avg_cost: totalQty > 0 ? totalCostVal / totalQty : 0,
+            market_value: totalMv,
+            total_cost: (existing.total_cost ?? 0) + (h.total_cost ?? 0),
+            unrealized_gain: totalUg,
+            unrealized_gain_pct: totalCostVal > 0 ? (totalUg / totalCostVal) * 100 : null,
+          });
+        } else {
+          map.set(h.ticker, { ...h });
+        }
+      }
+    }
+    return [...map.values()].sort((a, b) => (b.market_value ?? 0) - (a.market_value ?? 0));
+  }, [allDetails]);
+
+  const portfolio = allDetails[0] ?? null; // for backward compat references
+  const totalValue = allDetails.reduce((s, p) => s + (p.total_value ?? 0), 0);
+  const totalCost = allDetails.reduce((s, p) => s + (p.total_cost ?? 0), 0);
+
+  const firstSelectedId = selectedIds[0] ?? null;
+
+  // Calculate allocation from merged holdings
+  const allocation = useMemo((): AllocationResponse | null => {
+    if (!holdings.length) return null;
+    const tv = holdings.reduce((s, h) => s + (h.market_value ?? h.quantity * h.avg_cost), 0);
+    if (tv === 0) return null;
+
+    const byStock = holdings.map((h, i) => {
+      const val = h.market_value ?? h.quantity * h.avg_cost;
+      return {
+        label: h.ticker,
+        value: Math.round(val * 100) / 100,
+        percentage: Math.round((val / tv) * 10000) / 100,
+        color: ALLOC_COLORS[i % ALLOC_COLORS.length],
+      };
     });
 
-  const { data: allocation, isLoading: allocLoading } =
-    useQuery<AllocationResponse>({
-      queryKey: ["allocation", activeId],
-      queryFn: () => getAllocation(activeId!),
-      enabled: activeId !== null,
-      staleTime: 60_000,
+    const sectorMap = new Map<string, number>();
+    holdings.forEach((h) => {
+      const sector = h.sector || "Unknown";
+      const val = h.market_value ?? h.quantity * h.avg_cost;
+      sectorMap.set(sector, (sectorMap.get(sector) || 0) + val);
     });
+    const bySector = [...sectorMap.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([label, value], i) => ({
+        label,
+        value: Math.round(value * 100) / 100,
+        percentage: Math.round((value / tv) * 10000) / 100,
+        color: ALLOC_COLORS[i % ALLOC_COLORS.length],
+      }));
 
-  const { data: performance, isLoading: perfLoading } =
+    return { by_stock: byStock, by_sector: bySector, total_value: tv };
+  }, [holdings]);
+
+  const { data: performance, isLoading: perfLoading, error: perfError } =
     useQuery<PerformanceResponse>({
-      queryKey: ["performance", activeId, perfPeriod],
-      queryFn: () => getPerformance(activeId!, perfPeriod),
-      enabled: activeId !== null,
+      queryKey: ["performance", firstSelectedId, perfPeriod],
+      queryFn: () => getPerformance(firstSelectedId!, perfPeriod),
+      enabled: firstSelectedId !== null,
       staleTime: 60_000,
     });
 
@@ -123,12 +188,12 @@ const Portfolio = () => {
     mutationFn: (id: number) => deletePortfolio(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["portfolios"] });
-      setSelectedPortfolioId(null);
+      setSelectedIds([]);
       setDeleteDialogOpen(false);
     },
   });
 
-  const holdings = portfolio?.holdings ?? [];
+
 
   const computeGainPct = (h: Holding): number => {
     if (h.unrealized_gain_pct != null) return h.unrealized_gain_pct;
@@ -136,13 +201,8 @@ const Portfolio = () => {
     return 0;
   };
 
-  const totalGainPct = (() => {
-    if (portfolio?.total_gain_pct != null) return portfolio.total_gain_pct;
-    const cost = portfolio?.total_cost;
-    const gain = portfolio?.total_gain;
-    if (cost && cost !== 0 && gain != null) return (gain / cost) * 100;
-    return null;
-  })();
+  const totalGain = totalValue - totalCost;
+  const totalGainPct = totalCost > 0 ? (totalGain / totalCost) * 100 : null;
 
   const holdingsColumns: ColumnDef<Holding, unknown>[] = [
     {
@@ -233,21 +293,11 @@ const Portfolio = () => {
         {portfoliosLoading ? (
           <Skeleton className="h-9 w-48" />
         ) : portfolios && portfolios.length > 0 ? (
-          <Select
-            value={activeId?.toString() ?? ""}
-            onValueChange={(v) => setSelectedPortfolioId(Number(v))}
-          >
-            <SelectTrigger className="w-56">
-              <SelectValue placeholder="Select portfolio" />
-            </SelectTrigger>
-            <SelectContent>
-              {portfolios.map((p) => (
-                <SelectItem key={p.id} value={p.id.toString()}>
-                  {p.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <PortfolioMultiSelect
+            portfolios={portfolios}
+            selectedIds={selectedIds}
+            onSelectionChange={setSelectedIds}
+          />
         ) : (
           <p className="text-sm text-muted-foreground">No portfolios yet.</p>
         )}
@@ -289,7 +339,7 @@ const Portfolio = () => {
           </DialogContent>
         </Dialog>
 
-        {activeId && (
+        {selectedIds.length > 0 && (
           <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
             <DialogTrigger
               render={
@@ -317,7 +367,7 @@ const Portfolio = () => {
                 </Button>
                 <Button
                   variant="destructive"
-                  onClick={() => deleteMutation.mutate(activeId)}
+                  onClick={() => { if (firstSelectedId) deleteMutation.mutate(firstSelectedId); }}
                   disabled={deleteMutation.isPending}
                 >
                   {deleteMutation.isPending ? "Deleting..." : "Delete"}
@@ -329,7 +379,7 @@ const Portfolio = () => {
       </div>
 
       {/* Summary Cards */}
-      {activeId && (
+      {selectedIds.length > 0 && (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {detailLoading ? (
@@ -350,7 +400,7 @@ const Portfolio = () => {
                 />
                 <MetricCard
                   title="Total Gain/Loss"
-                  value={formatCurrency(portfolio.total_gain ?? 0)}
+                  value={formatCurrency(totalGain ?? 0)}
                   changePct={totalGainPct ?? undefined}
                   icon={<TrendingUp className="h-4 w-4" />}
                 />
@@ -399,7 +449,8 @@ const Portfolio = () => {
                 </CardHeader>
                 <CardContent>
                   <ChartContainer
-                    isLoading={allocLoading}
+                    isLoading={detailLoading}
+                    error={null}
                     isEmpty={!allocation || allocation.by_stock.length === 0}
                     height="h-64"
                   >
@@ -417,7 +468,8 @@ const Portfolio = () => {
                 </CardHeader>
                 <CardContent>
                   <ChartContainer
-                    isLoading={allocLoading}
+                    isLoading={detailLoading}
+                    error={null}
                     isEmpty={!allocation || allocation.by_sector.length === 0}
                     height="h-64"
                   >
@@ -456,33 +508,50 @@ const Portfolio = () => {
             </div>
 
             {performance && (
-              <div className="flex gap-4 mb-4">
+              <div className="flex flex-wrap gap-x-5 gap-y-1 mb-4">
                 <div className="text-sm">
-                  <span className="text-muted-foreground">Portfolio Return: </span>
+                  <span className="text-muted-foreground">Portfolio: </span>
                   <span
                     className={
-                      performance.total_return >= 0
-                        ? "text-green-600 font-medium"
-                        : "text-red-600 font-medium"
+                      performance.total_return_pct >= 0
+                        ? "text-blue-600 font-semibold"
+                        : "text-red-600 font-semibold"
                     }
                   >
-                    {performance.total_return >= 0 ? "+" : ""}
-                    {performance.total_return.toFixed(2)}%
+                    {performance.total_return_pct >= 0 ? "+" : ""}
+                    {performance.total_return_pct.toFixed(2)}%
                   </span>
                 </div>
-                <div className="text-sm">
-                  <span className="text-muted-foreground">Benchmark: </span>
-                  <span
-                    className={
-                      performance.benchmark_return >= 0
-                        ? "text-green-600 font-medium"
-                        : "text-red-600 font-medium"
-                    }
-                  >
-                    {performance.benchmark_return >= 0 ? "+" : ""}
-                    {performance.benchmark_return.toFixed(2)}%
-                  </span>
-                </div>
+                {performance.spy_return_pct != null && (
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">SPY: </span>
+                    <span
+                      className={
+                        performance.spy_return_pct >= 0
+                          ? "text-green-600 font-semibold"
+                          : "text-red-600 font-semibold"
+                      }
+                    >
+                      {performance.spy_return_pct >= 0 ? "+" : ""}
+                      {performance.spy_return_pct.toFixed(2)}%
+                    </span>
+                  </div>
+                )}
+                {performance.qqq_return_pct != null && (
+                  <div className="text-sm">
+                    <span className="text-muted-foreground">QQQ: </span>
+                    <span
+                      className={
+                        performance.qqq_return_pct >= 0
+                          ? "text-orange-500 font-semibold"
+                          : "text-red-600 font-semibold"
+                      }
+                    >
+                      {performance.qqq_return_pct >= 0 ? "+" : ""}
+                      {performance.qqq_return_pct.toFixed(2)}%
+                    </span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -490,13 +559,14 @@ const Portfolio = () => {
               <CardContent className="pt-4">
                 <ChartContainer
                   isLoading={perfLoading}
+                  error={perfError as Error | null}
                   isEmpty={
-                    !performance || performance.data_points.length === 0
+                    !performance || performance.points.length === 0
                   }
                   height="h-72"
                 >
                   <PerformanceChart
-                    data={performance?.data_points ?? []}
+                    data={performance?.points ?? []}
                   />
                 </ChartContainer>
               </CardContent>

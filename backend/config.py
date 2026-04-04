@@ -19,6 +19,11 @@ class Settings(BaseSettings):
     ANTHROPIC_API_KEY: str = ""
     FINNHUB_API_KEY: str = ""
 
+    # Auth
+    GOOGLE_CLIENT_ID: str = ""
+    JWT_SECRET: str = "stockdash-jwt-secret-change-in-production"
+    JWT_EXPIRE_HOURS: int = 168  # 7 days
+
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = 8001

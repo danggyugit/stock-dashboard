@@ -51,15 +51,16 @@ const CandlestickChart = ({
   const volumeSeriesRef = useRef<ISeriesApi<"Histogram"> | null>(null);
   const [legend, setLegend] = useState<OhlcvLegend | null>(null);
 
+  // Always fetch max data — period only controls visible range
   const {
     data: chartData,
     isLoading,
     error,
   } = useQuery<ChartDataPoint[]>({
-    queryKey: ["candlestickChart", ticker, period],
-    queryFn: () => getChartData(ticker, period),
+    queryKey: ["candlestickChart", ticker, "max"],
+    queryFn: () => getChartData(ticker, "5y", "1d"),
     enabled: !!ticker,
-    staleTime: 60_000,
+    staleTime: 5 * 60_000,
   });
 
   const handleCrosshairMove = useCallback(
@@ -124,7 +125,7 @@ const CandlestickChart = ({
       },
       timeScale: {
         borderColor: "rgba(255, 255, 255, 0.1)",
-        timeVisible: period === "1d",
+        timeVisible: false,
         secondsVisible: false,
       },
     });
@@ -220,77 +221,59 @@ const CandlestickChart = ({
       });
     }
 
-    chartRef.current?.timeScale().fitContent();
-  }, [chartData]);
-
-  if (error) {
-    return (
-      <div
-        className="flex items-center justify-center rounded-md bg-destructive/5 border border-destructive/20"
-        style={{ height }}
-      >
-        <p className="text-destructive text-sm">
-          Failed to load chart data: {(error as Error).message}
-        </p>
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div
-        className="flex items-center justify-center rounded-md bg-muted/30 animate-pulse"
-        style={{ height }}
-      >
-        <p className="text-muted-foreground text-sm">Loading chart...</p>
-      </div>
-    );
-  }
+    // Set initial visible range based on period
+    if (chartRef.current && chartData.length > 0) {
+      const periodDays: Record<string, number> = {
+        "1d": 1, "1w": 5, "1m": 22, "3m": 66, "6m": 132, "1y": 252, "5y": 1260,
+      };
+      const days = periodDays[period] ?? chartData.length;
+      const fromIndex = Math.max(0, chartData.length - days);
+      const from = chartData[fromIndex].date as Time;
+      const to = chartData[chartData.length - 1].date as Time;
+      chartRef.current.timeScale().setVisibleRange({ from, to });
+    }
+  }, [chartData, period]);
 
   return (
-    <div className="relative">
+    <div className="relative" style={{ height }}>
+      {/* Loading / Error overlays */}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-background/80">
+          <p className="text-muted-foreground text-sm animate-pulse">Loading chart...</p>
+        </div>
+      )}
+      {error && (
+        <div className="absolute inset-0 flex items-center justify-center z-20 bg-destructive/5">
+          <p className="text-destructive text-sm">Failed to load chart</p>
+        </div>
+      )}
+
       {/* OHLCV Legend Overlay */}
-      {legend && (
+      {legend && !isLoading && (
         <div className="absolute top-2 left-3 z-10 flex items-center gap-3 text-xs font-mono">
           <span className="text-gray-400">{legend.date}</span>
           <span className="text-gray-400">
-            O{" "}
-            <span className="text-white font-medium">
-              {legend.open.toFixed(2)}
-            </span>
+            O <span className="text-white font-medium">{legend.open.toFixed(2)}</span>
           </span>
           <span className="text-gray-400">
-            H{" "}
-            <span className="text-white font-medium">
-              {legend.high.toFixed(2)}
-            </span>
+            H <span className="text-white font-medium">{legend.high.toFixed(2)}</span>
           </span>
           <span className="text-gray-400">
-            L{" "}
-            <span className="text-white font-medium">
-              {legend.low.toFixed(2)}
-            </span>
+            L <span className="text-white font-medium">{legend.low.toFixed(2)}</span>
           </span>
           <span className="text-gray-400">
             C{" "}
-            <span
-              className={
-                legend.close >= legend.open
-                  ? "text-green-400 font-medium"
-                  : "text-red-400 font-medium"
-              }
-            >
+            <span className={legend.close >= legend.open ? "text-green-400 font-medium" : "text-red-400 font-medium"}>
               {legend.close.toFixed(2)}
             </span>
           </span>
           <span className="text-gray-400">
-            Vol{" "}
-            <span className="text-white font-medium">
-              {formatVolume(legend.volume)}
-            </span>
+            Vol <span className="text-white font-medium">{formatVolume(legend.volume)}</span>
           </span>
         </div>
       )}
+
+      {/* Chart container — always rendered so ref is always available */}
       <div ref={chartContainerRef} style={{ height }} />
     </div>
   );

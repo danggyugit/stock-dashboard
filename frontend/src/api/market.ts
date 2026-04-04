@@ -69,6 +69,16 @@ export const searchStocks = async (query: string): Promise<SearchResult[]> => {
   return data;
 };
 
+export const getClosePrice = async (
+  ticker: string,
+  date: string,
+): Promise<{ ticker: string; date: string; close: number | null }> => {
+  const { data } = await apiClient.get(`/market/stock/${ticker}/close`, {
+    params: { date },
+  });
+  return data;
+};
+
 export const refreshMarketData = async (): Promise<{ message: string }> => {
   const { data } = await apiClient.post<{ message: string }>("/market/refresh");
   return data;

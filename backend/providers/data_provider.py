@@ -48,6 +48,15 @@ INTERVAL_MAP = {
 }
 
 
+import threading
+from datetime import datetime as _dt
+
+# Global lock and cache for yfinance batch downloads
+_yf_lock = threading.Lock()
+_yf_cache: dict[str, tuple[dict[str, pd.DataFrame], float]] = {}
+_YF_CACHE_TTL = 300  # 5 minutes
+
+
 class MarketDataProvider:
     """Wrapper around yfinance for market data retrieval."""
 
@@ -129,6 +138,8 @@ class MarketDataProvider:
     ) -> pd.DataFrame:
         """Fetch daily OHLCV price data for a stock.
 
+        Thread-safe with global lock and 5-minute memory cache.
+
         Args:
             ticker: Stock ticker symbol.
             period: Time period (e.g., '1d', '1mo', '1y').
@@ -142,39 +153,58 @@ class MarketDataProvider:
         if interval is None:
             interval = INTERVAL_MAP.get(yf_period, "1d")
 
-        try:
-            stock = yf.Ticker(ticker)
-            df = stock.history(period=yf_period, interval=interval)
-            if df.empty:
-                logger.warning("No price data returned for %s (period=%s).", ticker, yf_period)
-                return pd.DataFrame(
-                    columns=["date", "open", "high", "low", "close", "adj_close", "volume"]
-                )
+        empty_df = pd.DataFrame(
+            columns=["date", "open", "high", "low", "close", "adj_close", "volume"]
+        )
 
-            df = df.reset_index()
-            date_col = "Date" if "Date" in df.columns else "Datetime"
-            result = pd.DataFrame({
-                "date": pd.to_datetime(df[date_col]).dt.strftime("%Y-%m-%d %H:%M:%S")
-                if interval not in ("1d", "1wk", "1mo")
-                else pd.to_datetime(df[date_col]).dt.strftime("%Y-%m-%d"),
-                "open": df["Open"],
-                "high": df["High"],
-                "low": df["Low"],
-                "close": df["Close"],
-                "adj_close": df["Close"],  # yfinance v0.2+ uses adjusted close as default
-                "volume": df["Volume"].astype(int),
-            })
-            return result
-        except Exception:
-            logger.exception("Failed to fetch daily prices for %s.", ticker)
-            return pd.DataFrame(
-                columns=["date", "open", "high", "low", "close", "adj_close", "volume"]
-            )
+        # Check cache
+        cache_key = f"daily:{ticker}:{yf_period}:{interval}"
+        if cache_key in _yf_cache:
+            cached_data, cached_at = _yf_cache[cache_key]
+            if (_dt.now().timestamp() - cached_at) < _YF_CACHE_TTL:
+                return cached_data
+
+        with _yf_lock:
+            # Double-check
+            if cache_key in _yf_cache:
+                cached_data, cached_at = _yf_cache[cache_key]
+                if (_dt.now().timestamp() - cached_at) < _YF_CACHE_TTL:
+                    return cached_data
+
+            try:
+                stock = yf.Ticker(ticker)
+                df = stock.history(period=yf_period, interval=interval)
+                if df.empty:
+                    logger.warning("No price data for %s (period=%s).", ticker, yf_period)
+                    return empty_df
+
+                df = df.reset_index()
+                date_col = "Date" if "Date" in df.columns else "Datetime"
+                result = pd.DataFrame({
+                    "date": pd.to_datetime(df[date_col]).dt.strftime("%Y-%m-%d %H:%M:%S")
+                    if interval not in ("1d", "1wk", "1mo")
+                    else pd.to_datetime(df[date_col]).dt.strftime("%Y-%m-%d"),
+                    "open": df["Open"],
+                    "high": df["High"],
+                    "low": df["Low"],
+                    "close": df["Close"],
+                    "adj_close": df["Close"],
+                    "volume": df["Volume"].astype(int),
+                })
+
+                _yf_cache[cache_key] = (result, _dt.now().timestamp())
+                return result
+            except Exception:
+                logger.exception("Failed to fetch daily prices for %s.", ticker)
+                return empty_df
 
     def get_batch_prices(
         self, tickers: list[str], period: str = "1mo"
     ) -> dict[str, pd.DataFrame]:
         """Fetch price data for multiple stocks using batch download.
+
+        Thread-safe with global lock to prevent concurrent yfinance calls.
+        Results are cached in memory for 5 minutes.
 
         Args:
             tickers: List of ticker symbols.
@@ -184,60 +214,130 @@ class MarketDataProvider:
             Dictionary mapping ticker to price DataFrame.
         """
         yf_period = PERIOD_MAP.get(period, period)
-        result: dict[str, pd.DataFrame] = {}
 
+        # Ensure minimum 5d download so we always have >= 2 data points
+        _MIN_PERIOD = {"1d": "5d"}
+        download_period = _MIN_PERIOD.get(yf_period, yf_period)
+
+        if not tickers:
+            return {}
+
+        # Build cache key from sorted tickers + period
+        cache_key = f"{download_period}:{','.join(sorted(tickers))}"
+
+        # Check memory cache (outside lock for speed)
+        if cache_key in _yf_cache:
+            cached_data, cached_at = _yf_cache[cache_key]
+            if (_dt.now().timestamp() - cached_at) < _YF_CACHE_TTL:
+                logger.info("Cache hit for %d tickers (period=%s).", len(tickers), download_period)
+                return cached_data
+
+        # Acquire lock — only one yfinance download at a time
+        with _yf_lock:
+            # Double-check cache inside lock (another thread may have filled it)
+            if cache_key in _yf_cache:
+                cached_data, cached_at = _yf_cache[cache_key]
+                if (_dt.now().timestamp() - cached_at) < _YF_CACHE_TTL:
+                    return cached_data
+
+            # Also check if a superset of tickers is already cached for this period
+            for ck, (cd, ct) in _yf_cache.items():
+                if ck.startswith(f"{download_period}:") and (_dt.now().timestamp() - ct) < _YF_CACHE_TTL:
+                    # Check if all requested tickers are in this cached result
+                    if all(t in cd for t in tickers):
+                        logger.info("Cache superset hit for %d tickers.", len(tickers))
+                        return {t: cd[t] for t in tickers if t in cd}
+
+            result: dict[str, pd.DataFrame] = {}
+
+            try:
+                logger.info("Downloading prices for %d tickers (period=%s)...", len(tickers), download_period)
+                data = yf.download(
+                    tickers,
+                    period=download_period,
+                    group_by="ticker",
+                    auto_adjust=True,
+                    threads=True,
+                )
+
+                if data.empty:
+                    logger.warning("No batch price data returned.")
+                    return result
+
+                for ticker in tickers:
+                    try:
+                        if data.columns.nlevels > 1:
+                            if ticker in data.columns.get_level_values(0):
+                                df = data[ticker].reset_index()
+                            else:
+                                continue
+                        else:
+                            df = data.reset_index()
+
+                        if df.empty or df.dropna(how="all").empty:
+                            continue
+
+                        date_col = "Date" if "Date" in df.columns else "Datetime"
+                        ticker_df = pd.DataFrame({
+                            "date": pd.to_datetime(df[date_col]).dt.strftime("%Y-%m-%d"),
+                            "open": df["Open"],
+                            "high": df["High"],
+                            "low": df["Low"],
+                            "close": df["Close"],
+                            "adj_close": df["Close"],
+                            "volume": pd.to_numeric(df["Volume"], errors="coerce")
+                            .fillna(0)
+                            .astype(int),
+                        })
+                        ticker_df = ticker_df.dropna(subset=["close"])
+                        result[ticker] = ticker_df
+                    except (KeyError, TypeError):
+                        logger.warning("Failed to extract batch data for %s.", ticker)
+                        continue
+
+                logger.info("Batch fetched prices for %d/%d tickers.", len(result), len(tickers))
+            except Exception:
+                logger.exception("Failed to fetch batch prices.")
+
+            # Store in cache
+            if result:
+                _yf_cache[cache_key] = (result, _dt.now().timestamp())
+
+            return result
+
+    def get_batch_market_caps(self, tickers: list[str]) -> dict[str, int]:
+        """Fetch market cap for multiple stocks using concurrent requests.
+
+        Uses yf.Ticker.fast_info for speed. Processes in batches with threading.
+
+        Args:
+            tickers: List of ticker symbols.
+
+        Returns:
+            Dictionary mapping ticker to market cap (int).
+        """
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        result: dict[str, int] = {}
         if not tickers:
             return result
 
-        try:
-            data = yf.download(
-                tickers,
-                period=yf_period,
-                group_by="ticker",
-                auto_adjust=True,
-                threads=True,
-            )
+        def _fetch_one(t: str) -> tuple[str, int | None]:
+            try:
+                info = yf.Ticker(t).fast_info
+                cap = getattr(info, "market_cap", None)
+                return t, int(cap) if cap else None
+            except Exception:
+                return t, None
 
-            if data.empty:
-                logger.warning("No batch price data returned.")
-                return result
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            futures = {executor.submit(_fetch_one, t): t for t in tickers}
+            for future in as_completed(futures):
+                t, cap = future.result()
+                if cap:
+                    result[t] = cap
 
-            for ticker in tickers:
-                try:
-                    # yfinance group_by='ticker' always returns MultiIndex (ticker, field)
-                    if data.columns.nlevels > 1:
-                        if ticker in data.columns.get_level_values(0):
-                            df = data[ticker].reset_index()
-                        else:
-                            continue
-                    else:
-                        df = data.reset_index()
-
-                    if df.empty or df.dropna(how="all").empty:
-                        continue
-
-                    date_col = "Date" if "Date" in df.columns else "Datetime"
-                    ticker_df = pd.DataFrame({
-                        "date": pd.to_datetime(df[date_col]).dt.strftime("%Y-%m-%d"),
-                        "open": df["Open"],
-                        "high": df["High"],
-                        "low": df["Low"],
-                        "close": df["Close"],
-                        "adj_close": df["Close"],
-                        "volume": pd.to_numeric(df["Volume"], errors="coerce")
-                        .fillna(0)
-                        .astype(int),
-                    })
-                    ticker_df = ticker_df.dropna(subset=["close"])
-                    result[ticker] = ticker_df
-                except (KeyError, TypeError):
-                    logger.warning("Failed to extract batch data for %s.", ticker)
-                    continue
-
-            logger.info("Batch fetched prices for %d/%d tickers.", len(result), len(tickers))
-        except Exception:
-            logger.exception("Failed to fetch batch prices.")
-
+        logger.info("Batch fetched market caps for %d/%d tickers.", len(result), len(tickers))
         return result
 
     def get_fundamentals(self, ticker: str) -> dict:

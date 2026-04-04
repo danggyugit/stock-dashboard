@@ -118,7 +118,8 @@ class PerformancePoint(BaseModel):
     portfolio_value: float
     total_cost: float
     gain_pct: float
-    benchmark_pct: float | None = None
+    spy_pct: float | None = None
+    qqq_pct: float | None = None
 
 
 class PerformanceResponse(BaseModel):
@@ -126,7 +127,8 @@ class PerformanceResponse(BaseModel):
 
     points: list[PerformancePoint] = Field(default_factory=list)
     total_return_pct: float = 0.0
-    benchmark_return_pct: float | None = None
+    spy_return_pct: float | None = None
+    qqq_return_pct: float | None = None
 
 
 class DividendEvent(BaseModel):

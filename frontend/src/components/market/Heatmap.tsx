@@ -338,6 +338,40 @@ const Heatmap = ({ data, isLoading = false, focusSector: externalFocusSector }: 
         const h = (d.y1 ?? 0) - (d.y0 ?? 0);
         return w > 80 && h > 40 ? "block" : "none";
       });
+
+    // Company logos (shown on large cells)
+    cellGroups
+      .append("image")
+      .attr("href", (d) =>
+        `https://assets.parqet.com/logos/symbol/${d.data.ticker}`,
+      )
+      .attr("x", (d) => {
+        const w = (d.x1 ?? 0) - (d.x0 ?? 0);
+        const sz = w >= 140 && ((d.y1 ?? 0) - (d.y0 ?? 0)) >= 80 ? 28 : 20;
+        return w - sz - 4;
+      })
+      .attr("y", 4)
+      .attr("width", (d) => {
+        const w = (d.x1 ?? 0) - (d.x0 ?? 0);
+        const h = (d.y1 ?? 0) - (d.y0 ?? 0);
+        return w >= 140 && h >= 80 ? 28 : 20;
+      })
+      .attr("height", (d) => {
+        const w = (d.x1 ?? 0) - (d.x0 ?? 0);
+        const h = (d.y1 ?? 0) - (d.y0 ?? 0);
+        return w >= 140 && h >= 80 ? 28 : 20;
+      })
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .style("pointer-events", "none")
+      .style("border-radius", "4px")
+      .attr("display", (d) => {
+        const w = (d.x1 ?? 0) - (d.x0 ?? 0);
+        const h = (d.y1 ?? 0) - (d.y0 ?? 0);
+        return w >= 80 && h >= 50 ? "block" : "none";
+      })
+      .on("error", function () {
+        d3.select(this).remove();
+      });
   }, [data, focusSector, navigate]);
 
   // Render on data change and resize

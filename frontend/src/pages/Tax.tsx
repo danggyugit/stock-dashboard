@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import { ArrowLeft, Calculator, AlertTriangle } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,6 +16,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import MetricCard from "@/components/common/MetricCard";
 import DataTable from "@/components/common/DataTable";
+import PortfolioMultiSelect from "@/components/common/PortfolioMultiSelect";
 import { getPortfolios, getTax } from "@/api/portfolio";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import type { Portfolio, TaxSummary, Trade } from "@/types";
@@ -24,9 +25,7 @@ const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
 const Tax = () => {
-  const [selectedPortfolioId, setSelectedPortfolioId] = useState<number | null>(
-    null,
-  );
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [year, setYear] = useState(currentYear);
 
   const { data: portfolios, isLoading: portfoliosLoading } = useQuery<
@@ -37,14 +36,39 @@ const Tax = () => {
     staleTime: 60_000,
   });
 
-  const activeId = selectedPortfolioId ?? portfolios?.[0]?.id ?? null;
+  useEffect(() => {
+    if (portfolios && portfolios.length > 0 && selectedIds.length === 0) {
+      setSelectedIds(portfolios.map((p) => p.id));
+    }
+  }, [portfolios, selectedIds.length]);
 
-  const { data: taxData, isLoading: taxLoading } = useQuery<TaxSummary>({
-    queryKey: ["tax", activeId, year],
-    queryFn: () => getTax(activeId!, year),
-    enabled: activeId !== null,
-    staleTime: 5 * 60_000,
+  const taxQueries = useQueries({
+    queries: selectedIds.map((id) => ({
+      queryKey: ["tax", id, year],
+      queryFn: () => getTax(id, year),
+      staleTime: 5 * 60_000,
+      enabled: true,
+    })),
   });
+
+  const taxLoading = taxQueries.some((q) => q.isLoading);
+
+  // Merge tax data from all selected portfolios
+  const taxData: TaxSummary | null = (() => {
+    const allData = taxQueries.map((q) => q.data).filter(Boolean) as TaxSummary[];
+    if (allData.length === 0) return null;
+    return {
+      year,
+      realized_gains: allData.reduce((s, d) => s + d.realized_gains, 0),
+      realized_losses: allData.reduce((s, d) => s + d.realized_losses, 0),
+      net_gain: allData.reduce((s, d) => s + d.net_gain, 0),
+      short_term_gain: allData.reduce((s, d) => s + d.short_term_gain, 0),
+      long_term_gain: allData.reduce((s, d) => s + d.long_term_gain, 0),
+      short_term_loss: allData.reduce((s, d) => s + d.short_term_loss, 0),
+      long_term_loss: allData.reduce((s, d) => s + d.long_term_loss, 0),
+      trades: allData.flatMap((d) => d.trades),
+    };
+  })();
 
   const columns: ColumnDef<Trade, unknown>[] = [
     {
@@ -115,21 +139,11 @@ const Tax = () => {
         {portfoliosLoading ? (
           <Skeleton className="h-9 w-48" />
         ) : portfolios && portfolios.length > 0 ? (
-          <Select
-            value={activeId?.toString() ?? ""}
-            onValueChange={(v) => setSelectedPortfolioId(Number(v))}
-          >
-            <SelectTrigger className="w-56">
-              <SelectValue placeholder="Select portfolio" />
-            </SelectTrigger>
-            <SelectContent>
-              {portfolios.map((p) => (
-                <SelectItem key={p.id} value={p.id.toString()}>
-                  {p.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <PortfolioMultiSelect
+            portfolios={portfolios}
+            selectedIds={selectedIds}
+            onSelectionChange={setSelectedIds}
+          />
         ) : null}
 
         <Select
@@ -149,7 +163,7 @@ const Tax = () => {
         </Select>
       </div>
 
-      {activeId && (
+      {selectedIds.length > 0 && (
         <>
           {/* Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">

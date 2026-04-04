@@ -48,6 +48,34 @@ async def lifespan(app: FastAPI):
     scheduler = start_scheduler()
     logger.info("Scheduler started.")
 
+    # Backfill Fear & Greed history if needed
+    try:
+        from services.sentiment_service import SentimentService
+        from db import get_connection as _get_conn
+        conn = _get_conn()
+        count = conn.execute("SELECT COUNT(*) FROM fear_greed_history").fetchone()[0]
+        if count < 10:
+            svc = SentimentService()
+            filled = svc.backfill_fear_greed(days=60)
+            logger.info("F&G history backfilled: %d new points (total was %d).", filled, count)
+    except Exception:
+        logger.exception("F&G backfill failed (non-critical).")
+
+    # Initial cache warm runs via scheduler (first job triggers immediately)
+    from scheduler import _warm_all_caches
+    from datetime import datetime as _dt
+    try:
+        scheduler.add_job(
+            _warm_all_caches,
+            id="initial_warm",
+            name="Initial cache warm",
+            next_run_time=_dt.now(),
+            replace_existing=True,
+        )
+        logger.info("Initial cache warm scheduled.")
+    except Exception:
+        logger.exception("Failed to schedule initial cache warm.")
+
     yield
 
     # --- Shutdown ---
@@ -64,22 +92,32 @@ app = FastAPI(
 )
 
 # CORS middleware for frontend dev server
+import os
+
+_allowed_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+# Add production frontend URL from env
+_frontend_url = os.environ.get("FRONTEND_URL")
+if _frontend_url:
+    _allowed_origins.append(_frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Register routers
+from auth import router as auth_router
 from routers.market import router as market_router
 from routers.portfolio import router as portfolio_router
 from routers.sentiment import router as sentiment_router
 
+app.include_router(auth_router)
 app.include_router(market_router)
 app.include_router(portfolio_router)
 app.include_router(sentiment_router)

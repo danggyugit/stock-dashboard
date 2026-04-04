@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import { ArrowLeft, Calendar, DollarSign, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   BarChart,
@@ -25,6 +25,7 @@ import MetricCard from "@/components/common/MetricCard";
 import DataTable from "@/components/common/DataTable";
 import ChartContainer from "@/components/common/ChartContainer";
 import DividendCalendar from "@/components/portfolio/DividendCalendar";
+import PortfolioMultiSelect from "@/components/common/PortfolioMultiSelect";
 import { getPortfolios, getDividends } from "@/api/portfolio";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import type { Portfolio, DividendSummary, DividendEvent } from "@/types";
@@ -38,9 +39,7 @@ const MONTH_NAMES = [
 ];
 
 const Dividends = () => {
-  const [selectedPortfolioId, setSelectedPortfolioId] = useState<number | null>(
-    null,
-  );
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [year, setYear] = useState(currentYear);
   const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth() + 1);
 
@@ -52,15 +51,38 @@ const Dividends = () => {
     staleTime: 60_000,
   });
 
-  const activeId = selectedPortfolioId ?? portfolios?.[0]?.id ?? null;
+  useEffect(() => {
+    if (portfolios && portfolios.length > 0 && selectedIds.length === 0) {
+      setSelectedIds(portfolios.map((p) => p.id));
+    }
+  }, [portfolios, selectedIds.length]);
 
-  const { data: dividendData, isLoading: dividendsLoading } =
-    useQuery<DividendSummary>({
-      queryKey: ["dividends", activeId, year],
-      queryFn: () => getDividends(activeId!, year),
-      enabled: activeId !== null,
+  // Fetch dividends for all selected portfolios
+  const dividendQueries = useQueries({
+    queries: selectedIds.map((id) => ({
+      queryKey: ["dividends", id, year],
+      queryFn: () => getDividends(id, year),
       staleTime: 5 * 60_000,
-    });
+      enabled: true,
+    })),
+  });
+
+  const dividendsLoading = dividendQueries.some((q) => q.isLoading);
+
+  // Merge dividend data from all selected portfolios
+  const dividendData: DividendSummary | null = (() => {
+    const allData = dividendQueries.map((q) => q.data).filter(Boolean) as DividendSummary[];
+    if (allData.length === 0) return null;
+    const events = allData.flatMap((d) => d.events);
+    const totalAnnual = allData.reduce((s, d) => s + d.total_annual, 0);
+    const breakdown: Record<string, number> = {};
+    for (const d of allData) {
+      for (const [k, v] of Object.entries(d.monthly_breakdown ?? {})) {
+        breakdown[k] = (breakdown[k] || 0) + v;
+      }
+    }
+    return { events, total_annual: totalAnnual, monthly_breakdown: breakdown };
+  })();
 
   const monthlyChartData = MONTH_NAMES.map((month, idx) => {
     const monthKey = `${year}-${String(idx + 1).padStart(2, "0")}`;
@@ -154,21 +176,11 @@ const Dividends = () => {
         {portfoliosLoading ? (
           <Skeleton className="h-9 w-48" />
         ) : portfolios && portfolios.length > 0 ? (
-          <Select
-            value={activeId?.toString() ?? ""}
-            onValueChange={(v) => setSelectedPortfolioId(Number(v))}
-          >
-            <SelectTrigger className="w-56">
-              <SelectValue placeholder="Select portfolio" />
-            </SelectTrigger>
-            <SelectContent>
-              {portfolios.map((p) => (
-                <SelectItem key={p.id} value={p.id.toString()}>
-                  {p.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <PortfolioMultiSelect
+            portfolios={portfolios}
+            selectedIds={selectedIds}
+            onSelectionChange={setSelectedIds}
+          />
         ) : null}
 
         <Select
@@ -188,7 +200,7 @@ const Dividends = () => {
         </Select>
       </div>
 
-      {activeId && (
+      {selectedIds.length > 0 && (
         <>
           {/* Summary */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

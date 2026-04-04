@@ -24,12 +24,15 @@ class PortfolioService:
 
     # --- Portfolio CRUD ---
 
-    def create_portfolio(self, name: str, description: str | None = None) -> dict:
+    def create_portfolio(
+        self, name: str, description: str | None = None, user_id: int | None = None,
+    ) -> dict:
         """Create a new portfolio.
 
         Args:
             name: Portfolio name.
             description: Optional portfolio description.
+            user_id: Owner user ID (None if not authenticated).
 
         Returns:
             Dict with created portfolio info.
@@ -38,10 +41,10 @@ class PortfolioService:
         new_id = conn.execute("SELECT nextval('seq_portfolio_id')").fetchone()[0]
         conn.execute(
             """
-            INSERT INTO portfolios (id, name, description, created_at)
-            VALUES (?, ?, ?, current_timestamp)
+            INSERT INTO portfolios (id, name, description, user_id, created_at)
+            VALUES (?, ?, ?, ?, current_timestamp)
             """,
-            [new_id, name, description],
+            [new_id, name, description, user_id],
         )
         logger.info("Created portfolio id=%d name=%s.", new_id, name)
         return {
@@ -51,16 +54,25 @@ class PortfolioService:
             "created_at": datetime.now().isoformat(),
         }
 
-    def get_portfolios(self) -> list[dict]:
-        """Get all portfolios with summary values.
+    def get_portfolios(self, user_id: int | None = None) -> list[dict]:
+        """Get portfolios with summary values, filtered by user if authenticated.
+
+        Args:
+            user_id: Filter by owner. None returns all (backward compat).
 
         Returns:
             List of portfolio dicts with total value and cost.
         """
         conn = get_connection()
-        rows = conn.execute(
-            "SELECT id, name, description, created_at FROM portfolios ORDER BY created_at DESC"
-        ).fetchall()
+        if user_id is not None:
+            rows = conn.execute(
+                "SELECT id, name, description, created_at FROM portfolios WHERE user_id = ? ORDER BY created_at DESC",
+                [user_id],
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT id, name, description, created_at FROM portfolios ORDER BY created_at DESC"
+            ).fetchall()
 
         portfolios = []
         for r in rows:
@@ -609,70 +621,114 @@ class PortfolioService:
         # Get unique tickers
         tickers = list({t[0] for t in trades})
 
-        # Fetch historical prices for holdings
-        batch_prices = self._provider.get_batch_prices(tickers, period=period)
+        # Fetch historical prices for holdings + benchmarks together
+        all_fetch_tickers = list(set(tickers + ["SPY", "QQQ"]))
+        batch_prices = self._provider.get_batch_prices(all_fetch_tickers, period=period)
 
-        # Fetch benchmark (S&P 500)
-        benchmark_df = self._provider.get_daily_prices("^GSPC", period=period)
+        # Build price lookup: ticker -> {date_str: close_price}
+        price_lookup: dict[str, dict[str, float]] = {}
+        all_dates: set[str] = set()
+        for ticker in tickers:
+            price_lookup[ticker] = {}
+            if ticker in batch_prices:
+                for _, row in batch_prices[ticker].iterrows():
+                    d = str(row["date"])[:10]
+                    price_lookup[ticker][d] = float(row["close"])
+                    all_dates.add(d)
 
-        # Build daily portfolio values
+        # Build benchmark lookups from same batch_prices
+        def _build_bench_map(ticker: str) -> dict[str, float]:
+            m: dict[str, float] = {}
+            if ticker in batch_prices and not batch_prices[ticker].empty:
+                for _, row in batch_prices[ticker].iterrows():
+                    m[str(row["date"])[:10]] = float(row["close"])
+            return m
+
+        spy_map = _build_bench_map("SPY")
+        qqq_map = _build_bench_map("QQQ")
+
+        # Sort dates
+        sorted_dates = sorted(d for d in all_dates if d >= str(start_date))
+
+        # Calculate holdings at each date from trades
         points: list[dict] = []
-        current_date = start_date
-        end_date = date.today()
+        for d in sorted_dates:
+            # Accumulate positions from trades up to this date
+            positions: dict[str, dict] = {}
+            for t in trades:
+                t_ticker, t_type, t_qty, t_price, t_comm, t_date = t
+                if str(t_date) > d:
+                    break
+                if t_ticker not in positions:
+                    positions[t_ticker] = {"qty": 0.0, "cost": 0.0}
+                if t_type == "BUY":
+                    positions[t_ticker]["cost"] += t_qty * t_price + (t_comm or 0)
+                    positions[t_ticker]["qty"] += t_qty
+                else:
+                    if positions[t_ticker]["qty"] > 0:
+                        avg = positions[t_ticker]["cost"] / positions[t_ticker]["qty"]
+                        positions[t_ticker]["qty"] -= t_qty
+                        positions[t_ticker]["cost"] = avg * max(0, positions[t_ticker]["qty"])
 
-        # Pre-calculate positions at start_date
-        while current_date <= end_date:
-            current_date += timedelta(days=1)
+            # Value portfolio at this date
+            total_value = 0.0
+            total_cost = 0.0
+            for tkr, pos in positions.items():
+                if pos["qty"] <= 0:
+                    continue
+                total_cost += pos["cost"]
+                price = price_lookup.get(tkr, {}).get(d)
+                if price:
+                    total_value += pos["qty"] * price
+                else:
+                    total_value += pos["cost"]  # fallback to cost if no price
 
-        # Simplified: use snapshots or calculate from trades
-        # For now, return snapshots if available, else estimate
-        snapshots = conn.execute(
-            """
-            SELECT date, total_value, total_cost
-            FROM portfolio_snapshots
-            WHERE portfolio_id = ? AND date >= ?
-            ORDER BY date ASC
-            """,
-            [portfolio_id, start_date],
-        ).fetchall()
+            gain_pct = ((total_value - total_cost) / total_cost * 100) if total_cost > 0 else 0
 
-        if snapshots:
-            for s in snapshots:
-                cost = s[2] or 0
-                value = s[1] or 0
-                gain_pct = ((value - cost) / cost * 100) if cost > 0 else 0
-                points.append({
-                    "date": str(s[0]),
-                    "portfolio_value": round(value, 2),
-                    "total_cost": round(cost, 2),
-                    "gain_pct": round(gain_pct, 2),
-                    "benchmark_pct": None,
-                })
+            points.append({
+                "date": d,
+                "portfolio_value": round(total_value, 2),
+                "total_cost": round(total_cost, 2),
+                "gain_pct": round(gain_pct, 2),
+                "spy_pct": None,
+                "qqq_pct": None,
+            })
 
-        # Add benchmark returns
-        if not benchmark_df.empty and points:
-            bench_first = benchmark_df["close"].iloc[0]
-            bench_map = {}
-            for _, row in benchmark_df.iterrows():
-                if bench_first and bench_first != 0:
-                    bench_map[row["date"]] = round(
-                        ((row["close"] - bench_first) / bench_first) * 100, 2
-                    )
+        # Add benchmark returns (normalized to first date)
+        if sorted_dates and points:
+            spy_first = spy_map.get(sorted_dates[0])
+            qqq_first = qqq_map.get(sorted_dates[0])
             for p in points:
-                p["benchmark_pct"] = bench_map.get(p["date"])
+                d = p["date"]
+                if spy_first and spy_first != 0:
+                    spy_val = spy_map.get(d)
+                    if spy_val:
+                        p["spy_pct"] = round(((spy_val - spy_first) / spy_first) * 100, 2)
+                if qqq_first and qqq_first != 0:
+                    qqq_val = qqq_map.get(d)
+                    if qqq_val:
+                        p["qqq_pct"] = round(((qqq_val - qqq_first) / qqq_first) * 100, 2)
 
         total_return_pct = points[-1]["gain_pct"] if points else 0.0
-        benchmark_return_pct = None
-        if not benchmark_df.empty and len(benchmark_df) >= 2:
-            b_first = benchmark_df["close"].iloc[0]
-            b_last = benchmark_df["close"].iloc[-1]
-            if b_first and b_first != 0:
-                benchmark_return_pct = round(((b_last - b_first) / b_first) * 100, 2)
+
+        # Calculate final benchmark returns from maps
+        def _calc_return_from_map(m: dict[str, float], dates: list[str]) -> float | None:
+            if not m or not dates:
+                return None
+            first = m.get(dates[0])
+            last = m.get(dates[-1])
+            if first and last and first != 0:
+                return round(((last - first) / first) * 100, 2)
+            return None
+
+        spy_return_pct = _calc_return_from_map(spy_map, sorted_dates)
+        qqq_return_pct = _calc_return_from_map(qqq_map, sorted_dates)
 
         return {
             "points": points,
             "total_return_pct": total_return_pct,
-            "benchmark_return_pct": benchmark_return_pct,
+            "spy_return_pct": spy_return_pct,
+            "qqq_return_pct": qqq_return_pct,
         }
 
     # --- Dividends ---

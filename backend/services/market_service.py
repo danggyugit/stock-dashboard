@@ -15,6 +15,21 @@ from providers.data_provider import MarketDataProvider
 
 logger = logging.getLogger(__name__)
 
+# yfinance sector names → GICS standard sector names
+_SECTOR_NORMALIZE: dict[str, str] = {
+    "Technology": "Information Technology",
+    "Healthcare": "Health Care",
+    "Financial Services": "Financials",
+    "Consumer Cyclical": "Consumer Discretionary",
+    "Consumer Defensive": "Consumer Staples",
+    "Basic Materials": "Materials",
+    "Communication Services": "Communication Services",
+    "Real Estate": "Real Estate",
+    "Industrials": "Industrials",
+    "Energy": "Energy",
+    "Utilities": "Utilities",
+}
+
 
 class MarketService:
     """Service layer for market data operations."""
@@ -22,6 +37,82 @@ class MarketService:
     def __init__(self) -> None:
         """Initialize MarketService with data provider."""
         self._provider = MarketDataProvider()
+        self._prices_cached_at: datetime | None = None
+
+    def _get_cached_or_fetch_prices(
+        self, tickers: list[str], period: str, conn,
+    ) -> dict[str, pd.DataFrame]:
+        """Return batch prices from DuckDB cache if fresh, else fetch and cache.
+
+        Args:
+            tickers: List of ticker symbols.
+            period: Price period for change calculation.
+            conn: DuckDB connection.
+
+        Returns:
+            Dictionary mapping ticker to price DataFrame.
+        """
+        settings = get_settings()
+
+        # Check cache freshness using fetch timestamp
+        cache_fresh = False
+        if self._prices_cached_at:
+            cache_age = (datetime.now() - self._prices_cached_at).total_seconds()
+            cache_fresh = cache_age < settings.MARKET_DATA_TTL
+
+        if not cache_fresh and self._prices_cached_at is None:
+            # On first request after server start, check if DB has cached data
+            row_count = conn.execute("SELECT COUNT(*) FROM daily_prices").fetchone()[0]
+            if row_count > 0:
+                self._prices_cached_at = datetime.now()
+                cache_fresh = True
+
+        if cache_fresh:
+            logger.info("Using cached daily_prices.")
+            result: dict[str, pd.DataFrame] = {}
+            cached_df = conn.execute("""
+                SELECT ticker, date, open, high, low, close, volume
+                FROM daily_prices
+                ORDER BY ticker, date
+            """).fetchdf()
+            if not cached_df.empty:
+                for ticker, group in cached_df.groupby("ticker"):
+                    result[str(ticker)] = group.reset_index(drop=True)
+            return result
+
+        # Fetch fresh data
+        logger.info("Cache stale or empty, fetching batch prices for %d tickers.", len(tickers))
+        batch_prices = self._provider.get_batch_prices(tickers, period=period)
+
+        # Persist to daily_prices cache
+        if batch_prices:
+            # Clear old cache and write fresh data
+            conn.execute("DELETE FROM daily_prices")
+            for ticker, df in batch_prices.items():
+                if df.empty:
+                    continue
+                for _, row in df.iterrows():
+                    try:
+                        conn.execute(
+                            """INSERT OR REPLACE INTO daily_prices
+                               (ticker, date, open, high, low, close, volume)
+                               VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                            [
+                                ticker,
+                                row["date"],
+                                float(row["open"]) if pd.notna(row["open"]) else None,
+                                float(row["high"]) if pd.notna(row["high"]) else None,
+                                float(row["low"]) if pd.notna(row["low"]) else None,
+                                float(row["close"]) if pd.notna(row["close"]) else None,
+                                int(row["volume"]) if pd.notna(row["volume"]) else None,
+                            ],
+                        )
+                    except Exception:
+                        pass
+            logger.info("Cached %d tickers to daily_prices.", len(batch_prices))
+
+        self._prices_cached_at = datetime.now()
+        return batch_prices
 
     def get_heatmap_data(self, period: str = "1d") -> dict:
         """Generate sector-grouped heatmap data.
@@ -53,9 +144,9 @@ class MarketService:
         if stocks_df.empty:
             return {"sectors": [], "period": period, "updated_at": None}
 
-        # Get price changes - fetch batch prices for top stocks by market cap
-        top_tickers = stocks_df["ticker"].head(200).tolist()
-        batch_prices = self._provider.get_batch_prices(top_tickers, period=period)
+        # Get price changes - use cached data or fetch
+        all_tickers = stocks_df["ticker"].tolist()
+        batch_prices = self._get_cached_or_fetch_prices(all_tickers, period, conn)
 
         # Build heatmap sectors
         sectors: dict[str, dict] = {}
@@ -77,10 +168,15 @@ class MarketService:
             if ticker in batch_prices:
                 price_df = batch_prices[ticker]
                 if not price_df.empty and len(price_df) >= 2:
-                    first_close = price_df["close"].iloc[0]
+                    if period == "1d":
+                        # For daily change: compare previous close vs latest close
+                        ref_close = price_df["close"].iloc[-2]
+                    else:
+                        # For longer periods: compare first close vs latest close
+                        ref_close = price_df["close"].iloc[0]
                     last_close = price_df["close"].iloc[-1]
-                    if first_close and first_close != 0:
-                        change_pct = round(((last_close - first_close) / first_close) * 100, 2)
+                    if ref_close and ref_close != 0:
+                        change_pct = round(((last_close - ref_close) / ref_close) * 100, 2)
                     price = last_close
                     volume = int(price_df["volume"].iloc[-1]) if pd.notna(price_df["volume"].iloc[-1]) else None
                 elif not price_df.empty:
@@ -94,7 +190,7 @@ class MarketService:
                 "ticker": ticker,
                 "name": row["name"],
                 "market_cap": mkt_cap,
-                "price": round(price, 2) if price is not None else None,
+                "price": round(float(price), 2) if price is not None and pd.notna(price) else None,
                 "change_pct": change_pct,
                 "volume": volume,
             })
@@ -310,6 +406,16 @@ class MarketService:
                 return self._build_stock_detail_from_cache(ticker, conn)
             return None
 
+        # Normalize yfinance sector name to GICS standard
+        raw_sector = info.get("sector")
+        normalized_sector = _SECTOR_NORMALIZE.get(raw_sector, raw_sector)
+
+        # Prefer existing GICS sector from Wikipedia if already in DB
+        if cached:
+            existing_sector = cached[2] if len(cached) > 2 else None  # sector column
+            if existing_sector and normalized_sector != existing_sector:
+                normalized_sector = existing_sector
+
         # Update stocks table
         conn.execute(
             """
@@ -319,7 +425,7 @@ class MarketService:
             [
                 ticker,
                 info.get("name", ticker),
-                info.get("sector"),
+                normalized_sector,
                 info.get("industry"),
                 info.get("market_cap"),
                 info.get("exchange"),
@@ -640,5 +746,26 @@ class MarketService:
             except Exception:
                 logger.warning("Failed to insert stock %s.", row["ticker"])
 
-        logger.info("Refreshed market data: %d stocks updated.", inserted)
-        return {"status": "ok", "message": f"Updated {inserted} stocks", "count": inserted}
+        # Batch-fetch market caps
+        logger.info("Fetching market caps for %d stocks...", len(tickers))
+        market_caps = self._provider.get_batch_market_caps(tickers)
+        cap_updated = 0
+        for ticker, cap in market_caps.items():
+            try:
+                conn.execute(
+                    "UPDATE stocks SET market_cap = ? WHERE ticker = ?",
+                    [cap, ticker],
+                )
+                cap_updated += 1
+            except Exception:
+                logger.warning("Failed to update market cap for %s.", ticker)
+
+        logger.info(
+            "Refreshed market data: %d stocks updated, %d market caps fetched.",
+            inserted, cap_updated,
+        )
+        return {
+            "status": "ok",
+            "message": f"Updated {inserted} stocks, {cap_updated} market caps",
+            "count": inserted,
+        }
