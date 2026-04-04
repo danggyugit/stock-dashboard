@@ -138,6 +138,7 @@ def init_db() -> None:
             id           INTEGER PRIMARY KEY,
             name         VARCHAR NOT NULL,
             description  VARCHAR,
+            user_id      INTEGER,
             created_at   TIMESTAMP DEFAULT current_timestamp
         )
     """)
