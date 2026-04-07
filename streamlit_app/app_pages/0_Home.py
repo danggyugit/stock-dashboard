@@ -522,6 +522,8 @@ else:
         WB_LOGOUT_BTN_WIDTH  = "100%" # button width inside its column
         WB_LOGOUT_RADIUS     = 10     # button radius (px)
         WB_LOGOUT_FONT       = 13     # button font size (px)
+        WB_LOGOUT_ALIGN      = "flex-end"  # horizontal: "flex-start"=left | "center" | "flex-end"=right
+        WB_LOGOUT_OFFSET_X   = 0      # horizontal shift (px) — negative=left, positive=right
         WB_LOGOUT_LABEL      = "⇥ Sign out"  # button text
 
         # Inject the dynamic CSS for this section
@@ -568,6 +570,8 @@ else:
             min-height: {WB_LOGOUT_HEIGHT}px !important;
             max-height: {WB_LOGOUT_HEIGHT}px !important;
             width: {WB_LOGOUT_BTN_WIDTH} !important;
+            max-width: none !important;
+            margin-left: {WB_LOGOUT_OFFSET_X}px !important;
             border-radius: {WB_LOGOUT_RADIUS}px !important;
             font-size: {WB_LOGOUT_FONT}px !important;
             padding: 0 12px !important;
@@ -576,6 +580,13 @@ else:
             color: #34D399 !important;
             font-weight: 600 !important;
             transition: all 0.15s !important;
+        }}
+        /* Horizontal alignment within the column + allow overflow */
+        div.st-key-welcome_banner div.st-key-home_logout,
+        div.st-key-welcome_banner div.st-key-home_logout [data-testid="stButton"] {{
+            display: flex !important;
+            justify-content: {WB_LOGOUT_ALIGN} !important;
+            overflow: visible !important;
         }}
         div.st-key-welcome_banner div.st-key-home_logout button:hover,
         div.st-key-home_logout button:hover {{
