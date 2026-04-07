@@ -43,21 +43,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install yfinance pandas requests lxml
 
-      - name: Fetch cache (heatmap + stocks always; fundamentals only on first daily run)
+      - name: Fetch cache (heatmap + stocks only — fundamentals fetched locally)
         run: |
-          # Determine if we should fetch fundamentals
-          # - Always on workflow_dispatch (user-triggered)
-          # - Only on the 06:30 KST run (21:30 UTC) on cron
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            EXTRA_ARGS="--fundamentals"
-          elif [ "$(date -u +%H)" = "21" ]; then
-            EXTRA_ARGS="--fundamentals"
-          else
-            EXTRA_ARGS=""
-          fi
-          echo "Running with: $EXTRA_ARGS"
+          # NOTE: yfinance .info (quoteSummary endpoint) is blocked from
+          # GitHub Actions data center IPs (returns 0/1500 tickers).
+          # Fundamentals are fetched manually from a residential IP via the
+          # local Windows Task Scheduler — see scripts/fetch_cache.py for
+          # the --fundamentals flag.
+          # This workflow only refreshes prices + market caps (heatmap).
+          echo "Running prices/heatmap only (fundamentals via local cron)"
           cd streamlit_app
-          python scripts/fetch_cache.py $EXTRA_ARGS
+          python scripts/fetch_cache.py
 
       - name: Commit and push if changed
         run: |

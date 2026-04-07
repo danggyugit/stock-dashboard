@@ -216,7 +216,7 @@ st.caption(f"{len(filtered)} stocks found")
 
 # Build display columns
 base_cols = ["ticker", "name", "sector"]
-fund_cols = ["market_cap", "pe_ratio", "pb_ratio", "dividend_yield",
+fund_cols = ["current_price", "market_cap", "pe_ratio", "pb_ratio", "dividend_yield",
              "eps", "roe", "beta", "debt_to_equity", "avg_volume"]
 display_cols = base_cols + [c for c in fund_cols if c in filtered.columns]
 
@@ -224,6 +224,7 @@ display_df = filtered[display_cols].copy()
 
 # Format display values
 fmt_map = {
+    "current_price": lambda x: f"${x:,.2f}" if pd.notna(x) else "",
     "market_cap": lambda x: f"${x / 1e9:.1f}B" if pd.notna(x) and x >= 1e9
                   else f"${x / 1e6:.0f}M" if pd.notna(x) else "",
     "dividend_yield": lambda x: f"{x * 100:.2f}%" if pd.notna(x) else "",

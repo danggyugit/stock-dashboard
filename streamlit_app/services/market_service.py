@@ -530,47 +530,106 @@ def get_fundamentals_cache_status() -> dict:
 
 
 def get_screener_from_cache() -> pd.DataFrame:
-    """Load screener data. Prefers GitHub cache, falls back to SQLite."""
-    # 1. Try GitHub cache first
-    from services.cache_loader import get_cached_stocks, get_cached_fundamentals
+    """Load screener data with hybrid update model.
+
+    - Slow data (EPS, ROE, debt/equity, beta, book value, dividend rate)
+      comes from fundamentals.json — quarterly cadence is fine
+    - Fast data (current_price, market_cap) comes from heatmap.json —
+      refreshed 4x daily by GitHub Actions
+    - Price-dependent ratios (P/E, P/B, P/S, dividend yield) are
+      RECOMPUTED from current price + cached quarterly fundamentals
+      so they reflect today's price, not a stale snapshot
+    """
+    from services.cache_loader import (
+        get_cached_stocks, get_cached_fundamentals, get_cached_heatmap,
+    )
     stocks_cache = get_cached_stocks()
     funds_cache = get_cached_fundamentals()
+    heatmap = get_cached_heatmap()
 
-    if stocks_cache:
-        rows = []
-        funds_dict = (funds_cache or {}).get("tickers", {}) if funds_cache else {}
-        for s in stocks_cache:
-            ticker = s["ticker"]
-            f = funds_dict.get(ticker, {})
-            rows.append({
-                "ticker": ticker,
-                "name": s["name"],
-                "sector": s["sector"],
-                "industry": s["industry"],
-                "market_cap": f.get("market_cap"),
-                "pe_ratio": f.get("pe_ratio"),
-                "pb_ratio": f.get("pb_ratio"),
-                "ps_ratio": f.get("ps_ratio"),
-                "eps": f.get("eps"),
-                "roe": f.get("roe"),
-                "debt_to_equity": f.get("debt_to_equity"),
-                "dividend_yield": f.get("dividend_yield"),
-                "beta": f.get("beta"),
-                "fifty_two_week_high": f.get("fifty_two_week_high"),
-                "fifty_two_week_low": f.get("fifty_two_week_low"),
-                "avg_volume": f.get("avg_volume"),
-            })
-        # Also enrich market_cap from heatmap cache (more reliable)
-        from services.cache_loader import get_cached_heatmap
-        heatmap = get_cached_heatmap()
-        if heatmap and heatmap.get("tickers"):
-            ticker_caps = {t: info.get("market_cap") for t, info in heatmap["tickers"].items()}
-            for r in rows:
-                if not r.get("market_cap") and r["ticker"] in ticker_caps:
-                    r["market_cap"] = ticker_caps[r["ticker"]]
-        return pd.DataFrame(rows).sort_values("market_cap", ascending=False, na_position="last").reset_index(drop=True)
+    if not stocks_cache:
+        return _screener_from_sqlite()
 
-    # 2. Fall back to SQLite/Turso
+    funds_dict = (funds_cache or {}).get("tickers", {}) if funds_cache else {}
+    heatmap_tickers = (heatmap or {}).get("tickers", {}) if heatmap else {}
+
+    rows = []
+    for s in stocks_cache:
+        ticker = s["ticker"]
+        f = funds_dict.get(ticker, {})
+        hm = heatmap_tickers.get(ticker, {})
+
+        # --- Current price (from heatmap cache) ---
+        prices = hm.get("prices") or []
+        current_price = None
+        if prices:
+            for p in reversed(prices):
+                if p.get("close") is not None:
+                    current_price = float(p["close"])
+                    break
+
+        # --- Quarterly fundamentals (slow, from fundamentals.json) ---
+        eps = f.get("eps")
+        book_value = f.get("book_value")
+        revenue_per_share = f.get("revenue_per_share")
+        annual_dividend = f.get("trailing_annual_dividend_rate")
+        roe = f.get("roe")
+        debt_to_equity = f.get("debt_to_equity")
+        beta = f.get("beta")
+
+        # --- Price-derived ratios (RECOMPUTED with today's price) ---
+        if current_price is not None and eps and eps > 0:
+            pe_ratio = round(current_price / eps, 2)
+        else:
+            pe_ratio = f.get("pe_ratio")  # fallback to cached value
+
+        if current_price is not None and book_value and book_value > 0:
+            pb_ratio = round(current_price / book_value, 2)
+        else:
+            pb_ratio = f.get("pb_ratio")
+
+        if current_price is not None and revenue_per_share and revenue_per_share > 0:
+            ps_ratio = round(current_price / revenue_per_share, 2)
+        else:
+            ps_ratio = f.get("ps_ratio")
+
+        if current_price is not None and annual_dividend and annual_dividend > 0:
+            dividend_yield = round(annual_dividend / current_price, 4)
+        else:
+            dividend_yield = f.get("dividend_yield")
+
+        # --- Market cap: prefer heatmap (fresher) ---
+        market_cap = hm.get("market_cap") or f.get("market_cap")
+
+        rows.append({
+            "ticker": ticker,
+            "name": s["name"],
+            "sector": s["sector"],
+            "industry": s["industry"],
+            "current_price": current_price,
+            "market_cap": market_cap,
+            "pe_ratio": pe_ratio,
+            "pb_ratio": pb_ratio,
+            "ps_ratio": ps_ratio,
+            "eps": eps,
+            "roe": roe,
+            "debt_to_equity": debt_to_equity,
+            "dividend_yield": dividend_yield,
+            "beta": beta,
+            "fifty_two_week_high": f.get("fifty_two_week_high"),
+            "fifty_two_week_low": f.get("fifty_two_week_low"),
+            "avg_volume": f.get("avg_volume"),
+        })
+
+    return (
+        pd.DataFrame(rows)
+        .sort_values("market_cap", ascending=False, na_position="last")
+        .reset_index(drop=True)
+    )
+
+
+def _screener_from_sqlite() -> pd.DataFrame:
+    """SQLite/Turso fallback for screener data."""
     conn = get_connection()
     rows = conn.execute("""
         SELECT s.ticker, s.name, s.sector, s.industry, s.market_cap,

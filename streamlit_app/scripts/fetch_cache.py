@@ -163,40 +163,79 @@ def fetch_market_caps(tickers: list[str]) -> dict[str, int]:
     return result
 
 
-def fetch_fundamentals(tickers: list[str]) -> dict[str, dict]:
-    """Fetch fundamentals via yf.Ticker(t).info concurrently."""
-    logger.info("Fetching fundamentals for %d tickers...", len(tickers))
+def fetch_fundamentals(tickers: list[str], max_count: int | None = None) -> dict[str, dict]:
+    """Fetch fundamentals via yf.Ticker(t).info — sequential to avoid Yahoo's
+    crumb authentication race condition.
+
+    Yahoo's quoteSummary API (used by .info) requires a per-session crumb cookie.
+    Concurrent requests trigger 'Invalid Crumb' 401 errors. Sequential calls with
+    a shared curl_cffi browser-impersonating session work reliably.
+
+    Args:
+        tickers: list of tickers to fetch
+        max_count: optional cap (for limiting universe to e.g. top 500)
+
+    Returns:
+        dict {ticker: fundamentals_dict}
+    """
+    if max_count:
+        tickers = tickers[:max_count]
+
+    logger.info("Fetching fundamentals for %d tickers (sequential)...", len(tickers))
+
+    # Shared browser-impersonating session — bypasses Yahoo's bot detection
+    try:
+        from curl_cffi import requests as cf_requests
+        session = cf_requests.Session(impersonate="chrome")
+        logger.info("Using curl_cffi Chrome session.")
+    except ImportError:
+        session = None
+        logger.warning("curl_cffi not available, using default session.")
+
     result: dict[str, dict] = {}
+    consecutive_errors = 0
+    delay = 0.8  # base delay between requests (sec)
 
-    def _fetch_one(t: str) -> tuple[str, dict | None]:
+    for i, ticker in enumerate(tickers):
         try:
-            info = yf.Ticker(t).info
-            if not info:
-                return t, None
-            return t, {
-                "pe_ratio": info.get("trailingPE"),
-                "pb_ratio": info.get("priceToBook"),
-                "ps_ratio": info.get("priceToSalesTrailing12Months"),
-                "eps": info.get("trailingEps"),
-                "roe": info.get("returnOnEquity"),
-                "debt_to_equity": info.get("debtToEquity"),
-                "dividend_yield": info.get("dividendYield"),
-                "beta": info.get("beta"),
-                "fifty_two_week_high": info.get("fiftyTwoWeekHigh"),
-                "fifty_two_week_low": info.get("fiftyTwoWeekLow"),
-                "avg_volume": info.get("averageVolume"),
-            }
-        except Exception:
-            return t, None
+            t = yf.Ticker(ticker, session=session) if session else yf.Ticker(ticker)
+            info = t.info
+            if info and len(info) > 5:
+                result[ticker] = {
+                    "pe_ratio": info.get("trailingPE"),
+                    "pb_ratio": info.get("priceToBook"),
+                    "ps_ratio": info.get("priceToSalesTrailing12Months"),
+                    "eps": info.get("trailingEps"),
+                    "roe": info.get("returnOnEquity"),
+                    "debt_to_equity": info.get("debtToEquity"),
+                    "dividend_yield": info.get("dividendYield"),
+                    "beta": info.get("beta"),
+                    "fifty_two_week_high": info.get("fiftyTwoWeekHigh"),
+                    "fifty_two_week_low": info.get("fiftyTwoWeekLow"),
+                    "avg_volume": info.get("averageVolume"),
+                    "shares_outstanding": info.get("sharesOutstanding"),
+                    "book_value": info.get("bookValue"),
+                    "trailing_annual_dividend_rate": info.get("trailingAnnualDividendRate"),
+                    "revenue_per_share": info.get("revenuePerShare"),
+                }
+                consecutive_errors = 0
+            else:
+                consecutive_errors += 1
+        except Exception as e:
+            consecutive_errors += 1
+            if "RateLimit" in type(e).__name__ or "Too Many" in str(e):
+                wait = min(60, 5 * (2 ** min(consecutive_errors, 4)))
+                logger.warning("Rate limited at %s. Backing off %ds...", ticker, wait)
+                time.sleep(wait)
+            elif consecutive_errors >= 20:
+                logger.error("20 consecutive errors at %s — aborting.", ticker)
+                break
 
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        futures = {executor.submit(_fetch_one, t): t for t in tickers}
-        for i, future in enumerate(as_completed(futures)):
-            t, info = future.result()
-            if info:
-                result[t] = info
-            if (i + 1) % 50 == 0:
-                logger.info("  Progress: %d/%d", i + 1, len(tickers))
+        time.sleep(delay)
+
+        if (i + 1) % 25 == 0:
+            logger.info("  Progress: %d/%d (got %d)", i + 1, len(tickers), len(result))
+
     logger.info("Got fundamentals for %d/%d tickers.", len(result), len(tickers))
     return result
 
@@ -248,8 +287,18 @@ def main() -> int:
         write_json("heatmap.json", heatmap)
 
         # 3. Fundamentals (slower, optional flag)
-        if "--fundamentals" in sys.argv:
-            funds = fetch_fundamentals(tickers)
+        # Default cap at top 500 by market cap (S&P 500-ish) to keep runtime
+        # under ~10 min and reduce Yahoo rate-limit risk. Override with
+        # --fundamentals-all to fetch the full S&P 1500 universe.
+        if "--fundamentals" in sys.argv or "--fundamentals-all" in sys.argv:
+            # Sort tickers by market cap desc so the top N are the most valuable
+            sorted_tickers = sorted(
+                tickers,
+                key=lambda t: caps.get(t) or 0,
+                reverse=True,
+            )
+            cap_n = None if "--fundamentals-all" in sys.argv else 500
+            funds = fetch_fundamentals(sorted_tickers, max_count=cap_n)
             fund_data = {
                 "updated_at": now_iso,
                 "tickers": funds,
