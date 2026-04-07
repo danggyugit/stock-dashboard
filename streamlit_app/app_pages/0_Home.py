@@ -7,7 +7,8 @@ import streamlit as st
 from services.auth_service import (
     is_logged_in, get_or_create_user, claim_legacy_data,
 )
-from services.market_service import get_indices
+from services.market_service import get_indices, get_heatmap_data
+from services.portfolio_service import get_portfolios, get_holdings
 
 # ═══════════════════════════════════════════════════════════
 # CSS — hero, cards, gradients
@@ -497,6 +498,95 @@ else:
                 if st.button("Ignore (start fresh)"):
                     st.info("You can claim them later by visiting this page again.")
 
+        # ═══════════════════════════════════════════════════
+        # MY PORTFOLIO SUMMARY (logged in users only)
+        # ═══════════════════════════════════════════════════
+        try:
+            portfolios = get_portfolios(user_id=user["id"])
+        except Exception:
+            portfolios = []
+
+        if portfolios:
+            st.markdown(
+                '<div class="section-h">💼 My Portfolio</div>',
+                unsafe_allow_html=True,
+            )
+
+            # Aggregate across all user's portfolios
+            total_value = 0.0
+            total_cost = 0.0
+            all_holdings: list[dict] = []
+            for p in portfolios:
+                try:
+                    h_data = get_holdings(p["id"])
+                except Exception:
+                    continue
+                if h_data and h_data.get("holdings"):
+                    all_holdings.extend(h_data["holdings"])
+                    total_value += h_data.get("total_value", 0)
+                    total_cost += h_data.get("total_cost", 0)
+
+            gain = total_value - total_cost
+            gain_pct = (gain / total_cost * 100) if total_cost else 0
+            num_positions = len(all_holdings)
+            num_portfolios = len(portfolios)
+
+            # Find top gainer & loser within holdings
+            top_gainer = None
+            top_loser = None
+            for h in all_holdings:
+                pct = h.get("unrealized_gain_pct")
+                if pct is None:
+                    continue
+                if top_gainer is None or pct > top_gainer["unrealized_gain_pct"]:
+                    top_gainer = h
+                if top_loser is None or pct < top_loser["unrealized_gain_pct"]:
+                    top_loser = h
+
+            # 4 metric cards
+            mc1, mc2, mc3, mc4 = st.columns(4)
+            with mc1:
+                st.metric(
+                    "Total Value",
+                    f"${total_value:,.0f}" if total_value else "$0",
+                )
+            with mc2:
+                st.metric(
+                    "Unrealized P&L",
+                    f"${gain:+,.0f}" if gain else "$0",
+                    delta=f"{gain_pct:+.2f}%" if gain_pct else None,
+                )
+            with mc3:
+                st.metric(
+                    "Positions",
+                    f"{num_positions}",
+                    help=f"{num_portfolios} portfolio(s)",
+                )
+            with mc4:
+                if top_gainer:
+                    st.metric(
+                        f"Top: {top_gainer['ticker']}",
+                        f"${top_gainer.get('current_price', 0):,.2f}",
+                        delta=f"{top_gainer.get('unrealized_gain_pct', 0):+.2f}%",
+                    )
+                else:
+                    st.metric("Top Position", "—")
+
+            # Quick link to full portfolio page
+            if st.button(
+                "→ Open full Portfolio page",
+                key="goto_portfolio",
+                use_container_width=True,
+            ):
+                st.switch_page("app_pages/5_Portfolio.py")
+        else:
+            # No portfolios yet — encourage them to create one
+            st.info(
+                "📁 You don't have any portfolios yet. "
+                "[Create your first portfolio →](javascript:void(0))",
+                icon="💡",
+            )
+
 
 # ═══════════════════════════════════════════════════════════
 # MARKET INDICES
@@ -518,6 +608,121 @@ if indices:
                 value=f"{price:,.2f}" if price else "N/A",
                 delta=delta_str,
             )
+
+
+# ═══════════════════════════════════════════════════════════
+# TOP MOVERS (S&P 1500) — from cached heatmap data
+# ═══════════════════════════════════════════════════════════
+try:
+    hm_data = get_heatmap_data("1d")
+    all_stocks = []
+    for sector in hm_data.get("sectors", []):
+        for stock in sector.get("stocks", []):
+            if stock.get("change_pct") is not None and stock.get("price"):
+                all_stocks.append(stock)
+except Exception:
+    all_stocks = []
+
+if all_stocks:
+    all_stocks.sort(key=lambda x: x["change_pct"], reverse=True)
+    top_gainers = all_stocks[:5]
+    top_losers = all_stocks[-5:][::-1]
+
+    st.markdown(
+        '<div class="section-h">🔥 Top Movers (Today)</div>',
+        unsafe_allow_html=True,
+    )
+
+    # Top movers card styling
+    st.markdown("""
+    <style>
+    .mover-card {
+        background: linear-gradient(135deg, rgba(30,41,59,0.7), rgba(15,23,42,0.5));
+        border-left: 4px solid;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.15s;
+    }
+    .mover-card:hover {
+        transform: translateX(3px);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+    }
+    .mover-up   { border-left-color: #10B981; }
+    .mover-down { border-left-color: #EF4444; }
+    .mover-logo {
+        width: 32px; height: 32px;
+        border-radius: 6px;
+        background: white;
+        padding: 3px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+    .mover-info { flex: 1; min-width: 0; }
+    .mover-ticker { font-size: 14px; font-weight: 700; color: #F8FAFC; }
+    .mover-name {
+        font-size: 11px;
+        color: #94A3B8;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .mover-stats { text-align: right; flex-shrink: 0; }
+    .mover-price { font-size: 12px; color: #CBD5E1; }
+    .mover-change { font-size: 13px; font-weight: 700; }
+    .mover-change-up   { color: #10B981; }
+    .mover-change-down { color: #EF4444; }
+    .mover-section-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #CBD5E1;
+        margin-bottom: 8px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    def _render_mover(stock: dict, is_up: bool) -> str:
+        ticker = stock["ticker"]
+        name = (stock.get("name") or ticker)[:24]
+        change = stock.get("change_pct") or 0
+        price = stock.get("price")
+        arrow = "▲" if is_up else "▼"
+        card_cls = "mover-up" if is_up else "mover-down"
+        chg_cls = "mover-change-up" if is_up else "mover-change-down"
+        logo_url = f"https://assets.parqet.com/logos/symbol/{ticker}?format=png"
+        price_str = f"${price:,.2f}" if price else ""
+        return f"""
+        <div class="mover-card {card_cls}">
+            <img src="{logo_url}" class="mover-logo" onerror="this.style.display='none'"/>
+            <div class="mover-info">
+                <div class="mover-ticker">{ticker}</div>
+                <div class="mover-name">{name}</div>
+            </div>
+            <div class="mover-stats">
+                <div class="mover-price">{price_str}</div>
+                <div class="mover-change {chg_cls}">{arrow} {change:+.2f}%</div>
+            </div>
+        </div>
+        """
+
+    col_g, col_l = st.columns(2)
+    with col_g:
+        st.markdown(
+            '<div class="mover-section-title">📈 Top 5 Gainers</div>',
+            unsafe_allow_html=True,
+        )
+        gainers_html = "".join(_render_mover(s, True) for s in top_gainers)
+        st.markdown(gainers_html, unsafe_allow_html=True)
+    with col_l:
+        st.markdown(
+            '<div class="mover-section-title">📉 Top 5 Losers</div>',
+            unsafe_allow_html=True,
+        )
+        losers_html = "".join(_render_mover(s, False) for s in top_losers)
+        st.markdown(losers_html, unsafe_allow_html=True)
 
 
 # ═══════════════════════════════════════════════════════════
