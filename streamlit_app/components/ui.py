@@ -33,59 +33,10 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 
 /* st.navigation handles sidebar order — Account, nav menu, Status render in code order */
 
-/* ============================================ */
-/* Sidebar nav items styled as buttons          */
-/* Streamlit uses li > a structure (or div)     */
-/* ============================================ */
-
-/* Bigger font for nav items */
+/* Sidebar nav font size: 14px -> 16px (no button styling) */
 [data-testid="stSidebarNav"] span,
 [data-testid="stSidebarNavItems"] span {
     font-size: 16px !important;
-}
-
-/* Button-like style on each nav item (cover both <a> and <li>) */
-[data-testid="stSidebarNav"] li,
-[data-testid="stSidebarNavItems"] li {
-    list-style: none !important;
-    margin: 4px 8px !important;
-}
-[data-testid="stSidebarNav"] li > a,
-[data-testid="stSidebarNav"] li > div,
-[data-testid="stSidebarNavItems"] li > a,
-[data-testid="stSidebarNavItems"] li > div {
-    background: rgba(30, 41, 59, 0.6) !important;
-    border: 1px solid rgba(59, 130, 246, 0.2) !important;
-    border-radius: 8px !important;
-    padding: 8px 12px !important;
-    transition: all 0.15s ease !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-}
-[data-testid="stSidebarNav"] li > a:hover,
-[data-testid="stSidebarNav"] li > div:hover,
-[data-testid="stSidebarNavItems"] li > a:hover,
-[data-testid="stSidebarNavItems"] li > div:hover {
-    background: rgba(59, 130, 246, 0.2) !important;
-    border-color: rgba(59, 130, 246, 0.6) !important;
-    transform: translateX(2px) !important;
-}
-/* Active (currently selected) */
-[data-testid="stSidebarNav"] li > a[aria-current="page"],
-[data-testid="stSidebarNav"] li > div[aria-current="page"],
-[data-testid="stSidebarNavItems"] li > a[aria-current="page"],
-[data-testid="stSidebarNavItems"] li > div[aria-current="page"] {
-    background: rgba(59, 130, 246, 0.35) !important;
-    border-color: rgba(59, 130, 246, 0.8) !important;
-    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.25) !important;
-}
-[data-testid="stSidebarNav"] li > a[aria-current="page"] span,
-[data-testid="stSidebarNav"] li > div[aria-current="page"] span,
-[data-testid="stSidebarNavItems"] li > a[aria-current="page"] span,
-[data-testid="stSidebarNavItems"] li > div[aria-current="page"] span {
-    color: #F8FAFC !important;
-    font-weight: 700 !important;
 }
 
 /* ============================================ */
@@ -288,21 +239,21 @@ def render_sidebar_info() -> None:
 <style>
 .sb-status {{ margin-top: 14px; padding: 0 4px; }}
 .sb-status .title {{
-    font-size: 16px; font-weight: 700; color: #F8FAFC;
-    margin: 0 0 6px 0;
+    font-size: 18px; font-weight: 700; color: #F8FAFC;
+    margin: 0 0 8px 0;
 }}
 .sb-status .market {{
-    font-size: 12px; font-weight: 600; color: #F8FAFC;
-    padding: 2px 0 6px 0;
+    font-size: 14px; font-weight: 600; color: #F8FAFC;
+    padding: 2px 0 8px 0;
 }}
 .sb-status .row {{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 11px;
+    font-size: 13px;
     color: #94A3B8;
-    padding: 2px 0;
-    line-height: 1.4;
+    padding: 3px 0;
+    line-height: 1.5;
 }}
 .sb-status .row .val {{
     color: #F8FAFC;
