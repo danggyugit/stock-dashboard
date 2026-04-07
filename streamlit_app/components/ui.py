@@ -49,7 +49,12 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 header[data-testid="stHeader"] {
     background: transparent !important;
 }
-/* Hide only the right-side action elements (Deploy, Manage app, ...) */
+/* Hide the Streamlit Cloud host toolbar buttons (Share / Star / Edit / GitHub)
+   — they live in stToolbarActions, separate from the sidebar expand button */
+[data-testid="stToolbarActions"] {
+    display: none !important;
+}
+/* Hide the right-side action elements (Deploy, Manage app, ...) */
 [data-testid="stHeaderActionElements"] {
     display: none !important;
 }
