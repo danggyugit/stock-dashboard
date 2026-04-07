@@ -1,7 +1,7 @@
 """Economic calendar service for Streamlit app."""
 
 import logging
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import requests
 import streamlit as st
@@ -112,9 +112,8 @@ def _get_builtin_events(from_date: str, to_date: str) -> list[dict]:
     return sorted(events, key=lambda x: x["event_date"])
 
 
-@st.cache_data(ttl=86400, show_spinner="Loading earnings calendar...")
-def get_earnings_events(from_date: str, to_date: str) -> list[dict]:
-    """Get earnings calendar from Finnhub (SDK first, then REST fallback)."""
+def _fetch_earnings_chunk(from_iso: str, to_iso: str) -> list[dict]:
+    """Fetch a single earnings chunk from Finnhub (no caching)."""
     events: list[dict] = []
 
     # Try SDK first
@@ -122,14 +121,14 @@ def get_earnings_events(from_date: str, to_date: str) -> list[dict]:
     if client:
         try:
             data = client.earnings_calendar(
-                _from=from_date, to=to_date, symbol="", international=False,
+                _from=from_iso, to=to_iso, symbol="", international=False,
             )
             raw = data.get("earningsCalendar", [])
             events = [
                 {
                     "ticker": ev.get("symbol", ""),
                     "company_name": None,
-                    "earnings_date": ev.get("date", from_date),
+                    "earnings_date": ev.get("date", from_iso),
                     "eps_estimate": ev.get("epsEstimate"),
                     "eps_actual": ev.get("epsActual"),
                     "revenue_estimate": ev.get("revenueEstimate"),
@@ -147,7 +146,7 @@ def get_earnings_events(from_date: str, to_date: str) -> list[dict]:
             try:
                 resp = requests.get(
                     "https://finnhub.io/api/v1/calendar/earnings",
-                    params={"from": from_date, "to": to_date, "token": key},
+                    params={"from": from_iso, "to": to_iso, "token": key},
                     timeout=15,
                 )
                 if resp.status_code == 200:
@@ -157,7 +156,7 @@ def get_earnings_events(from_date: str, to_date: str) -> list[dict]:
                         {
                             "ticker": ev.get("symbol", ""),
                             "company_name": None,
-                            "earnings_date": ev.get("date", from_date),
+                            "earnings_date": ev.get("date", from_iso),
                             "eps_estimate": ev.get("epsEstimate"),
                             "eps_actual": ev.get("epsActual"),
                             "revenue_estimate": ev.get("revenueEstimate"),
@@ -168,11 +167,39 @@ def get_earnings_events(from_date: str, to_date: str) -> list[dict]:
             except Exception:
                 logger.exception("Finnhub REST earnings call failed.")
 
-    # Last fallback: yfinance earnings for major stocks
-    if not events:
-        events = _get_yfinance_earnings(from_date, to_date)
-
     return events
+
+
+@st.cache_data(ttl=86400, show_spinner="Loading earnings calendar...")
+def get_earnings_events(from_date: str, to_date: str) -> list[dict]:
+    """Get earnings calendar from Finnhub.
+
+    Finnhub free plan caps responses at ~1500 rows per request, which
+    silently truncates wide date ranges. We chunk by 7-day windows and
+    merge to avoid the cap.
+    """
+    from_d = date.fromisoformat(from_date)
+    to_d = date.fromisoformat(to_date)
+
+    all_events: list[dict] = []
+    seen: set[tuple[str, str]] = set()
+
+    chunk_start = from_d
+    while chunk_start <= to_d:
+        chunk_end = min(chunk_start + timedelta(days=6), to_d)
+        chunk = _fetch_earnings_chunk(chunk_start.isoformat(), chunk_end.isoformat())
+        for ev in chunk:
+            key = (ev.get("ticker", ""), (ev.get("earnings_date") or "")[:10])
+            if key not in seen:
+                seen.add(key)
+                all_events.append(ev)
+        chunk_start = chunk_end + timedelta(days=1)
+
+    # Last fallback: yfinance earnings for major stocks
+    if not all_events:
+        all_events = _get_yfinance_earnings(from_date, to_date)
+
+    return all_events
 
 
 def _get_yfinance_earnings(from_date: str, to_date: str) -> list[dict]:
