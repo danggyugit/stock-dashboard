@@ -1,0 +1,31 @@
+# Secrets and credentials
+.streamlit/secrets.toml
+.env
+*.key
+credentials*.json
+
+# Data
+data/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.duckdb
+*.duckdb.wal
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
