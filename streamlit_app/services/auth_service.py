@@ -149,7 +149,7 @@ def render_user_sidebar() -> None:
     .st-key-logout_btn button {
         padding: 0 !important;
         min-height: 0 !important;
-        height: 56px !important;
+        height: 40px !important;
         width: 100% !important;
         background: rgba(148,163,184,0.10) !important;
         border: 1px solid rgba(148,163,184,0.25) !important;
@@ -168,7 +168,7 @@ def render_user_sidebar() -> None:
     }
     .st-key-logout_btn button p {
         margin: 0 !important;
-        font-size: 20px !important;
+        font-size: 16px !important;
         line-height: 1 !important;
     }
     /* Compact account heading */

@@ -73,8 +73,8 @@ st.markdown("""
     background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.10));
     border: 1px solid rgba(16,185,129,0.3);
     border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 16px;
+    padding: 14px 20px;
+    margin-bottom: 0;
     display: flex;
     align-items: center;
     gap: 14px;
@@ -98,6 +98,32 @@ st.markdown("""
     font-size: 0.85rem;
     color: #94A3B8;
     margin: 2px 0 0 0;
+}
+.welcome-logout-wrap {
+    margin-left: auto;
+}
+/* Inline logout button matching the welcome banner */
+div.st-key-home_logout button {
+    background: rgba(16,185,129,0.12) !important;
+    border: 1px solid rgba(16,185,129,0.4) !important;
+    color: #34D399 !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    height: 76px !important;
+    width: 100% !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    transition: all 0.15s !important;
+}
+div.st-key-home_logout button:hover {
+    background: rgba(16,185,129,0.22) !important;
+    border-color: rgba(16,185,129,0.7) !important;
+    color: #6EE7B7 !important;
+    transform: none !important;
+}
+div.st-key-home_logout button p {
+    margin: 0 !important;
+    font-size: 13px !important;
 }
 
 /* Quick action cards */
@@ -474,7 +500,12 @@ else:
             </div>
         </div>
         """
-        st.markdown(welcome_html, unsafe_allow_html=True)
+        wcol_banner, wcol_logout = st.columns([7, 1], vertical_alignment="center")
+        with wcol_banner:
+            st.markdown(welcome_html, unsafe_allow_html=True)
+        with wcol_logout:
+            if st.button("⇥ Sign out", key="home_logout"):
+                st.logout()
 
         # Legacy data claim
         from database import get_connection
