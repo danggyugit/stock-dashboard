@@ -205,7 +205,17 @@ st.markdown(hero_html, unsafe_allow_html=True)
 # LOGIN / WELCOME
 # ═══════════════════════════════════════════════════════════
 if not is_logged_in():
-    # Big Google Sign-in button styling — covers entire column
+    # ═══════════════════════════════════════════════════════
+    # 🎨 GOOGLE SIGN-IN BUTTON — adjust these values freely
+    # ═══════════════════════════════════════════════════════
+    BTN_HEIGHT      = 285   # button height in px (match table height)
+    BTN_RADIUS      = 16    # corner radius
+    LOGO_SIZE       = 100   # Google logo size (px)
+    LOGO_TOP        = 40    # logo distance from top (px)
+    TEXT_SIZE       = 28    # "Sign in with Google" font size (px)
+    TEXT_BOTTOM     = 50    # text distance from bottom (px)
+    # ═══════════════════════════════════════════════════════
+
     google_svg = (
         "data:image/svg+xml;utf8,"
         "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'>"
@@ -220,26 +230,25 @@ if not is_logged_in():
 
     st.markdown(f"""
     <style>
-    /* Force button container to match table height (~285px) */
+    /* Force button container to match table height */
     div.st-key-google_signin,
     div.st-key-google_signin > div,
     div.st-key-google_signin [data-testid="stButton"],
     div.st-key-google_signin [data-testid="stButton"] > div {{
         position: relative !important;
         width: 100% !important;
-        height: 285px !important;
+        height: {BTN_HEIGHT}px !important;
     }}
 
     .st-key-google_signin button {{
         background: linear-gradient(135deg, #4285F4 0%, #1A73E8 100%) !important;
         color: #FFFFFF !important;
         border: none !important;
-        border-radius: 16px !important;
+        border-radius: {BTN_RADIUS}px !important;
         font-family: "Google Sans", Roboto, Arial, sans-serif !important;
         font-weight: 700 !important;
-        font-size: 32px !important;
-        height: 285px !important;
-        min-height: 285px !important;
+        height: {BTN_HEIGHT}px !important;
+        min-height: {BTN_HEIGHT}px !important;
         width: 100% !important;
         min-width: 100% !important;
         box-shadow: 0 10px 40px rgba(66,133,244,0.45) !important;
@@ -258,32 +267,32 @@ if not is_logged_in():
     .st-key-google_signin button:active {{
         transform: translateY(0) !important;
     }}
-    /* Google logo — always visible pseudo */
+    /* Google logo — always visible pseudo-element */
     .st-key-google_signin button::before {{
         content: "" !important;
         position: absolute !important;
-        top: 40px !important;
+        top: {LOGO_TOP}px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        width: 100px !important;
-        height: 100px !important;
+        width: {LOGO_SIZE}px !important;
+        height: {LOGO_SIZE}px !important;
         background-image: url("{google_svg}") !important;
         background-size: contain !important;
         background-repeat: no-repeat !important;
         background-position: center !important;
         pointer-events: none !important;
     }}
-    /* Button text — high specificity for font size */
+    /* Button text */
     div.st-key-google_signin button p,
     div.st-key-google_signin button div p,
     .st-key-google_signin button > div p {{
         color: #FFFFFF !important;
         font-weight: 700 !important;
-        font-size: 28px !important;
+        font-size: {TEXT_SIZE}px !important;
         line-height: 1 !important;
         margin: 0 !important;
         position: absolute !important;
-        bottom: 50px !important;
+        bottom: {TEXT_BOTTOM}px !important;
         left: 0 !important;
         right: 0 !important;
         text-align: center !important;
