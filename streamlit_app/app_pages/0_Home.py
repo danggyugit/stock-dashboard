@@ -988,28 +988,29 @@ with pulse_col3:
 # ═══════════════════════════════════════════════════════════
 # QUICK ACTIONS
 # ═══════════════════════════════════════════════════════════
-st.markdown('<div class="section-h">⚡ Quick Actions</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-h">Quick Actions</div>', unsafe_allow_html=True)
 
-# Define quick actions: (path, icon, title, description)
+# Define quick actions: (path, material_icon, title, description)
+# Icons mirror the sidebar navigation in app.py
 if is_logged_in():
     actions = [
-        ("app_pages/5_Portfolio.py",    "💼", "My Portfolio",   "Track holdings, performance & taxes"),
-        ("app_pages/10_Watchlist.py",   "⭐", "Watchlist",      "Get notified on price moves"),
-        ("app_pages/2_AI_Quant_Lab.py", "🧠", "AI Quant Lab",   "Run ML-based backtests"),
-        ("app_pages/3_Heatmap.py",      "🗺️", "Market Heatmap", "S&P 1500 sector view"),
-        ("app_pages/4_Stock_Detail.py", "📈", "Stock Search",   "Charts + fundamentals"),
-        ("app_pages/8_Screener.py",     "🔍", "Screener",       "Filter by valuation, momentum"),
-        ("app_pages/9_Compare.py",      "⚖️", "Compare",        "Side-by-side comparison"),
-        ("app_pages/6_Sentiment.py",    "🧭", "Sentiment",      "Fear & Greed + news"),
+        ("app_pages/5_Portfolio.py",    "folder",         "My Portfolio",   "Track holdings, performance & taxes"),
+        ("app_pages/10_Watchlist.py",   "star",           "Watchlist",      "Get notified on price moves"),
+        ("app_pages/2_AI_Quant_Lab.py", "science",        "AI Quant Lab",   "Run ML-based backtests"),
+        ("app_pages/3_Heatmap.py",      "grid_view",      "Market Heatmap", "S&P 1500 sector view"),
+        ("app_pages/4_Stock_Detail.py", "show_chart",     "Stock Search",   "Charts + fundamentals"),
+        ("app_pages/8_Screener.py",     "filter_alt",     "Screener",       "Filter by valuation, momentum"),
+        ("app_pages/9_Compare.py",      "compare_arrows", "Compare",        "Side-by-side comparison"),
+        ("app_pages/6_Sentiment.py",    "psychology",     "Sentiment",      "Fear & Greed + news"),
     ]
 else:
     actions = [
-        ("app_pages/3_Heatmap.py",      "🗺️", "Heatmap",       "S&P 1500 sector treemap"),
-        ("app_pages/4_Stock_Detail.py", "📈", "Stock Search",   "Charts + fundamentals"),
-        ("app_pages/8_Screener.py",     "🔍", "Screener",       "Filter stocks"),
-        ("app_pages/9_Compare.py",      "⚖️", "Compare",        "Compare 2-5 stocks"),
-        ("app_pages/6_Sentiment.py",    "🧭", "Sentiment",      "Fear & Greed + news"),
-        ("app_pages/7_Calendar.py",     "📅", "Calendar",       "Earnings & economic events"),
+        ("app_pages/3_Heatmap.py",      "grid_view",      "Heatmap",       "S&P 1500 sector treemap"),
+        ("app_pages/4_Stock_Detail.py", "show_chart",     "Stock Search",  "Charts + fundamentals"),
+        ("app_pages/8_Screener.py",     "filter_alt",     "Screener",      "Filter stocks"),
+        ("app_pages/9_Compare.py",      "compare_arrows", "Compare",       "Compare 2-5 stocks"),
+        ("app_pages/6_Sentiment.py",    "psychology",     "Sentiment",     "Fear & Greed + news"),
+        ("app_pages/7_Calendar.py",     "calendar_month", "Calendar",      "Earnings & economic events"),
     ]
 
 # Render as button grid
@@ -1017,10 +1018,10 @@ n_cols = 4
 for row_start in range(0, len(actions), n_cols):
     cols = st.columns(n_cols)
     for i, action in enumerate(actions[row_start:row_start + n_cols]):
-        page_path, icon, title, desc = action
+        page_path, mat_icon, title, desc = action
         with cols[i]:
             if st.button(
-                f"{icon}  {title}\n\n{desc}",
+                f":material/{mat_icon}: **{title}**\n\n{desc}",
                 key=f"qa_{page_path}",
                 use_container_width=True,
             ):

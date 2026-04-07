@@ -26,7 +26,7 @@ render_user_sidebar()
 
 # --- Page navigation ---
 PAGES = [
-    st.Page("app_pages/0_Home.py", title="app", icon=":material/home:"),
+    st.Page("app_pages/0_Home.py", title="Home", icon=":material/home:"),
     st.Page("app_pages/1_Dashboard.py", title="Dashboard", icon=":material/dashboard:"),
     st.Page("app_pages/2_AI_Quant_Lab.py", title="AI Quant Lab", icon=":material/science:"),
     st.Page("app_pages/3_Heatmap.py", title="Heatmap", icon=":material/grid_view:"),
