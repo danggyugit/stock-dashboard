@@ -157,10 +157,12 @@ def render_user_sidebar() -> None:
 
     # Logout button — independent from profile because Streamlit wraps
     # the button in extra divs that add their own height
-    SB_LOGOUT_HEIGHT   = 13     # logout button height (px) — tweak to match profile visually
-    SB_LOGOUT_RADIUS   = 8      # logout button border radius (px)
-    SB_LOGOUT_FONT     = 16     # logout icon size (px)
-    SB_LOGOUT_LABEL    = "⇥"    # button text/icon
+    SB_LOGOUT_HEIGHT     = 50      # logout button height (px) — tweak to match profile visually
+    SB_LOGOUT_BTN_WIDTH  = "120%"  # button width: "100%" | "120%" | "60px" etc.
+    SB_LOGOUT_RADIUS     = 8       # logout button border radius (px)
+    SB_LOGOUT_FONT       = 16      # logout icon size (px)
+    SB_LOGOUT_OFFSET_X   = 0       # horizontal shift in px (negative=left, positive=right)
+    SB_LOGOUT_LABEL      = "⇥"     # button text/icon
 
     # Subtle gray logout button
     # NOTE: We boost selector specificity (extra [data-testid] prefixes) to
@@ -177,7 +179,9 @@ def render_user_sidebar() -> None:
         min-height: 0 !important;
         height: {SB_LOGOUT_HEIGHT}px !important;
         max-height: {SB_LOGOUT_HEIGHT}px !important;
-        width: 100% !important;
+        width: {SB_LOGOUT_BTN_WIDTH} !important;
+        max-width: none !important;
+        margin-left: {SB_LOGOUT_OFFSET_X}px !important;
         background: rgba(148,163,184,0.10) !important;
         border: 1px solid rgba(148,163,184,0.25) !important;
         color: #94A3B8 !important;
@@ -186,6 +190,11 @@ def render_user_sidebar() -> None:
         align-items: center !important;
         justify-content: center !important;
         transition: all 0.15s !important;
+    }}
+    /* Allow the button to overflow its column when SB_LOGOUT_BTN_WIDTH > 100% */
+    [data-testid="stSidebar"] div.st-key-logout_btn,
+    [data-testid="stSidebar"] div.st-key-logout_btn [data-testid="stButton"] {{
+        overflow: visible !important;
     }}
     [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] div.st-key-logout_btn button:hover,
     .st-key-logout_btn button:hover {{
