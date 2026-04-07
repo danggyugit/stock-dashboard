@@ -40,7 +40,8 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 }
 
 /* ============================================ */
-/* Hide Streamlit Cloud toolbar                  */
+/* Hide Streamlit Cloud toolbar (but keep header  */
+/* so the sidebar collapse button works on mobile) */
 /* ============================================ */
 [data-testid="stToolbar"] {
     visibility: hidden !important;
@@ -49,11 +50,34 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 }
 header[data-testid="stHeader"] {
     background: transparent !important;
-    height: 0 !important;
 }
 #MainMenu { visibility: hidden !important; }
 footer { visibility: hidden !important; }
 .stDeployButton { display: none !important; }
+
+/* Ensure the sidebar collapse/expand button is visible on mobile.
+   It lives in the header — hiding the header used to hide it too. */
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"],
+button[kind="header"][data-testid="baseButton-headerNoPadding"] {
+    visibility: visible !important;
+    display: flex !important;
+    z-index: 999999 !important;
+}
+
+/* On desktop the sidebar is always open so the header can shrink.
+   On mobile (<= 768px) keep the header tall enough to hold the
+   collapse button. */
+@media (min-width: 769px) {
+    header[data-testid="stHeader"] {
+        height: 0 !important;
+    }
+}
+@media (max-width: 768px) {
+    header[data-testid="stHeader"] {
+        min-height: 48px !important;
+    }
+}
 
 /* Metric card hover + glow effect */
 [data-testid="stMetric"] {
