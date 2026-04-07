@@ -1034,7 +1034,9 @@ QA_CARD_HEIGHT     = 110   # button height in px
 QA_CARD_RADIUS     = 12    # corner radius in px
 QA_PAD_X           = 18    # left/right padding in px
 QA_PAD_Y           = 16    # top/bottom padding in px
-QA_VALIGN          = "center"  # "flex-start" | "center" | "flex-end"
+QA_VALIGN          = "center"  # vertical:   "flex-start" | "center" | "flex-end"
+QA_HALIGN          = "center"  # horizontal: "flex-start" | "center" | "flex-end"
+QA_TEXT_ALIGN      = "center"  # text-align: "left" | "center" | "right"
 
 QA_TITLE_SIZE      = 15    # title font size (px)
 QA_TITLE_WEIGHT    = 600   # title font weight
@@ -1058,7 +1060,7 @@ st.markdown(f"""
     border-radius: {QA_CARD_RADIUS}px !important;
     padding: {QA_PAD_Y}px {QA_PAD_X}px !important;
     height: {QA_CARD_HEIGHT}px !important;
-    text-align: left !important;
+    text-align: {QA_TEXT_ALIGN} !important;
     transition: all 0.2s ease !important;
     color: {QA_TITLE_COLOR} !important;
     white-space: normal !important;
@@ -1066,7 +1068,7 @@ st.markdown(f"""
     display: flex !important;
     flex-direction: column !important;
     justify-content: {QA_VALIGN} !important;
-    align-items: flex-start !important;
+    align-items: {QA_HALIGN} !important;
 }}
 [data-testid="stHorizontalBlock"] [data-testid="stButton"] button:hover {{
     border-color: rgba(59,130,246,0.6) !important;
@@ -1077,12 +1079,12 @@ st.markdown(f"""
    and stay left-aligned (Streamlit centers them by default) */
 [data-testid="stHorizontalBlock"] [data-testid="stButton"] button [data-testid="stMarkdownContainer"] {{
     width: 100% !important;
-    text-align: left !important;
+    text-align: {QA_TEXT_ALIGN} !important;
 }}
 [data-testid="stHorizontalBlock"] [data-testid="stButton"] button p {{
     color: {QA_TITLE_COLOR} !important;
     margin: 0 !important;
-    text-align: left !important;
+    text-align: {QA_TEXT_ALIGN} !important;
     width: 100% !important;
 }}
 /* First <p> = title (icon + name), second <p> = description */
