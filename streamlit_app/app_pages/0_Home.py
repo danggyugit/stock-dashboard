@@ -9,6 +9,8 @@ from services.auth_service import (
 )
 from services.market_service import get_indices, get_heatmap_data
 from services.portfolio_service import get_portfolios, get_holdings
+from services.sentiment_service import get_fear_greed
+from services.calendar_service import get_earnings_events
 
 # ═══════════════════════════════════════════════════════════
 # CSS — hero, cards, gradients
@@ -736,6 +738,204 @@ if all_stocks:
         )
         losers_html = "".join(_render_mover(s, False) for s in top_losers)
         st.markdown(losers_html, unsafe_allow_html=True)
+
+
+# ═══════════════════════════════════════════════════════════
+# MARKET PULSE — Mini Heatmap + Fear & Greed + Earnings Today
+# ═══════════════════════════════════════════════════════════
+st.markdown('<div class="section-h">🌡️ Market Pulse</div>', unsafe_allow_html=True)
+
+import plotly.express as _px
+import plotly.graph_objects as _go
+import pandas as _pd
+from datetime import date as _date, timedelta as _td
+
+pulse_col1, pulse_col2, pulse_col3 = st.columns([2, 1, 1.3])
+
+# --- Mini Heatmap (sector-level only) ---
+with pulse_col1:
+    st.markdown(
+        '<div style="font-size:13px; font-weight:600; color:#94A3B8; '
+        'margin-bottom:6px;">SECTOR HEATMAP</div>',
+        unsafe_allow_html=True,
+    )
+    try:
+        sectors = (hm_data or {}).get("sectors", [])
+    except NameError:
+        sectors = []
+
+    if sectors:
+        sector_rows = []
+        for s in sectors:
+            avg = s.get("avg_change_pct")
+            cap = s.get("total_market_cap") or 1
+            if avg is not None:
+                sector_rows.append({
+                    "sector": s["name"],
+                    "market_cap": cap,
+                    "change_pct": round(avg, 2),
+                    "label": f"{s['name']}<br>{avg:+.2f}%",
+                })
+        if sector_rows:
+            _df_sec = _pd.DataFrame(sector_rows)
+            mini_fig = _px.treemap(
+                _df_sec,
+                path=["sector"],
+                values="market_cap",
+                color="change_pct",
+                color_continuous_scale=[
+                    "#DC2626", "#991B1B", "#1E293B", "#166534", "#16A34A",
+                ],
+                color_continuous_midpoint=0,
+                custom_data=["change_pct"],
+            )
+            mini_fig.update_traces(
+                texttemplate="<b>%{label}</b><br>%{customdata[0]:+.2f}%",
+                textfont=dict(size=14),
+                hovertemplate="<b>%{label}</b><br>Avg: %{customdata[0]:+.2f}%<extra></extra>",
+            )
+            mini_fig.update_layout(
+                height=260,
+                margin=dict(l=0, r=0, t=0, b=0),
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                coloraxis_showscale=False,
+            )
+            st.plotly_chart(mini_fig, use_container_width=True)
+        else:
+            st.caption("No heatmap data.")
+    else:
+        st.caption("Heatmap cache empty. Visit Heatmap page to refresh.")
+
+# --- Fear & Greed gauge ---
+with pulse_col2:
+    st.markdown(
+        '<div style="font-size:13px; font-weight:600; color:#94A3B8; '
+        'margin-bottom:6px;">FEAR &amp; GREED</div>',
+        unsafe_allow_html=True,
+    )
+    try:
+        fg = get_fear_greed()
+        score = fg.get("score", 50)
+        label = fg.get("label", "Neutral")
+    except Exception:
+        score = 50
+        label = "Unavailable"
+
+    gauge_fig = _go.Figure(_go.Indicator(
+        mode="gauge+number",
+        value=score,
+        number={"font": {"size": 36, "color": "#F8FAFC"}},
+        gauge={
+            "axis": {"range": [0, 100], "tickwidth": 1, "tickcolor": "#94A3B8"},
+            "bar": {"color": "#3B82F6", "thickness": 0.25},
+            "bgcolor": "rgba(0,0,0,0)",
+            "borderwidth": 0,
+            "steps": [
+                {"range": [0, 20],   "color": "#DC2626"},
+                {"range": [20, 40],  "color": "#F97316"},
+                {"range": [40, 60],  "color": "#EAB308"},
+                {"range": [60, 80],  "color": "#84CC16"},
+                {"range": [80, 100], "color": "#22C55E"},
+            ],
+            "threshold": {
+                "line": {"color": "white", "width": 3},
+                "thickness": 0.75,
+                "value": score,
+            },
+        },
+    ))
+    gauge_fig.update_layout(
+        height=200,
+        margin=dict(l=10, r=10, t=10, b=10),
+        paper_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#F8FAFC"),
+    )
+    st.plotly_chart(gauge_fig, use_container_width=True)
+    label_color = (
+        "#22C55E" if score >= 60 else
+        "#DC2626" if score <= 40 else "#EAB308"
+    )
+    st.markdown(
+        f'<div style="text-align:center; font-size:14px; font-weight:700; '
+        f'color:{label_color}; margin-top:-10px;">{label}</div>',
+        unsafe_allow_html=True,
+    )
+
+# --- Earnings This Week ---
+with pulse_col3:
+    st.markdown(
+        '<div style="font-size:13px; font-weight:600; color:#94A3B8; '
+        'margin-bottom:6px;">EARNINGS THIS WEEK</div>',
+        unsafe_allow_html=True,
+    )
+    try:
+        today = _date.today()
+        week_end = today + _td(days=7)
+        earnings = get_earnings_events(today.isoformat(), week_end.isoformat())
+    except Exception:
+        earnings = []
+
+    if earnings:
+        # Sort by date
+        earnings_sorted = sorted(
+            earnings, key=lambda x: x.get("earnings_date", "")
+        )[:7]
+
+        st.markdown("""
+        <style>
+        .earn-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: rgba(30,41,59,0.5);
+            border-left: 3px solid #60A5FA;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        .earn-logo {
+            width: 22px; height: 22px;
+            border-radius: 4px;
+            background: white;
+            padding: 2px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .earn-ticker {
+            font-weight: 700;
+            color: #F8FAFC;
+            min-width: 50px;
+        }
+        .earn-date {
+            color: #94A3B8;
+            font-size: 11px;
+            margin-left: auto;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        items_html = ""
+        for ev in earnings_sorted:
+            ticker = ev.get("ticker", "")
+            ev_date = ev.get("earnings_date", "")
+            try:
+                dt = _date.fromisoformat(ev_date[:10])
+                date_str = dt.strftime("%a %m/%d")
+            except Exception:
+                date_str = ev_date[:10]
+            logo = f"https://assets.parqet.com/logos/symbol/{ticker}?format=png"
+            items_html += f"""
+            <div class="earn-item">
+                <img src="{logo}" class="earn-logo" onerror="this.style.display='none'"/>
+                <span class="earn-ticker">{ticker}</span>
+                <span class="earn-date">{date_str}</span>
+            </div>
+            """
+        st.markdown(items_html, unsafe_allow_html=True)
+    else:
+        st.caption("No earnings data this week.")
 
 
 # ═══════════════════════════════════════════════════════════
