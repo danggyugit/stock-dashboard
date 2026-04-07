@@ -275,7 +275,7 @@ if not is_logged_in():
     }}
 
     /* Plan comparison table */
-    .plan-table {
+    .plan-table {{
         margin-top: 16px;
         border-collapse: separate;
         border-spacing: 0;
@@ -283,46 +283,46 @@ if not is_logged_in():
         border-radius: 10px;
         overflow: hidden;
         border: 1px solid rgba(59,130,246,0.2);
-    }
-    .plan-table th {
+    }}
+    .plan-table th {{
         font-size: 13px;
         font-weight: 700;
         padding: 12px 14px;
         text-align: left;
         background: rgba(30,41,59,0.8);
         border-bottom: 1px solid rgba(59,130,246,0.25);
-    }
-    .plan-table th.feature-col { color: #F8FAFC; width: 50%; }
-    .plan-table th.public-col {
+    }}
+    .plan-table th.feature-col {{ color: #F8FAFC; width: 50%; }}
+    .plan-table th.public-col {{
         color: #94A3B8;
         text-align: center;
         width: 25%;
-    }
-    .plan-table th.personal-col {
+    }}
+    .plan-table th.personal-col {{
         color: #60A5FA;
         text-align: center;
         width: 25%;
         background: rgba(59,130,246,0.15);
-    }
-    .plan-table td {
+    }}
+    .plan-table td {{
         padding: 9px 14px;
         font-size: 13px;
         color: #CBD5E1;
         border-bottom: 1px solid rgba(148,163,184,0.08);
-    }
-    .plan-table td.feature {
+    }}
+    .plan-table td.feature {{
         font-weight: 500;
-    }
-    .plan-table td.check {
+    }}
+    .plan-table td.check {{
         text-align: center;
         font-size: 16px;
-    }
-    .plan-table td.check.yes { color: #10B981; }
-    .plan-table td.check.no { color: #475569; }
-    .plan-table td.personal-cell {
+    }}
+    .plan-table td.check.yes {{ color: #10B981; }}
+    .plan-table td.check.no {{ color: #475569; }}
+    .plan-table td.personal-cell {{
         background: rgba(59,130,246,0.06);
-    }
-    .plan-table tr:last-child td { border-bottom: none; }
+    }}
+    .plan-table tr:last-child td {{ border-bottom: none; }}
     </style>
     """, unsafe_allow_html=True)
 
