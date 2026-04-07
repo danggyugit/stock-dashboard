@@ -2848,8 +2848,8 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
 
         st.markdown("---")
 
-        # ── Row 2: 핵심 파라미터 + 실행 버튼 ──────────────
-        c1, c2, c3, c4, c5 = st.columns([2, 2, 2, 2, 1])
+        # ── Row 2: 핵심 파라미터 ──────────────────────────
+        c1, c2, c3, c4 = st.columns(4)
         with c1:
             rebal_m = st.slider(
                 "리밸런싱 기간 (개월)", 1, 12, 1, 1,
@@ -2868,11 +2868,31 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
                 value=0.3, step=0.05, format="%.2f",
                 help="왕복 총 거래비용 (수수료 + 슬리피지)",
             )
-        with c5:
-            st.markdown("<br>", unsafe_allow_html=True)
-            run_btn = st.button("🚀 실행", type="primary", use_container_width=True)
 
-        # ── Row 3: 고급 설정 (Ver3.5/3.6) ─────────────────────
+        # ── Row 3: 날짜 설정 ────────────────────────────────
+        st.markdown("---")
+        # 유의미한 백테스트: rolling_win + min_test_periods 개 리밸런싱 날짜 필요
+        # 날짜 수 = rolling_w + MIN_TEST + 1 (마지막 날짜는 forward return 종료점)
+        MIN_TEST    = 5   # 최소 테스트(예측) 횟수
+        auto_months = (rolling_w + MIN_TEST) * rebal_m + 12  # +12개월 지표 warm-up
+        auto_end    = datetime.today()
+        auto_start  = auto_end - timedelta(days=int(auto_months * 30.5))
+
+        use_custom = st.checkbox("날짜 직접 입력", value=False)
+        if use_custom:
+            dc1, dc2 = st.columns(2)
+            sd = dc1.date_input("시작일", value=auto_start.date())
+            ed = dc2.date_input("종료일", value=auto_end.date(), min_value=sd)
+        else:
+            sd = auto_start.date()
+            ed = auto_end.date()
+            st.info(
+                f"📅 자동 설정: **{sd}** ~ **{ed}** "
+                f"(약 {auto_months}개월 | 최소 {MIN_TEST}회 테스트 보장 | "
+                f"리밸런싱 1회 = {rebal_m}개월)"
+            )
+
+        # ── Row 4: 고급 설정 (Ver3.5/3.6) ─────────────────────
         st.markdown("---")
         st.markdown("**🔬 고급 설정**")
         ac1, ac2, ac3 = st.columns(3)
@@ -2908,27 +2928,14 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
                 help="3개 모델의 예측을 평균하여 안정적인 종목 선정. 해제 시 RF 단일 모델 사용.",
             )
 
-        # ── Row 4: 날짜 설정 ────────────────────────────────
+        # ── Row 5: 실행 버튼 (맨 아래) ─────────────────────
         st.markdown("---")
-        # 유의미한 백테스트: rolling_win + min_test_periods 개 리밸런싱 날짜 필요
-        # 날짜 수 = rolling_w + MIN_TEST + 1 (마지막 날짜는 forward return 종료점)
-        MIN_TEST    = 5   # 최소 테스트(예측) 횟수
-        auto_months = (rolling_w + MIN_TEST) * rebal_m + 12  # +12개월 지표 warm-up
-        auto_end    = datetime.today()
-        auto_start  = auto_end - timedelta(days=int(auto_months * 30.5))
-
-        use_custom = st.checkbox("날짜 직접 입력", value=False)
-        if use_custom:
-            dc1, dc2 = st.columns(2)
-            sd = dc1.date_input("시작일", value=auto_start.date())
-            ed = dc2.date_input("종료일", value=auto_end.date(), min_value=sd)
-        else:
-            sd = auto_start.date()
-            ed = auto_end.date()
-            st.info(
-                f"📅 자동 설정: **{sd}** ~ **{ed}** "
-                f"(약 {auto_months}개월 | 최소 {MIN_TEST}회 테스트 보장 | "
-                f"리밸런싱 1회 = {rebal_m}개월)"
+        rb1, rb2, rb3 = st.columns([1, 2, 1])
+        with rb2:
+            run_btn = st.button(
+                "🚀 백테스트 실행",
+                type="primary",
+                use_container_width=True,
             )
 
     return {
