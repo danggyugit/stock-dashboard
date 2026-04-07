@@ -53,36 +53,44 @@ header[data-testid="stHeader"] {
 [data-testid="stToolbar"] {
     display: none !important;
 }
+[data-testid="stHeaderActionElements"] {
+    display: none !important;
+}
 #MainMenu { display: none !important; }
 footer { visibility: hidden !important; }
 .stDeployButton { display: none !important; }
 
-/* Force-show the sidebar collapse / expand controls with every test-id
-   variant Streamlit has used across versions, so the mobile hamburger
-   is always reachable. */
-[data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"],
-[data-testid="stSidebarCollapseButton"],
-button[kind="header"],
-button[kind="headerNoPadding"],
-[data-testid="baseButton-headerNoPadding"],
-[data-testid="baseButton-header"] {
+/* Force-show the sidebar expand button (Streamlit 1.55+).
+   This is the floating "open sidebar" pill that appears after the
+   sidebar is collapsed — both on desktop after clicking << and on
+   mobile where the sidebar starts collapsed. */
+[data-testid="stExpandSidebarButton"] {
     visibility: visible !important;
     opacity: 1 !important;
     display: flex !important;
     pointer-events: auto !important;
+    position: fixed !important;
+    top: 0.75rem !important;
+    left: 0.75rem !important;
     z-index: 999999 !important;
+    background: rgba(30, 41, 59, 0.95) !important;
+    border: 1px solid rgba(59, 130, 246, 0.5) !important;
+    border-radius: 8px !important;
+    padding: 8px 10px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+[data-testid="stExpandSidebarButton"]:hover {
+    background: rgba(59, 130, 246, 0.2) !important;
+    border-color: rgba(59, 130, 246, 0.8) !important;
 }
 
-/* Floating fallback: if Streamlit positions the collapsed control
-   absolutely, anchor it to the top-left corner where users expect it. */
-[data-testid="stSidebarCollapsedControl"] {
-    position: fixed !important;
-    top: 0.5rem !important;
-    left: 0.5rem !important;
-    background: rgba(15, 23, 42, 0.85) !important;
-    border-radius: 8px !important;
-    padding: 6px !important;
+/* Make sure the collapse button (<<) inside the expanded sidebar
+   is also reachable */
+[data-testid="stSidebarCollapseButton"] {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+    pointer-events: auto !important;
 }
 
 /* Metric card hover + glow effect */
