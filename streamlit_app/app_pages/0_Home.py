@@ -750,7 +750,7 @@ import plotly.graph_objects as _go
 import pandas as _pd
 from datetime import date as _date, timedelta as _td
 
-pulse_col1, pulse_col2, pulse_col3 = st.columns([2, 1, 1.3])
+pulse_col1, pulse_col2, pulse_col3 = st.columns([2, 1, 1.7])
 
 # --- Mini Heatmap (sector-level only) ---
 with pulse_col1:
@@ -908,30 +908,29 @@ with pulse_col3:
     .earn-item {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 5px 10px;
+        gap: 6px;
+        padding: 4px 7px;
         background: rgba(30,41,59,0.5);
-        border-left: 3px solid #60A5FA;
-        border-radius: 6px;
+        border-left: 2px solid #60A5FA;
+        border-radius: 5px;
         margin-bottom: 4px;
-        font-size: 12px;
+        font-size: 11px;
     }
     .earn-logo {
-        width: 20px; height: 20px;
-        border-radius: 4px;
+        width: 16px; height: 16px;
+        border-radius: 3px;
         background: white;
-        padding: 2px;
+        padding: 1px;
         object-fit: contain;
         flex-shrink: 0;
     }
     .earn-ticker {
         font-weight: 700;
         color: #F8FAFC;
-        min-width: 50px;
     }
     .earn-cap {
         color: #94A3B8;
-        font-size: 11px;
+        font-size: 10px;
         margin-left: auto;
     }
     .earn-day-label {
@@ -940,7 +939,8 @@ with pulse_col3:
         color: #60A5FA;
         text-transform: uppercase;
         letter-spacing: 0.5px;
-        margin: 6px 0 4px 0;
+        margin: 0 0 6px 0;
+        text-align: center;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -954,27 +954,35 @@ with pulse_col3:
             return f"${mc / 1e6:.0f}M"
         return "—"
 
-    def _render_group(label: str, rows: list[dict]) -> None:
-        st.markdown(f'<div class="earn-day-label">{label}</div>', unsafe_allow_html=True)
+    def _build_group_html(label: str, rows: list[dict]) -> str:
+        html = f'<div class="earn-day-label">{label}</div>'
         if not rows:
-            st.caption("No major earnings.")
-            return
-        items_html = ""
+            html += '<div style="color:#64748B; font-size:11px; text-align:center;">No major earnings.</div>'
+            return html
         for ev in rows:
             ticker = ev.get("ticker", "")
             cap_str = _fmt_cap(cap_map.get(ticker, 0))
             logo = f"https://assets.parqet.com/logos/symbol/{ticker}?format=png"
-            items_html += f"""
-            <div class="earn-item">
-                <img src="{logo}" class="earn-logo" onerror="this.style.display='none'"/>
-                <span class="earn-ticker">{ticker}</span>
-                <span class="earn-cap">{cap_str}</span>
-            </div>
-            """
-        st.markdown(items_html, unsafe_allow_html=True)
+            html += (
+                f'<div class="earn-item">'
+                f'<img src="{logo}" class="earn-logo" onerror="this.style.display=\'none\'"/>'
+                f'<span class="earn-ticker">{ticker}</span>'
+                f'<span class="earn-cap">{cap_str}</span>'
+                f'</div>'
+            )
+        return html
 
-    _render_group(f"Today · {today.strftime('%a %m/%d')}", today_top)
-    _render_group(f"Tomorrow · {tomorrow.strftime('%a %m/%d')}", tomorrow_top)
+    earn_col_a, earn_col_b = st.columns(2, gap="small")
+    with earn_col_a:
+        st.markdown(
+            _build_group_html(f"Today · {today.strftime('%m/%d')}", today_top),
+            unsafe_allow_html=True,
+        )
+    with earn_col_b:
+        st.markdown(
+            _build_group_html(f"Tomorrow · {tomorrow.strftime('%m/%d')}", tomorrow_top),
+            unsafe_allow_html=True,
+        )
 
 
 # ═══════════════════════════════════════════════════════════
