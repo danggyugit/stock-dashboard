@@ -143,41 +143,57 @@ def render_user_sidebar() -> None:
     if not user:
         return
 
+    # ─────────────────────────────────────────────────────
+    # Sidebar Account — adjustable knobs (edit these numbers!)
+    # ─────────────────────────────────────────────────────
+    SB_PROFILE_WIDTH   = 4      # profile column ratio
+    SB_LOGOUT_WIDTH    = 1      # logout column ratio
+    SB_PROFILE_PAD     = 8      # profile card padding (px)
+    SB_PROFILE_RADIUS  = 8      # profile card border radius (px)
+    SB_AVATAR_SIZE     = 36     # profile avatar diameter (px)
+    SB_NAME_FONT       = 12     # name font size (px)
+    SB_EMAIL_FONT      = 10     # email font size (px)
+
+    SB_LOGOUT_HEIGHT   = 52     # logout button height (px) — match profile card
+    SB_LOGOUT_RADIUS   = 8      # logout button border radius (px)
+    SB_LOGOUT_FONT     = 16     # logout icon size (px)
+    SB_LOGOUT_LABEL    = "⇥"    # button text/icon
+
     # Subtle gray logout button
-    st.sidebar.markdown("""
+    st.sidebar.markdown(f"""
     <style>
-    .st-key-logout_btn button {
+    .st-key-logout_btn button {{
         padding: 0 !important;
         min-height: 0 !important;
-        height: 40px !important;
+        height: {SB_LOGOUT_HEIGHT}px !important;
         width: 100% !important;
         background: rgba(148,163,184,0.10) !important;
         border: 1px solid rgba(148,163,184,0.25) !important;
         color: #94A3B8 !important;
-        border-radius: 8px !important;
+        border-radius: {SB_LOGOUT_RADIUS}px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         transition: all 0.15s !important;
-    }
-    .st-key-logout_btn button:hover {
+    }}
+    .st-key-logout_btn button:hover {{
         background: rgba(148,163,184,0.20) !important;
         border-color: rgba(148,163,184,0.5) !important;
         color: #CBD5E1 !important;
         transform: none !important;
-    }
-    .st-key-logout_btn button p {
+    }}
+    .st-key-logout_btn button p {{
         margin: 0 !important;
-        font-size: 16px !important;
+        font-size: {SB_LOGOUT_FONT}px !important;
         line-height: 1 !important;
-    }
+    }}
     /* Compact account heading */
-    .sidebar-account-block h3 {
+    .sidebar-account-block h3 {{
         margin: 0 0 6px 0 !important;
         padding: 0 !important;
         font-size: 1rem !important;
         border: none !important;
-    }
+    }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -187,21 +203,25 @@ def render_user_sidebar() -> None:
     name = user.get("name") or "User"
     email = user.get("email") or ""
 
-    col_profile, col_logout = st.sidebar.columns([4, 1])
+    col_profile, col_logout = st.sidebar.columns(
+        [SB_PROFILE_WIDTH, SB_LOGOUT_WIDTH],
+        vertical_alignment="center",
+    )
     with col_profile:
         st.markdown(f"""
-        <div style="display:flex; align-items:center; gap:10px; padding:8px;
-                    background:rgba(30,41,59,0.5); border-radius:8px;">
-            <img src="{pic}" style="width:36px;height:36px;border-radius:50%;
-                 object-fit:cover;" onerror="this.style.display='none'"/>
+        <div style="display:flex; align-items:center; gap:10px; padding:{SB_PROFILE_PAD}px;
+                    background:rgba(30,41,59,0.5); border-radius:{SB_PROFILE_RADIUS}px;
+                    height:{SB_LOGOUT_HEIGHT}px; box-sizing:border-box;">
+            <img src="{pic}" style="width:{SB_AVATAR_SIZE}px;height:{SB_AVATAR_SIZE}px;
+                 border-radius:50%; object-fit:cover;" onerror="this.style.display='none'"/>
             <div style="overflow:hidden;min-width:0;">
-                <div style="font-weight:600;color:#F8FAFC;font-size:12px;
+                <div style="font-weight:600;color:#F8FAFC;font-size:{SB_NAME_FONT}px;
                      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name}</div>
-                <div style="font-size:10px;color:#94A3B8;
+                <div style="font-size:{SB_EMAIL_FONT}px;color:#94A3B8;
                      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{email}</div>
             </div>
         </div>
         """, unsafe_allow_html=True)
     with col_logout:
-        if st.button("⇥", key="logout_btn", help="Logout"):
+        if st.button(SB_LOGOUT_LABEL, key="logout_btn", help="Logout"):
             st.logout()
