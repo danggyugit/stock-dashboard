@@ -1,19 +1,211 @@
-"""Home page — landing screen with login + market overview."""
+"""Home page — landing screen with hero, welcome, and quick action cards."""
+
+from datetime import datetime, timedelta, timezone
 
 import streamlit as st
 
-from components.ui import page_header
 from services.auth_service import (
     is_logged_in, get_or_create_user, claim_legacy_data,
 )
+from services.market_service import get_indices
 
-page_header("Stock Dashboard", "Real-time market overview and personal portfolio tracker")
+# ═══════════════════════════════════════════════════════════
+# CSS — hero, cards, gradients
+# ═══════════════════════════════════════════════════════════
+st.markdown("""
+<style>
+/* Hero */
+.hero {
+    background: radial-gradient(ellipse at top left,
+                rgba(59,130,246,0.15) 0%,
+                rgba(15,23,42,0) 60%),
+                radial-gradient(ellipse at bottom right,
+                rgba(168,85,247,0.12) 0%,
+                rgba(15,23,42,0) 60%);
+    border: 1px solid rgba(59,130,246,0.18);
+    border-radius: 16px;
+    padding: 36px 32px;
+    margin-bottom: 24px;
+}
+.hero-title {
+    font-size: 2.6rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60A5FA 0%, #A855F7 50%, #EC4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 8px 0;
+    line-height: 1.1;
+}
+.hero-subtitle {
+    font-size: 1.05rem;
+    color: #CBD5E1;
+    margin: 0 0 4px 0;
+}
+.hero-meta {
+    font-size: 0.85rem;
+    color: #94A3B8;
+    margin-top: 16px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+.hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.hero-meta-item .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
 
-# Login section
+/* Welcome banner (logged in) */
+.welcome-banner {
+    background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.10));
+    border: 1px solid rgba(16,185,129,0.3);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.welcome-avatar {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(16,185,129,0.5);
+}
+.welcome-text {
+    flex: 1;
+}
+.welcome-greet {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #F8FAFC;
+    margin: 0;
+}
+.welcome-sub {
+    font-size: 0.85rem;
+    color: #94A3B8;
+    margin: 2px 0 0 0;
+}
+
+/* Quick action cards */
+.qa-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+}
+.qa-card {
+    background: linear-gradient(135deg, rgba(30,41,59,0.7), rgba(15,23,42,0.5));
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 12px;
+    padding: 18px;
+    text-decoration: none !important;
+    color: inherit !important;
+    transition: all 0.2s ease;
+    display: block;
+    cursor: pointer;
+}
+.qa-card:hover {
+    border-color: rgba(59,130,246,0.6);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(59,130,246,0.18);
+}
+.qa-icon {
+    font-size: 26px;
+    margin-bottom: 8px;
+    display: block;
+}
+.qa-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #F8FAFC;
+    margin: 0 0 4px 0;
+}
+.qa-desc {
+    font-size: 0.78rem;
+    color: #94A3B8;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Section header */
+.section-h {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #F8FAFC;
+    margin: 24px 0 12px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(90deg, #3B82F6, transparent) 1;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+# ═══════════════════════════════════════════════════════════
+# Time & status helpers
+# ═══════════════════════════════════════════════════════════
+def _get_market_state() -> tuple[str, str, str]:
+    """Return (label, color, dot_color) for current US market state."""
+    ny = datetime.now(timezone.utc) + timedelta(hours=-4)
+    weekday = ny.weekday()
+    minutes = ny.hour * 60 + ny.minute
+
+    if weekday >= 5:
+        return "Market Closed (Weekend)", "#94A3B8", "#94A3B8"
+    if 570 <= minutes < 960:  # 9:30 - 16:00 ET
+        return "Market Open", "#10B981", "#10B981"
+    if minutes < 570:
+        return "Pre-Market", "#F59E0B", "#F59E0B"
+    return "After Hours", "#A855F7", "#A855F7"
+
+
+# ═══════════════════════════════════════════════════════════
+# HERO SECTION
+# ═══════════════════════════════════════════════════════════
+now_kst = datetime.now()
+ny_now = datetime.now(timezone.utc) + timedelta(hours=-4)
+market_label, market_color, dot_color = _get_market_state()
+
+hero_html = f"""
+<div class="hero">
+    <h1 class="hero-title">AI Quant Lab Dashboard</h1>
+    <p class="hero-subtitle">Track stocks, run AI backtests, and manage your portfolio — all in one place.</p>
+    <div class="hero-meta">
+        <div class="hero-meta-item">
+            <span class="dot" style="background:{dot_color};"></span>
+            <span style="color:{market_color}; font-weight:600;">{market_label}</span>
+        </div>
+        <div class="hero-meta-item">
+            🇰🇷 KST {now_kst.strftime('%H:%M')}
+        </div>
+        <div class="hero-meta-item">
+            🗽 NY {ny_now.strftime('%H:%M')}
+        </div>
+        <div class="hero-meta-item">
+            📅 {now_kst.strftime('%Y-%m-%d (%a)')}
+        </div>
+    </div>
+</div>
+"""
+st.markdown(hero_html, unsafe_allow_html=True)
+
+
+# ═══════════════════════════════════════════════════════════
+# LOGIN / WELCOME
+# ═══════════════════════════════════════════════════════════
 if not is_logged_in():
-    st.markdown("---")
-
-    # Google Sign-in button styling — dark theme with 4-color logo
+    # Google Sign-in button styling
     st.markdown("""
     <style>
     .st-key-google_signin button {
@@ -38,11 +230,6 @@ if not is_logged_in():
     .st-key-google_signin button:hover {
         background-color: #1F1F20 !important;
         border-color: #A5A8A5 !important;
-        box-shadow: 0 2px 6px rgba(255,255,255,0.08) !important;
-        transform: none !important;
-    }
-    .st-key-google_signin button:active {
-        background-color: #2A2A2B !important;
     }
     .st-key-google_signin button p {
         color: #E3E3E3 !important;
@@ -51,42 +238,45 @@ if not is_logged_in():
     </style>
     """, unsafe_allow_html=True)
 
-    col1, col2 = st.columns([1, 2])
+    col1, col2 = st.columns([3, 2])
     with col1:
-        st.markdown("### 🔒 Sign in")
+        st.markdown("### 🔒 Sign in to unlock your personal workspace")
         st.markdown(
-            "Sign in with Google to access your personal portfolio, watchlist, and alerts."
+            "Track holdings, get price alerts, run AI-powered backtests, "
+            "and manage multiple portfolios — all synced to your Google account."
         )
-        if st.button("Sign in with Google", use_container_width=True, key="google_signin"):
+        if st.button("Sign in with Google", use_container_width=False, key="google_signin"):
             st.login("google")
     with col2:
-        st.markdown("### Public features")
-        st.markdown("""
-        These pages work without sign-in:
-        - **Heatmap** — S&P 500 sector treemap
-        - **Stock Detail** — Individual stock charts
-        - **Sentiment** — Fear & Greed, news
-        - **Calendar** — Economic & earnings
-        - **Screener** — Filter S&P 500 stocks
-        - **Compare** — Compare 2-5 stocks
-        """)
-        st.markdown("### Personal features (sign-in required)")
-        st.markdown("""
-        - **Portfolio** — Track holdings, performance, dividends, taxes
-        - **Watchlist & Alerts** — Get notified on price moves
-        """)
+        st.markdown("**Public features (no sign-in)**")
+        st.caption("• Heatmap, Stock Detail, Sentiment, Calendar, Screener, Compare")
+        st.markdown("**Personal features (sign-in required)**")
+        st.caption("• Portfolio, Watchlist, Alerts, AI Quant Lab")
+
 else:
     user = get_or_create_user()
     if user:
-        st.success(f"Welcome back, **{user['name']}** 👋")
+        pic = user.get("picture") or ""
+        name = user.get("name") or "User"
+        email = user.get("email") or ""
 
-        # Check for legacy data
+        welcome_html = f"""
+        <div class="welcome-banner">
+            <img src="{pic}" class="welcome-avatar" onerror="this.style.display='none'"/>
+            <div class="welcome-text">
+                <p class="welcome-greet">Welcome back, {name} 👋</p>
+                <p class="welcome-sub">{email} · Logged in</p>
+            </div>
+        </div>
+        """
+        st.markdown(welcome_html, unsafe_allow_html=True)
+
+        # Legacy data claim
         from database import get_connection
         conn = get_connection()
         legacy_count = conn.execute(
             "SELECT COUNT(*) FROM portfolios WHERE user_id IS NULL"
         ).fetchone()[0]
-
         if legacy_count > 0:
             st.warning(
                 f"Found **{legacy_count}** unassigned portfolios from before sign-in was added."
@@ -104,10 +294,12 @@ else:
             with cl2:
                 if st.button("Ignore (start fresh)"):
                     st.info("You can claim them later by visiting this page again.")
-        st.markdown("---")
 
-# Quick market overview
-from services.market_service import get_indices
+
+# ═══════════════════════════════════════════════════════════
+# MARKET INDICES
+# ═══════════════════════════════════════════════════════════
+st.markdown('<div class="section-h">📊 Market Indices</div>', unsafe_allow_html=True)
 
 with st.spinner("Loading market indices..."):
     indices = get_indices()
@@ -125,17 +317,73 @@ if indices:
                 delta=delta_str,
             )
 
-st.markdown("---")
+
+# ═══════════════════════════════════════════════════════════
+# QUICK ACTIONS
+# ═══════════════════════════════════════════════════════════
+st.markdown('<div class="section-h">⚡ Quick Actions</div>', unsafe_allow_html=True)
+
+# Define quick actions: (path, icon, title, description)
+if is_logged_in():
+    actions = [
+        ("app_pages/5_Portfolio.py",    "💼", "My Portfolio",   "Track holdings, performance & taxes"),
+        ("app_pages/10_Watchlist.py",   "⭐", "Watchlist",      "Get notified on price moves"),
+        ("app_pages/2_AI_Quant_Lab.py", "🧠", "AI Quant Lab",   "Run ML-based backtests"),
+        ("app_pages/3_Heatmap.py",      "🗺️", "Market Heatmap", "S&P 1500 sector view"),
+        ("app_pages/4_Stock_Detail.py", "📈", "Stock Search",   "Charts + fundamentals"),
+        ("app_pages/8_Screener.py",     "🔍", "Screener",       "Filter by valuation, momentum"),
+        ("app_pages/9_Compare.py",      "⚖️", "Compare",        "Side-by-side comparison"),
+        ("app_pages/6_Sentiment.py",    "🧭", "Sentiment",      "Fear & Greed + news"),
+    ]
+else:
+    actions = [
+        ("app_pages/3_Heatmap.py",      "🗺️", "Heatmap",       "S&P 1500 sector treemap"),
+        ("app_pages/4_Stock_Detail.py", "📈", "Stock Search",   "Charts + fundamentals"),
+        ("app_pages/8_Screener.py",     "🔍", "Screener",       "Filter stocks"),
+        ("app_pages/9_Compare.py",      "⚖️", "Compare",        "Compare 2-5 stocks"),
+        ("app_pages/6_Sentiment.py",    "🧭", "Sentiment",      "Fear & Greed + news"),
+        ("app_pages/7_Calendar.py",     "📅", "Calendar",       "Earnings & economic events"),
+    ]
+
+# Render as button grid
+n_cols = 4
+for row_start in range(0, len(actions), n_cols):
+    cols = st.columns(n_cols)
+    for i, action in enumerate(actions[row_start:row_start + n_cols]):
+        page_path, icon, title, desc = action
+        with cols[i]:
+            if st.button(
+                f"{icon}  {title}\n\n{desc}",
+                key=f"qa_{page_path}",
+                use_container_width=True,
+            ):
+                st.switch_page(page_path)
+
+# Quick actions card styling
 st.markdown("""
-### Pages
-- **Dashboard** — Market overview + portfolio summary
-- **AI Quant Lab** — ML-based backtest & predictions
-- **Heatmap** — S&P 500 sector heatmap
-- **Stock Detail** — Individual stock analysis
-- **Portfolio** — Portfolio management & performance
-- **Sentiment** — Fear & Greed index + news
-- **Calendar** — Economic & earnings calendar
-- **Screener** — Stock screener with filters
-- **Compare** — Compare 2-5 stocks
-- **Watchlist** — Track stocks + price alerts
-""")
+<style>
+/* Make Quick Action buttons look like cards */
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button {
+    background: linear-gradient(135deg, rgba(30,41,59,0.7), rgba(15,23,42,0.5)) !important;
+    border: 1px solid rgba(59,130,246,0.2) !important;
+    border-radius: 12px !important;
+    padding: 18px !important;
+    height: 110px !important;
+    text-align: left !important;
+    transition: all 0.2s ease !important;
+    color: #F8FAFC !important;
+    white-space: pre-wrap !important;
+    line-height: 1.4 !important;
+}
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button:hover {
+    border-color: rgba(59,130,246,0.6) !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 24px rgba(59,130,246,0.18) !important;
+}
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button p {
+    color: #F8FAFC !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+}
+</style>
+""", unsafe_allow_html=True)
