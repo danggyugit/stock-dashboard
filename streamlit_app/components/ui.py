@@ -31,10 +31,7 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
     margin-top: 0 !important;
 }
 
-/* Hide native st.navigation sidebar — we render our own nav buttons */
-section[data-testid="stSidebar"] [data-testid="stSidebarNav"] {
-    display: none !important;
-}
+/* st.navigation handles sidebar order — Account, nav menu, Status render in code order */
 
 /* ============================================ */
 /* Hide Streamlit Cloud toolbar                  */
