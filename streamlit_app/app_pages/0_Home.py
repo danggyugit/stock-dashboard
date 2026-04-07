@@ -523,7 +523,7 @@ else:
         WB_LOGOUT_RADIUS     = 10     # button radius (px)
         WB_LOGOUT_FONT       = 13     # button font size (px)
         WB_LOGOUT_ALIGN      = "flex-end"  # horizontal: "flex-start"=left | "center" | "flex-end"=right
-        WB_LOGOUT_OFFSET_X   = 0      # horizontal shift (px) — negative=left, positive=right
+        WB_LOGOUT_OFFSET_X   = 120      # horizontal shift (px) — negative=left, positive=right
         WB_LOGOUT_LABEL      = "⇥ Sign out"  # button text
 
         # Inject the dynamic CSS for this section

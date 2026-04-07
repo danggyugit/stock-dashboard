@@ -161,7 +161,7 @@ def render_user_sidebar() -> None:
     SB_LOGOUT_BTN_WIDTH  = "50px"  # button width: "100%" | "120%" | "60px" etc.
     SB_LOGOUT_RADIUS     = 8       # logout button border radius (px)
     SB_LOGOUT_FONT       = 16      # logout icon size (px)
-    SB_LOGOUT_OFFSET_X   = 0       # horizontal shift in px (negative=left, positive=right)
+    SB_LOGOUT_OFFSET_X   = 600       # horizontal shift in px (negative=left, positive=right)
     SB_LOGOUT_LABEL      = "⇥"     # button text/icon
 
     # Subtle gray logout button
