@@ -220,17 +220,14 @@ if not is_logged_in():
 
     st.markdown(f"""
     <style>
-    /* Force button container to match table height */
-    div.st-key-google_signin {{
-        position: relative !important;
-        width: 100% !important;
-        height: 305px !important;
-    }}
+    /* Force button container to match table height (~285px) */
+    div.st-key-google_signin,
     div.st-key-google_signin > div,
     div.st-key-google_signin [data-testid="stButton"],
     div.st-key-google_signin [data-testid="stButton"] > div {{
+        position: relative !important;
         width: 100% !important;
-        height: 305px !important;
+        height: 285px !important;
     }}
 
     .st-key-google_signin button {{
@@ -241,8 +238,8 @@ if not is_logged_in():
         font-family: "Google Sans", Roboto, Arial, sans-serif !important;
         font-weight: 700 !important;
         font-size: 32px !important;
-        height: 305px !important;
-        min-height: 305px !important;
+        height: 285px !important;
+        min-height: 285px !important;
         width: 100% !important;
         min-width: 100% !important;
         box-shadow: 0 10px 40px rgba(66,133,244,0.45) !important;
@@ -261,29 +258,32 @@ if not is_logged_in():
     .st-key-google_signin button:active {{
         transform: translateY(0) !important;
     }}
-    /* Google logo — pseudo-element, always visible */
+    /* Google logo — always visible pseudo */
     .st-key-google_signin button::before {{
         content: "" !important;
         position: absolute !important;
-        top: 50px !important;
+        top: 40px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        width: 110px !important;
-        height: 110px !important;
+        width: 100px !important;
+        height: 100px !important;
         background-image: url("{google_svg}") !important;
         background-size: contain !important;
         background-repeat: no-repeat !important;
         background-position: center !important;
         pointer-events: none !important;
     }}
-    /* Button text — positioned below logo */
-    .st-key-google_signin button p {{
+    /* Button text — high specificity for font size */
+    div.st-key-google_signin button p,
+    div.st-key-google_signin button div p,
+    .st-key-google_signin button > div p {{
         color: #FFFFFF !important;
         font-weight: 700 !important;
-        font-size: 32px !important;
+        font-size: 28px !important;
+        line-height: 1 !important;
         margin: 0 !important;
         position: absolute !important;
-        bottom: 55px !important;
+        bottom: 50px !important;
         left: 0 !important;
         right: 0 !important;
         text-align: center !important;
