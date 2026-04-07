@@ -208,13 +208,13 @@ if not is_logged_in():
     # ═══════════════════════════════════════════════════════
     # 🎨 GOOGLE SIGN-IN BUTTON — adjust these values freely
     # ═══════════════════════════════════════════════════════
-    BTN_HEIGHT      = 285   # button height in px (match table height)
+    BTN_HEIGHT      = 320   # button height in px (match table height)
     BTN_RADIUS      = 16    # corner radius
-    BTN_OFFSET_TOP  = 25     # move button up (negative) or down (positive) px
+    BTN_OFFSET_TOP  = 15     # move button up (negative) or down (positive) px
     LOGO_SIZE       = 100   # Google logo size (px)
-    LOGO_TOP        = 60    # logo distance from top (px)
-    TEXT_SIZE       = 100    # "Sign in with Google" font size (px)
-    TEXT_BOTTOM     = 50    # text distance from bottom (px)
+    LOGO_TOP        = 80    # logo distance from top (px)
+    TEXT_SIZE       = 25    # "Sign in with Google" font size (px)
+    TEXT_BOTTOM     = 25    # text distance from bottom (px)
     # ═══════════════════════════════════════════════════════
 
     google_svg = (
@@ -300,7 +300,7 @@ if not is_logged_in():
     div.st-key-google_signin button [data-testid="stMarkdownContainer"],
     div.st-key-google_signin button [data-testid="stMarkdownContainer"] p,
     div.st-key-google_signin button [data-testid="stMarkdownContainer"] span {{
-        color: #FFFFFF !important;
+        color: #60A5FA !important;
         font-weight: 700 !important;
         font-size: {TEXT_SIZE}px !important;
         line-height: 1 !important;
