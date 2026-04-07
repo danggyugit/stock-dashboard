@@ -512,6 +512,19 @@ else:
                 unsafe_allow_html=True,
             )
 
+            # Force all metric cards on this page to same height
+            st.markdown("""
+            <style>
+            [data-testid="stMetric"] {
+                height: 130px !important;
+                box-sizing: border-box !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
             # Aggregate across all user's portfolios
             total_value = 0.0
             total_cost = 0.0
