@@ -494,73 +494,75 @@ else:
         # ─────────────────────────────────────────────────────
         # Welcome banner — adjustable knobs (edit these numbers!)
         # ─────────────────────────────────────────────────────
-        # Layout (banner + logout column ratio)
-        WB_BANNER_WIDTH    = 12     # banner column ratio (e.g. 12 of 13)
-        WB_LOGOUT_WIDTH    = 1      # logout column ratio (smaller = narrower)
-        WB_VALIGN          = "center"   # "top" | "center" | "bottom"
+        # The whole banner is now a single st.container so the logout
+        # button lives INSIDE the green box (works on mobile too).
 
-        # Banner box itself
-        WB_BANNER_HEIGHT     = 78     # banner total height (px)
-        WB_BANNER_MAX_WIDTH  = "100%" # banner max width: "100%" | "900px" | "80%" etc.
+        # Inner column ratio (text vs logout) — applies on desktop;
+        # Streamlit stacks them vertically on narrow screens but they
+        # remain inside the same banner box.
+        WB_TEXT_RATIO        = 5      # text+avatar column ratio
+        WB_LOGOUT_RATIO      = 1      # logout button column ratio
+
+        # Banner box (the green wrapper itself)
         WB_BANNER_PAD_X      = 20     # left/right padding (px)
         WB_BANNER_PAD_Y      = 14     # top/bottom padding (px)
         WB_BANNER_RADIUS     = 12     # border radius (px)
-        WB_BANNER_GAP        = 14     # gap between avatar and text (px)
-        WB_BANNER_MB         = 0      # margin-bottom under banner (px)
-        WB_BANNER_ALIGN      = "flex-start"  # banner alignment in column: "flex-start" | "center" | "flex-end"
+        WB_BANNER_MB         = 16     # margin-bottom under banner (px)
 
-        # Banner content
+        # Avatar + text content
         WB_AVATAR_SIZE       = 48     # avatar diameter (px)
         WB_AVATAR_BORDER     = 2      # avatar border width (px)
         WB_GREET_SIZE        = 18     # "Welcome back" font size (px)
         WB_GREET_WEIGHT      = 700    # greet font weight
         WB_SUB_SIZE          = 13     # email/status font size (px)
+        WB_TEXT_GAP          = 14     # gap between avatar and text (px)
 
-        # Logout button (right column) — independent from banner because
-        # Streamlit wraps the button in extra divs that add their own height
-        WB_LOGOUT_HEIGHT     = 78     # button height (px)
-        WB_LOGOUT_BTN_WIDTH  = "120px" # button width: "100%" | "120px" | "80%" etc.
-        WB_LOGOUT_RADIUS     = 12     # button radius (px)
-        WB_LOGOUT_FONT       = 16     # button font size (px)
-        WB_LOGOUT_OFFSET_Y   = 15      # vertical shift (px) — negative=up, positive=down
-        WB_LOGOUT_ALIGN      = "flex-start"  # button alignment in column: "flex-start" | "center" | "flex-end"
+        # Logout button (sits inside the banner)
+        WB_LOGOUT_HEIGHT     = 50     # button height (px)
+        WB_LOGOUT_BTN_WIDTH  = "100%" # button width inside its column
+        WB_LOGOUT_RADIUS     = 10     # button radius (px)
+        WB_LOGOUT_FONT       = 13     # button font size (px)
         WB_LOGOUT_LABEL      = "⇥ Sign out"  # button text
 
         # Inject the dynamic CSS for this section
         st.markdown(f"""
         <style>
-        .welcome-banner {{
-            padding: {WB_BANNER_PAD_Y}px {WB_BANNER_PAD_X}px !important;
+        /* The container itself IS the banner */
+        div.st-key-welcome_banner {{
+            background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.10)) !important;
+            border: 1px solid rgba(16,185,129,0.3) !important;
             border-radius: {WB_BANNER_RADIUS}px !important;
-            height: {WB_BANNER_HEIGHT}px !important;
-            min-height: {WB_BANNER_HEIGHT}px !important;
-            max-width: {WB_BANNER_MAX_WIDTH} !important;
+            padding: {WB_BANNER_PAD_Y}px {WB_BANNER_PAD_X}px !important;
             margin-bottom: {WB_BANNER_MB}px !important;
-            gap: {WB_BANNER_GAP}px !important;
             box-sizing: border-box !important;
         }}
-        /* Align banner inside its column */
-        div.st-key-home_banner_col {{
+        /* Avatar + text styles */
+        .welcome-inner {{
             display: flex !important;
-            justify-content: {WB_BANNER_ALIGN} !important;
+            align-items: center !important;
+            gap: {WB_TEXT_GAP}px !important;
         }}
         .welcome-avatar {{
             width: {WB_AVATAR_SIZE}px !important;
             height: {WB_AVATAR_SIZE}px !important;
-            border-width: {WB_AVATAR_BORDER}px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            border: {WB_AVATAR_BORDER}px solid rgba(16,185,129,0.5) !important;
         }}
         .welcome-greet {{
             font-size: {WB_GREET_SIZE}px !important;
             font-weight: {WB_GREET_WEIGHT} !important;
+            color: #F8FAFC !important;
+            margin: 0 !important;
         }}
         .welcome-sub {{
             font-size: {WB_SUB_SIZE}px !important;
+            color: #94A3B8 !important;
+            margin: 2px 0 0 0 !important;
         }}
-        /* Higher specificity to beat the Quick Actions global rule
-           ([data-testid="stHorizontalBlock"] [data-testid="stButton"] button)
-           which also matches column-based buttons and forces height:110px */
-        [data-testid="stHorizontalBlock"] div.st-key-home_logout button,
-        div.st-key-home_logout [data-testid="stButton"] button,
+        /* Logout button — boost specificity to beat Quick Actions global rule */
+        div.st-key-welcome_banner [data-testid="stHorizontalBlock"] div.st-key-home_logout button,
+        div.st-key-welcome_banner div.st-key-home_logout button,
         div.st-key-home_logout button {{
             height: {WB_LOGOUT_HEIGHT}px !important;
             min-height: {WB_LOGOUT_HEIGHT}px !important;
@@ -568,16 +570,21 @@ else:
             width: {WB_LOGOUT_BTN_WIDTH} !important;
             border-radius: {WB_LOGOUT_RADIUS}px !important;
             font-size: {WB_LOGOUT_FONT}px !important;
-            padding: 0 !important;
-            margin-top: {WB_LOGOUT_OFFSET_Y}px !important;
+            padding: 0 12px !important;
+            background: rgba(16,185,129,0.12) !important;
+            border: 1px solid rgba(16,185,129,0.4) !important;
+            color: #34D399 !important;
+            font-weight: 600 !important;
+            transition: all 0.15s !important;
         }}
-        /* Align the button container within its column */
-        div.st-key-home_logout [data-testid="stButton"],
-        div.st-key-home_logout {{
-            display: flex !important;
-            justify-content: {WB_LOGOUT_ALIGN} !important;
+        div.st-key-welcome_banner div.st-key-home_logout button:hover,
+        div.st-key-home_logout button:hover {{
+            background: rgba(16,185,129,0.22) !important;
+            border-color: rgba(16,185,129,0.7) !important;
+            color: #6EE7B7 !important;
+            transform: none !important;
         }}
-        [data-testid="stHorizontalBlock"] div.st-key-home_logout button p,
+        div.st-key-welcome_banner div.st-key-home_logout button p,
         div.st-key-home_logout button p {{
             font-size: {WB_LOGOUT_FONT}px !important;
             margin: 0 !important;
@@ -585,25 +592,29 @@ else:
         </style>
         """, unsafe_allow_html=True)
 
-        welcome_html = f"""
-        <div class="welcome-banner">
-            <img src="{pic}" class="welcome-avatar" onerror="this.style.display='none'"/>
-            <div class="welcome-text">
-                <p class="welcome-greet">Welcome back, {name} 👋</p>
-                <p class="welcome-sub">{email} · Logged in</p>
-            </div>
-        </div>
-        """
-        wcol_banner, wcol_logout = st.columns(
-            [WB_BANNER_WIDTH, WB_LOGOUT_WIDTH],
-            vertical_alignment=WB_VALIGN,
-        )
-        with wcol_banner:
-            with st.container(key="home_banner_col"):
-                st.markdown(welcome_html, unsafe_allow_html=True)
-        with wcol_logout:
-            if st.button(WB_LOGOUT_LABEL, key="home_logout"):
-                st.logout()
+        # The whole banner — container with key acts as the green box
+        with st.container(key="welcome_banner"):
+            wcol_text, wcol_logout = st.columns(
+                [WB_TEXT_RATIO, WB_LOGOUT_RATIO],
+                vertical_alignment="center",
+            )
+            with wcol_text:
+                st.markdown(
+                    f"""
+                    <div class="welcome-inner">
+                        <img src="{pic}" class="welcome-avatar"
+                             onerror="this.style.display='none'"/>
+                        <div>
+                            <p class="welcome-greet">Welcome back, {name} 👋</p>
+                            <p class="welcome-sub">{email} · Logged in</p>
+                        </div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+            with wcol_logout:
+                if st.button(WB_LOGOUT_LABEL, key="home_logout"):
+                    st.logout()
 
         # Legacy data claim
         from database import get_connection
