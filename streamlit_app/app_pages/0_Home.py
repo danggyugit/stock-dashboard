@@ -210,10 +210,10 @@ if not is_logged_in():
     # ═══════════════════════════════════════════════════════
     BTN_HEIGHT      = 285   # button height in px (match table height)
     BTN_RADIUS      = 16    # corner radius
-    BTN_OFFSET_TOP  = 0     # move button up (negative) or down (positive) px
+    BTN_OFFSET_TOP  = 25     # move button up (negative) or down (positive) px
     LOGO_SIZE       = 100   # Google logo size (px)
-    LOGO_TOP        = 40    # logo distance from top (px)
-    TEXT_SIZE       = 28    # "Sign in with Google" font size (px)
+    LOGO_TOP        = 60    # logo distance from top (px)
+    TEXT_SIZE       = 100    # "Sign in with Google" font size (px)
     TEXT_BOTTOM     = 50    # text distance from bottom (px)
     # ═══════════════════════════════════════════════════════
 
@@ -288,20 +288,34 @@ if not is_logged_in():
         background-position: center !important;
         pointer-events: none !important;
     }}
-    /* Button text */
+    /* Button text — target ALL descendants to override Streamlit defaults */
+    div.st-key-google_signin button,
+    div.st-key-google_signin button *,
     div.st-key-google_signin button p,
+    div.st-key-google_signin button span,
+    div.st-key-google_signin button div,
     div.st-key-google_signin button div p,
-    .st-key-google_signin button > div p {{
+    div.st-key-google_signin button div span,
+    div.st-key-google_signin button > div > p,
+    div.st-key-google_signin button [data-testid="stMarkdownContainer"],
+    div.st-key-google_signin button [data-testid="stMarkdownContainer"] p,
+    div.st-key-google_signin button [data-testid="stMarkdownContainer"] span {{
         color: #FFFFFF !important;
         font-weight: 700 !important;
         font-size: {TEXT_SIZE}px !important;
         line-height: 1 !important;
-        margin: 0 !important;
+    }}
+    /* Position the text at bottom of the button */
+    div.st-key-google_signin button > div,
+    div.st-key-google_signin button [data-testid="stMarkdownContainer"] {{
         position: absolute !important;
         bottom: {TEXT_BOTTOM}px !important;
         left: 0 !important;
         right: 0 !important;
         text-align: center !important;
+    }}
+    div.st-key-google_signin button p {{
+        margin: 0 !important;
     }}
 
     /* Plan comparison table */
