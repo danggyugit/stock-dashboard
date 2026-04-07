@@ -205,48 +205,74 @@ st.markdown(hero_html, unsafe_allow_html=True)
 # LOGIN / WELCOME
 # ═══════════════════════════════════════════════════════════
 if not is_logged_in():
-    # Big Google Sign-in button styling
-    st.markdown("""
+    # Big Google Sign-in button styling — covers entire column
+    google_svg = (
+        "data:image/svg+xml;utf8,"
+        "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'>"
+        "<circle cx='24' cy='24' r='23' fill='white'/>"
+        "<g transform='translate(8 8) scale(0.667)'>"
+        "<path fill='%23EA4335' d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z'/>"
+        "<path fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z'/>"
+        "<path fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z'/>"
+        "<path fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z'/>"
+        "</g></svg>"
+    )
+
+    st.markdown(f"""
     <style>
-    .st-key-google_signin button {
+    /* Force the entire st.button container to be tall and wide */
+    div.st-key-google_signin {{
+        height: 380px !important;
+    }}
+    div.st-key-google_signin > div,
+    div.st-key-google_signin > div > div,
+    div.st-key-google_signin [data-testid="stButton"] {{
+        height: 380px !important;
+        width: 100% !important;
+    }}
+    .st-key-google_signin button {{
         background: linear-gradient(135deg, #4285F4 0%, #1A73E8 100%) !important;
         color: #FFFFFF !important;
         border: none !important;
-        border-radius: 14px !important;
+        border-radius: 16px !important;
         font-family: "Google Sans", Roboto, Arial, sans-serif !important;
         font-weight: 700 !important;
-        font-size: 22px !important;
-        height: 280px !important;
+        font-size: 26px !important;
+        height: 380px !important;
+        min-height: 380px !important;
         width: 100% !important;
-        box-shadow: 0 8px 32px rgba(66,133,244,0.4) !important;
+        box-shadow: 0 10px 40px rgba(66,133,244,0.45) !important;
         transition: all 0.2s ease !important;
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><circle cx='24' cy='24' r='23' fill='white'/><path fill='%23EA4335' d='M24 11.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 4.38 30.47 2 24 2 14.62 2 6.51 7.38 2.56 15.22l7.98 6.19C12.43 15.72 17.74 11.5 24 11.5z' transform='scale(0.62) translate(15 15)'/><path fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z' transform='scale(0.62) translate(15 15)'/><path fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z' transform='scale(0.62) translate(15 15)'/><path fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z' transform='scale(0.62) translate(15 15)'/></svg>") !important;
+        background-image: url("{google_svg}") !important;
         background-repeat: no-repeat !important;
-        background-position: center 60px !important;
-        background-size: 80px 80px !important;
-        padding: 170px 16px 24px 16px !important;
+        background-position: center 90px !important;
+        background-size: 110px 110px !important;
+        padding: 230px 20px 30px 20px !important;
         text-align: center !important;
         cursor: pointer !important;
         white-space: nowrap !important;
-    }
-    .st-key-google_signin button:hover {
+        display: flex !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
+    }}
+    .st-key-google_signin button:hover {{
         background: linear-gradient(135deg, #1A73E8 0%, #1557B0 100%) !important;
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><circle cx='24' cy='24' r='23' fill='white'/><path fill='%23EA4335' d='M24 11.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 4.38 30.47 2 24 2 14.62 2 6.51 7.38 2.56 15.22l7.98 6.19C12.43 15.72 17.74 11.5 24 11.5z' transform='scale(0.62) translate(15 15)'/><path fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z' transform='scale(0.62) translate(15 15)'/><path fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z' transform='scale(0.62) translate(15 15)'/><path fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z' transform='scale(0.62) translate(15 15)'/></svg>") !important;
+        background-image: url("{google_svg}") !important;
         background-repeat: no-repeat !important;
-        background-position: center 60px !important;
-        background-size: 80px 80px !important;
-        box-shadow: 0 12px 36px rgba(66,133,244,0.6) !important;
+        background-position: center 90px !important;
+        background-size: 110px 110px !important;
+        box-shadow: 0 14px 48px rgba(66,133,244,0.65) !important;
         transform: translateY(-3px) !important;
-    }
-    .st-key-google_signin button:active {
+    }}
+    .st-key-google_signin button:active {{
         transform: translateY(0) !important;
-    }
-    .st-key-google_signin button p {
+    }}
+    .st-key-google_signin button p {{
         color: #FFFFFF !important;
         font-weight: 700 !important;
-        font-size: 22px !important;
+        font-size: 26px !important;
         margin: 0 !important;
-    }
+    }}
 
     /* Plan comparison table */
     .plan-table {
@@ -300,15 +326,40 @@ if not is_logged_in():
     </style>
     """, unsafe_allow_html=True)
 
-    col1, col2 = st.columns([2, 1])
+    col1, col2 = st.columns([3, 2])
     with col1:
         st.markdown("### 🔒 Sign in to unlock your personal workspace")
         st.markdown(
             "Track holdings, get price alerts, run AI-powered backtests, "
             "and manage multiple portfolios — all synced to your Google account."
         )
-        # Plan comparison table — Personal includes everything in Public
-        features_html = """
+        # Plan comparison table — uses Material Symbols (same as sidebar)
+        # Inline SVG icons matching sidebar :material/...:
+        ic_grid    = '<span class="mi mi-grid">grid_view</span>'
+        ic_chart   = '<span class="mi mi-chart">show_chart</span>'
+        ic_brain   = '<span class="mi mi-brain">psychology</span>'
+        ic_cal     = '<span class="mi mi-cal">calendar_month</span>'
+        ic_filter  = '<span class="mi mi-filter">filter_alt</span>'
+        ic_compare = '<span class="mi mi-compare">compare_arrows</span>'
+        ic_folder  = '<span class="mi mi-folder">folder</span>'
+        ic_star    = '<span class="mi mi-star">star</span>'
+        ic_lab     = '<span class="mi mi-lab">science</span>'
+
+        features_html = f"""
+        <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet"/>
+        <style>
+        .mi {{
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 18px;
+            line-height: 1;
+            vertical-align: middle;
+            color: #60A5FA;
+            margin-right: 4px;
+            font-feature-settings: 'liga';
+        }}
+        </style>
         <table class="plan-table">
             <thead>
                 <tr>
@@ -319,32 +370,32 @@ if not is_logged_in():
             </thead>
             <tbody>
                 <tr>
-                    <td class="feature">🗺️ Heatmap & Stock Detail</td>
+                    <td class="feature">{ic_grid} Heatmap &nbsp;·&nbsp; {ic_chart} Stock Detail</td>
                     <td class="check yes">✓</td>
                     <td class="check yes personal-cell">✓</td>
                 </tr>
                 <tr>
-                    <td class="feature">🧭 Sentiment & Calendar</td>
+                    <td class="feature">{ic_brain} Sentiment &nbsp;·&nbsp; {ic_cal} Calendar</td>
                     <td class="check yes">✓</td>
                     <td class="check yes personal-cell">✓</td>
                 </tr>
                 <tr>
-                    <td class="feature">🔍 Screener & Compare</td>
+                    <td class="feature">{ic_filter} Screener &nbsp;·&nbsp; {ic_compare} Compare</td>
                     <td class="check yes">✓</td>
                     <td class="check yes personal-cell">✓</td>
                 </tr>
                 <tr>
-                    <td class="feature">📁 Portfolio (holdings, P&amp;L, taxes)</td>
+                    <td class="feature">{ic_folder} Portfolio (holdings, P&amp;L, taxes)</td>
                     <td class="check no">—</td>
                     <td class="check yes personal-cell">✓</td>
                 </tr>
                 <tr>
-                    <td class="feature">⭐ Watchlist + 🔔 Price alerts</td>
+                    <td class="feature">{ic_star} Watchlist + price alerts</td>
                     <td class="check no">—</td>
                     <td class="check yes personal-cell">✓</td>
                 </tr>
                 <tr>
-                    <td class="feature">🧠 AI Quant Lab (ML backtest)</td>
+                    <td class="feature">{ic_lab} AI Quant Lab (ML backtest)</td>
                     <td class="check no">—</td>
                     <td class="check yes personal-cell">✓</td>
                 </tr>
