@@ -157,18 +157,26 @@ def render_user_sidebar() -> None:
 
     # Logout button — independent from profile because Streamlit wraps
     # the button in extra divs that add their own height
-    SB_LOGOUT_HEIGHT   = 26     # logout button height (px) — tweak to match profile visually
+    SB_LOGOUT_HEIGHT   = 13     # logout button height (px) — tweak to match profile visually
     SB_LOGOUT_RADIUS   = 8      # logout button border radius (px)
     SB_LOGOUT_FONT     = 16     # logout icon size (px)
     SB_LOGOUT_LABEL    = "⇥"    # button text/icon
 
     # Subtle gray logout button
+    # NOTE: We boost selector specificity (extra [data-testid] prefixes) to
+    # beat the global Quick Actions rule from 0_Home.py which targets
+    # [data-testid="stHorizontalBlock"] [data-testid="stButton"] button and
+    # forces height:110px on every column-based button.
     st.sidebar.markdown(f"""
     <style>
+    [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] div.st-key-logout_btn button,
+    [data-testid="stSidebar"] div.st-key-logout_btn button,
+    div.st-key-logout_btn [data-testid="stButton"] button,
     .st-key-logout_btn button {{
         padding: 0 !important;
         min-height: 0 !important;
         height: {SB_LOGOUT_HEIGHT}px !important;
+        max-height: {SB_LOGOUT_HEIGHT}px !important;
         width: 100% !important;
         background: rgba(148,163,184,0.10) !important;
         border: 1px solid rgba(148,163,184,0.25) !important;
@@ -179,12 +187,14 @@ def render_user_sidebar() -> None:
         justify-content: center !important;
         transition: all 0.15s !important;
     }}
+    [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] div.st-key-logout_btn button:hover,
     .st-key-logout_btn button:hover {{
         background: rgba(148,163,184,0.20) !important;
         border-color: rgba(148,163,184,0.5) !important;
         color: #CBD5E1 !important;
         transform: none !important;
     }}
+    [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] div.st-key-logout_btn button p,
     .st-key-logout_btn button p {{
         margin: 0 !important;
         font-size: {SB_LOGOUT_FONT}px !important;
