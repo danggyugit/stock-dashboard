@@ -251,46 +251,190 @@ else:
                     fig.update_layout(height=420, margin=dict(l=20, r=20, t=50, b=40))
                     st.plotly_chart(fig, use_container_width=True)
 
-        # Holdings news — fetch for all holdings, group by ticker
+        # Holdings news — one section per holding (logo + ticker + name header)
+        st.markdown("---")
         st.subheader("Holdings News")
-        # Sort tickers by market value desc so largest positions appear first
-        tickers_sorted = [
-            h["ticker"] for h in sorted(
-                all_holdings,
-                key=lambda x: x.get("market_value") or x.get("total_cost") or 0,
-                reverse=True,
-            )
-        ]
-        # Dedupe while preserving order
-        seen_t: set[str] = set()
-        tickers = [t for t in tickers_sorted if not (t in seen_t or seen_t.add(t))]
 
-        if not tickers:
+        # Sort holdings by market value desc, dedupe by ticker
+        holdings_sorted = sorted(
+            all_holdings,
+            key=lambda x: x.get("market_value") or x.get("total_cost") or 0,
+            reverse=True,
+        )
+        seen_t: set[str] = set()
+        unique_holdings: list[dict] = []
+        for h in holdings_sorted:
+            t = h.get("ticker")
+            if t and t not in seen_t:
+                seen_t.add(t)
+                unique_holdings.append(h)
+
+        if not unique_holdings:
             st.caption("No holdings to show news for.")
         else:
-            articles_per_ticker = 2  # show 2 articles per ticker
-            news_by_ticker: dict[str, list[dict]] = {}
-            for t in tickers:
-                try:
-                    articles = get_stock_news(t)
-                    if articles:
-                        news_by_ticker[t] = articles[:articles_per_ticker]
-                except Exception:
-                    pass
+            # Inject section card styles once
+            st.markdown("""
+            <style>
+            .news-section {
+                background: linear-gradient(135deg, rgba(30,41,59,0.55), rgba(15,23,42,0.35));
+                border: 1px solid rgba(59,130,246,0.18);
+                border-radius: 12px;
+                padding: 14px 18px;
+                margin-bottom: 14px;
+            }
+            .news-head {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding-bottom: 10px;
+                margin-bottom: 10px;
+                border-bottom: 1px solid rgba(148,163,184,0.18);
+            }
+            .news-logo {
+                width: 38px; height: 38px;
+                border-radius: 8px;
+                background: white;
+                padding: 4px;
+                object-fit: contain;
+                flex-shrink: 0;
+            }
+            .news-title-stack {
+                display: flex;
+                flex-direction: column;
+                line-height: 1.25;
+                min-width: 0;
+            }
+            .news-ticker {
+                font-size: 16px;
+                font-weight: 700;
+                color: #F8FAFC;
+                letter-spacing: 0.3px;
+            }
+            .news-company {
+                font-size: 12px;
+                color: #94A3B8;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .news-pnl {
+                margin-left: auto;
+                font-size: 13px;
+                font-weight: 700;
+                padding: 4px 10px;
+                border-radius: 999px;
+            }
+            .news-pnl-pos { color: #34D399; background: rgba(16,185,129,0.12); }
+            .news-pnl-neg { color: #F87171; background: rgba(239,68,68,0.12); }
+            .news-pnl-flat { color: #94A3B8; background: rgba(148,163,184,0.12); }
+            .news-list { display: flex; flex-direction: column; gap: 8px; }
+            .news-item {
+                display: flex;
+                gap: 10px;
+                align-items: flex-start;
+                padding: 8px 10px;
+                background: rgba(15,23,42,0.45);
+                border-left: 3px solid #475569;
+                border-radius: 6px;
+                transition: background 0.15s ease;
+            }
+            .news-item:hover { background: rgba(15,23,42,0.7); }
+            .news-item.bull { border-left-color: #10B981; }
+            .news-item.bear { border-left-color: #EF4444; }
+            .news-dot {
+                font-size: 9px;
+                margin-top: 5px;
+                flex-shrink: 0;
+            }
+            .news-body { flex: 1; min-width: 0; }
+            .news-headline {
+                font-size: 13px;
+                color: #E2E8F0;
+                text-decoration: none;
+                font-weight: 500;
+                display: block;
+                line-height: 1.4;
+            }
+            .news-headline:hover { color: #60A5FA; text-decoration: underline; }
+            .news-source {
+                font-size: 11px;
+                color: #64748B;
+                margin-top: 2px;
+                display: block;
+            }
+            .news-empty {
+                font-size: 12px;
+                color: #64748B;
+                font-style: italic;
+            }
+            </style>
+            """, unsafe_allow_html=True)
 
-            if news_by_ticker:
-                for t in tickers:
-                    if t not in news_by_ticker:
-                        continue
-                    for article in news_by_ticker[t]:
+            articles_per_ticker = 3
+            for h in unique_holdings:
+                t = h["ticker"]
+                name = h.get("name") or t
+                pnl_pct = h.get("unrealized_gain_pct")
+
+                # Build P&L pill
+                if pnl_pct is None:
+                    pnl_html = ""
+                else:
+                    if pnl_pct > 0:
+                        pnl_cls = "news-pnl-pos"
+                    elif pnl_pct < 0:
+                        pnl_cls = "news-pnl-neg"
+                    else:
+                        pnl_cls = "news-pnl-flat"
+                    pnl_html = f'<span class="news-pnl {pnl_cls}">{pnl_pct:+.2f}%</span>'
+
+                # Fetch news for this ticker
+                try:
+                    raw_articles = get_stock_news(t) or []
+                except Exception:
+                    raw_articles = []
+                articles = raw_articles[:articles_per_ticker]
+
+                # Build articles HTML
+                if articles:
+                    items_html = '<div class="news-list">'
+                    for article in articles:
                         sentiment = article.get("sentiment_label", "Neutral")
-                        badge = {"Bullish": "🟢", "Bearish": "🔴"}.get(sentiment, "⚪")
+                        sent_cls = {"Bullish": "bull", "Bearish": "bear"}.get(sentiment, "")
+                        sent_dot = {"Bullish": "🟢", "Bearish": "🔴"}.get(sentiment, "⚪")
                         url = article.get("url", "")
-                        headline = article.get("headline", "")
-                        source = article.get("source", "")
+                        headline = (article.get("headline", "") or "").replace("<", "&lt;").replace(">", "&gt;")
+                        source = (article.get("source", "") or "").replace("<", "&lt;").replace(">", "&gt;")
                         if url:
-                            st.markdown(f"{badge} **[{t}]** [{headline}]({url}) — _{source}_")
+                            headline_html = f'<a href="{url}" target="_blank" class="news-headline">{headline}</a>'
                         else:
-                            st.markdown(f"{badge} **[{t}]** {headline} — _{source}_")
-            else:
-                st.caption("No recent news found for your holdings.")
+                            headline_html = f'<span class="news-headline">{headline}</span>'
+                        items_html += (
+                            f'<div class="news-item {sent_cls}">'
+                            f'<span class="news-dot">{sent_dot}</span>'
+                            f'<div class="news-body">'
+                            f'{headline_html}'
+                            f'<span class="news-source">{source}</span>'
+                            f'</div>'
+                            f'</div>'
+                        )
+                    items_html += '</div>'
+                else:
+                    items_html = '<div class="news-empty">No recent news.</div>'
+
+                logo_url = f"https://assets.parqet.com/logos/symbol/{t}?format=png"
+                section_html = (
+                    '<div class="news-section">'
+                    '<div class="news-head">'
+                    f'<img src="{logo_url}" class="news-logo" '
+                    f"onerror=\"this.style.background='#1e293b';this.src='';\"/>"
+                    '<div class="news-title-stack">'
+                    f'<span class="news-ticker">{t}</span>'
+                    f'<span class="news-company">{name}</span>'
+                    '</div>'
+                    f'{pnl_html}'
+                    '</div>'
+                    f'{items_html}'
+                    '</div>'
+                )
+                st.markdown(section_html, unsafe_allow_html=True)
