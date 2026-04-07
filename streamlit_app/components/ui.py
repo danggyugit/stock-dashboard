@@ -41,14 +41,16 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 
 /* ============================================ */
 /* Minimal Streamlit Cloud chrome cleanup.        */
-/* Touch only the deploy button + main menu —     */
-/* leave header / sidebar alone so the native     */
-/* << / >> toggle keeps working on PC + mobile.   */
+/* IMPORTANT: do NOT hide stToolbar — the         */
+/* sidebar expand button (stExpandSidebarButton)  */
+/* is a child of it, and hiding the toolbar makes */
+/* the sidebar unrecoverable once collapsed.      */
 /* ============================================ */
 header[data-testid="stHeader"] {
     background: transparent !important;
 }
-[data-testid="stToolbar"] {
+/* Hide only the right-side action elements (Deploy, Manage app, ...) */
+[data-testid="stHeaderActionElements"] {
     display: none !important;
 }
 #MainMenu { display: none !important; }
