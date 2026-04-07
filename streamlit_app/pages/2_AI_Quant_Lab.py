@@ -189,9 +189,10 @@ FEAT_COLS  = list(FEATURE_META.keys())
 FEAT_NAMES = {k: v["name"] for k, v in FEATURE_META.items()}
 
 PLOT_CFG = dict(
-    template="plotly_white",
-    paper_bgcolor="rgba(255,255,255,1)",
-    plot_bgcolor="rgba(248,249,250,1)",
+    template="plotly_dark",
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(0,0,0,0)",
+    font=dict(color="#F8FAFC"),
 )
 
 # ═══════════════════════════════════════════════════════════
