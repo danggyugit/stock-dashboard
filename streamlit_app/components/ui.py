@@ -35,35 +35,57 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 
 /* ============================================ */
 /* Sidebar nav items styled as buttons          */
+/* Streamlit uses li > a structure (or div)     */
 /* ============================================ */
-section[data-testid="stSidebarNav"] a span,
-section[data-testid="stSidebarNav"] li span {
+
+/* Bigger font for nav items */
+[data-testid="stSidebarNav"] span,
+[data-testid="stSidebarNavItems"] span {
     font-size: 16px !important;
 }
 
-/* Each nav item -> button look */
-section[data-testid="stSidebarNav"] a {
-    background: rgba(30, 41, 59, 0.5) !important;
-    border: 1px solid rgba(59, 130, 246, 0.15) !important;
-    border-radius: 8px !important;
+/* Button-like style on each nav item (cover both <a> and <li>) */
+[data-testid="stSidebarNav"] li,
+[data-testid="stSidebarNavItems"] li {
+    list-style: none !important;
     margin: 4px 8px !important;
+}
+[data-testid="stSidebarNav"] li > a,
+[data-testid="stSidebarNav"] li > div,
+[data-testid="stSidebarNavItems"] li > a,
+[data-testid="stSidebarNavItems"] li > div {
+    background: rgba(30, 41, 59, 0.6) !important;
+    border: 1px solid rgba(59, 130, 246, 0.2) !important;
+    border-radius: 8px !important;
     padding: 8px 12px !important;
     transition: all 0.15s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
 }
-section[data-testid="stSidebarNav"] a:hover {
+[data-testid="stSidebarNav"] li > a:hover,
+[data-testid="stSidebarNav"] li > div:hover,
+[data-testid="stSidebarNavItems"] li > a:hover,
+[data-testid="stSidebarNavItems"] li > div:hover {
     background: rgba(59, 130, 246, 0.2) !important;
-    border-color: rgba(59, 130, 246, 0.5) !important;
+    border-color: rgba(59, 130, 246, 0.6) !important;
     transform: translateX(2px) !important;
 }
-/* Active page (currently selected) */
-section[data-testid="stSidebarNav"] a[aria-current="page"] {
-    background: rgba(59, 130, 246, 0.3) !important;
-    border-color: rgba(59, 130, 246, 0.7) !important;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2) !important;
+/* Active (currently selected) */
+[data-testid="stSidebarNav"] li > a[aria-current="page"],
+[data-testid="stSidebarNav"] li > div[aria-current="page"],
+[data-testid="stSidebarNavItems"] li > a[aria-current="page"],
+[data-testid="stSidebarNavItems"] li > div[aria-current="page"] {
+    background: rgba(59, 130, 246, 0.35) !important;
+    border-color: rgba(59, 130, 246, 0.8) !important;
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.25) !important;
 }
-section[data-testid="stSidebarNav"] a[aria-current="page"] span {
+[data-testid="stSidebarNav"] li > a[aria-current="page"] span,
+[data-testid="stSidebarNav"] li > div[aria-current="page"] span,
+[data-testid="stSidebarNavItems"] li > a[aria-current="page"] span,
+[data-testid="stSidebarNavItems"] li > div[aria-current="page"] span {
     color: #F8FAFC !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
 }
 
 /* ============================================ */
@@ -230,40 +252,6 @@ def render_sidebar_info() -> None:
     is_open, status = market_status()
     badge_color = "#10B981" if is_open else "#EF4444"
 
-    # Compact status styling
-    st.sidebar.markdown("""
-    <style>
-    .sidebar-status-block { margin-top: 16px; }
-    .sidebar-status-block h3 {
-        margin: 0 0 4px 0 !important;
-        padding: 0 !important;
-        font-size: 0.95rem !important;
-        border: none !important;
-    }
-    .sidebar-status-block .status-row {
-        display: flex;
-        justify-content: space-between;
-        font-size: 11px;
-        color: #94A3B8;
-        padding: 1px 0;
-        line-height: 1.4;
-    }
-    .sidebar-status-block .status-row .val {
-        color: #F8FAFC;
-        font-weight: 600;
-    }
-    .sidebar-status-block .market-line {
-        font-size: 12px;
-        font-weight: 600;
-        color: #F8FAFC;
-        padding: 2px 0 4px 0;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    st.sidebar.markdown('<div class="sidebar-status-block">', unsafe_allow_html=True)
-    st.sidebar.markdown("### Status")
-
     try:
         conn = get_connection()
         hm_age = conn.execute(
@@ -291,17 +279,46 @@ def render_sidebar_info() -> None:
                 return "?"
 
         hm_label = _age_label(hm_age[0] if hm_age else None)
-
-        st.sidebar.markdown(
-            f'<div class="market-line"><span style="color:{badge_color};">●</span> {status}</div>'
-            f'<div class="status-row"><span>Stocks</span><span class="val">{stock_count}</span></div>'
-            f'<div class="status-row"><span>Fundamentals</span><span class="val">{fund_count}</span></div>'
-            f'<div class="status-row"><span>Portfolios</span><span class="val">{portfolio_count}</span></div>'
-            f'<div class="status-row"><span>Heatmap cache</span><span class="val">{hm_label}</span></div>',
-            unsafe_allow_html=True,
-        )
     except Exception:
         st.sidebar.caption("Status unavailable.")
+        return
+
+    # Render entire status block in a single markdown call so CSS scoping works
+    status_html = f"""
+<style>
+.sb-status {{ margin-top: 14px; padding: 0 4px; }}
+.sb-status .title {{
+    font-size: 16px; font-weight: 700; color: #F8FAFC;
+    margin: 0 0 6px 0;
+}}
+.sb-status .market {{
+    font-size: 12px; font-weight: 600; color: #F8FAFC;
+    padding: 2px 0 6px 0;
+}}
+.sb-status .row {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #94A3B8;
+    padding: 2px 0;
+    line-height: 1.4;
+}}
+.sb-status .row .val {{
+    color: #F8FAFC;
+    font-weight: 600;
+}}
+</style>
+<div class="sb-status">
+    <div class="title">Status</div>
+    <div class="market"><span style="color:{badge_color};">●</span> {status}</div>
+    <div class="row"><span>Stocks</span><span class="val">{stock_count}</span></div>
+    <div class="row"><span>Fundamentals</span><span class="val">{fund_count}</span></div>
+    <div class="row"><span>Portfolios</span><span class="val">{portfolio_count}</span></div>
+    <div class="row"><span>Heatmap cache</span><span class="val">{hm_label}</span></div>
+</div>
+"""
+    st.sidebar.markdown(status_html, unsafe_allow_html=True)
 
 
 # --- Error boundary helper ---
