@@ -40,43 +40,49 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 }
 
 /* ============================================ */
-/* Hide Streamlit Cloud toolbar (but keep header  */
-/* so the sidebar collapse button works on mobile) */
+/* Hide Streamlit Cloud toolbar — but KEEP the    */
+/* header alive so the sidebar toggle works on    */
+/* mobile.                                         */
 /* ============================================ */
-[data-testid="stToolbar"] {
-    visibility: hidden !important;
-    height: 0 !important;
-    position: fixed !important;
-}
 header[data-testid="stHeader"] {
     background: transparent !important;
+    /* DO NOT set height:0 or the sidebar collapse button gets clipped */
 }
-#MainMenu { visibility: hidden !important; }
+
+/* Hide individual unwanted children, not the whole header */
+[data-testid="stToolbar"] {
+    display: none !important;
+}
+#MainMenu { display: none !important; }
 footer { visibility: hidden !important; }
 .stDeployButton { display: none !important; }
 
-/* Ensure the sidebar collapse/expand button is visible on mobile.
-   It lives in the header — hiding the header used to hide it too. */
+/* Force-show the sidebar collapse / expand controls with every test-id
+   variant Streamlit has used across versions, so the mobile hamburger
+   is always reachable. */
 [data-testid="stSidebarCollapsedControl"],
 [data-testid="collapsedControl"],
-button[kind="header"][data-testid="baseButton-headerNoPadding"] {
+[data-testid="stSidebarCollapseButton"],
+button[kind="header"],
+button[kind="headerNoPadding"],
+[data-testid="baseButton-headerNoPadding"],
+[data-testid="baseButton-header"] {
     visibility: visible !important;
+    opacity: 1 !important;
     display: flex !important;
+    pointer-events: auto !important;
     z-index: 999999 !important;
 }
 
-/* On desktop the sidebar is always open so the header can shrink.
-   On mobile (<= 768px) keep the header tall enough to hold the
-   collapse button. */
-@media (min-width: 769px) {
-    header[data-testid="stHeader"] {
-        height: 0 !important;
-    }
-}
-@media (max-width: 768px) {
-    header[data-testid="stHeader"] {
-        min-height: 48px !important;
-    }
+/* Floating fallback: if Streamlit positions the collapsed control
+   absolutely, anchor it to the top-left corner where users expect it. */
+[data-testid="stSidebarCollapsedControl"] {
+    position: fixed !important;
+    top: 0.5rem !important;
+    left: 0.5rem !important;
+    background: rgba(15, 23, 42, 0.85) !important;
+    border-radius: 8px !important;
+    padding: 6px !important;
 }
 
 /* Metric card hover + glow effect */
