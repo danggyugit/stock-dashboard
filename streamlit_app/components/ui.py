@@ -40,58 +40,20 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 }
 
 /* ============================================ */
-/* Hide Streamlit Cloud toolbar — but KEEP the    */
-/* header alive so the sidebar toggle works on    */
-/* mobile.                                         */
+/* Minimal Streamlit Cloud chrome cleanup.        */
+/* Touch only the deploy button + main menu —     */
+/* leave header / sidebar alone so the native     */
+/* << / >> toggle keeps working on PC + mobile.   */
 /* ============================================ */
 header[data-testid="stHeader"] {
     background: transparent !important;
-    /* DO NOT set height:0 or the sidebar collapse button gets clipped */
 }
-
-/* Hide individual unwanted children, not the whole header */
 [data-testid="stToolbar"] {
-    display: none !important;
-}
-[data-testid="stHeaderActionElements"] {
     display: none !important;
 }
 #MainMenu { display: none !important; }
 footer { visibility: hidden !important; }
 .stDeployButton { display: none !important; }
-
-/* Force-show the sidebar expand button (Streamlit 1.55+).
-   This is the floating "open sidebar" pill that appears after the
-   sidebar is collapsed — both on desktop after clicking << and on
-   mobile where the sidebar starts collapsed. */
-[data-testid="stExpandSidebarButton"] {
-    visibility: visible !important;
-    opacity: 1 !important;
-    display: flex !important;
-    pointer-events: auto !important;
-    position: fixed !important;
-    top: 0.75rem !important;
-    left: 0.75rem !important;
-    z-index: 999999 !important;
-    background: rgba(30, 41, 59, 0.95) !important;
-    border: 1px solid rgba(59, 130, 246, 0.5) !important;
-    border-radius: 8px !important;
-    padding: 8px 10px !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-}
-[data-testid="stExpandSidebarButton"]:hover {
-    background: rgba(59, 130, 246, 0.2) !important;
-    border-color: rgba(59, 130, 246, 0.8) !important;
-}
-
-/* Make sure the collapse button (<<) inside the expanded sidebar
-   is also reachable */
-[data-testid="stSidebarCollapseButton"] {
-    visibility: visible !important;
-    opacity: 1 !important;
-    display: flex !important;
-    pointer-events: auto !important;
-}
 
 /* Metric card hover + glow effect */
 [data-testid="stMetric"] {
