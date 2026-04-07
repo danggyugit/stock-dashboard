@@ -17,19 +17,25 @@ logger = logging.getLogger(__name__)
 # --- Custom CSS (injected once per page) ---
 CUSTOM_CSS = """
 <style>
-/* Place sidebar user content (Account, Status) ABOVE the page navigation */
-section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
-    display: flex !important;
-    flex-direction: column !important;
+/* ============================================ */
+/* Reduce top padding on main content + sidebar */
+/* ============================================ */
+.block-container {
+    padding-top: 1rem !important;
+}
+section[data-testid="stSidebar"] > div {
+    padding-top: 0.5rem !important;
 }
 section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
-    order: -1 !important;
-}
-section[data-testid="stSidebar"] [data-testid="stSidebarNav"] {
-    order: 0 !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
 }
 
-/* Hide Streamlit Cloud toolbar (Share, Star, GitHub, menu) */
+/* st.navigation handles sidebar order — Account, nav menu, Status render in code order */
+
+/* ============================================ */
+/* Hide Streamlit Cloud toolbar                  */
+/* ============================================ */
 [data-testid="stToolbar"] {
     visibility: hidden !important;
     height: 0 !important;
@@ -37,6 +43,7 @@ section[data-testid="stSidebar"] [data-testid="stSidebarNav"] {
 }
 header[data-testid="stHeader"] {
     background: transparent !important;
+    height: 0 !important;
 }
 #MainMenu { visibility: hidden !important; }
 footer { visibility: hidden !important; }
@@ -184,38 +191,55 @@ def stock_logo_url(ticker: str) -> str:
 # --- Global Sidebar Info Panel ---
 
 def render_sidebar_info() -> None:
-    """Render global info panel in sidebar (cache age, market status)."""
+    """Render compact status panel at the bottom of sidebar."""
     from database import get_connection
 
     is_open, status = market_status()
     badge_color = "#10B981" if is_open else "#EF4444"
 
-    st.sidebar.markdown("---")
+    # Compact status styling
+    st.sidebar.markdown("""
+    <style>
+    .sidebar-status-block { margin-top: 16px; }
+    .sidebar-status-block h3 {
+        margin: 0 0 4px 0 !important;
+        padding: 0 !important;
+        font-size: 0.95rem !important;
+        border: none !important;
+    }
+    .sidebar-status-block .status-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 11px;
+        color: #94A3B8;
+        padding: 1px 0;
+        line-height: 1.4;
+    }
+    .sidebar-status-block .status-row .val {
+        color: #F8FAFC;
+        font-weight: 600;
+    }
+    .sidebar-status-block .market-line {
+        font-size: 12px;
+        font-weight: 600;
+        color: #F8FAFC;
+        padding: 2px 0 4px 0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.sidebar.markdown('<div class="sidebar-status-block">', unsafe_allow_html=True)
     st.sidebar.markdown("### Status")
 
-    # Market status
-    st.sidebar.markdown(
-        f'<div style="padding:6px 0;">'
-        f'<span style="color:{badge_color};">●</span> '
-        f'<span style="font-weight:600;">{status}</span>'
-        f'</div>',
-        unsafe_allow_html=True,
-    )
-
-    # Cache info
     try:
         conn = get_connection()
-        # Heatmap cache
         hm_age = conn.execute(
             "SELECT updated_at FROM cache_meta WHERE key = 'heatmap'"
         ).fetchone()
-        # Stock count
         sc = conn.execute("SELECT COUNT(*) FROM stocks").fetchone()
         stock_count = sc[0] if sc else 0
-        # Fundamentals count
         fc = conn.execute("SELECT COUNT(*) FROM fundamentals").fetchone()
         fund_count = fc[0] if fc else 0
-        # Portfolio count
         pc = conn.execute("SELECT COUNT(*) FROM portfolios").fetchone()
         portfolio_count = pc[0] if pc else 0
 
@@ -235,16 +259,16 @@ def render_sidebar_info() -> None:
 
         hm_label = _age_label(hm_age[0] if hm_age else None)
 
-        st.sidebar.caption(f"Stocks: **{stock_count}**")
-        st.sidebar.caption(f"Fundamentals: **{fund_count}**")
-        st.sidebar.caption(f"Portfolios: **{portfolio_count}**")
-        st.sidebar.caption(f"Heatmap cache: {hm_label}")
+        st.sidebar.markdown(
+            f'<div class="market-line"><span style="color:{badge_color};">●</span> {status}</div>'
+            f'<div class="status-row"><span>Stocks</span><span class="val">{stock_count}</span></div>'
+            f'<div class="status-row"><span>Fundamentals</span><span class="val">{fund_count}</span></div>'
+            f'<div class="status-row"><span>Portfolios</span><span class="val">{portfolio_count}</span></div>'
+            f'<div class="status-row"><span>Heatmap cache</span><span class="val">{hm_label}</span></div>',
+            unsafe_allow_html=True,
+        )
     except Exception:
         st.sidebar.caption("Status unavailable.")
-
-    st.sidebar.markdown("---")
-    st.sidebar.caption("Stock Dashboard v1.0")
-    st.sidebar.caption("Powered by yfinance, Finnhub")
 
 
 # --- Error boundary helper ---

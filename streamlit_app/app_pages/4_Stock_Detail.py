@@ -43,10 +43,6 @@ def _calc_bollinger(closes: list[float], period: int = 20, std_dev: float = 2.0)
     lower = middle - std * std_dev
     return middle.tolist(), upper.tolist(), lower.tolist()
 
-st.set_page_config(page_title="Stock Detail", page_icon="📈", layout="wide")
-inject_css()
-render_user_sidebar()
-render_sidebar_info()
 page_header("Stock Detail", "Individual stock analysis with interactive chart")
 
 # --- Recently viewed sidebar ---

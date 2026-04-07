@@ -135,7 +135,7 @@ def claim_legacy_data(user_id: int) -> dict:
 
 
 def render_user_sidebar() -> None:
-    """Render user info + compact logout button in sidebar."""
+    """Render user info + compact logout button at top of sidebar."""
     if not is_logged_in():
         return
 
@@ -143,7 +143,7 @@ def render_user_sidebar() -> None:
     if not user:
         return
 
-    # Compact logout icon button (SVG-style logout/exit icon)
+    # Subtle gray logout button
     st.sidebar.markdown("""
     <style>
     .st-key-logout_btn button {
@@ -151,9 +151,9 @@ def render_user_sidebar() -> None:
         min-height: 0 !important;
         height: 56px !important;
         width: 100% !important;
-        background: rgba(239,68,68,0.10) !important;
-        border: 1px solid rgba(239,68,68,0.3) !important;
-        color: #EF4444 !important;
+        background: rgba(148,163,184,0.10) !important;
+        border: 1px solid rgba(148,163,184,0.25) !important;
+        color: #94A3B8 !important;
         border-radius: 8px !important;
         display: flex !important;
         align-items: center !important;
@@ -161,15 +161,22 @@ def render_user_sidebar() -> None:
         transition: all 0.15s !important;
     }
     .st-key-logout_btn button:hover {
-        background: rgba(239,68,68,0.25) !important;
-        border-color: rgba(239,68,68,0.7) !important;
+        background: rgba(148,163,184,0.20) !important;
+        border-color: rgba(148,163,184,0.5) !important;
+        color: #CBD5E1 !important;
         transform: none !important;
     }
     .st-key-logout_btn button p {
         margin: 0 !important;
-        font-size: 22px !important;
+        font-size: 20px !important;
         line-height: 1 !important;
-        font-weight: 700 !important;
+    }
+    /* Compact account heading */
+    .sidebar-account-block h3 {
+        margin: 0 0 6px 0 !important;
+        padding: 0 !important;
+        font-size: 1rem !important;
+        border: none !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -196,6 +203,5 @@ def render_user_sidebar() -> None:
         </div>
         """, unsafe_allow_html=True)
     with col_logout:
-        # Unicode "exit" icon (rectangle with arrow leaving)
         if st.button("⇥", key="logout_btn", help="Logout"):
             st.logout()

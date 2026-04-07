@@ -9,10 +9,6 @@ from services.calendar_service import get_economic_events, get_earnings_events
 from services.auth_service import render_user_sidebar
 from components.ui import inject_css, page_header, render_sidebar_info
 
-st.set_page_config(page_title="Calendar", page_icon="📅", layout="wide")
-inject_css()
-render_user_sidebar()
-render_sidebar_info()
 page_header("Economic & Earnings Calendar", "Upcoming economic events and earnings reports")
 
 # --- Date Range ---

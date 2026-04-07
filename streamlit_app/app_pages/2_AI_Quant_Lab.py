@@ -34,24 +34,6 @@ from datetime import datetime, timedelta
 
 warnings.filterwarnings("ignore")
 
-# ═══════════════════════════════════════════════════════════
-# PAGE CONFIG (multipage compatible — dark theme)
-# ═══════════════════════════════════════════════════════════
-st.set_page_config(
-    page_title="AI Quant Lab",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
-# Inject shared CSS + sidebar info (consistent with other pages)
-from components.ui import inject_css, render_sidebar_info  # noqa: E402
-from services.auth_service import render_user_sidebar  # noqa: E402
-
-inject_css()
-render_user_sidebar()
-render_sidebar_info()
-
 # AI Quant Lab specific styles (dark-theme compatible)
 st.markdown("""
 <style>
