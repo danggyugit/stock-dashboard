@@ -1,0 +1,72 @@
+name: Update Stock Cache
+
+on:
+  # Manual trigger from GitHub UI
+  workflow_dispatch:
+    inputs:
+      with_fundamentals:
+        description: "Also fetch fundamentals (slow, ~5min)"
+        required: false
+        default: "true"
+
+  # Scheduled runs (UTC)
+  # Times in KST = UTC + 9
+  schedule:
+    # 22:30 KST (US market open)        = 13:30 UTC
+    - cron: "30 13 * * 1-5"
+    # 02:30 KST (4 hours later, midday) = 17:30 UTC
+    - cron: "30 17 * * 1-5"
+    # 06:30 KST (US market close + 30m) = 21:30 UTC
+    - cron: "30 21 * * 1-5"
+    # 13:00 KST (Korea midday)          = 04:00 UTC
+    - cron: "0 4 * * 1-5"
+
+permissions:
+  contents: write
+
+jobs:
+  update-cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install yfinance pandas requests lxml
+
+      - name: Fetch cache (heatmap + stocks always; fundamentals only on first daily run)
+        run: |
+          # Determine if we should fetch fundamentals
+          # - Always on workflow_dispatch (user-triggered)
+          # - Only on the 06:30 KST run (21:30 UTC) on cron
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            EXTRA_ARGS="--fundamentals"
+          elif [ "$(date -u +%H)" = "21" ]; then
+            EXTRA_ARGS="--fundamentals"
+          else
+            EXTRA_ARGS=""
+          fi
+          echo "Running with: $EXTRA_ARGS"
+          cd streamlit_app
+          python scripts/fetch_cache.py $EXTRA_ARGS
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add streamlit_app/data/cache/
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: update stock cache [skip ci]"
+            git push
+          fi

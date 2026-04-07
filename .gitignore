@@ -6,8 +6,13 @@ __pycache__/
 venv/
 
 # Data
-data/
+/data/
 backend/data/
+
+# Streamlit app: ignore DBs but keep cache JSONs
+streamlit_app/data/*.db
+streamlit_app/data/*.db-*
+streamlit_app/data/*.db-journal
 
 # Environment
 .env

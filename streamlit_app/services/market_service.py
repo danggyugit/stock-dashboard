@@ -50,19 +50,81 @@ def _store_stocks(df: pd.DataFrame) -> None:
 
 
 def get_heatmap_data(period: str = "1d") -> dict:
-    """Get heatmap data from SQLite cache. Falls back to live fetch if empty."""
-    conn = get_connection()
+    """Get heatmap data with priority: GitHub cache > SQLite > live fetch."""
+    # 1. Try GitHub-prefetched cache (fastest, ~1s)
+    from services.cache_loader import get_cached_heatmap
+    github_cache = get_cached_heatmap()
+    if github_cache and github_cache.get("tickers"):
+        return _build_heatmap_from_github_cache(github_cache, period)
 
-    # Check if we have cached heatmap data
+    # 2. Try SQLite/Turso cache (fast, populated by manual Refresh)
+    conn = get_connection()
     cached_count = conn.execute(
         "SELECT COUNT(*) FROM daily_prices"
     ).fetchone()[0]
-
     if cached_count > 0:
         return _build_heatmap_from_cache(period)
 
-    # No cache — do live fetch (slow, first time only)
+    # 3. Live fetch (slow, last resort)
     return _fetch_heatmap_live(period)
+
+
+def _build_heatmap_from_github_cache(cache: dict, period: str) -> dict:
+    """Build heatmap dict from GitHub-cached JSON.
+
+    Args:
+        cache: JSON dict loaded from data/cache/heatmap.json.
+        period: '1d' uses last 2 closes, others use first vs last.
+
+    Returns:
+        Heatmap response dict (sectors list + period + updated_at).
+    """
+    tickers_data = cache.get("tickers", {})
+    sectors: dict[str, dict] = {}
+
+    for ticker, info in tickers_data.items():
+        sector_name = info.get("sector") or "Other"
+        mkt_cap = info.get("market_cap") or 1_000_000_000
+        prices = info.get("prices") or []
+
+        if sector_name not in sectors:
+            sectors[sector_name] = {
+                "name": sector_name, "stocks": [], "total_market_cap": 0,
+            }
+
+        change_pct = price = volume = None
+        if len(prices) >= 2:
+            ref = prices[-2]["close"] if period == "1d" else prices[0]["close"]
+            last = prices[-1]["close"]
+            if ref and ref != 0 and last:
+                change_pct = round(((last - ref) / ref) * 100, 2)
+            price = last
+            volume = prices[-1].get("volume")
+        elif prices:
+            price = prices[-1].get("close")
+
+        sectors[sector_name]["stocks"].append({
+            "ticker": ticker,
+            "name": info.get("name", ticker),
+            "market_cap": mkt_cap,
+            "price": round(float(price), 2) if price else None,
+            "change_pct": change_pct,
+            "volume": volume,
+        })
+        sectors[sector_name]["total_market_cap"] += mkt_cap
+
+    sector_list: list[dict] = []
+    for sd in sectors.values():
+        changes = [s["change_pct"] for s in sd["stocks"] if s["change_pct"] is not None]
+        sd["avg_change_pct"] = round(sum(changes) / len(changes), 2) if changes else None
+        sector_list.append(sd)
+
+    sector_list.sort(key=lambda x: x.get("total_market_cap") or 0, reverse=True)
+    return {
+        "sectors": sector_list,
+        "period": period,
+        "updated_at": cache.get("updated_at"),
+    }
 
 
 def _build_heatmap_from_cache(period: str) -> dict:
@@ -252,11 +314,22 @@ def refresh_heatmap_cache(progress_callback=None) -> int:
 
 
 def get_heatmap_cache_status() -> dict:
-    """Check heatmap cache status."""
+    """Check heatmap cache status. Prefers GitHub cache, falls back to SQLite."""
+    # Try GitHub cache first
+    from services.cache_loader import get_cache_meta
+    meta = get_cache_meta()
+    if meta:
+        return {
+            "count": meta.get("price_count", 0),
+            "last_date": meta.get("updated_at", "")[:19].replace("T", " "),
+            "source": "github_cache",
+        }
+
+    # Fall back to SQLite/Turso
     conn = get_connection()
     count = conn.execute("SELECT COUNT(DISTINCT ticker) FROM daily_prices").fetchone()[0]
     last_date = conn.execute("SELECT MAX(date) FROM daily_prices").fetchone()[0]
-    return {"count": count or 0, "last_date": last_date}
+    return {"count": count or 0, "last_date": last_date, "source": "sqlite"}
 
 
 def heatmap_cache_age_hours() -> float | None:
@@ -432,7 +505,18 @@ def get_screener_data(sector: str | None = None, sort_by: str = "market_cap") ->
 # --- Screener Fundamentals Cache ---
 
 def get_fundamentals_cache_status() -> dict:
-    """Check how many stocks have cached fundamentals and when last updated."""
+    """Check fundamentals cache status. Prefers GitHub cache."""
+    # Try GitHub cache first
+    from services.cache_loader import get_cached_fundamentals
+    funds = get_cached_fundamentals()
+    if funds and funds.get("tickers"):
+        return {
+            "count": len(funds["tickers"]),
+            "oldest": funds.get("updated_at"),
+            "newest": funds.get("updated_at"),
+            "source": "github_cache",
+        }
+
     conn = get_connection()
     row = conn.execute(
         "SELECT COUNT(*), MIN(updated_at), MAX(updated_at) FROM fundamentals"
@@ -441,11 +525,52 @@ def get_fundamentals_cache_status() -> dict:
         "count": row[0] or 0,
         "oldest": row[1],
         "newest": row[2],
+        "source": "sqlite",
     }
 
 
 def get_screener_from_cache() -> pd.DataFrame:
-    """Load screener data from SQLite fundamentals + stocks cache (instant)."""
+    """Load screener data. Prefers GitHub cache, falls back to SQLite."""
+    # 1. Try GitHub cache first
+    from services.cache_loader import get_cached_stocks, get_cached_fundamentals
+    stocks_cache = get_cached_stocks()
+    funds_cache = get_cached_fundamentals()
+
+    if stocks_cache:
+        rows = []
+        funds_dict = (funds_cache or {}).get("tickers", {}) if funds_cache else {}
+        for s in stocks_cache:
+            ticker = s["ticker"]
+            f = funds_dict.get(ticker, {})
+            rows.append({
+                "ticker": ticker,
+                "name": s["name"],
+                "sector": s["sector"],
+                "industry": s["industry"],
+                "market_cap": f.get("market_cap"),
+                "pe_ratio": f.get("pe_ratio"),
+                "pb_ratio": f.get("pb_ratio"),
+                "ps_ratio": f.get("ps_ratio"),
+                "eps": f.get("eps"),
+                "roe": f.get("roe"),
+                "debt_to_equity": f.get("debt_to_equity"),
+                "dividend_yield": f.get("dividend_yield"),
+                "beta": f.get("beta"),
+                "fifty_two_week_high": f.get("fifty_two_week_high"),
+                "fifty_two_week_low": f.get("fifty_two_week_low"),
+                "avg_volume": f.get("avg_volume"),
+            })
+        # Also enrich market_cap from heatmap cache (more reliable)
+        from services.cache_loader import get_cached_heatmap
+        heatmap = get_cached_heatmap()
+        if heatmap and heatmap.get("tickers"):
+            ticker_caps = {t: info.get("market_cap") for t, info in heatmap["tickers"].items()}
+            for r in rows:
+                if not r.get("market_cap") and r["ticker"] in ticker_caps:
+                    r["market_cap"] = ticker_caps[r["ticker"]]
+        return pd.DataFrame(rows).sort_values("market_cap", ascending=False, na_position="last").reset_index(drop=True)
+
+    # 2. Fall back to SQLite/Turso
     conn = get_connection()
     rows = conn.execute("""
         SELECT s.ticker, s.name, s.sector, s.industry, s.market_cap,
