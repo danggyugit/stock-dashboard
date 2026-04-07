@@ -220,15 +220,13 @@ if not is_logged_in():
 
     st.markdown(f"""
     <style>
-    /* Force the entire st.button container to be tall and wide */
-    div.st-key-google_signin {{
-        height: 380px !important;
-    }}
+    /* Force the button container to fill column width and be tall */
+    div.st-key-google_signin,
     div.st-key-google_signin > div,
-    div.st-key-google_signin > div > div,
-    div.st-key-google_signin [data-testid="stButton"] {{
-        height: 380px !important;
+    div.st-key-google_signin [data-testid="stButton"],
+    div.st-key-google_signin [data-testid="stButton"] > div {{
         width: 100% !important;
+        height: 360px !important;
     }}
     .st-key-google_signin button {{
         background: linear-gradient(135deg, #4285F4 0%, #1A73E8 100%) !important;
@@ -238,40 +236,47 @@ if not is_logged_in():
         font-family: "Google Sans", Roboto, Arial, sans-serif !important;
         font-weight: 700 !important;
         font-size: 26px !important;
-        height: 380px !important;
-        min-height: 380px !important;
+        height: 360px !important;
+        min-height: 360px !important;
         width: 100% !important;
+        min-width: 100% !important;
         box-shadow: 0 10px 40px rgba(66,133,244,0.45) !important;
         transition: all 0.2s ease !important;
-        background-image: url("{google_svg}") !important;
-        background-repeat: no-repeat !important;
-        background-position: center 90px !important;
-        background-size: 110px 110px !important;
-        padding: 230px 20px 30px 20px !important;
+        background-image:
+            url("{google_svg}"),
+            linear-gradient(135deg, #4285F4 0%, #1A73E8 100%) !important;
+        background-repeat: no-repeat, no-repeat !important;
+        background-position: center 35%, center !important;
+        background-size: 130px 130px, 100% 100% !important;
+        padding: 0 !important;
         text-align: center !important;
         cursor: pointer !important;
-        white-space: nowrap !important;
-        display: flex !important;
-        align-items: flex-end !important;
-        justify-content: center !important;
+        position: relative !important;
     }}
     .st-key-google_signin button:hover {{
-        background: linear-gradient(135deg, #1A73E8 0%, #1557B0 100%) !important;
-        background-image: url("{google_svg}") !important;
-        background-repeat: no-repeat !important;
-        background-position: center 90px !important;
-        background-size: 110px 110px !important;
+        background-image:
+            url("{google_svg}"),
+            linear-gradient(135deg, #1A73E8 0%, #1557B0 100%) !important;
+        background-repeat: no-repeat, no-repeat !important;
+        background-position: center 35%, center !important;
+        background-size: 130px 130px, 100% 100% !important;
         box-shadow: 0 14px 48px rgba(66,133,244,0.65) !important;
         transform: translateY(-3px) !important;
     }}
     .st-key-google_signin button:active {{
         transform: translateY(0) !important;
     }}
+    /* Push text to bottom 25% of button so it sits below the logo */
     .st-key-google_signin button p {{
         color: #FFFFFF !important;
         font-weight: 700 !important;
         font-size: 26px !important;
         margin: 0 !important;
+        position: absolute !important;
+        bottom: 60px !important;
+        left: 0 !important;
+        right: 0 !important;
+        text-align: center !important;
     }}
 
     /* Plan comparison table */
