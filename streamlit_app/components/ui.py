@@ -33,10 +33,37 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 
 /* st.navigation handles sidebar order — Account, nav menu, Status render in code order */
 
-/* Sidebar nav item font size: 14px -> 16px */
+/* ============================================ */
+/* Sidebar nav items styled as buttons          */
+/* ============================================ */
 section[data-testid="stSidebarNav"] a span,
 section[data-testid="stSidebarNav"] li span {
     font-size: 16px !important;
+}
+
+/* Each nav item -> button look */
+section[data-testid="stSidebarNav"] a {
+    background: rgba(30, 41, 59, 0.5) !important;
+    border: 1px solid rgba(59, 130, 246, 0.15) !important;
+    border-radius: 8px !important;
+    margin: 4px 8px !important;
+    padding: 8px 12px !important;
+    transition: all 0.15s ease !important;
+}
+section[data-testid="stSidebarNav"] a:hover {
+    background: rgba(59, 130, 246, 0.2) !important;
+    border-color: rgba(59, 130, 246, 0.5) !important;
+    transform: translateX(2px) !important;
+}
+/* Active page (currently selected) */
+section[data-testid="stSidebarNav"] a[aria-current="page"] {
+    background: rgba(59, 130, 246, 0.3) !important;
+    border-color: rgba(59, 130, 246, 0.7) !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2) !important;
+}
+section[data-testid="stSidebarNav"] a[aria-current="page"] span {
+    color: #F8FAFC !important;
+    font-weight: 600 !important;
 }
 
 /* ============================================ */
