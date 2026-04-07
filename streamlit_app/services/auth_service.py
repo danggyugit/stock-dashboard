@@ -135,11 +135,7 @@ def claim_legacy_data(user_id: int) -> dict:
 
 
 def render_user_sidebar() -> None:
-    """Render user info + compact logout button in sidebar.
-
-    Layout: profile card on left, small icon logout button on right.
-    Placed at the top of the sidebar (above Status panel).
-    """
+    """Render user info + compact logout button in sidebar."""
     if not is_logged_in():
         return
 
@@ -147,22 +143,33 @@ def render_user_sidebar() -> None:
     if not user:
         return
 
-    # Compact logout button styling — scoped to st-key-logout_btn
+    # Compact logout icon button (SVG-style logout/exit icon)
     st.sidebar.markdown("""
     <style>
     .st-key-logout_btn button {
-        padding: 8px 6px !important;
+        padding: 0 !important;
         min-height: 0 !important;
-        height: auto !important;
-        font-size: 16px !important;
-        line-height: 1 !important;
-        background: rgba(239,68,68,0.12) !important;
+        height: 56px !important;
+        width: 100% !important;
+        background: rgba(239,68,68,0.10) !important;
         border: 1px solid rgba(239,68,68,0.3) !important;
         color: #EF4444 !important;
+        border-radius: 8px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.15s !important;
     }
     .st-key-logout_btn button:hover {
         background: rgba(239,68,68,0.25) !important;
-        border-color: rgba(239,68,68,0.6) !important;
+        border-color: rgba(239,68,68,0.7) !important;
+        transform: none !important;
+    }
+    .st-key-logout_btn button p {
+        margin: 0 !important;
+        font-size: 22px !important;
+        line-height: 1 !important;
+        font-weight: 700 !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -189,5 +196,6 @@ def render_user_sidebar() -> None:
         </div>
         """, unsafe_allow_html=True)
     with col_logout:
-        if st.button("⏏", key="logout_btn", help="Logout"):
+        # Unicode "exit" icon (rectangle with arrow leaving)
+        if st.button("⇥", key="logout_btn", help="Logout"):
             st.logout()

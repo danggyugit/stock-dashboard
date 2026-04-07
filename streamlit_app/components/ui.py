@@ -17,6 +17,18 @@ logger = logging.getLogger(__name__)
 # --- Custom CSS (injected once per page) ---
 CUSTOM_CSS = """
 <style>
+/* Place sidebar user content (Account, Status) ABOVE the page navigation */
+section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+    display: flex !important;
+    flex-direction: column !important;
+}
+section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
+    order: -1 !important;
+}
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] {
+    order: 0 !important;
+}
+
 /* Hide Streamlit Cloud toolbar (Share, Star, GitHub, menu) */
 [data-testid="stToolbar"] {
     visibility: hidden !important;
