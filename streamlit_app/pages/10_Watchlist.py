@@ -12,8 +12,8 @@ from components.ui import inject_css, page_header, stock_logo_url, render_sideba
 
 st.set_page_config(page_title="Watchlist", page_icon="⭐", layout="wide")
 inject_css()
-render_sidebar_info()
 render_user_sidebar()
+render_sidebar_info()
 page_header("Watchlist & Alerts", "Track stocks and get notified on price moves")
 
 # Auth guard

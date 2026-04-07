@@ -64,8 +64,8 @@ def _build_wordcloud(headlines: list[str]) -> bytes | None:
 
 st.set_page_config(page_title="Sentiment", page_icon="🧠", layout="wide")
 inject_css()
-render_sidebar_info()
 render_user_sidebar()
+render_sidebar_info()
 page_header("Market Sentiment", "Fear & Greed index, news sentiment, AI analysis")
 
 # --- Fear & Greed Index ---

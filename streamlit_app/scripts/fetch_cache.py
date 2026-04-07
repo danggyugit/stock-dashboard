@@ -33,26 +33,64 @@ CACHE_DIR = Path(__file__).resolve().parent.parent / "data" / "cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def fetch_sp500_list() -> pd.DataFrame:
-    """Fetch S&P 500 list from Wikipedia."""
-    logger.info("Fetching S&P 500 list from Wikipedia...")
-    url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-    resp = requests.get(
-        url,
-        headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64)"},
-        timeout=30,
-    )
-    resp.raise_for_status()
-    tables = pd.read_html(io.StringIO(resp.text))
-    df = tables[0]
-    result = pd.DataFrame({
-        "ticker": df["Symbol"].str.replace(".", "-", regex=False),
-        "name": df["Security"],
-        "sector": df["GICS Sector"],
-        "industry": df["GICS Sub-Industry"],
-    })
-    logger.info("Fetched %d S&P 500 stocks.", len(result))
-    return result
+def fetch_sp1500_list() -> pd.DataFrame:
+    """Fetch S&P 1500 (Large + Mid + Small Cap) list from Wikipedia.
+
+    Combines:
+    - S&P 500 (Large Cap): ~503 tickers
+    - S&P 400 (Mid Cap): ~400 tickers
+    - S&P 600 (Small Cap): ~600 tickers
+    Total: ~1500 unique tickers.
+    """
+    logger.info("Fetching S&P 1500 list (Large + Mid + Small Cap)...")
+    headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64)"}
+    sources = [
+        ("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies", "Large Cap"),
+        ("https://en.wikipedia.org/wiki/List_of_S%26P_400_companies", "Mid Cap"),
+        ("https://en.wikipedia.org/wiki/List_of_S%26P_600_companies", "Small Cap"),
+    ]
+
+    frames: list[pd.DataFrame] = []
+    for url, cap_tier in sources:
+        try:
+            resp = requests.get(url, headers=headers, timeout=30)
+            tables = pd.read_html(io.StringIO(resp.text))
+            raw = tables[0]
+            # Wikipedia table column names vary; map flexibly
+            col_map: dict[str, str] = {}
+            for c in raw.columns:
+                lc = str(c).lower()
+                if "symbol" in lc or "ticker" in lc:
+                    col_map[c] = "ticker"
+                elif "gics sector" in lc or (lc == "sector"):
+                    col_map[c] = "sector"
+                elif "gics sub" in lc or "industry" in lc:
+                    col_map[c] = "industry"
+                elif "security" in lc or "company" in lc:
+                    col_map[c] = "name"
+            raw = raw.rename(columns=col_map)
+            needed = [c for c in ["ticker", "name", "sector", "industry"] if c in raw.columns]
+            df = raw[needed].copy()
+            df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+            df["cap_tier"] = cap_tier
+            # Fill missing columns with empty
+            for col in ("name", "sector", "industry"):
+                if col not in df.columns:
+                    df[col] = ""
+            frames.append(df)
+            logger.info("  %s: %d tickers", cap_tier, len(df))
+        except Exception as e:
+            logger.warning("Failed to fetch %s: %s", cap_tier, e)
+
+    if not frames:
+        logger.error("All Wikipedia sources failed.")
+        return pd.DataFrame(columns=["ticker", "name", "sector", "industry", "cap_tier"])
+
+    combined = pd.concat(frames, ignore_index=True)
+    # Drop duplicates (S&P 500 and 400 may overlap occasionally)
+    combined = combined.drop_duplicates(subset=["ticker"], keep="first")
+    logger.info("Fetched %d unique S&P 1500 stocks.", len(combined))
+    return combined
 
 
 def fetch_batch_prices(tickers: list[str]) -> dict[str, list[dict]]:
@@ -179,8 +217,8 @@ def main() -> int:
     now_iso = datetime.now(timezone.utc).isoformat()
 
     try:
-        # 1. Stock list
-        stocks_df = fetch_sp500_list()
+        # 1. Stock list (S&P 1500: Large + Mid + Small Cap)
+        stocks_df = fetch_sp1500_list()
         if stocks_df.empty:
             logger.error("Failed to fetch stock list.")
             return 1

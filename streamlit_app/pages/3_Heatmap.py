@@ -13,8 +13,8 @@ from components.ui import inject_css, page_header, stock_logo_url, render_sideba
 
 st.set_page_config(page_title="Market Heatmap", page_icon="🗺️", layout="wide")
 inject_css()
-render_sidebar_info()
 render_user_sidebar()
+render_sidebar_info()
 page_header("S&P 500 Market Heatmap", "Sector-grouped treemap with live price changes")
 
 # Cache status & refresh

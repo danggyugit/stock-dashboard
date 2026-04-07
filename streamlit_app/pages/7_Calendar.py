@@ -11,8 +11,8 @@ from components.ui import inject_css, page_header, render_sidebar_info
 
 st.set_page_config(page_title="Calendar", page_icon="📅", layout="wide")
 inject_css()
-render_sidebar_info()
 render_user_sidebar()
+render_sidebar_info()
 page_header("Economic & Earnings Calendar", "Upcoming economic events and earnings reports")
 
 # --- Date Range ---

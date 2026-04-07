@@ -135,7 +135,11 @@ def claim_legacy_data(user_id: int) -> dict:
 
 
 def render_user_sidebar() -> None:
-    """Render user info + logout button in sidebar (only if logged in)."""
+    """Render user info + compact logout button in sidebar.
+
+    Layout: profile card on left, small icon logout button on right.
+    Placed at the top of the sidebar (above Status panel).
+    """
     if not is_logged_in():
         return
 
@@ -143,26 +147,47 @@ def render_user_sidebar() -> None:
     if not user:
         return
 
-    st.sidebar.markdown("---")
+    # Compact logout button styling — scoped to st-key-logout_btn
+    st.sidebar.markdown("""
+    <style>
+    .st-key-logout_btn button {
+        padding: 8px 6px !important;
+        min-height: 0 !important;
+        height: auto !important;
+        font-size: 16px !important;
+        line-height: 1 !important;
+        background: rgba(239,68,68,0.12) !important;
+        border: 1px solid rgba(239,68,68,0.3) !important;
+        color: #EF4444 !important;
+    }
+    .st-key-logout_btn button:hover {
+        background: rgba(239,68,68,0.25) !important;
+        border-color: rgba(239,68,68,0.6) !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     st.sidebar.markdown("### Account")
 
-    # Profile card
     pic = user.get("picture") or ""
     name = user.get("name") or "User"
     email = user.get("email") or ""
-    profile_html = f"""
-    <div style="display:flex; align-items:center; gap:10px; padding:8px;
-                background:rgba(30,41,59,0.5); border-radius:8px; margin-bottom:8px;">
-        <img src="{pic}" style="width:40px;height:40px;border-radius:50%;
-             object-fit:cover;" onerror="this.style.display='none'"/>
-        <div style="overflow:hidden;">
-            <div style="font-weight:600;color:#F8FAFC;font-size:13px;">{name}</div>
-            <div style="font-size:11px;color:#94A3B8;
-                 overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{email}</div>
-        </div>
-    </div>
-    """
-    st.sidebar.markdown(profile_html, unsafe_allow_html=True)
 
-    if st.sidebar.button("Logout", use_container_width=True):
-        st.logout()
+    col_profile, col_logout = st.sidebar.columns([4, 1])
+    with col_profile:
+        st.markdown(f"""
+        <div style="display:flex; align-items:center; gap:10px; padding:8px;
+                    background:rgba(30,41,59,0.5); border-radius:8px;">
+            <img src="{pic}" style="width:36px;height:36px;border-radius:50%;
+                 object-fit:cover;" onerror="this.style.display='none'"/>
+            <div style="overflow:hidden;min-width:0;">
+                <div style="font-weight:600;color:#F8FAFC;font-size:12px;
+                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{name}</div>
+                <div style="font-size:10px;color:#94A3B8;
+                     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{email}</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col_logout:
+        if st.button("⏏", key="logout_btn", help="Logout"):
+            st.logout()

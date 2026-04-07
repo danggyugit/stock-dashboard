@@ -13,8 +13,8 @@ from components.ui import inject_css, page_header, render_sidebar_info
 
 st.set_page_config(page_title="Dashboard", page_icon="📊", layout="wide")
 inject_css()
-render_sidebar_info()
 render_user_sidebar()
+render_sidebar_info()
 page_header("Dashboard", "Real-time market overview and portfolio summary")
 
 # User context (Dashboard works without login but portfolio requires it)

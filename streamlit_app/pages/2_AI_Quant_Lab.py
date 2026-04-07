@@ -49,8 +49,8 @@ from components.ui import inject_css, render_sidebar_info  # noqa: E402
 from services.auth_service import render_user_sidebar  # noqa: E402
 
 inject_css()
-render_sidebar_info()
 render_user_sidebar()
+render_sidebar_info()
 
 # AI Quant Lab specific styles (dark-theme compatible)
 st.markdown("""

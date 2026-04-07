@@ -24,8 +24,8 @@ init_db()
 
 # --- Sidebar ---
 st.sidebar.title("Stock Dashboard")
-render_sidebar_info()
 render_user_sidebar()
+render_sidebar_info()
 
 # --- Home Page ---
 page_header("Stock Dashboard", "Navigate using the sidebar pages")
