@@ -34,6 +34,10 @@ from datetime import datetime, timedelta
 
 warnings.filterwarnings("ignore")
 
+# Auth guard — sign-in required
+from services.auth_service import require_auth  # noqa: E402
+_user = require_auth()
+
 # AI Quant Lab specific styles (dark-theme compatible)
 st.markdown("""
 <style>
