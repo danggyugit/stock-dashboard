@@ -220,20 +220,19 @@ if not is_logged_in():
 
     st.markdown(f"""
     <style>
-    /* Make column 2 a positioning context */
+    /* Force button container to match table height */
     div.st-key-google_signin {{
         position: relative !important;
         width: 100% !important;
-        height: 380px !important;
+        height: 305px !important;
     }}
     div.st-key-google_signin > div,
     div.st-key-google_signin [data-testid="stButton"],
     div.st-key-google_signin [data-testid="stButton"] > div {{
         width: 100% !important;
-        height: 380px !important;
+        height: 305px !important;
     }}
 
-    /* The actual button — solid blue gradient, absolute positioned */
     .st-key-google_signin button {{
         background: linear-gradient(135deg, #4285F4 0%, #1A73E8 100%) !important;
         color: #FFFFFF !important;
@@ -241,9 +240,9 @@ if not is_logged_in():
         border-radius: 16px !important;
         font-family: "Google Sans", Roboto, Arial, sans-serif !important;
         font-weight: 700 !important;
-        font-size: 26px !important;
-        height: 380px !important;
-        min-height: 380px !important;
+        font-size: 32px !important;
+        height: 305px !important;
+        min-height: 305px !important;
         width: 100% !important;
         min-width: 100% !important;
         box-shadow: 0 10px 40px rgba(66,133,244,0.45) !important;
@@ -262,29 +261,29 @@ if not is_logged_in():
     .st-key-google_signin button:active {{
         transform: translateY(0) !important;
     }}
-    /* The Google logo — pseudo-element, always visible regardless of state */
+    /* Google logo — pseudo-element, always visible */
     .st-key-google_signin button::before {{
         content: "" !important;
         position: absolute !important;
-        top: 90px !important;
+        top: 50px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        width: 130px !important;
-        height: 130px !important;
+        width: 110px !important;
+        height: 110px !important;
         background-image: url("{google_svg}") !important;
         background-size: contain !important;
         background-repeat: no-repeat !important;
         background-position: center !important;
         pointer-events: none !important;
     }}
-    /* Button text — positioned at bottom */
+    /* Button text — positioned below logo */
     .st-key-google_signin button p {{
         color: #FFFFFF !important;
         font-weight: 700 !important;
-        font-size: 26px !important;
+        font-size: 32px !important;
         margin: 0 !important;
         position: absolute !important;
-        bottom: 70px !important;
+        bottom: 55px !important;
         left: 0 !important;
         right: 0 !important;
         text-align: center !important;
@@ -342,13 +341,16 @@ if not is_logged_in():
     </style>
     """, unsafe_allow_html=True)
 
+    # Header text spans full width above the table+button row
+    st.markdown("### 🔒 Sign in to unlock your personal workspace")
+    st.markdown(
+        "Track holdings, get price alerts, run AI-powered backtests, "
+        "and manage multiple portfolios — all synced to your Google account."
+    )
+
+    # Now table (col1) and button (col2) start at same vertical position
     col1, col2 = st.columns([3, 2], gap="medium", vertical_alignment="top")
     with col1:
-        st.markdown("### 🔒 Sign in to unlock your personal workspace")
-        st.markdown(
-            "Track holdings, get price alerts, run AI-powered backtests, "
-            "and manage multiple portfolios — all synced to your Google account."
-        )
         # Plan comparison table — uses Material Symbols (same as sidebar)
         # Inline SVG icons matching sidebar :material/...:
         ic_grid    = '<span class="mi mi-grid">grid_view</span>'
