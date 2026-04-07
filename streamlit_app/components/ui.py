@@ -33,6 +33,12 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 
 /* st.navigation handles sidebar order — Account, nav menu, Status render in code order */
 
+/* Sidebar nav item font size: 14px -> 16px */
+section[data-testid="stSidebarNav"] a span,
+section[data-testid="stSidebarNav"] li span {
+    font-size: 16px !important;
+}
+
 /* ============================================ */
 /* Hide Streamlit Cloud toolbar                  */
 /* ============================================ */
