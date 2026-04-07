@@ -518,11 +518,11 @@ else:
 
         # Logout button (right column) — independent from banner because
         # Streamlit wraps the button in extra divs that add their own height
-        WB_LOGOUT_HEIGHT     = 65     # button height (px)
-        WB_LOGOUT_BTN_WIDTH  = "100%" # button width: "100%" | "120px" | "80%" etc.
+        WB_LOGOUT_HEIGHT     = 78     # button height (px)
+        WB_LOGOUT_BTN_WIDTH  = "120px" # button width: "100%" | "120px" | "80%" etc.
         WB_LOGOUT_RADIUS     = 12     # button radius (px)
-        WB_LOGOUT_FONT       = 14     # button font size (px)
-        WB_LOGOUT_OFFSET_Y   = 0      # vertical shift (px) — negative=up, positive=down
+        WB_LOGOUT_FONT       = 16     # button font size (px)
+        WB_LOGOUT_OFFSET_Y   = 15      # vertical shift (px) — negative=up, positive=down
         WB_LOGOUT_ALIGN      = "flex-start"  # button alignment in column: "flex-start" | "center" | "flex-end"
         WB_LOGOUT_LABEL      = "⇥ Sign out"  # button text
 

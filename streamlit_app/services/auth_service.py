@@ -152,13 +152,13 @@ def render_user_sidebar() -> None:
     SB_PROFILE_PAD     = 8      # profile card padding (px)
     SB_PROFILE_RADIUS  = 8      # profile card border radius (px)
     SB_AVATAR_SIZE     = 36     # profile avatar diameter (px)
-    SB_NAME_FONT       = 12     # name font size (px)
+    SB_NAME_FONT       = 14     # name font size (px)
     SB_EMAIL_FONT      = 10     # email font size (px)
 
     # Logout button — independent from profile because Streamlit wraps
     # the button in extra divs that add their own height
     SB_LOGOUT_HEIGHT     = 50      # logout button height (px) — tweak to match profile visually
-    SB_LOGOUT_BTN_WIDTH  = "120%"  # button width: "100%" | "120%" | "60px" etc.
+    SB_LOGOUT_BTN_WIDTH  = "50px"  # button width: "100%" | "120%" | "60px" etc.
     SB_LOGOUT_RADIUS     = 8       # logout button border radius (px)
     SB_LOGOUT_FONT       = 16      # logout icon size (px)
     SB_LOGOUT_OFFSET_X   = 0       # horizontal shift in px (negative=left, positive=right)
