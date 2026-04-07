@@ -210,6 +210,7 @@ if not is_logged_in():
     # ═══════════════════════════════════════════════════════
     BTN_HEIGHT      = 285   # button height in px (match table height)
     BTN_RADIUS      = 16    # corner radius
+    BTN_OFFSET_TOP  = 0     # move button up (negative) or down (positive) px
     LOGO_SIZE       = 100   # Google logo size (px)
     LOGO_TOP        = 40    # logo distance from top (px)
     TEXT_SIZE       = 28    # "Sign in with Google" font size (px)
@@ -231,7 +232,12 @@ if not is_logged_in():
     st.markdown(f"""
     <style>
     /* Force button container to match table height */
-    div.st-key-google_signin,
+    div.st-key-google_signin {{
+        position: relative !important;
+        width: 100% !important;
+        height: {BTN_HEIGHT}px !important;
+        margin-top: {BTN_OFFSET_TOP}px !important;
+    }}
     div.st-key-google_signin > div,
     div.st-key-google_signin [data-testid="stButton"],
     div.st-key-google_signin [data-testid="stButton"] > div {{
