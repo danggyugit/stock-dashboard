@@ -64,12 +64,9 @@ h2, h3 {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Plotly chart container */
+/* Plotly chart container — minimal styling, no overlay */
 [data-testid="stPlotlyChart"] {
-    background: rgba(15, 23, 42, 0.3);
     border-radius: 12px;
-    padding: 8px;
-    border: 1px solid rgba(59, 130, 246, 0.1);
 }
 
 /* Selectbox + input polish */
