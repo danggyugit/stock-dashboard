@@ -216,10 +216,24 @@ else:
             gain = total_value - total_cost
             gain_pct = (gain / total_cost * 100) if total_cost else 0
 
-            m1, m2, m3 = st.columns(3)
-            m1.metric("Total Value", f"${total_value:,.2f}")
-            m2.metric("Total Cost", f"${total_cost:,.2f}")
-            m3.metric("Unrealized P&L", f"${gain:,.2f}", delta=f"{gain_pct:+.2f}%")
+            # Force equal height across the three summary metric cards
+            st.markdown("""
+            <style>
+            div.st-key-port_summary_metrics [data-testid="stMetric"] {
+                height: 130px !important;
+                box-sizing: border-box !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+
+            with st.container(key="port_summary_metrics"):
+                m1, m2, m3 = st.columns(3)
+                m1.metric("Total Value", f"${total_value:,.2f}")
+                m2.metric("Total Cost", f"${total_cost:,.2f}")
+                m3.metric("Unrealized P&L", f"${gain:,.2f}", delta=f"{gain_pct:+.2f}%")
 
             # Allocation: By Stock + By Sector
             colors = [
