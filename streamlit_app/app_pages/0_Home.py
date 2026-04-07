@@ -864,80 +864,117 @@ with pulse_col2:
         unsafe_allow_html=True,
     )
 
-# --- Earnings This Week ---
+# --- Earnings: Today & Tomorrow (top by market cap) ---
 with pulse_col3:
     st.markdown(
         '<div style="font-size:13px; font-weight:600; color:#94A3B8; '
-        'margin-bottom:6px;">EARNINGS THIS WEEK</div>',
+        'margin-bottom:6px;">EARNINGS</div>',
         unsafe_allow_html=True,
     )
     try:
         today = _date.today()
-        week_end = today + _td(days=7)
-        earnings = get_earnings_events(today.isoformat(), week_end.isoformat())
+        tomorrow = today + _td(days=1)
+        earnings = get_earnings_events(today.isoformat(), tomorrow.isoformat())
     except Exception:
         earnings = []
 
-    if earnings:
-        # Sort by date
-        earnings_sorted = sorted(
-            earnings, key=lambda x: x.get("earnings_date", "")
-        )[:7]
+    # Build ticker -> market_cap map from cached heatmap (S&P 1500)
+    cap_map: dict[str, float] = {}
+    try:
+        for sector in (hm_data or {}).get("sectors", []):
+            for stk in sector.get("stocks", []):
+                t = stk.get("ticker")
+                mc = stk.get("market_cap") or 0
+                if t:
+                    cap_map[t] = mc
+    except Exception:
+        pass
 
-        st.markdown("""
-        <style>
-        .earn-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 10px;
-            background: rgba(30,41,59,0.5);
-            border-left: 3px solid #60A5FA;
-            border-radius: 6px;
-            margin-bottom: 5px;
-            font-size: 12px;
-        }
-        .earn-logo {
-            width: 22px; height: 22px;
-            border-radius: 4px;
-            background: white;
-            padding: 2px;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
-        .earn-ticker {
-            font-weight: 700;
-            color: #F8FAFC;
-            min-width: 50px;
-        }
-        .earn-date {
-            color: #94A3B8;
-            font-size: 11px;
-            margin-left: auto;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+    def _top_n_for_date(target: _date, n: int = 7) -> list[dict]:
+        target_iso = target.isoformat()
+        rows = [
+            ev for ev in earnings
+            if (ev.get("earnings_date") or "")[:10] == target_iso
+            and ev.get("ticker") in cap_map
+        ]
+        rows.sort(key=lambda x: cap_map.get(x["ticker"], 0), reverse=True)
+        return rows[:n]
 
+    today_top = _top_n_for_date(today)
+    tomorrow_top = _top_n_for_date(tomorrow)
+
+    st.markdown("""
+    <style>
+    .earn-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 10px;
+        background: rgba(30,41,59,0.5);
+        border-left: 3px solid #60A5FA;
+        border-radius: 6px;
+        margin-bottom: 4px;
+        font-size: 12px;
+    }
+    .earn-logo {
+        width: 20px; height: 20px;
+        border-radius: 4px;
+        background: white;
+        padding: 2px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+    .earn-ticker {
+        font-weight: 700;
+        color: #F8FAFC;
+        min-width: 50px;
+    }
+    .earn-cap {
+        color: #94A3B8;
+        font-size: 11px;
+        margin-left: auto;
+    }
+    .earn-day-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #60A5FA;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 6px 0 4px 0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    def _fmt_cap(mc: float) -> str:
+        if mc >= 1e12:
+            return f"${mc / 1e12:.1f}T"
+        if mc >= 1e9:
+            return f"${mc / 1e9:.0f}B"
+        if mc >= 1e6:
+            return f"${mc / 1e6:.0f}M"
+        return "—"
+
+    def _render_group(label: str, rows: list[dict]) -> None:
+        st.markdown(f'<div class="earn-day-label">{label}</div>', unsafe_allow_html=True)
+        if not rows:
+            st.caption("No major earnings.")
+            return
         items_html = ""
-        for ev in earnings_sorted:
+        for ev in rows:
             ticker = ev.get("ticker", "")
-            ev_date = ev.get("earnings_date", "")
-            try:
-                dt = _date.fromisoformat(ev_date[:10])
-                date_str = dt.strftime("%a %m/%d")
-            except Exception:
-                date_str = ev_date[:10]
+            cap_str = _fmt_cap(cap_map.get(ticker, 0))
             logo = f"https://assets.parqet.com/logos/symbol/{ticker}?format=png"
             items_html += f"""
             <div class="earn-item">
                 <img src="{logo}" class="earn-logo" onerror="this.style.display='none'"/>
                 <span class="earn-ticker">{ticker}</span>
-                <span class="earn-date">{date_str}</span>
+                <span class="earn-cap">{cap_str}</span>
             </div>
             """
         st.markdown(items_html, unsafe_allow_html=True)
-    else:
-        st.caption("No earnings data this week.")
+
+    _render_group(f"Today · {today.strftime('%a %m/%d')}", today_top)
+    _render_group(f"Tomorrow · {tomorrow.strftime('%a %m/%d')}", tomorrow_top)
 
 
 # ═══════════════════════════════════════════════════════════
