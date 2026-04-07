@@ -148,13 +148,16 @@ def render_user_sidebar() -> None:
     # ─────────────────────────────────────────────────────
     SB_PROFILE_WIDTH   = 4      # profile column ratio
     SB_LOGOUT_WIDTH    = 1      # logout column ratio
+    SB_PROFILE_HEIGHT  = 52     # profile card height (px)
     SB_PROFILE_PAD     = 8      # profile card padding (px)
     SB_PROFILE_RADIUS  = 8      # profile card border radius (px)
     SB_AVATAR_SIZE     = 36     # profile avatar diameter (px)
     SB_NAME_FONT       = 12     # name font size (px)
     SB_EMAIL_FONT      = 10     # email font size (px)
 
-    SB_LOGOUT_HEIGHT   = 52     # logout button height (px) — match profile card
+    # Logout button — independent from profile because Streamlit wraps
+    # the button in extra divs that add their own height
+    SB_LOGOUT_HEIGHT   = 26     # logout button height (px) — tweak to match profile visually
     SB_LOGOUT_RADIUS   = 8      # logout button border radius (px)
     SB_LOGOUT_FONT     = 16     # logout icon size (px)
     SB_LOGOUT_LABEL    = "⇥"    # button text/icon
@@ -211,7 +214,7 @@ def render_user_sidebar() -> None:
         st.markdown(f"""
         <div style="display:flex; align-items:center; gap:10px; padding:{SB_PROFILE_PAD}px;
                     background:rgba(30,41,59,0.5); border-radius:{SB_PROFILE_RADIUS}px;
-                    height:{SB_LOGOUT_HEIGHT}px; box-sizing:border-box;">
+                    height:{SB_PROFILE_HEIGHT}px; box-sizing:border-box;">
             <img src="{pic}" style="width:{SB_AVATAR_SIZE}px;height:{SB_AVATAR_SIZE}px;
                  border-radius:50%; object-fit:cover;" onerror="this.style.display='none'"/>
             <div style="overflow:hidden;min-width:0;">

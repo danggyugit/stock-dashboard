@@ -500,7 +500,7 @@ else:
         WB_VALIGN          = "center"   # "top" | "center" | "bottom"
 
         # Banner box itself
-        WB_BANNER_HEIGHT   = 78     # banner total height (px) — also drives logout height
+        WB_BANNER_HEIGHT   = 78     # banner total height (px)
         WB_BANNER_PAD_X    = 20     # left/right padding (px)
         WB_BANNER_PAD_Y    = 14     # top/bottom padding (px)
         WB_BANNER_RADIUS   = 12     # border radius (px)
@@ -514,7 +514,9 @@ else:
         WB_GREET_WEIGHT    = 700    # greet font weight
         WB_SUB_SIZE        = 13     # email/status font size (px)
 
-        # Logout button (right column)
+        # Logout button (right column) — independent from banner because
+        # Streamlit wraps the button in extra divs that add their own height
+        WB_LOGOUT_HEIGHT   = 78     # button height (px) — tweak to match banner visually
         WB_LOGOUT_RADIUS   = 12     # button radius (px)
         WB_LOGOUT_FONT     = 13     # button font size (px)
         WB_LOGOUT_LABEL    = "⇥ Sign out"  # button text
@@ -544,7 +546,8 @@ else:
             font-size: {WB_SUB_SIZE}px !important;
         }}
         div.st-key-home_logout button {{
-            height: {WB_BANNER_HEIGHT}px !important;
+            height: {WB_LOGOUT_HEIGHT}px !important;
+            min-height: {WB_LOGOUT_HEIGHT}px !important;
             border-radius: {WB_LOGOUT_RADIUS}px !important;
             font-size: {WB_LOGOUT_FONT}px !important;
         }}
