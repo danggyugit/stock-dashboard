@@ -17,6 +17,19 @@ logger = logging.getLogger(__name__)
 # --- Custom CSS (injected once per page) ---
 CUSTOM_CSS = """
 <style>
+/* Hide Streamlit Cloud toolbar (Share, Star, GitHub, menu) */
+[data-testid="stToolbar"] {
+    visibility: hidden !important;
+    height: 0 !important;
+    position: fixed !important;
+}
+header[data-testid="stHeader"] {
+    background: transparent !important;
+}
+#MainMenu { visibility: hidden !important; }
+footer { visibility: hidden !important; }
+.stDeployButton { display: none !important; }
+
 /* Metric card hover + glow effect */
 [data-testid="stMetric"] {
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.4));
