@@ -516,9 +516,9 @@ else:
 
         # Logout button (right column) — independent from banner because
         # Streamlit wraps the button in extra divs that add their own height
-        WB_LOGOUT_HEIGHT   = 78     # button height (px) — tweak to match banner visually
+        WB_LOGOUT_HEIGHT   = 35     # button height (px) — tweak to match banner visually
         WB_LOGOUT_RADIUS   = 12     # button radius (px)
-        WB_LOGOUT_FONT     = 13     # button font size (px)
+        WB_LOGOUT_FONT     = 14     # button font size (px)
         WB_LOGOUT_LABEL    = "⇥ Sign out"  # button text
 
         # Inject the dynamic CSS for this section
@@ -545,14 +545,23 @@ else:
         .welcome-sub {{
             font-size: {WB_SUB_SIZE}px !important;
         }}
+        /* Higher specificity to beat the Quick Actions global rule
+           ([data-testid="stHorizontalBlock"] [data-testid="stButton"] button)
+           which also matches column-based buttons and forces height:110px */
+        [data-testid="stHorizontalBlock"] div.st-key-home_logout button,
+        div.st-key-home_logout [data-testid="stButton"] button,
         div.st-key-home_logout button {{
             height: {WB_LOGOUT_HEIGHT}px !important;
             min-height: {WB_LOGOUT_HEIGHT}px !important;
+            max-height: {WB_LOGOUT_HEIGHT}px !important;
             border-radius: {WB_LOGOUT_RADIUS}px !important;
             font-size: {WB_LOGOUT_FONT}px !important;
+            padding: 0 !important;
         }}
+        [data-testid="stHorizontalBlock"] div.st-key-home_logout button p,
         div.st-key-home_logout button p {{
             font-size: {WB_LOGOUT_FONT}px !important;
+            margin: 0 !important;
         }}
         </style>
         """, unsafe_allow_html=True)
