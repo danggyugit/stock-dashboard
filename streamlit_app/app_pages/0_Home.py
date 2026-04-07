@@ -205,33 +205,37 @@ st.markdown(hero_html, unsafe_allow_html=True)
 # LOGIN / WELCOME
 # ═══════════════════════════════════════════════════════════
 if not is_logged_in():
-    # Google Sign-in button — vivid blue, large, prominent
+    # Big Google Sign-in button styling
     st.markdown("""
     <style>
     .st-key-google_signin button {
         background: linear-gradient(135deg, #4285F4 0%, #1A73E8 100%) !important;
         color: #FFFFFF !important;
         border: none !important;
-        border-radius: 10px !important;
-        padding: 14px 28px !important;
+        border-radius: 12px !important;
         font-family: "Google Sans", Roboto, Arial, sans-serif !important;
-        font-weight: 600 !important;
-        font-size: 16px !important;
-        height: 56px !important;
-        min-width: 280px !important;
-        box-shadow: 0 4px 14px rgba(66,133,244,0.4) !important;
+        font-weight: 700 !important;
+        font-size: 18px !important;
+        height: 180px !important;
+        width: 100% !important;
+        box-shadow: 0 6px 24px rgba(66,133,244,0.4) !important;
         transition: all 0.2s ease !important;
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><circle cx='24' cy='24' r='22' fill='white'/><path fill='%23EA4335' d='M24 11.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 4.38 30.47 2 24 2 14.62 2 6.51 7.38 2.56 15.22l7.98 6.19C12.43 15.72 17.74 11.5 24 11.5z' transform='scale(0.7) translate(10 10)'/><path fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z' transform='scale(0.7) translate(10 10)'/><path fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z' transform='scale(0.7) translate(10 10)'/><path fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z' transform='scale(0.7) translate(10 10)'/></svg>") !important;
         background-repeat: no-repeat !important;
-        background-position: 18px center !important;
-        background-size: 28px 28px !important;
-        padding-left: 60px !important;
+        background-position: center 32px !important;
+        background-size: 56px 56px !important;
+        padding: 100px 16px 16px 16px !important;
         text-align: center !important;
         cursor: pointer !important;
+        white-space: nowrap !important;
     }
     .st-key-google_signin button:hover {
         background: linear-gradient(135deg, #1A73E8 0%, #1557B0 100%) !important;
-        box-shadow: 0 6px 20px rgba(66,133,244,0.55) !important;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'><circle cx='24' cy='24' r='22' fill='white'/><path fill='%23EA4335' d='M24 11.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 4.38 30.47 2 24 2 14.62 2 6.51 7.38 2.56 15.22l7.98 6.19C12.43 15.72 17.74 11.5 24 11.5z' transform='scale(0.7) translate(10 10)'/><path fill='%234285F4' d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z' transform='scale(0.7) translate(10 10)'/><path fill='%23FBBC05' d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z' transform='scale(0.7) translate(10 10)'/><path fill='%2334A853' d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z' transform='scale(0.7) translate(10 10)'/></svg>") !important;
+        background-repeat: no-repeat !important;
+        background-position: center 32px !important;
+        background-size: 56px 56px !important;
+        box-shadow: 0 8px 28px rgba(66,133,244,0.55) !important;
         transform: translateY(-2px) !important;
     }
     .st-key-google_signin button:active {
@@ -239,10 +243,41 @@ if not is_logged_in():
     }
     .st-key-google_signin button p {
         color: #FFFFFF !important;
-        font-weight: 600 !important;
-        font-size: 16px !important;
+        font-weight: 700 !important;
+        font-size: 18px !important;
         margin: 0 !important;
     }
+
+    /* Features comparison table */
+    .features-table {
+        margin-top: 16px;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(59,130,246,0.18);
+    }
+    .features-table th {
+        background: rgba(30,41,59,0.7);
+        color: #F8FAFC;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 10px 14px;
+        text-align: left;
+        border-bottom: 1px solid rgba(59,130,246,0.18);
+    }
+    .features-table th.public { color: #94A3B8; }
+    .features-table th.personal { color: #60A5FA; }
+    .features-table td {
+        padding: 8px 14px;
+        font-size: 12px;
+        color: #CBD5E1;
+        border-bottom: 1px solid rgba(148,163,184,0.08);
+    }
+    .features-table tr:last-child td { border-bottom: none; }
+    .features-table td.icon { width: 28px; text-align: center; font-size: 14px; }
+    .features-table .lock { color: #F59E0B; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -253,14 +288,40 @@ if not is_logged_in():
             "Track holdings, get price alerts, run AI-powered backtests, "
             "and manage multiple portfolios — all synced to your Google account."
         )
-        st.markdown("<div style='margin-top:14px;'></div>", unsafe_allow_html=True)
+        # Features comparison table
+        features_html = """
+        <table class="features-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="public">Public (no sign-in)</th>
+                    <th class="personal">Personal (sign-in required)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="icon">📊</td>
+                    <td>Heatmap, Stock Detail</td>
+                    <td>📁 Portfolio (holdings, P&amp;L, taxes)</td>
+                </tr>
+                <tr>
+                    <td class="icon">🧭</td>
+                    <td>Sentiment, Calendar</td>
+                    <td>⭐ Watchlist + 🔔 Price alerts</td>
+                </tr>
+                <tr>
+                    <td class="icon">🔍</td>
+                    <td>Screener, Compare</td>
+                    <td>🧠 AI Quant Lab (ML backtest)</td>
+                </tr>
+            </tbody>
+        </table>
+        """
+        st.markdown(features_html, unsafe_allow_html=True)
+
+    with col2:
         if st.button("Sign in with Google", key="google_signin"):
             st.login("google")
-    with col2:
-        st.markdown("**Public features (no sign-in)**")
-        st.caption("• Heatmap, Stock Detail, Sentiment, Calendar, Screener, Compare")
-        st.markdown("**Personal features (sign-in required)**")
-        st.caption("• Portfolio, Watchlist, Alerts, AI Quant Lab")
 
 else:
     user = get_or_create_user()
