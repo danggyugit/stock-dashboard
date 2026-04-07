@@ -78,15 +78,48 @@ def _portfolio_selector(key_prefix: str) -> list[int]:
 
 
 def _merge_holdings(selected_ids: list[int]) -> tuple[list[dict], float, float]:
-    """Merge holdings across selected portfolios."""
-    merged = []
+    """Merge holdings across selected portfolios, aggregated by ticker.
+
+    When the same ticker exists in multiple portfolios, quantities and
+    costs are summed and avg_cost / unrealized P&L are recomputed so
+    each ticker shows up exactly once.
+    """
+    by_ticker: dict[str, dict] = {}
     total_value = total_cost = 0.0
+
     for pid in selected_ids:
         data = get_holdings(pid)
-        if data and data.get("holdings"):
-            merged.extend(data["holdings"])
-            total_value += data["total_value"]
-            total_cost += data["total_cost"]
+        if not data or not data.get("holdings"):
+            continue
+        total_value += data.get("total_value") or 0.0
+        total_cost += data.get("total_cost") or 0.0
+
+        for h in data["holdings"]:
+            t = h.get("ticker")
+            if not t:
+                continue
+            if t in by_ticker:
+                agg = by_ticker[t]
+                agg["quantity"] = (agg.get("quantity") or 0) + (h.get("quantity") or 0)
+                agg["total_cost"] = (agg.get("total_cost") or 0) + (h.get("total_cost") or 0)
+                if h.get("market_value") is not None:
+                    agg["market_value"] = (agg.get("market_value") or 0) + h["market_value"]
+                if h.get("unrealized_gain") is not None:
+                    agg["unrealized_gain"] = (agg.get("unrealized_gain") or 0) + h["unrealized_gain"]
+            else:
+                by_ticker[t] = dict(h)  # shallow copy
+
+    # Recompute avg_cost and unrealized_gain_pct from the merged totals
+    for agg in by_ticker.values():
+        qty = agg.get("quantity") or 0
+        cost = agg.get("total_cost") or 0
+        if qty:
+            agg["avg_cost"] = round(cost / qty, 2)
+        if cost:
+            gain = agg.get("unrealized_gain") or 0
+            agg["unrealized_gain_pct"] = round((gain / cost) * 100, 2)
+
+    merged = list(by_ticker.values())
     return merged, total_value, total_cost
 
 
@@ -130,10 +163,24 @@ with tab_holdings:
         gain = total_value - total_cost
         gain_pct = (gain / total_cost * 100) if total_cost else 0
 
-        m1, m2, m3 = st.columns(3)
-        m1.metric("Total Value", f"${total_value:,.2f}")
-        m2.metric("Total Cost", f"${total_cost:,.2f}")
-        m3.metric("Unrealized P&L", f"${gain:,.2f}", delta=f"{gain_pct:+.2f}%")
+        # Force equal height across the three summary metric cards
+        st.markdown("""
+        <style>
+        div.st-key-port_holdings_metrics [data-testid="stMetric"] {
+            height: 130px !important;
+            box-sizing: border-box !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+        with st.container(key="port_holdings_metrics"):
+            m1, m2, m3 = st.columns(3)
+            m1.metric("Total Value", f"${total_value:,.2f}")
+            m2.metric("Total Cost", f"${total_cost:,.2f}")
+            m3.metric("Unrealized P&L", f"${gain:,.2f}", delta=f"{gain_pct:+.2f}%")
 
         # Allocation charts (top)
         alloc = _build_allocation(merged_holdings, total_value)
