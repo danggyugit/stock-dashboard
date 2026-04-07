@@ -1027,62 +1027,82 @@ for row_start in range(0, len(actions), n_cols):
             ):
                 st.switch_page(page_path)
 
+# ─────────────────────────────────────────────────────────
+# Quick action card — adjustable knobs (edit these numbers!)
+# ─────────────────────────────────────────────────────────
+QA_CARD_HEIGHT     = 110   # button height in px
+QA_CARD_RADIUS     = 12    # corner radius in px
+QA_PAD_X           = 18    # left/right padding in px
+QA_PAD_Y           = 16    # top/bottom padding in px
+QA_VALIGN          = "center"  # "flex-start" | "center" | "flex-end"
+
+QA_TITLE_SIZE      = 15    # title font size (px)
+QA_TITLE_WEIGHT    = 600   # title font weight
+QA_TITLE_COLOR     = "#F8FAFC"
+QA_TITLE_GAP       = 6     # gap between title and description (px)
+
+QA_DESC_SIZE       = 12    # description font size (px)
+QA_DESC_COLOR      = "#94A3B8"
+
+QA_ICON_SIZE       = 20    # material icon size (px)
+QA_ICON_COLOR      = "#60A5FA"
+QA_ICON_GAP        = 4     # space after icon (px)
+
 # Quick actions card styling
-st.markdown("""
+st.markdown(f"""
 <style>
 /* Make Quick Action buttons look like cards */
-[data-testid="stHorizontalBlock"] [data-testid="stButton"] button {
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button {{
     background: linear-gradient(135deg, rgba(30,41,59,0.7), rgba(15,23,42,0.5)) !important;
     border: 1px solid rgba(59,130,246,0.2) !important;
-    border-radius: 12px !important;
-    padding: 16px 18px !important;
-    height: 110px !important;
+    border-radius: {QA_CARD_RADIUS}px !important;
+    padding: {QA_PAD_Y}px {QA_PAD_X}px !important;
+    height: {QA_CARD_HEIGHT}px !important;
     text-align: left !important;
     transition: all 0.2s ease !important;
-    color: #F8FAFC !important;
+    color: {QA_TITLE_COLOR} !important;
     white-space: normal !important;
     line-height: 1.4 !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-start !important;
+    justify-content: {QA_VALIGN} !important;
     align-items: flex-start !important;
-}
-[data-testid="stHorizontalBlock"] [data-testid="stButton"] button:hover {
+}}
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button:hover {{
     border-color: rgba(59,130,246,0.6) !important;
     transform: translateY(-3px) !important;
     box-shadow: 0 8px 24px rgba(59,130,246,0.18) !important;
-}
+}}
 /* Force the inner markdown container + paragraphs to span full width
    and stay left-aligned (Streamlit centers them by default) */
-[data-testid="stHorizontalBlock"] [data-testid="stButton"] button [data-testid="stMarkdownContainer"] {
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button [data-testid="stMarkdownContainer"] {{
     width: 100% !important;
     text-align: left !important;
-}
-[data-testid="stHorizontalBlock"] [data-testid="stButton"] button p {
-    color: #F8FAFC !important;
-    font-size: 14px !important;
+}}
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button p {{
+    color: {QA_TITLE_COLOR} !important;
     margin: 0 !important;
     text-align: left !important;
     width: 100% !important;
-}
+}}
 /* First <p> = title (icon + name), second <p> = description */
-[data-testid="stHorizontalBlock"] [data-testid="stButton"] button p:first-child {
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    margin-bottom: 6px !important;
-}
-[data-testid="stHorizontalBlock"] [data-testid="stButton"] button p:last-child {
-    font-size: 12px !important;
-    color: #94A3B8 !important;
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button p:first-child {{
+    font-size: {QA_TITLE_SIZE}px !important;
+    font-weight: {QA_TITLE_WEIGHT} !important;
+    margin-bottom: {QA_TITLE_GAP}px !important;
+}}
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button p:last-child {{
+    font-size: {QA_DESC_SIZE}px !important;
+    color: {QA_DESC_COLOR} !important;
     font-weight: 400 !important;
-}
+}}
 /* Material icon sizing to match sidebar */
 [data-testid="stHorizontalBlock"] [data-testid="stButton"] button span[data-testid="stIconMaterial"],
-[data-testid="stHorizontalBlock"] [data-testid="stButton"] button .material-symbols-outlined {
-    font-size: 20px !important;
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button .material-symbols-outlined {{
+    font-size: {QA_ICON_SIZE}px !important;
     vertical-align: middle !important;
-    margin-right: 4px !important;
-    color: #60A5FA !important;
-}
+    margin-right: {QA_ICON_GAP}px !important;
+    color: {QA_ICON_COLOR} !important;
+}}
 </style>
 """, unsafe_allow_html=True)
