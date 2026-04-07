@@ -1035,23 +1035,54 @@ st.markdown("""
     background: linear-gradient(135deg, rgba(30,41,59,0.7), rgba(15,23,42,0.5)) !important;
     border: 1px solid rgba(59,130,246,0.2) !important;
     border-radius: 12px !important;
-    padding: 18px !important;
+    padding: 16px 18px !important;
     height: 110px !important;
     text-align: left !important;
     transition: all 0.2s ease !important;
     color: #F8FAFC !important;
-    white-space: pre-wrap !important;
+    white-space: normal !important;
     line-height: 1.4 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
 }
 [data-testid="stHorizontalBlock"] [data-testid="stButton"] button:hover {
     border-color: rgba(59,130,246,0.6) !important;
     transform: translateY(-3px) !important;
     box-shadow: 0 8px 24px rgba(59,130,246,0.18) !important;
 }
+/* Force the inner markdown container + paragraphs to span full width
+   and stay left-aligned (Streamlit centers them by default) */
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button [data-testid="stMarkdownContainer"] {
+    width: 100% !important;
+    text-align: left !important;
+}
 [data-testid="stHorizontalBlock"] [data-testid="stButton"] button p {
     color: #F8FAFC !important;
     font-size: 14px !important;
     margin: 0 !important;
+    text-align: left !important;
+    width: 100% !important;
+}
+/* First <p> = title (icon + name), second <p> = description */
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button p:first-child {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    margin-bottom: 6px !important;
+}
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button p:last-child {
+    font-size: 12px !important;
+    color: #94A3B8 !important;
+    font-weight: 400 !important;
+}
+/* Material icon sizing to match sidebar */
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button span[data-testid="stIconMaterial"],
+[data-testid="stHorizontalBlock"] [data-testid="stButton"] button .material-symbols-outlined {
+    font-size: 20px !important;
+    vertical-align: middle !important;
+    margin-right: 4px !important;
+    color: #60A5FA !important;
 }
 </style>
 """, unsafe_allow_html=True)
