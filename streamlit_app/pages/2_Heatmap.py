@@ -125,6 +125,8 @@ if view_mode == "Treemap":
         height=800, margin=dict(l=0, r=0, t=40, b=0),
         coloraxis_colorbar=dict(title="Change %", tickformat="+.2f"),
         uniformtext=dict(minsize=10, mode="hide"),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
     )
     st.plotly_chart(fig, use_container_width=True)
 

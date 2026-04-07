@@ -198,6 +198,8 @@ with tab_holdings:
                 height=500, margin=dict(l=0, r=0, t=50, b=0),
                 coloraxis_colorbar=dict(title="P&L %", tickformat="+.2f"),
                 uniformtext=dict(minsize=10, mode="hide"),
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
             )
             st.plotly_chart(tm_fig, use_container_width=True)
 
