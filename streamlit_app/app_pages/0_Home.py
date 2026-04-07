@@ -770,11 +770,13 @@ with pulse_col1:
             avg = s.get("avg_change_pct")
             cap = s.get("total_market_cap") or 1
             if avg is not None:
+                avg_r = round(float(avg), 2)
                 sector_rows.append({
                     "sector": s["name"],
                     "market_cap": cap,
-                    "change_pct": round(avg, 2),
-                    "label": f"{s['name']}<br>{avg:+.2f}%",
+                    "change_pct": avg_r,
+                    "display": f"<b>{s['name']}</b><br>{avg_r:+.2f}%",
+                    "hover": f"{s['name']}: {avg_r:+.2f}%",
                 })
         if sector_rows:
             _df_sec = _pd.DataFrame(sector_rows)
@@ -787,12 +789,12 @@ with pulse_col1:
                     "#DC2626", "#991B1B", "#1E293B", "#166534", "#16A34A",
                 ],
                 color_continuous_midpoint=0,
-                custom_data=["change_pct"],
+                custom_data=["display", "hover"],
             )
             mini_fig.update_traces(
-                texttemplate="<b>%{label}</b><br>%{customdata[0]:+.2f}%",
+                texttemplate="%{customdata[0]}",
                 textfont=dict(size=14),
-                hovertemplate="<b>%{label}</b><br>Avg: %{customdata[0]:+.2f}%<extra></extra>",
+                hovertemplate="%{customdata[1]}<extra></extra>",
             )
             mini_fig.update_layout(
                 height=260,
