@@ -34,44 +34,140 @@ from datetime import datetime, timedelta
 
 warnings.filterwarnings("ignore")
 
-# Auth guard — sign-in required
+# Auth guard + shared site chrome
 from services.auth_service import require_auth  # noqa: E402
-_user = require_auth()
+from components.ui import inject_css  # noqa: E402
 
-# AI Quant Lab specific styles (dark-theme compatible)
+_user = require_auth()
+inject_css()  # site-wide CSS (cards, metric polish, sidebar collapse, etc.)
+
+# AI Quant Lab specific styles — tuned to match the rest of the dashboard
+# (blue accent, gradient cards, soft borders)
 st.markdown("""
 <style>
-    .main-title {
-        font-size: 2.0rem; font-weight: 800;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* Hero card matching Home / Dashboard */
+    .lab-hero {
+        background: radial-gradient(ellipse at top left,
+                    rgba(59,130,246,0.15) 0%,
+                    rgba(15,23,42,0) 60%),
+                    radial-gradient(ellipse at bottom right,
+                    rgba(168,85,247,0.10) 0%,
+                    rgba(15,23,42,0) 60%);
+        border: 1px solid rgba(59,130,246,0.18);
+        border-radius: 16px;
+        padding: 28px 30px;
+        margin-bottom: 20px;
+    }
+    .lab-hero h1 {
+        font-size: 2.2rem; font-weight: 800; margin: 0 0 6px 0;
+        background: linear-gradient(135deg, #60A5FA 0%, #A855F7 50%, #EC4899 100%);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        margin-bottom: 0.1rem;
+        line-height: 1.15;
     }
-    .sub-title { font-size: 0.9rem; color: #94A3B8; margin-bottom: 0.8rem; }
+    .lab-hero .lab-sub {
+        font-size: 0.95rem; color: #CBD5E1; margin: 0;
+    }
+    .lab-hero .lab-meta {
+        display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;
+    }
+    .lab-hero .lab-meta span {
+        font-size: 0.72rem; font-weight: 600;
+        color: #93C5FD;
+        background: rgba(59,130,246,0.12);
+        border: 1px solid rgba(59,130,246,0.3);
+        padding: 4px 10px; border-radius: 999px;
+    }
+
+    /* Section header — same gradient underline as Home/Dashboard */
     .section-hdr {
-        font-size: 0.95rem; font-weight: 700; color: #60A5FA;
-        margin: 0.8rem 0 0.4rem 0; padding-bottom: 0.2rem;
-        border-bottom: 2px solid rgba(96,165,250,0.3);
+        font-size: 1.05rem; font-weight: 700; color: #F8FAFC;
+        margin: 22px 0 10px 0; padding-bottom: 6px;
+        border-bottom: 2px solid;
+        border-image: linear-gradient(90deg, #3B82F6, transparent) 1;
     }
+
+    /* Metric box — gradient card matching site metric polish */
     .metric-box {
-        background: rgba(30,41,59,0.6); border-radius: 8px; padding: 0.7rem 1rem;
-        border: 1px solid rgba(96,165,250,0.2); text-align: center; margin-bottom: 0.3rem;
+        background: linear-gradient(135deg, rgba(30,41,59,0.6), rgba(15,23,42,0.4));
+        border-radius: 12px; padding: 14px 18px;
+        border: 1px solid rgba(59,130,246,0.15);
+        text-align: center; margin-bottom: 8px;
+        transition: all 0.25s ease;
     }
-    .metric-label { font-size: 0.7rem; color: #94A3B8; }
-    .metric-value { font-size: 1.2rem; font-weight: 700; color: #F8FAFC; }
+    .metric-box:hover {
+        border-color: rgba(59,130,246,0.5);
+        box-shadow: 0 4px 20px rgba(59,130,246,0.15);
+        transform: translateY(-2px);
+    }
+    .metric-label { font-size: 0.72rem; color: #94A3B8; letter-spacing: 0.3px; }
+    .metric-value { font-size: 1.35rem; font-weight: 700; color: #F8FAFC; margin-top: 4px; }
     .pos { color: #10B981; } .neg { color: #EF4444; } .neu { color: #60A5FA; }
 
+    /* Welcome feature cards (4-up grid on the empty state) */
+    .lab-feat-card {
+        background: linear-gradient(135deg, rgba(30,41,59,0.7), rgba(15,23,42,0.5));
+        border: 1px solid rgba(59,130,246,0.2);
+        border-radius: 12px;
+        padding: 18px 20px;
+        height: 100%;
+        transition: all 0.2s ease;
+    }
+    .lab-feat-card:hover {
+        border-color: rgba(59,130,246,0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(59,130,246,0.15);
+    }
+    .lab-feat-icon {
+        font-size: 22px;
+        margin-bottom: 8px;
+    }
+    .lab-feat-title {
+        font-size: 1rem; font-weight: 700; color: #F8FAFC;
+        margin: 0 0 8px 0;
+    }
+    .lab-feat-card ul {
+        list-style: none; padding: 0; margin: 0;
+        font-size: 0.82rem; color: #94A3B8;
+    }
+    .lab-feat-card li {
+        padding: 3px 0;
+        position: relative;
+        padding-left: 14px;
+    }
+    .lab-feat-card li::before {
+        content: "•";
+        color: #60A5FA;
+        position: absolute;
+        left: 0;
+    }
+
+    /* Settings bar — softer border to match other cards */
     .settings-bar {
-        background: rgba(30,41,59,0.5); border-radius: 10px; padding: 1rem 1.2rem;
-        border: 1px solid rgba(96,165,250,0.2); margin-bottom: 1rem;
+        background: linear-gradient(135deg, rgba(30,41,59,0.6), rgba(15,23,42,0.4));
+        border-radius: 12px; padding: 1rem 1.2rem;
+        border: 1px solid rgba(59,130,246,0.18);
+        margin-bottom: 1rem;
     }
     .settings-title {
         font-size: 1rem; font-weight: 700; color: #F8FAFC; margin-bottom: 0.5rem;
     }
 
+    /* Inline CTA used by the empty-state hint */
+    .lab-cta-hint {
+        background: rgba(59,130,246,0.10);
+        border: 1px solid rgba(59,130,246,0.3);
+        border-radius: 10px;
+        padding: 12px 16px;
+        color: #BFDBFE;
+        font-size: 0.9rem;
+        margin: 14px 0 8px 0;
+    }
+    .lab-cta-hint b { color: #F8FAFC; }
+
     @media (max-width: 768px) {
-        .main-title { font-size: 1.4rem; }
-        .metric-value { font-size: 1rem; }
+        .lab-hero h1 { font-size: 1.5rem; }
+        .lab-hero { padding: 22px 20px; }
+        .metric-value { font-size: 1.05rem; }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -2962,11 +3058,23 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
 # ═══════════════════════════════════════════════════════════
 
 def main():
-    st.markdown('<div class="main-title">📊 AI Quant Lab 3.9</div>', unsafe_allow_html=True)
+    # Hero card (matches Home / Dashboard tone)
     st.markdown(
-        '<div class="sub-title">AI 퀀트 백테스팅 & 실시간 추천 · '
-        '66개 피처 (CS정규화·시장레짐·VIX·섹터RS 포함) · RF+XGB+LGBM Rank Average · '
-        '생존자 편향 보정 · PIT 22개 지표</div>',
+        """
+        <div class="lab-hero">
+            <h1>AI Quant Lab</h1>
+            <p class="lab-sub">AI 퀀트 백테스팅 &amp; 실시간 종목 추천 플랫폼</p>
+            <div class="lab-meta">
+                <span>RF + XGBoost + LightGBM Ensemble</span>
+                <span>66 Features</span>
+                <span>CS Normalization</span>
+                <span>Market Regime · VIX</span>
+                <span>Sector RS</span>
+                <span>Survivorship Bias Fix</span>
+                <span>PIT 22 지표</span>
+            </div>
+        </div>
+        """,
         unsafe_allow_html=True,
     )
 
@@ -2983,18 +3091,35 @@ def main():
         if k not in st.session_state:
             st.session_state[k] = None
 
-    # ── 환영 화면 ─────────────────────────────────────────
+    # ── 환영 화면 (gradient feature cards) ──────────────────
     if not cfg["run"] and st.session_state.results is None:
-        st.info("위 설정 바에서 원하는 조건을 선택한 후 **🚀 실행** 버튼을 누르세요.")
-        c1, c2, c3, c4 = st.columns(4)
-        for col, icon, title, items in [
-            (c1, "🧠", "AI 모델", ["Random Forest 예측", "롤링 윈도우 학습", "피처 중요도 추출"]),
-            (c2, "📐", "지표 (50+)", ["기술지표 25종", "펀더멘털 25종", "복합 지표"]),
-            (c3, "📊", "분석 뷰", ["IC 분석", "리밸런싱 히스토리", "지표 히트맵"]),
-            (c4, "🔴", "실시간", ["특정일 추천 종목", "레이더 차트", "성과 추적 대시보드"]),
-        ]:
+        st.markdown(
+            '<div class="lab-cta-hint">'
+            '위 설정 바에서 원하는 조건을 선택한 후 <b>🚀 백테스트 실행</b> 버튼을 눌러주세요.'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+        st.markdown('<div class="section-hdr">주요 기능</div>', unsafe_allow_html=True)
+
+        feat_cards = [
+            ("🧠", "AI 모델",   ["Random Forest 예측", "Rolling 윈도우 학습", "피처 중요도 추출"]),
+            ("📐", "지표 (66종)", ["기술지표 25종", "펀더멘털 25종", "Cross-Section 정규화"]),
+            ("📊", "분석 뷰",   ["IC 분석", "리밸런싱 히스토리", "지표 히트맵"]),
+            ("🎯", "실시간 추천", ["특정일 추천 종목", "레이더 차트", "성과 추적 대시보드"]),
+        ]
+        cols = st.columns(4)
+        for col, (icon, title, items) in zip(cols, feat_cards):
+            li_html = "".join(f"<li>{x}</li>" for x in items)
             col.markdown(
-                f"**{icon} {title}**\n" + "".join(f"\n- {i}" for i in items)
+                f"""
+                <div class="lab-feat-card">
+                    <div class="lab-feat-icon">{icon}</div>
+                    <div class="lab-feat-title">{title}</div>
+                    <ul>{li_html}</ul>
+                </div>
+                """,
+                unsafe_allow_html=True,
             )
         return
 
