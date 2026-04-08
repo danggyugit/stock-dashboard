@@ -571,19 +571,28 @@ def get_stock_detail(ticker: str) -> dict | None:
     return result
 
 
+@st.cache_data(ttl=600, show_spinner=False)
 def search_stocks(query: str) -> list[dict]:
-    """Search stocks by ticker or name from SQLite."""
+    """Search stocks by ticker or name from SQLite.
+
+    Cached 10 min — same query string returns same result, and the
+    Stock Detail search box re-runs this on every keystroke without
+    caching.
+    """
     conn = get_connection()
-    q = f"%{query.upper()}%"
-    rows = conn.execute(
-        """SELECT ticker, name, sector FROM stocks
-           WHERE UPPER(ticker) LIKE ? OR UPPER(name) LIKE ?
-           ORDER BY CASE WHEN UPPER(ticker) = ? THEN 0
-                        WHEN UPPER(ticker) LIKE ? THEN 1 ELSE 2 END,
-                   market_cap DESC
-           LIMIT 20""",
-        (q, q, query.upper(), f"{query.upper()}%"),
-    ).fetchall()
+    try:
+        q = f"%{query.upper()}%"
+        rows = conn.execute(
+            """SELECT ticker, name, sector FROM stocks
+               WHERE UPPER(ticker) LIKE ? OR UPPER(name) LIKE ?
+               ORDER BY CASE WHEN UPPER(ticker) = ? THEN 0
+                            WHEN UPPER(ticker) LIKE ? THEN 1 ELSE 2 END,
+                       market_cap DESC
+               LIMIT 20""",
+            (q, q, query.upper(), f"{query.upper()}%"),
+        ).fetchall()
+    except Exception:
+        return []
     return [{"ticker": r[0], "name": r[1], "sector": r[2]} for r in rows]
 
 

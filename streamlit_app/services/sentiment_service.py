@@ -110,34 +110,26 @@ def _calc_volume_score() -> float | None:
     return max(0, min(100, (ratio - 0.5) * 100))
 
 
+@st.cache_data(ttl=900, show_spinner=False)
 def get_market_news() -> list[dict]:
-    """Get market news with auto-sentiment. Cached in session_state."""
-    cache_key = "_market_news_cache"
-    if cache_key not in st.session_state:
-        articles = _news_provider.get_market_news()
-        for a in articles:
-            score, label = _quick_sentiment(a.get("headline", ""))
-            a["sentiment"] = score
-            a["sentiment_label"] = label
-        if articles:
-            st.session_state[cache_key] = articles
-        return articles
-    return st.session_state[cache_key]
+    """Get market news with auto-sentiment. Cached 15 min."""
+    articles = _news_provider.get_market_news()
+    for a in articles:
+        score, label = _quick_sentiment(a.get("headline", ""))
+        a["sentiment"] = score
+        a["sentiment_label"] = label
+    return articles
 
 
+@st.cache_data(ttl=900, show_spinner=False)
 def get_stock_news(ticker: str) -> list[dict]:
-    """Get stock news with auto-sentiment. Cached in session_state per ticker."""
-    cache_key = f"_stock_news_{ticker}"
-    if cache_key not in st.session_state:
-        articles = _news_provider.get_stock_news(ticker)
-        for a in articles:
-            score, label = _quick_sentiment(a.get("headline", ""))
-            a["sentiment"] = score
-            a["sentiment_label"] = label
-        if articles:
-            st.session_state[cache_key] = articles
-        return articles
-    return st.session_state[cache_key]
+    """Get stock news with auto-sentiment. Cached 15 min per ticker."""
+    articles = _news_provider.get_stock_news(ticker)
+    for a in articles:
+        score, label = _quick_sentiment(a.get("headline", ""))
+        a["sentiment"] = score
+        a["sentiment_label"] = label
+    return articles
 
 
 def analyze_with_ai(headlines: list[str]) -> list[dict] | None:

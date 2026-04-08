@@ -58,69 +58,177 @@ st.subheader(tr("scr.filters"))
 
 has_fundamentals = "pe_ratio" in df.columns and cached_count > 0
 
-# Row 1: Sector, Industry, Search
-f1, f2, f3 = st.columns(3)
-with f1:
-    sectors = ["All"] + sorted(df["sector"].dropna().unique().tolist())
-    selected_sector = st.selectbox(tr("scr.sector"), sectors)
-with f2:
-    if "industry" in df.columns:
-        if selected_sector != "All":
-            industries = ["All"] + sorted(
-                df[df["sector"] == selected_sector]["industry"].dropna().unique().tolist()
+# Defaults stored in session_state so the table reflects whatever was
+# last applied — no rerun until the user clicks "Apply Filters".
+_DEFAULTS = {
+    "scr_sector":   "All",
+    "scr_industry": "All",
+    "scr_search":   "",
+    "scr_pe":       "Any",
+    "scr_pb":       "Any",
+    "scr_ps":       "Any",
+    "scr_div":      "Any",
+    "scr_roe":      "Any",
+    "scr_de":       "Any",
+    "scr_eps":      "Any",
+    "scr_beta":     "Any",
+    "scr_cap":      "Any",
+    "scr_vol":      "Any",
+}
+for _k, _v in _DEFAULTS.items():
+    st.session_state.setdefault(_k, _v)
+
+# All filter widgets live INSIDE a single st.form so changing them
+# does not trigger a full page rerun. The filtered table is rebuilt
+# only when "Apply Filters" or "Reset" is clicked.
+with st.form("screener_filters"):
+    # Row 1: Sector / Industry / Search
+    f1, f2, f3 = st.columns(3)
+    with f1:
+        sectors = ["All"] + sorted(df["sector"].dropna().unique().tolist())
+        selected_sector = st.selectbox(
+            tr("scr.sector"), sectors,
+            index=sectors.index(st.session_state["scr_sector"])
+                  if st.session_state["scr_sector"] in sectors else 0,
+            key="scr_sector_widget",
+        )
+    with f2:
+        if "industry" in df.columns:
+            # Industry list depends on sector — recompute from the
+            # form's CURRENT selectbox value (not session_state, which
+            # reflects the last applied state)
+            base = df if selected_sector == "All" else df[df["sector"] == selected_sector]
+            industries = ["All"] + sorted(base["industry"].dropna().unique().tolist())
+            selected_industry = st.selectbox(
+                tr("scr.industry"), industries,
+                index=industries.index(st.session_state["scr_industry"])
+                      if st.session_state["scr_industry"] in industries else 0,
+                key="scr_industry_widget",
             )
         else:
-            industries = ["All"] + sorted(df["industry"].dropna().unique().tolist())
-        selected_industry = st.selectbox(tr("scr.industry"), industries)
+            selected_industry = "All"
+    with f3:
+        search = st.text_input(
+            tr("common.search"),
+            value=st.session_state["scr_search"],
+            placeholder=tr("scr.search_placeholder"),
+            key="scr_search_widget",
+        )
+
+    # Row 2: Valuation filters
+    if has_fundamentals:
+        st.markdown(f"**{tr('scr.valuation')}**")
+        v1, v2, v3, v4 = st.columns(4)
+        _pe_opts = ["Any", "Under 5", "Under 10", "Under 15",
+                    "Under 20", "Under 30", "Under 50", "Over 50"]
+        _pb_opts = ["Any", "Under 1", "Under 2", "Under 3", "Under 5", "Over 5"]
+        _ps_opts = ["Any", "Under 1", "Under 2", "Under 5", "Under 10", "Over 10"]
+        _div_opts = ["Any", "Over 0%", "Over 1%", "Over 2%",
+                     "Over 3%", "Over 5%", "Over 7%"]
+        with v1:
+            pe_filter = st.selectbox("P/E", _pe_opts,
+                index=_pe_opts.index(st.session_state["scr_pe"])
+                      if st.session_state["scr_pe"] in _pe_opts else 0)
+        with v2:
+            pb_filter = st.selectbox("P/B", _pb_opts,
+                index=_pb_opts.index(st.session_state["scr_pb"])
+                      if st.session_state["scr_pb"] in _pb_opts else 0)
+        with v3:
+            ps_filter = st.selectbox("P/S", _ps_opts,
+                index=_ps_opts.index(st.session_state["scr_ps"])
+                      if st.session_state["scr_ps"] in _ps_opts else 0)
+        with v4:
+            div_filter = st.selectbox(tr("scr.dividend_yield"), _div_opts,
+                index=_div_opts.index(st.session_state["scr_div"])
+                      if st.session_state["scr_div"] in _div_opts else 0)
+
+        st.markdown(f"**{tr('scr.fundamentals')}**")
+        f4, f5, f6, f7 = st.columns(4)
+        _roe_opts = ["Any", "Positive (>0%)", "Over 5%", "Over 10%",
+                     "Over 15%", "Over 20%", "Over 30%"]
+        _de_opts  = ["Any", "Under 0.5", "Under 1", "Under 2", "Over 2"]
+        _eps_opts = ["Any", "Positive", "Negative", "Over 1", "Over 5", "Over 10"]
+        _beta_opts= ["Any", "Under 0.5", "Under 1", "1 to 1.5", "1.5 to 2", "Over 2"]
+        with f4:
+            roe_filter = st.selectbox("ROE", _roe_opts,
+                index=_roe_opts.index(st.session_state["scr_roe"])
+                      if st.session_state["scr_roe"] in _roe_opts else 0)
+        with f5:
+            de_filter = st.selectbox("Debt/Equity", _de_opts,
+                index=_de_opts.index(st.session_state["scr_de"])
+                      if st.session_state["scr_de"] in _de_opts else 0)
+        with f6:
+            eps_filter = st.selectbox("EPS", _eps_opts,
+                index=_eps_opts.index(st.session_state["scr_eps"])
+                      if st.session_state["scr_eps"] in _eps_opts else 0)
+        with f7:
+            beta_filter = st.selectbox("Beta", _beta_opts,
+                index=_beta_opts.index(st.session_state["scr_beta"])
+                      if st.session_state["scr_beta"] in _beta_opts else 0)
+
+        st.markdown(f"**{tr('scr.market_cap_volume')}**")
+        m1, m2 = st.columns(2)
+        _cap_opts = ["Any", "Mega (>200B)", "Large (10B-200B)",
+                     "Mid (2B-10B)", "Small (300M-2B)", "Micro (<300M)"]
+        _vol_opts = ["Any", "Over 100K", "Over 500K", "Over 1M", "Over 5M"]
+        with m1:
+            cap_filter = st.selectbox(tr("scr.market_cap"), _cap_opts,
+                index=_cap_opts.index(st.session_state["scr_cap"])
+                      if st.session_state["scr_cap"] in _cap_opts else 0)
+        with m2:
+            vol_filter = st.selectbox(tr("scr.avg_volume"), _vol_opts,
+                index=_vol_opts.index(st.session_state["scr_vol"])
+                      if st.session_state["scr_vol"] in _vol_opts else 0)
     else:
-        selected_industry = "All"
-with f3:
-    search = st.text_input(tr("common.search"), placeholder=tr("scr.search_placeholder"))
+        pe_filter = pb_filter = ps_filter = div_filter = "Any"
+        roe_filter = de_filter = eps_filter = beta_filter = "Any"
+        cap_filter = vol_filter = "Any"
 
-# Row 2: Valuation filters
-if has_fundamentals:
-    st.markdown(f"**{tr('scr.valuation')}**")
-    v1, v2, v3, v4 = st.columns(4)
-    with v1:
-        pe_filter = st.selectbox("P/E", ["Any", "Under 5", "Under 10", "Under 15",
-                                          "Under 20", "Under 30", "Under 50", "Over 50"])
-    with v2:
-        pb_filter = st.selectbox("P/B", ["Any", "Under 1", "Under 2", "Under 3",
-                                          "Under 5", "Over 5"])
-    with v3:
-        ps_filter = st.selectbox("P/S", ["Any", "Under 1", "Under 2", "Under 5",
-                                          "Under 10", "Over 10"])
-    with v4:
-        div_filter = st.selectbox(tr("scr.dividend_yield"), ["Any", "Over 0%", "Over 1%", "Over 2%",
-                                                      "Over 3%", "Over 5%", "Over 7%"])
+    # Apply / Reset buttons
+    btn_col1, btn_col2, _ = st.columns([1, 1, 4])
+    with btn_col1:
+        apply_clicked = st.form_submit_button(
+            "🔍 Apply Filters", type="primary", use_container_width=True,
+        )
+    with btn_col2:
+        reset_clicked = st.form_submit_button(
+            "↺ Reset", use_container_width=True,
+        )
 
-    st.markdown(f"**{tr('scr.fundamentals')}**")
-    f4, f5, f6, f7 = st.columns(4)
-    with f4:
-        roe_filter = st.selectbox("ROE", ["Any", "Positive (>0%)", "Over 5%", "Over 10%",
-                                           "Over 15%", "Over 20%", "Over 30%"])
-    with f5:
-        de_filter = st.selectbox("Debt/Equity", ["Any", "Under 0.5", "Under 1",
-                                                   "Under 2", "Over 2"])
-    with f6:
-        eps_filter = st.selectbox("EPS", ["Any", "Positive", "Negative", "Over 1",
-                                           "Over 5", "Over 10"])
-    with f7:
-        beta_filter = st.selectbox("Beta", ["Any", "Under 0.5", "Under 1",
-                                             "1 to 1.5", "1.5 to 2", "Over 2"])
+# Persist whatever the user just submitted (or reset to defaults)
+if apply_clicked:
+    st.session_state["scr_sector"]   = selected_sector
+    st.session_state["scr_industry"] = selected_industry
+    st.session_state["scr_search"]   = search
+    st.session_state["scr_pe"]       = pe_filter
+    st.session_state["scr_pb"]       = pb_filter
+    st.session_state["scr_ps"]       = ps_filter
+    st.session_state["scr_div"]      = div_filter
+    st.session_state["scr_roe"]      = roe_filter
+    st.session_state["scr_de"]       = de_filter
+    st.session_state["scr_eps"]      = eps_filter
+    st.session_state["scr_beta"]     = beta_filter
+    st.session_state["scr_cap"]      = cap_filter
+    st.session_state["scr_vol"]      = vol_filter
+elif reset_clicked:
+    for _k, _v in _DEFAULTS.items():
+        st.session_state[_k] = _v
+    st.rerun()
 
-    st.markdown(f"**{tr('scr.market_cap_volume')}**")
-    m1, m2 = st.columns(2)
-    with m1:
-        cap_filter = st.selectbox(tr("scr.market_cap"), ["Any", "Mega (>200B)", "Large (10B-200B)",
-                                                   "Mid (2B-10B)", "Small (300M-2B)", "Micro (<300M)"])
-    with m2:
-        vol_filter = st.selectbox(tr("scr.avg_volume"), ["Any", "Over 100K", "Over 500K",
-                                                   "Over 1M", "Over 5M"])
-else:
-    pe_filter = pb_filter = ps_filter = div_filter = "Any"
-    roe_filter = de_filter = eps_filter = beta_filter = "Any"
-    cap_filter = vol_filter = "Any"
+# Read the applied (committed) filter values for table rendering
+selected_sector   = st.session_state["scr_sector"]
+selected_industry = st.session_state["scr_industry"]
+search            = st.session_state["scr_search"]
+pe_filter         = st.session_state["scr_pe"]
+pb_filter         = st.session_state["scr_pb"]
+ps_filter         = st.session_state["scr_ps"]
+div_filter        = st.session_state["scr_div"]
+roe_filter        = st.session_state["scr_roe"]
+de_filter         = st.session_state["scr_de"]
+eps_filter        = st.session_state["scr_eps"]
+beta_filter       = st.session_state["scr_beta"]
+cap_filter        = st.session_state["scr_cap"]
+vol_filter        = st.session_state["scr_vol"]
 
 # --- Apply Filters ---
 filtered = df.copy()
