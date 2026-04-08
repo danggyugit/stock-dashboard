@@ -1,12 +1,29 @@
 """Portfolio management service for Streamlit app.
 
 Uses SQLite for persistent portfolio/trade storage.
+
+Caching strategy
+----------------
+Read functions are wrapped in @st.cache_data so Streamlit doesn't
+re-hit the DB / yfinance on every widget rerun. Mutation functions
+(create/delete/add/...) call _invalidate_portfolio_caches() at the
+end so the next read picks up the change.
+
+TTLs are tuned to the data volatility:
+- get_portfolios:   60s (rarely changes)
+- get_trades:      120s
+- get_holdings:     60s (live prices, but 60s lag is fine for UI)
+- get_allocation:   60s (derived from holdings)
+- get_performance: 300s (heavy historical fetch)
+- get_dividends:  3600s (annual data, basically static)
+- get_tax_summary:3600s (year-bound)
 """
 
 import logging
 from datetime import date, datetime, timedelta
 
 import pandas as pd
+import streamlit as st
 
 from core.data_provider import MarketDataProvider
 from database import get_connection
@@ -14,6 +31,22 @@ from database import get_connection
 logger = logging.getLogger(__name__)
 
 _provider = MarketDataProvider()
+
+
+def _invalidate_portfolio_caches() -> None:
+    """Wipe every portfolio_service @st.cache_data entry.
+
+    Called from any mutation (create/delete/add/...) so the next read
+    picks up the change immediately instead of waiting for the TTL.
+    """
+    for fn in (
+        get_portfolios, get_trades, get_holdings, get_allocation,
+        get_performance, get_dividends, get_tax_summary,
+    ):
+        try:
+            fn.clear()
+        except Exception:
+            pass
 
 
 # --- Portfolio CRUD ---
@@ -27,9 +60,11 @@ def create_portfolio(name: str, description: str | None = None,
         (user_id, name, description),
     )
     conn.commit()
+    _invalidate_portfolio_caches()
     return {"id": cur.lastrowid, "name": name, "description": description}
 
 
+@st.cache_data(ttl=60, show_spinner=False)
 def get_portfolios(user_id: int | None = None) -> list[dict]:
     """Get portfolios for a user (or all if user_id is None)."""
     conn = get_connection()
@@ -98,6 +133,7 @@ def delete_portfolio(portfolio_id: int, user_id: int | None = None) -> bool:
     conn.execute("DELETE FROM trades WHERE portfolio_id = ?", (portfolio_id,))
     conn.execute("DELETE FROM portfolios WHERE id = ?", (portfolio_id,))
     conn.commit()
+    _invalidate_portfolio_caches()
     return True
 
 
@@ -115,6 +151,7 @@ def add_trade(portfolio_id: int, data: dict) -> dict:
          data["trade_date"], data.get("note")),
     )
     conn.commit()
+    _invalidate_portfolio_caches()
     return {"id": cur.lastrowid, "portfolio_id": portfolio_id, **data}
 
 
@@ -126,9 +163,11 @@ def delete_trade(portfolio_id: int, trade_id: int) -> bool:
         (trade_id, portfolio_id),
     )
     conn.commit()
+    _invalidate_portfolio_caches()
     return True
 
 
+@st.cache_data(ttl=120, show_spinner=False)
 def get_trades(portfolio_id: int) -> list[dict]:
     """Get all trades for a portfolio."""
     conn = get_connection()
@@ -192,8 +231,13 @@ def _calculate_holdings(portfolio_id: int) -> list[dict]:
     return holdings
 
 
+@st.cache_data(ttl=60, show_spinner=False)
 def get_holdings(portfolio_id: int) -> dict | None:
-    """Get current holdings with live prices and P&L."""
+    """Get current holdings with live prices and P&L.
+
+    Cached 60s — fresh enough for live UI but stops the constant
+    yfinance batch_prices call on every widget rerun.
+    """
     conn = get_connection()
     try:
         portfolio = conn.execute(
@@ -292,6 +336,7 @@ def get_holdings(portfolio_id: int) -> dict | None:
 
 # --- Allocation ---
 
+@st.cache_data(ttl=60, show_spinner=False)
 def get_allocation(portfolio_id: int) -> dict:
     """Get portfolio allocation by stock and sector."""
     data = get_holdings(portfolio_id)
@@ -330,8 +375,12 @@ def get_allocation(portfolio_id: int) -> dict:
 
 # --- Performance ---
 
+@st.cache_data(ttl=300, show_spinner=False)
 def get_performance(portfolio_id: int, period: str = "1m") -> dict:
-    """Get portfolio performance with SPY/QQQ benchmark comparison."""
+    """Get portfolio performance with SPY/QQQ benchmark comparison.
+
+    Cached 5 min — heavy historical fetch via batch_prices.
+    """
     conn = get_connection()
 
     period_days = {"1m": 30, "3m": 90, "6m": 180, "1y": 365, "ytd": None}
@@ -445,8 +494,12 @@ def get_performance(portfolio_id: int, period: str = "1m") -> dict:
 
 # --- Dividends ---
 
+@st.cache_data(ttl=3600, show_spinner=False)
 def get_dividends(portfolio_id: int, year: int | None = None) -> dict:
-    """Get dividend events for portfolio holdings."""
+    """Get dividend events for portfolio holdings.
+
+    Cached 1 hour — dividend data is essentially static intraday.
+    """
     if year is None:
         year = date.today().year
 
@@ -497,8 +550,13 @@ def _empty_tax() -> dict:
     }
 
 
+@st.cache_data(ttl=3600, show_spinner=False)
 def get_tax_summary(portfolio_id: int, year: int | None = None) -> dict:
-    """Calculate tax summary for realized trades."""
+    """Calculate tax summary for realized trades.
+
+    Cached 1 hour — derived purely from trades, doesn't change
+    intraday unless you add a new trade (cache is invalidated then).
+    """
     if year is None:
         year = date.today().year
 

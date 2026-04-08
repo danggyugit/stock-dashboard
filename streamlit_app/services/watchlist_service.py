@@ -1,13 +1,32 @@
-"""Watchlist and Alert management service."""
+"""Watchlist and Alert management service.
+
+Caching strategy
+----------------
+Read functions are wrapped in @st.cache_data so widget reruns don't
+re-trigger yfinance batch_prices on every interaction. Mutation
+functions (add/remove/create_alert/...) call
+_invalidate_watchlist_caches() so the next read is fresh.
+"""
 
 import logging
 from datetime import datetime
+
+import streamlit as st
 
 from core.data_provider import MarketDataProvider
 from database import get_connection
 
 logger = logging.getLogger(__name__)
 _provider = MarketDataProvider()
+
+
+def _invalidate_watchlist_caches() -> None:
+    """Wipe every watchlist_service @st.cache_data entry."""
+    for fn in (get_watchlist, get_alerts):
+        try:
+            fn.clear()
+        except Exception:
+            pass
 
 
 # --- Watchlist CRUD ---
@@ -35,6 +54,7 @@ def add_to_watchlist(ticker: str, note: str | None = None,
         (user_id, ticker, note, current_price),
     )
     conn.commit()
+    _invalidate_watchlist_caches()
     return True
 
 
@@ -46,11 +66,17 @@ def remove_from_watchlist(ticker: str, user_id: int | None = None) -> bool:
         (ticker.upper(), user_id),
     )
     conn.commit()
+    _invalidate_watchlist_caches()
     return True
 
 
+@st.cache_data(ttl=60, show_spinner=False)
 def get_watchlist(user_id: int | None = None) -> list[dict]:
-    """Get all watchlist items with current prices."""
+    """Get all watchlist items with current prices.
+
+    Cached 60s — fresh enough for live UI but stops the constant
+    yfinance batch_prices call on every widget rerun.
+    """
     conn = get_connection()
     try:
         rows = conn.execute(
@@ -113,6 +139,7 @@ def create_alert(ticker: str, condition: str, threshold: float,
         (user_id, ticker.upper().strip(), condition, threshold, note),
     )
     conn.commit()
+    _invalidate_watchlist_caches()
     return cur.lastrowid
 
 
@@ -127,8 +154,10 @@ def delete_alert(alert_id: int, user_id: int | None = None) -> None:
             return
     conn.execute("DELETE FROM alerts WHERE id = ?", (alert_id,))
     conn.commit()
+    _invalidate_watchlist_caches()
 
 
+@st.cache_data(ttl=120, show_spinner=False)
 def get_alerts(active_only: bool = False, user_id: int | None = None) -> list[dict]:
     """Get all alerts for a user."""
     conn = get_connection()
@@ -229,6 +258,7 @@ def reactivate_alert(alert_id: int, user_id: int | None = None) -> None:
         (alert_id,),
     )
     conn.commit()
+    _invalidate_watchlist_caches()
 
 
 # --- Cache freshness tracking ---

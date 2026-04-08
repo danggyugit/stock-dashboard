@@ -439,58 +439,79 @@ with tab_holdings:
 # ===== TRADES TAB =====
 with tab_trades:
     st.subheader(tr("pf.add_trade"))
-    active_pf = st.selectbox(
-        tr("pf.portfolio_name"), all_ids,
-        format_func=lambda x: pf_options[x], key="trade_target",
-    )
 
-    t_col1, t_col2, t_col3 = st.columns(3)
-    with t_col1:
-        trade_type = st.selectbox(tr("pf.action"), ["BUY", "SELL"], key="trade_type_sel")
-    with t_col2:
-        ticker_input = st.text_input(tr("common.ticker"), placeholder="AAPL", key="trade_ticker").upper().strip()
-    with t_col3:
-        trade_date_input = st.date_input(tr("pf.date"), value=date.today(), key="trade_date")
+    # Single form: every input lives inside it so the page does NOT
+    # rerun on each keystroke / date change. yfinance auto-price lookup
+    # only fires once on submit.
+    with st.form("add_trade", clear_on_submit=True):
+        # Row 1: portfolio + type + ticker + date
+        r1c1, r1c2, r1c3, r1c4 = st.columns([2, 1, 2, 2])
+        with r1c1:
+            active_pf = st.selectbox(
+                tr("pf.portfolio_name"), all_ids,
+                format_func=lambda x: pf_options[x], key="trade_target",
+            )
+        with r1c2:
+            trade_type = st.selectbox(tr("pf.action"), ["BUY", "SELL"], key="trade_type_sel")
+        with r1c3:
+            ticker_input = st.text_input(
+                tr("common.ticker"), placeholder="AAPL", key="trade_ticker"
+            )
+        with r1c4:
+            trade_date_input = st.date_input(
+                tr("pf.date"), value=date.today(), key="trade_date"
+            )
 
-    auto_price = 0.0
-    if ticker_input and trade_date_input:
-        try:
-            start = trade_date_input
-            end = trade_date_input + timedelta(days=5)
-            hist = yf.Ticker(ticker_input).history(start=str(start), end=str(end))
-            if not hist.empty:
-                auto_price = round(float(hist["Close"].iloc[0]), 2)
-        except Exception:
-            pass
-
-    with st.form("add_trade"):
-        p_col1, p_col2, p_col3 = st.columns(3)
-        with p_col1:
-            price = st.number_input(tr("pf.price"), min_value=0.0, value=auto_price, step=0.01, format="%.2f")
-        with p_col2:
+        # Row 2: price + qty + commission
+        r2c1, r2c2, r2c3 = st.columns(3)
+        with r2c1:
+            # 0 = auto-fill on submit from yfinance close at trade_date
+            price = st.number_input(
+                tr("pf.price") + " (0 = auto)",
+                min_value=0.0, value=0.0, step=0.01, format="%.2f",
+            )
+        with r2c2:
             quantity = st.number_input(tr("pf.quantity"), min_value=0.0, step=1.0)
-        with p_col3:
+        with r2c3:
             commission = st.number_input("Commission ($)", min_value=0.0, value=0.0, step=0.01)
 
         note = st.text_input(tr("common.note_optional"))
-        submitted = st.form_submit_button(tr("pf.submit_trade"))
+        submitted = st.form_submit_button(tr("pf.submit_trade"), type="primary")
 
-        if submitted and ticker_input and quantity > 0 and price > 0:
-            add_trade(active_pf, {
-                "ticker": ticker_input, "trade_type": trade_type,
-                "quantity": quantity, "price": price,
-                "commission": commission,
-                "trade_date": str(trade_date_input), "note": note or None,
-            })
-            st.success(f"Added {trade_type} {quantity} {ticker_input} @ ${price:.2f}")
-            st.rerun()
-        elif submitted:
-            if not ticker_input:
+        if submitted:
+            ticker_clean = (ticker_input or "").upper().strip()
+            if not ticker_clean:
                 st.warning("Enter a ticker.")
             elif quantity <= 0:
                 st.warning("Enter quantity.")
-            elif price <= 0:
-                st.warning("Price must be > 0.")
+            else:
+                # Auto-fetch price if user left it at 0
+                final_price = price
+                if final_price <= 0:
+                    try:
+                        start = trade_date_input
+                        end = trade_date_input + timedelta(days=5)
+                        hist = yf.Ticker(ticker_clean).history(
+                            start=str(start), end=str(end)
+                        )
+                        if not hist.empty:
+                            final_price = round(float(hist["Close"].iloc[0]), 2)
+                    except Exception:
+                        pass
+
+                if final_price <= 0:
+                    st.warning("Could not auto-fetch price — please enter manually.")
+                else:
+                    add_trade(active_pf, {
+                        "ticker": ticker_clean, "trade_type": trade_type,
+                        "quantity": quantity, "price": final_price,
+                        "commission": commission,
+                        "trade_date": str(trade_date_input), "note": note or None,
+                    })
+                    st.success(
+                        f"Added {trade_type} {quantity} {ticker_clean} @ ${final_price:.2f}"
+                    )
+                    st.rerun()
 
     st.subheader(tr("pf.trade_history"))
     for pid in all_ids:
