@@ -52,11 +52,14 @@ def remove_from_watchlist(ticker: str, user_id: int | None = None) -> bool:
 def get_watchlist(user_id: int | None = None) -> list[dict]:
     """Get all watchlist items with current prices."""
     conn = get_connection()
-    rows = conn.execute(
-        """SELECT id, ticker, note, added_price, added_at FROM watchlist
-           WHERE user_id IS ? ORDER BY added_at DESC""",
-        (user_id,),
-    ).fetchall()
+    try:
+        rows = conn.execute(
+            """SELECT id, ticker, note, added_price, added_at FROM watchlist
+               WHERE user_id IS ? ORDER BY added_at DESC""",
+            (user_id,),
+        ).fetchall()
+    except Exception:
+        return []
 
     if not rows:
         return []
@@ -136,7 +139,10 @@ def get_alerts(active_only: bool = False, user_id: int | None = None) -> list[di
         sql += " AND active = 1 AND triggered = 0"
     sql += " ORDER BY created_at DESC"
 
-    rows = conn.execute(sql, params).fetchall()
+    try:
+        rows = conn.execute(sql, params).fetchall()
+    except Exception:
+        return []
     return [
         {
             "id": r[0], "ticker": r[1], "condition": r[2], "threshold": r[3],
@@ -153,11 +159,14 @@ def check_alerts(user_id: int | None = None) -> list[dict]:
     Returns list of alerts that just triggered (newly).
     """
     conn = get_connection()
-    active = conn.execute(
-        """SELECT id, ticker, condition, threshold, note FROM alerts
-           WHERE active = 1 AND triggered = 0 AND user_id IS ?""",
-        (user_id,),
-    ).fetchall()
+    try:
+        active = conn.execute(
+            """SELECT id, ticker, condition, threshold, note FROM alerts
+               WHERE active = 1 AND triggered = 0 AND user_id IS ?""",
+            (user_id,),
+        ).fetchall()
+    except Exception:
+        return []
 
     if not active:
         return []

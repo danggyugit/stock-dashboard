@@ -33,16 +33,34 @@ def create_portfolio(name: str, description: str | None = None,
 def get_portfolios(user_id: int | None = None) -> list[dict]:
     """Get portfolios for a user (or all if user_id is None)."""
     conn = get_connection()
-    if user_id is not None:
-        rows = conn.execute(
-            """SELECT id, name, description, created_at FROM portfolios
-               WHERE user_id = ? ORDER BY created_at DESC""",
-            (user_id,),
-        ).fetchall()
-    else:
-        rows = conn.execute(
-            "SELECT id, name, description, created_at FROM portfolios ORDER BY created_at DESC"
-        ).fetchall()
+    try:
+        if user_id is not None:
+            rows = conn.execute(
+                """SELECT id, name, description, created_at FROM portfolios
+                   WHERE user_id = ? ORDER BY created_at DESC""",
+                (user_id,),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                "SELECT id, name, description, created_at FROM portfolios ORDER BY created_at DESC"
+            ).fetchall()
+    except Exception:
+        # `portfolios` table missing/locked — try to (re)create the schema once
+        try:
+            from database import init_db as _init
+            _init()
+            if user_id is not None:
+                rows = conn.execute(
+                    """SELECT id, name, description, created_at FROM portfolios
+                       WHERE user_id = ? ORDER BY created_at DESC""",
+                    (user_id,),
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    "SELECT id, name, description, created_at FROM portfolios ORDER BY created_at DESC"
+                ).fetchall()
+        except Exception:
+            rows = []
 
     portfolios = []
     for r in rows:
@@ -114,13 +132,16 @@ def delete_trade(portfolio_id: int, trade_id: int) -> bool:
 def get_trades(portfolio_id: int) -> list[dict]:
     """Get all trades for a portfolio."""
     conn = get_connection()
-    rows = conn.execute(
-        """SELECT id, portfolio_id, ticker, trade_type, quantity, price,
-                  commission, trade_date, note, created_at
-           FROM trades WHERE portfolio_id = ?
-           ORDER BY trade_date DESC, created_at DESC""",
-        (portfolio_id,),
-    ).fetchall()
+    try:
+        rows = conn.execute(
+            """SELECT id, portfolio_id, ticker, trade_type, quantity, price,
+                      commission, trade_date, note, created_at
+               FROM trades WHERE portfolio_id = ?
+               ORDER BY trade_date DESC, created_at DESC""",
+            (portfolio_id,),
+        ).fetchall()
+    except Exception:
+        return []
     return [
         {"id": r[0], "portfolio_id": r[1], "ticker": r[2], "trade_type": r[3],
          "quantity": r[4], "price": r[5], "commission": r[6],
@@ -134,12 +155,15 @@ def get_trades(portfolio_id: int) -> list[dict]:
 def _calculate_holdings(portfolio_id: int) -> list[dict]:
     """Calculate current holdings from trade history (FIFO)."""
     conn = get_connection()
-    trades = conn.execute(
-        """SELECT ticker, trade_type, quantity, price, commission
-           FROM trades WHERE portfolio_id = ?
-           ORDER BY trade_date ASC, created_at ASC""",
-        (portfolio_id,),
-    ).fetchall()
+    try:
+        trades = conn.execute(
+            """SELECT ticker, trade_type, quantity, price, commission
+               FROM trades WHERE portfolio_id = ?
+               ORDER BY trade_date ASC, created_at ASC""",
+            (portfolio_id,),
+        ).fetchall()
+    except Exception:
+        return []
 
     positions: dict[str, dict] = {}
     for t in trades:
@@ -171,10 +195,13 @@ def _calculate_holdings(portfolio_id: int) -> list[dict]:
 def get_holdings(portfolio_id: int) -> dict | None:
     """Get current holdings with live prices and P&L."""
     conn = get_connection()
-    portfolio = conn.execute(
-        "SELECT id, name, description FROM portfolios WHERE id = ?",
-        (portfolio_id,),
-    ).fetchone()
+    try:
+        portfolio = conn.execute(
+            "SELECT id, name, description FROM portfolios WHERE id = ?",
+            (portfolio_id,),
+        ).fetchone()
+    except Exception:
+        return None
     if not portfolio:
         return None
 
@@ -189,16 +216,37 @@ def get_holdings(portfolio_id: int) -> dict | None:
     tickers = [h["ticker"] for h in holdings_raw]
     batch_prices = _provider.get_batch_prices(tickers, period="5d")
 
-    # Get stock names
-    ticker_names = {}
-    ticker_sectors = {}
+    # Get stock names — try DB first, fall back to GitHub cache (stocks.json).
+    # Wrap each lookup so a missing `stocks` table on cold start does not
+    # crash the whole page.
+    ticker_names: dict[str, str] = {}
+    ticker_sectors: dict[str, str] = {}
     for ticker in tickers:
-        row = conn.execute(
-            "SELECT name, sector FROM stocks WHERE ticker = ?", (ticker,)
-        ).fetchone()
-        if row:
-            ticker_names[ticker] = row[0]
-            ticker_sectors[ticker] = row[1]
+        try:
+            row = conn.execute(
+                "SELECT name, sector FROM stocks WHERE ticker = ?", (ticker,)
+            ).fetchone()
+            if row:
+                ticker_names[ticker] = row[0]
+                ticker_sectors[ticker] = row[1]
+        except Exception:
+            # `stocks` table missing/locked — silent fall-through to cache below
+            break
+
+    # GitHub-cached stocks.json fallback for any ticker we still don't have
+    missing = [t for t in tickers if t not in ticker_names]
+    if missing:
+        try:
+            from services.cache_loader import get_cached_stocks
+            cached = get_cached_stocks() or []
+            cached_map = {s["ticker"]: s for s in cached}
+            for t in missing:
+                s = cached_map.get(t)
+                if s:
+                    ticker_names[t] = s.get("name") or t
+                    ticker_sectors[t] = s.get("sector")
+        except Exception:
+            pass
 
     holdings = []
     total_value = total_cost = 0.0
@@ -292,11 +340,14 @@ def get_performance(portfolio_id: int, period: str = "1m") -> dict:
     else:
         start_date = date.today() - timedelta(days=period_days.get(period, 30))
 
-    trades = conn.execute(
-        """SELECT ticker, trade_type, quantity, price, commission, trade_date
-           FROM trades WHERE portfolio_id = ? ORDER BY trade_date ASC""",
-        (portfolio_id,),
-    ).fetchall()
+    try:
+        trades = conn.execute(
+            """SELECT ticker, trade_type, quantity, price, commission, trade_date
+               FROM trades WHERE portfolio_id = ? ORDER BY trade_date ASC""",
+            (portfolio_id,),
+        ).fetchall()
+    except Exception:
+        trades = []
 
     if not trades:
         return {"points": [], "total_return_pct": 0.0, "spy_return_pct": None, "qqq_return_pct": None}
@@ -437,18 +488,30 @@ def get_dividends(portfolio_id: int, year: int | None = None) -> dict:
 
 # --- Tax ---
 
+def _empty_tax() -> dict:
+    return {
+        "year": None, "trades": [], "total_proceeds": 0.0, "total_cost_basis": 0.0,
+        "realized_gains": 0.0, "realized_losses": 0.0, "net_gain": 0.0,
+        "short_term_gain": 0.0, "long_term_gain": 0.0,
+        "short_term_loss": 0.0, "long_term_loss": 0.0,
+    }
+
+
 def get_tax_summary(portfolio_id: int, year: int | None = None) -> dict:
     """Calculate tax summary for realized trades."""
     if year is None:
         year = date.today().year
 
     conn = get_connection()
-    trades = conn.execute(
-        """SELECT ticker, trade_type, quantity, price, commission, trade_date
-           FROM trades WHERE portfolio_id = ?
-           ORDER BY trade_date ASC, created_at ASC""",
-        (portfolio_id,),
-    ).fetchall()
+    try:
+        trades = conn.execute(
+            """SELECT ticker, trade_type, quantity, price, commission, trade_date
+               FROM trades WHERE portfolio_id = ?
+               ORDER BY trade_date ASC, created_at ASC""",
+            (portfolio_id,),
+        ).fetchall()
+    except Exception:
+        return _empty_tax()
 
     cost_basis: dict[str, list[tuple[float, float, str]]] = {}
     short_gain = long_gain = short_loss = long_loss = 0.0

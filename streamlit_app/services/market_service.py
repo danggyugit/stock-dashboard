@@ -24,6 +24,66 @@ _SECTOR_NORMALIZE: dict[str, str] = {
     "Basic Materials": "Materials",
 }
 
+# ── Mega-cap backstop ──────────────────────────────────────────────
+# Streamlit-Cloud GitHub Actions (datacenter IPs) regularly fail to
+# fetch market_cap for the largest US tickers via yfinance fast_info.
+# Without a value the heatmap fallback is 1B which makes AAPL etc.
+# disappear from the treemap. These hardcoded caps are stale but
+# correct order-of-magnitude — accurate enough for treemap sizing.
+# Refresh annually.  Values in USD, snapshot ≈ early 2026.
+_MEGA_CAPS: dict[str, int] = {
+    "NVDA":  4_400_000_000_000,
+    "AAPL":  3_900_000_000_000,
+    "MSFT":  3_600_000_000_000,
+    "GOOGL": 2_500_000_000_000,
+    "GOOG":  2_500_000_000_000,
+    "AMZN":  2_400_000_000_000,
+    "META":  1_800_000_000_000,
+    "AVGO":  1_550_000_000_000,
+    "BRK-B": 1_050_000_000_000,
+    "TSLA":  1_050_000_000_000,
+    "LLY":     780_000_000_000,
+    "TSM":     760_000_000_000,
+    "WMT":     700_000_000_000,
+    "JPM":     680_000_000_000,
+    "V":       620_000_000_000,
+    "ORCL":    560_000_000_000,
+    "MA":      490_000_000_000,
+    "XOM":     480_000_000_000,
+    "COST":    470_000_000_000,
+    "JNJ":     450_000_000_000,
+    "NFLX":    430_000_000_000,
+    "PG":      420_000_000_000,
+    "HD":      420_000_000_000,
+    "ABBV":    400_000_000_000,
+    "BAC":     360_000_000_000,
+    "KO":      330_000_000_000,
+    "CRM":     320_000_000_000,
+    "CVX":     310_000_000_000,
+    "MRK":     300_000_000_000,
+    "AMD":     290_000_000_000,
+    "PEP":     270_000_000_000,
+    "ADBE":    260_000_000_000,
+    "TMUS":    260_000_000_000,
+    "CSCO":    250_000_000_000,
+    "ABT":     240_000_000_000,
+    "ACN":     230_000_000_000,
+    "MCD":     230_000_000_000,
+    "LIN":     220_000_000_000,
+    "WFC":     210_000_000_000,
+    "DIS":     200_000_000_000,
+    "INTC":    195_000_000_000,
+    "QCOM":    195_000_000_000,
+    "TXN":     180_000_000_000,
+    "INTU":    180_000_000_000,
+    "AMAT":    175_000_000_000,
+    "CMCSA":   170_000_000_000,
+    "IBM":     170_000_000_000,
+    "PM":      165_000_000_000,
+    "T":       160_000_000_000,
+    "PFE":     155_000_000_000,
+}
+
 _provider = MarketDataProvider()
 
 
@@ -80,11 +140,49 @@ def _build_heatmap_from_github_cache(cache: dict, period: str) -> dict:
         Heatmap response dict (sectors list + period + updated_at).
     """
     tickers_data = cache.get("tickers", {})
+
+    # ── Enrich missing market_cap from multiple sources ──
+    # GitHub Actions running yfinance from data center IPs often gets None
+    # for fast_info.market_cap on the largest tickers (AAPL, MSFT, NVDA …),
+    # which makes them shrink to the 1B fallback and disappear from the
+    # treemap.
+    #
+    # Strategy:
+    #   1. Hard-coded top mega caps (most reliable, refreshed periodically)
+    #   2. Derive from fundamentals.json shares_outstanding × current price
+    #   3. Final fallback: 1B
+    fundamentals_caps: dict[str, int] = {}
+    try:
+        from services.cache_loader import get_cached_fundamentals
+        funds = get_cached_fundamentals() or {}
+        for t, f in (funds.get("tickers") or {}).items():
+            if not f:
+                continue
+            cap = f.get("market_cap")
+            if not cap:
+                shares = f.get("shares_outstanding")
+                hm_info = tickers_data.get(t, {})
+                hm_prices = hm_info.get("prices") or []
+                last_close = hm_prices[-1].get("close") if hm_prices else None
+                if shares and last_close:
+                    cap = int(shares * last_close)
+            if cap:
+                fundamentals_caps[t] = int(cap)
+    except Exception:
+        pass
+
     sectors: dict[str, dict] = {}
 
     for ticker, info in tickers_data.items():
         sector_name = info.get("sector") or "Other"
-        mkt_cap = info.get("market_cap") or 1_000_000_000
+        # Prefer heatmap.json cap, then fundamentals.json cap, then mega-cap
+        # backstop, then 1B fallback
+        mkt_cap = (
+            info.get("market_cap")
+            or fundamentals_caps.get(ticker)
+            or _MEGA_CAPS.get(ticker)
+            or 1_000_000_000
+        )
         prices = info.get("prices") or []
 
         if sector_name not in sectors:
