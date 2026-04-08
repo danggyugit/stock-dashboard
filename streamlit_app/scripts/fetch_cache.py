@@ -171,8 +171,18 @@ def fetch_fundamentals(tickers: list[str], max_count: int | None = None) -> dict
     Concurrent requests trigger 'Invalid Crumb' 401 errors. Sequential calls with
     a shared curl_cffi browser-impersonating session work reliably.
 
+    Strategy notes:
+      - The first few requests are most likely to hit rate limits, so we
+        shuffle the order. The most valuable mega-caps are NOT at the very
+        front, where they'd be the ones killed by an early rate limit.
+      - A short warmup delay before the first request lets the session settle.
+      - On rate limit, exponential backoff and continue (don't give up).
+      - On RUNS where the result has gaps in mega caps, the second pass
+        retries any of the top 10 names that failed.
+
     Args:
-        tickers: list of tickers to fetch
+        tickers: list of tickers to fetch (assumed sorted by importance,
+                 e.g. market cap desc)
         max_count: optional cap (for limiting universe to e.g. top 500)
 
     Returns:
@@ -181,7 +191,16 @@ def fetch_fundamentals(tickers: list[str], max_count: int | None = None) -> dict
     if max_count:
         tickers = tickers[:max_count]
 
-    logger.info("Fetching fundamentals for %d tickers (sequential)...", len(tickers))
+    # Remember the top 10 mega caps for the retry pass — these matter most
+    mega_caps = list(tickers[:10])
+
+    # Shuffle the rest so rate limits don't always hit the same prefix
+    import random
+    work = list(tickers)
+    random.shuffle(work)
+
+    logger.info("Fetching fundamentals for %d tickers (shuffled, sequential)...",
+                len(work))
 
     # Shared browser-impersonating session — bypasses Yahoo's bot detection
     try:
@@ -192,51 +211,77 @@ def fetch_fundamentals(tickers: list[str], max_count: int | None = None) -> dict
         session = None
         logger.warning("curl_cffi not available, using default session.")
 
-    result: dict[str, dict] = {}
-    consecutive_errors = 0
-    delay = 0.8  # base delay between requests (sec)
+    # Brief warmup so the session settles before the first real request
+    time.sleep(2)
 
-    for i, ticker in enumerate(tickers):
+    result: dict[str, dict] = {}
+
+    def _fetch_one(ticker: str) -> bool:
+        """Fetch a single ticker. Returns True on success, False on failure."""
         try:
             t = yf.Ticker(ticker, session=session) if session else yf.Ticker(ticker)
             info = t.info
-            if info and len(info) > 5:
-                result[ticker] = {
-                    "pe_ratio": info.get("trailingPE"),
-                    "pb_ratio": info.get("priceToBook"),
-                    "ps_ratio": info.get("priceToSalesTrailing12Months"),
-                    "eps": info.get("trailingEps"),
-                    "roe": info.get("returnOnEquity"),
-                    "debt_to_equity": info.get("debtToEquity"),
-                    "dividend_yield": info.get("dividendYield"),
-                    "beta": info.get("beta"),
-                    "fifty_two_week_high": info.get("fiftyTwoWeekHigh"),
-                    "fifty_two_week_low": info.get("fiftyTwoWeekLow"),
-                    "avg_volume": info.get("averageVolume"),
-                    "shares_outstanding": info.get("sharesOutstanding"),
-                    "book_value": info.get("bookValue"),
-                    "trailing_annual_dividend_rate": info.get("trailingAnnualDividendRate"),
-                    "revenue_per_share": info.get("revenuePerShare"),
-                }
-                consecutive_errors = 0
-            else:
-                consecutive_errors += 1
+            if not info or len(info) <= 5:
+                return False
+            result[ticker] = {
+                "pe_ratio": info.get("trailingPE"),
+                "pb_ratio": info.get("priceToBook"),
+                "ps_ratio": info.get("priceToSalesTrailing12Months"),
+                "eps": info.get("trailingEps"),
+                "roe": info.get("returnOnEquity"),
+                "debt_to_equity": info.get("debtToEquity"),
+                "dividend_yield": info.get("dividendYield"),
+                "beta": info.get("beta"),
+                "fifty_two_week_high": info.get("fiftyTwoWeekHigh"),
+                "fifty_two_week_low": info.get("fiftyTwoWeekLow"),
+                "avg_volume": info.get("averageVolume"),
+                "shares_outstanding": info.get("sharesOutstanding"),
+                "book_value": info.get("bookValue"),
+                "trailing_annual_dividend_rate": info.get("trailingAnnualDividendRate"),
+                "revenue_per_share": info.get("revenuePerShare"),
+            }
+            return True
         except Exception as e:
-            consecutive_errors += 1
             if "RateLimit" in type(e).__name__ or "Too Many" in str(e):
-                wait = min(60, 5 * (2 ** min(consecutive_errors, 4)))
-                logger.warning("Rate limited at %s. Backing off %ds...", ticker, wait)
-                time.sleep(wait)
-            elif consecutive_errors >= 20:
-                logger.error("20 consecutive errors at %s — aborting.", ticker)
+                logger.warning("Rate limited at %s — backing off 30s", ticker)
+                time.sleep(30)
+            return False
+
+    # ── Pass 1: shuffled full list ─────────────────────────────
+    consecutive_errors = 0
+    delay = 0.8
+
+    for i, ticker in enumerate(work):
+        ok = _fetch_one(ticker)
+        if ok:
+            consecutive_errors = 0
+        else:
+            consecutive_errors += 1
+            if consecutive_errors >= 20:
+                logger.error("20 consecutive errors at %s — aborting pass 1.", ticker)
                 break
 
         time.sleep(delay)
 
         if (i + 1) % 25 == 0:
-            logger.info("  Progress: %d/%d (got %d)", i + 1, len(tickers), len(result))
+            logger.info("  Pass 1 progress: %d/%d (got %d)",
+                        i + 1, len(work), len(result))
 
-    logger.info("Got fundamentals for %d/%d tickers.", len(result), len(tickers))
+    logger.info("Pass 1 done: %d/%d tickers", len(result), len(work))
+
+    # ── Pass 2: retry any mega caps that failed ────────────────
+    missing_megacaps = [t for t in mega_caps if t not in result]
+    if missing_megacaps:
+        logger.info("Pass 2: retrying %d missing mega caps: %s",
+                    len(missing_megacaps), missing_megacaps)
+        time.sleep(5)  # cool-down
+        for ticker in missing_megacaps:
+            ok = _fetch_one(ticker)
+            if ok:
+                logger.info("  Recovered %s", ticker)
+            time.sleep(1.2)
+
+    logger.info("Got fundamentals for %d/%d tickers.", len(result), len(work))
     return result
 
 
