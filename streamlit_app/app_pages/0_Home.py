@@ -209,7 +209,7 @@ market_label, market_color, dot_color = _get_market_state()
 
 hero_html = f"""
 <div class="hero">
-    <h1 class="hero-title">AI Quant Lab Dashboard</h1>
+    <h1 class="hero-title">AI Quant Lab</h1>
     <p class="hero-subtitle">Track stocks, run AI backtests, and manage your portfolio — all in one place.</p>
     <div class="hero-meta">
         <div class="hero-meta-item">

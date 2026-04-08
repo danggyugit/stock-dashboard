@@ -40,6 +40,66 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 }
 
 /* ============================================ */
+/* Highlight the AI Quant Lab nav item — it's    */
+/* the flagship feature of the app.              */
+/* Streamlit renders nav items as <a> tags whose */
+/* href ends with the slugified page name.       */
+/* ============================================ */
+[data-testid="stSidebarNav"] a[href*="ai_quant_lab"],
+[data-testid="stSidebarNav"] a[href*="AI_Quant_Lab"],
+[data-testid="stSidebarNav"] a[href*="ai-quant-lab"],
+[data-testid="stSidebarNav"] a[href*="2_AI_Quant_Lab"] {
+    background: linear-gradient(135deg,
+                rgba(168, 85, 247, 0.18),
+                rgba(59, 130, 246, 0.18)) !important;
+    border: 1px solid rgba(168, 85, 247, 0.45) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.15),
+                0 4px 16px rgba(168, 85, 247, 0.18) !important;
+    position: relative !important;
+    transition: all 0.2s ease !important;
+}
+[data-testid="stSidebarNav"] a[href*="ai_quant_lab"]:hover,
+[data-testid="stSidebarNav"] a[href*="AI_Quant_Lab"]:hover,
+[data-testid="stSidebarNav"] a[href*="ai-quant-lab"]:hover,
+[data-testid="stSidebarNav"] a[href*="2_AI_Quant_Lab"]:hover {
+    background: linear-gradient(135deg,
+                rgba(168, 85, 247, 0.30),
+                rgba(59, 130, 246, 0.30)) !important;
+    border-color: rgba(168, 85, 247, 0.75) !important;
+    box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.30),
+                0 6px 22px rgba(168, 85, 247, 0.28) !important;
+    transform: translateX(2px) !important;
+}
+/* Bold + colored text on the AI Quant Lab item */
+[data-testid="stSidebarNav"] a[href*="ai_quant_lab"] span,
+[data-testid="stSidebarNav"] a[href*="AI_Quant_Lab"] span,
+[data-testid="stSidebarNav"] a[href*="ai-quant-lab"] span,
+[data-testid="stSidebarNav"] a[href*="2_AI_Quant_Lab"] span {
+    font-weight: 700 !important;
+    background: linear-gradient(135deg, #C4B5FD 0%, #93C5FD 100%);
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+/* "PRO" badge before the label */
+[data-testid="stSidebarNav"] a[href*="ai_quant_lab"]::after,
+[data-testid="stSidebarNav"] a[href*="AI_Quant_Lab"]::after,
+[data-testid="stSidebarNav"] a[href*="ai-quant-lab"]::after,
+[data-testid="stSidebarNav"] a[href*="2_AI_Quant_Lab"]::after {
+    content: "★";
+    margin-left: auto;
+    color: #FBBF24;
+    font-size: 12px;
+    text-shadow: 0 0 6px rgba(251, 191, 36, 0.6);
+    animation: ai-lab-pulse 2.4s ease-in-out infinite;
+}
+@keyframes ai-lab-pulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50%      { opacity: 1;   transform: scale(1.15); }
+}
+
+/* ============================================ */
 /* Minimal Streamlit Cloud chrome cleanup.        */
 /* IMPORTANT: do NOT hide stToolbar — the         */
 /* sidebar expand button (stExpandSidebarButton)  */
