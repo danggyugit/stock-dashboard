@@ -46,8 +46,18 @@ for i, (ticker, name) in enumerate(index_tickers.items()):
     with chart_cols[i]:
         is_vix = ticker == "^VIX"
         if is_vix:
-            data = get_chart_data(ticker, period="1mo", interval="1d")
-            label = f"{name} (1M)"
+            # VIX: try 1d/5m intraday first (so it lines up with the
+            # other charts), then fall back to 5d/5m, then 1mo/1d as a
+            # last resort. Some data sources don't expose intraday VIX,
+            # so the daily 1mo fallback is the safety net.
+            data = get_chart_data(ticker, period="1d", interval="5m")
+            label = f"{name} (1D)"
+            if not data or len(data) < 5:
+                data = get_chart_data(ticker, period="5d", interval="5m")
+                label = f"{name} (5D)"
+            if not data or len(data) < 5:
+                data = get_chart_data(ticker, period="1mo", interval="1d")
+                label = f"{name} (1M)"
         else:
             data = get_chart_data(ticker, period="1d", interval="5m")
             label = f"{name} (1D)"
@@ -90,11 +100,15 @@ for i, (ticker, name) in enumerate(index_tickers.items()):
             name=name,
         ))
 
-        # x-axis: intraday = time labels, VIX = date labels
+        # x-axis: intraday = time labels, daily fallback = date labels
         x_range = None
-        if not is_vix and "1D" in label and dates:
+        is_intraday = "1D" in label
+        if is_intraday and not is_vix and dates:
             trading_date = dates[0][:10]
             x_range = [f"{trading_date} 09:30:00", f"{trading_date} 16:00:00"]
+
+        # Tick format follows the actual range used (intraday → time, daily → date)
+        tick_fmt = "%H:%M" if is_intraday else "%m/%d"
 
         fig.update_layout(
             title=dict(text=label, font=dict(size=14)),
@@ -102,7 +116,7 @@ for i, (ticker, name) in enumerate(index_tickers.items()):
             xaxis=dict(
                 showgrid=False, showticklabels=True,
                 range=x_range,
-                tickformat="%H:%M" if not is_vix else "%m/%d",
+                tickformat=tick_fmt,
                 nticks=5,
                 tickfont=dict(size=9),
             ),

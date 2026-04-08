@@ -273,6 +273,247 @@ _QUANT_LAB_STRINGS: dict[str, dict[str, str]] = {
                            "ko": "{tier} ({url}) 조회 실패: {e}"},
     "ui.warn_sp1500_fb":  {"en": "S&P 1500 list fetch failed. Using built-in list.",
                            "ko": "S&P 1500 목록 조회 실패. 내장 리스트 사용."},
+
+    # Progress messages while running a backtest
+    "prog.surv_load":         {"en": "📜 Loading S&P 500 change history (survivorship bias fix)…",
+                               "ko": "📜 S&P 500 변경 이력 로드 중 (생존자 편향 보정)..."},
+    "prog.dl_prices":         {"en": "📡 Downloading price data for {n} tickers…",
+                               "ko": "📡 {n}개 종목 가격 데이터 다운로드 중..."},
+    "prog.prices_done":       {"en": "✅ {n} tickers loaded ({extra} historical delisted included). Loading fundamentals…",
+                               "ko": "✅ {n}개 종목 ({extra}개 역사적 퇴출 종목 포함). 펀더멘털 로드 중..."},
+    "prog.fund_done":         {"en": "✅ Fundamentals: {ok}/{n}. Loading PIT quarterly statements…",
+                               "ko": "✅ 펀더멘털 완료: {ok}/{n}개. PIT 분기 재무제표 수집 중..."},
+    "prog.pit_loading":       {"en": "📋 Collecting quarterly statements ({n} tickers · this may take a while)",
+                               "ko": "📋 분기 재무제표 수집 중... ({n}개 · 시간이 걸릴 수 있습니다)"},
+    "prog.pit_done":          {"en": "✅ PIT statements: {ok}/{n}. Computing technical indicators…",
+                               "ko": "✅ PIT 재무제표 완료: {ok}/{n}개. 기술지표 계산 중..."},
+    "prog.tech_loading":      {"en": "📡 Downloading SPY · VIX + computing technical indicators…",
+                               "ko": "📡 SPY·VIX 다운로드 + 기술지표 계산 중..."},
+    "prog.tech_done":         {"en": "📈 Technical indicators ready ({n} tickers). Starting backtest…",
+                               "ko": "📈 기술지표 계산 완료 ({n}종목). 백테스트 시작..."},
+    "prog.training":          {"en": "🤖 Training AI model and running backtest…",
+                               "ko": "🤖 AI 모델 학습 및 백테스트 실행 중..."},
+    "prog.complete":          {"en": "✅ Backtest complete! {rebal} rebalances | {trains} trainings | {n} tickers analyzed",
+                               "ko": "✅ 백테스트 완료! {rebal}회 리밸런싱 | {trains}회 학습 | {n}개 종목 분석"},
+    "prog.snapshot":          {"en": "Computing snapshots ({i}/{total})…",
+                               "ko": "스냅샷 계산 중 ({i}/{total})..."},
+    "prog.done_short":        {"en": "✅ Done!",
+                               "ko": "✅ 완료!"},
+    "prog.short_period":      {"en": "Backtest period too short — not enough analytics data.",
+                               "ko": "백테스트 기간이 짧아 분석 데이터가 부족합니다."},
+
+    # Result chart axes / titles
+    "ax.cumulative_compare":  {"en": "Portfolio Cumulative Return Comparison",
+                               "ko": "포트폴리오 누적 수익률 비교"},
+    "ax.date":                {"en": "Date",            "ko": "날짜"},
+    "ax.cum_return":          {"en": "Cumulative Return (1.0 = start)",
+                               "ko": "누적 수익 (1.0 = 시작)"},
+    "ax.return_pct":          {"en": "Return (%)",      "ko": "수익률"},
+    "ax.rebalance_date":      {"en": "Rebalance Date",  "ko": "리밸런싱 날짜"},
+    "ax.importance":          {"en": "Importance",      "ko": "중요도"},
+    "ax.indicator":           {"en": "Indicator",       "ko": "지표"},
+    "ax.ticker":              {"en": "Ticker",          "ko": "티커"},
+    "ax.ai_score":            {"en": "AI Score",        "ko": "AI 점수"},
+    "ax.rank":                {"en": "Rank",            "ko": "순위"},
+    "ax.ai_strategy":         {"en": "AI Strategy",     "ko": "AI 전략"},
+
+    # IC labels
+    "ic.mean":                {"en": "Mean IC",          "ko": "평균 IC"},
+    "ic.std":                 {"en": "IC Std Dev",       "ko": "IC 표준편차"},
+    "ic.ir":                  {"en": "IC IR",            "ko": "IC IR"},
+    "ic.pos_rate":            {"en": "Positive IC Ratio","ko": "양(+)IC 비율"},
+
+    # Rebalance history
+    "rh.select":              {"en": "Select rebalance period",
+                               "ko": "리밸런싱 기간 선택"},
+    "rh.rebal_date":          {"en": "Rebalance Date",  "ko": "리밸런싱 기준일"},
+    "rh.holding_period":      {"en": "Holding Period",  "ko": "보유 기간"},
+    "rh.learn_period":        {"en": "Training Window", "ko": "주가 학습 기간"},
+    "rh.period_return":       {"en": "Period Return",   "ko": "기간 수익률"},
+
+    # Tracking summary
+    "tk.win_rate":            {"en": "Rebalance Win Rate", "ko": "리밸런싱 승률"},
+    "tk.avg_return":          {"en": "Avg Period Return",  "ko": "기간 평균 수익"},
+    "tk.cumulative":          {"en": "Cumulative Return",  "ko": "누적 수익률"},
+    "tk.best":                {"en": "Best Period",        "ko": "최고 수익 기간"},
+    "tk.worst":               {"en": "Worst Period",       "ko": "최저 수익 기간"},
+
+    # AI Picks
+    "pk.as_of":               {"en": "As-of date",        "ko": "분석 기준일"},
+    "pk.consensus":           {"en": "Consensus",         "ko": "합의도"},
+    "pk.recommend":           {"en": "Pick",              "ko": "추천"},
+    "pk.title":               {"en": "AI Recommendation Score ({date})",
+                               "ko": "AI 추천 종목 점수 ({date})"},
+
+    # More chart titles + axes used in result tabs
+    "chart.turnover_per_rebal": {"en": "Turnover per Rebalance",
+                                 "ko": "리밸런싱별 턴오버율"},
+    "chart.ic_per_model":       {"en": "IC per Model per Rebalance",
+                                 "ko": "리밸런싱별 모델 IC 비교"},
+    "chart.cum_ic_per_model":   {"en": "Cumulative IC by Model",
+                                 "ko": "누적 IC 비교 (모델별)"},
+    "chart.ic_per_rebal":       {"en": "IC per Rebalance",
+                                 "ko": "리밸런싱별 IC"},
+    "chart.cum_ic":             {"en": "Cumulative IC",
+                                 "ko": "누적 IC"},
+    "chart.ic_dist":            {"en": "IC Distribution",
+                                 "ko": "IC 분포 히스토그램"},
+    "chart.norm_importance":    {"en": "Normalized Importance (share)",
+                                 "ko": "정규화 중요도 (비중)"},
+    "chart.corr":               {"en": "Correlation",
+                                 "ko": "상관계수"},
+    "chart.top20_avg_return":   {"en": "Top 20 Stocks by Avg Return",
+                                 "ko": "종목별 평균 수익률 TOP 20"},
+    "chart.current_top15_imp":  {"en": "Current Top 15 Indicator Importance",
+                                 "ko": "현재 지표 중요도 TOP 15"},
+    "chart.short_period_msg":   {"en": "Try switching to auto date or moving the start date earlier.",
+                                 "ko": "날짜를 자동 설정으로 변경하거나 시작일을 앞당겨 주세요."},
+    # Long-form explainer body for the Turnover expander
+    "exp.what_is_to_body": {
+        "en": (
+            "| Metric | Definition | Threshold |\n"
+            "|--------|------------|-----------|\n"
+            "| **Avg Turnover** | Share of holdings replaced per rebalance | "
+            "lower = friendlier on transaction cost |\n"
+            "| **Annual Turnover** | Avg turnover × rebalances per year | "
+            "1.0 = full portfolio replaced once a year |\n\n"
+            "- 50% turnover means half of the holdings are swapped each rebalance.\n"
+            "- Higher annual turnover translates directly into higher trading-cost drag."
+        ),
+        "ko": (
+            "| 지표 | 정의 | 기준 |\n"
+            "|------|------|------|\n"
+            "| **평균 턴오버** | 리밸런싱 1회당 교체되는 종목 비율 | 낮을수록 거래비용 유리 |\n"
+            "| **연간 턴오버** | 평균 턴오버 × 연간 리밸런싱 횟수 | 1.0 = 포트폴리오 1회 완전 교체 |\n\n"
+            "- 턴오버 50% = 리밸런싱마다 절반의 종목이 교체됨\n"
+            "- 연간 턴오버가 높을수록 실제 거래비용 부담이 커짐"
+        ),
+    },
+
+    # Long-form explainer body for the model documentation expander
+    "exp.model_doc_body": {
+        "en": (
+            "| Model | What it does | Strengths | Weaknesses |\n"
+            "|-------|--------------|-----------|------------|\n"
+            "| **Random Forest (RF)** | Average of many decision trees, each "
+            "trained on a random subset of data and features. | Robust to "
+            "overfitting, stable on outliers, easy to interpret | Weaker at "
+            "capturing non-linear patterns vs boosting |\n"
+            "| **XGBoost (XGB)** | Gradient boosting where each new tree "
+            "corrects the previous tree's error. | High accuracy, captures "
+            "complex patterns, built-in regularization | Risk of overfitting, "
+            "sensitive to hyperparameters |\n"
+            "| **LightGBM (LGBM)** | Like XGBoost but uses leaf-wise splitting "
+            "for faster, more memory-efficient training. | Optimized for large "
+            "datasets, native categorical features, fast training | Can "
+            "overfit on small datasets |\n\n"
+            "**Ensemble effect**: each model interprets the data differently, "
+            "so when one is wrong the others compensate. RF gives a stable "
+            "baseline; XGBoost and LightGBM capture the finer-grained patterns."
+        ),
+        "ko": (
+            "| 모델 | 특징 | 강점 | 약점 |\n"
+            "|------|------|------|------|\n"
+            "| **Random Forest (RF)** | 여러 결정 트리의 평균 예측. 각 트리는 "
+            "랜덤 데이터·피처 조합으로 학습. | 과적합에 강건, 이상치에 안정적, "
+            "해석 용이 | 비선형 패턴 포착력이 부스팅 대비 약함 |\n"
+            "| **XGBoost (XGB)** | 이전 트리의 오차를 다음 트리가 보정하는 "
+            "그래디언트 부스팅. | 높은 예측 정확도, 복잡한 패턴 학습, 정규화 내장 | "
+            "과적합 위험, 하이퍼파라미터 민감 |\n"
+            "| **LightGBM (LGBM)** | XGBoost와 유사하나 리프 기반 분할로 더 빠르고 "
+            "메모리 효율적. | 대규모 데이터에 최적, 범주형 피처 지원, 학습 속도 | "
+            "소규모 데이터에서 과적합 가능 |\n\n"
+            "**앙상블 효과**: 3모델이 서로 다른 방식으로 데이터를 해석하므로, 한 "
+            "모델이 틀려도 나머지가 보완합니다. RF는 안정적 기반을 제공하고, "
+            "XGBoost/LightGBM은 세밀한 패턴을 포착합니다."
+        ),
+    },
+
+    # Long-form explainer body for the AI Picks expander
+    "exp.ai_model_doc_body": {
+        "en": (
+            "| Model | Role |\n"
+            "|-------|------|\n"
+            "| **Random Forest** | Stable foundation. Average of many decision "
+            "trees, robust to overfitting. |\n"
+            "| **XGBoost** | Captures fine-grained patterns by repeatedly "
+            "correcting previous-tree errors. |\n"
+            "| **LightGBM** | Fast training optimized for large datasets via "
+            "leaf-wise splitting. |\n\n"
+            "**Consensus (★)**\n"
+            "- ★★★ : picked by all 3 models → **highest confidence**\n"
+            "- ★★ : picked by 2 models → strong candidate\n"
+            "- ★ : picked by 1 model only → idiosyncratic call, double-check\n"
+            "- (blank) : not recommended\n\n"
+            "**How to use it**: prioritize ★★★ names; only act on ★ names "
+            "after additional verification."
+        ),
+        "ko": (
+            "| 모델 | 역할 |\n"
+            "|------|------|\n"
+            "| **Random Forest** | 안정적 기반. 여러 결정 트리의 평균으로 과적합에 강건. |\n"
+            "| **XGBoost** | 세밀한 패턴 포착. 이전 트리의 오차를 반복 보정. |\n"
+            "| **LightGBM** | 빠른 학습 + 대규모 데이터 최적화. 리프 기반 분할. |\n\n"
+            "**합의도 (★)**\n"
+            "- ★★★ : 3모델 모두 TOP N에 선정 → **가장 신뢰도 높음**\n"
+            "- ★★ : 2모델이 TOP N에 선정 → 유력 후보\n"
+            "- ★ : 1모델만 선정 → 특정 모델의 독자적 판단, 주의 필요\n"
+            "- (빈칸) : 추천 대상 아님\n\n"
+            "**활용법**: ★★★ 종목을 우선 검토하고, ★ 종목은 추가 확인 후 결정하세요."
+        ),
+    },
+
+    # Long-form explainer body for the IC expander
+    "exp.what_is_ic_body": {
+        "en": (
+            "**IC (Information Coefficient)** is the key metric for evaluating "
+            "an AI model's predictive power.\n\n"
+            "| Metric | Definition | Threshold |\n"
+            "|--------|------------|-----------|\n"
+            "| **IC** | Spearman correlation between predicted-return rank and "
+            "actual-return rank | > 0.05 = good, > 0 = useful |\n"
+            "| **IC IR** | Mean IC ÷ Std IC (consistency of prediction) | "
+            "> 0.5 = excellent, > 0.3 = solid |\n"
+            "| **Positive IC ratio** | Share of rebalances with IC > 0 | "
+            "> 60% = stable |\n\n"
+            "**How to read it**\n"
+            "- Consistently **positive IC** means the AI is reliably picking "
+            "winners.\n"
+            "- IC ≈ 0 means no predictive signal; IC < 0 means inverse "
+            "prediction (warning sign).\n"
+            "- An **upward-sloping cumulative IC** indicates model quality is "
+            "holding up over time.\n"
+            "- Academically, **IC > 0.05** is considered practically "
+            "meaningful predictive power."
+        ),
+        "ko": (
+            "**IC (Information Coefficient, 정보 계수)**는 AI 모델의 예측력을 "
+            "평가하는 핵심 지표입니다.\n\n"
+            "| 지표 | 정의 | 기준 |\n"
+            "|------|------|------|\n"
+            "| **IC** | AI 예측 수익률 순위와 실제 수익률 순위 간의 "
+            "**Spearman 상관계수** | > 0.05 = 좋음, > 0 = 유효 |\n"
+            "| **IC IR** | IC 평균 ÷ IC 표준편차 (예측 일관성) | "
+            "> 0.5 = 우수, > 0.3 = 양호 |\n"
+            "| **양(+)IC 비율** | IC > 0인 리밸런싱 기간 비율 | > 60% = 안정적 |\n\n"
+            "**해석 방법**\n"
+            "- IC가 꾸준히 **양수(+)**이면 AI 모델이 상승 종목을 잘 예측함을 "
+            "의미합니다.\n"
+            "- IC = 0이면 예측력 없음, IC < 0이면 역방향 예측 (위험 신호).\n"
+            "- 누적 IC가 **우상향** 추세이면 모델 품질이 일관적으로 유지되고 있습니다.\n"
+            "- 학술적으로 IC > 0.05이면 실용적으로 유의미한 예측력으로 간주합니다."
+        ),
+    },
+    "chart.short_period_full":  {
+        "en": ("Backtest period is too short. Need at least {n_needed} rebalance "
+               "dates (currently {n_have}). Training {rolling}× + testing {min_test}× "
+               "+ 1y indicator warm-up ≈ {months} months minimum. "
+               "Try switching to auto date or moving the start date earlier."),
+        "ko": ("백테스트 기간이 부족합니다. 최소 {n_needed}개 리밸런싱 날짜 필요 "
+               "(현재 {n_have}개). 학습 {rolling}회 + 테스트 {min_test}회 + 지표 "
+               "warm-up 1년 = 약 {months}개월 이상의 기간이 필요합니다. "
+               "날짜를 자동 설정으로 변경하거나 시작일을 앞당겨 주세요."),
+    },
 }
 
 

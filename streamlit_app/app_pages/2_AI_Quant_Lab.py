@@ -1466,10 +1466,10 @@ def run_backtest(
         snap["_fwd_return"] = pd.Series(fwd)
         snapshots[date] = snap
         progress(0.05 + 0.25 * (i / max(n_dates - 2, 1)),
-                 f"스냅샷 계산 중 ({i+1}/{n_dates-1})...")
+                 tr("prog.snapshot", i=i+1, total=n_dates-1))
 
     # ── Step 2: 롤링 모델 학습 + 포트폴리오 시뮬레이션 ──
-    progress(0.30, "🤖 AI 모델 학습 및 백테스트 실행 중...")
+    progress(0.30, tr("prog.training"))
 
     portfolio_dates  = [rebal_dates[0]]
     portfolio_values = [1.0]
@@ -1905,7 +1905,8 @@ def tab_performance(results: dict, benchmarks: dict, price_data: dict, rf: float
     if len(port_active) >= 2:
         # 운용 시작 시점 기준 1.0으로 재정규화
         port_active = port_active / port_active.iloc[0]
-    metrics_all = [calc_metrics(port_active, "🤖 AI 전략", rf=rf)]
+    _ai_label = f"🤖 {tr('ax.ai_strategy')}"
+    metrics_all = [calc_metrics(port_active, _ai_label, rf=rf)]
 
     # 차트용: 일단위 시리즈 (운용 시작 시점부터)
     port_daily = build_daily_portfolio(results, price_data)
@@ -1918,9 +1919,9 @@ def tab_performance(results: dict, benchmarks: dict, price_data: dict, rf: float
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=port_daily_active.index, y=port_daily_active.values,
-        name="🤖 AI 전략",
+        name=_ai_label,
         line=dict(color="#7c4dff", width=3),
-        hovertemplate="%{x|%Y-%m-%d}<br>%{y:.3f}<extra>AI 전략</extra>",
+        hovertemplate="%{x|%Y-%m-%d}<br>%{y:.3f}<extra>" + tr("ax.ai_strategy") + "</extra>",
     ))
 
     # 벤치마크도 운용 시작 시점 기준 정규화 (공정한 비교)
@@ -1938,8 +1939,8 @@ def tab_performance(results: dict, benchmarks: dict, price_data: dict, rf: float
 
     fig.update_layout(
         **PLOT_CFG, height=420,
-        title="포트폴리오 누적 수익률 비교",
-        xaxis_title="날짜", yaxis_title="누적 수익 (1.0 = 시작)",
+        title=tr("ax.cumulative_compare"),
+        xaxis_title=tr("ax.date"), yaxis_title=tr("ax.cum_return"),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         hovermode="x unified",
     )
@@ -1980,21 +1981,7 @@ def tab_performance(results: dict, benchmarks: dict, price_data: dict, rf: float
 def tab_ic(results: dict):
     # ── IC 분석 개념 설명 ──────────────────────────────────
     with st.expander(tr("exp.what_is_ic"), expanded=False):
-        st.markdown("""
-**IC (Information Coefficient, 정보 계수)**는 AI 모델의 예측력을 평가하는 핵심 지표입니다.
-
-| 지표 | 정의 | 기준 |
-|------|------|------|
-| **IC** | AI 예측 수익률 순위와 실제 수익률 순위 간의 **Spearman 상관계수** | > 0.05 = 좋음, > 0 = 유효 |
-| **IC IR** | IC 평균 ÷ IC 표준편차 (예측 일관성) | > 0.5 = 우수, > 0.3 = 양호 |
-| **양(+)IC 비율** | IC > 0인 리밸런싱 기간 비율 | > 60% = 안정적 |
-
-**해석 방법**
-- IC가 꾸준히 **양수(+)**이면 AI 모델이 상승 종목을 잘 예측함을 의미합니다.
-- IC = 0이면 예측력 없음, IC < 0이면 역방향 예측 (위험 신호).
-- 누적 IC가 **우상향** 추세이면 모델 품질이 일관적으로 유지되고 있습니다.
-- 학술적으로 IC > 0.05이면 실용적으로 유의미한 예측력으로 간주합니다.
-        """)
+        st.markdown(tr("exp.what_is_ic_body"))
 
     ic_df = results.get("ic_df", pd.DataFrame())
     if ic_df.empty:
@@ -2025,10 +2012,10 @@ def tab_ic(results: dict):
     st.markdown(f'<div class="section-hdr">{tr("sec.ic_core")}</div>', unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
     for col, lbl, val in [
-        (c1, "평균 IC",     ic_mean),
-        (c2, "IC IR",      ic_ir),
-        (c3, "IC 표준편차", ic_std),
-        (c4, "양(+)IC 비율", pos_rate),
+        (c1, tr("ic.mean"),     ic_mean),
+        (c2, tr("ic.ir"),       ic_ir),
+        (c3, tr("ic.std"),      ic_std),
+        (c4, tr("ic.pos_rate"), pos_rate),
     ]:
         col.markdown(f"""<div class="metric-box">
             <div class="metric-label">{lbl}</div>
@@ -2038,15 +2025,7 @@ def tab_ic(results: dict):
     # ── 턴오버 지표 ───────────────────────────────────────
     st.markdown(f'<div class="section-hdr">{tr("sec.turnover")}</div>', unsafe_allow_html=True)
     with st.expander(tr("exp.what_is_to"), expanded=False):
-        st.markdown("""
-| 지표 | 정의 | 기준 |
-|------|------|------|
-| **평균 턴오버** | 리밸런싱 1회당 교체되는 종목 비율 | 낮을수록 거래비용 유리 |
-| **연간 턴오버** | 평균 턴오버 × 연간 리밸런싱 횟수 | 1.0 = 포트폴리오 1회 완전 교체 |
-
-- 턴오버 50% = 리밸런싱마다 절반의 종목이 교체됨
-- 연간 턴오버가 높을수록 실제 거래비용 부담이 커짐
-        """)
+        st.markdown(tr("exp.what_is_to_body"))
 
     ct1, ct2, ct3 = st.columns(3)
     ct1.markdown(f"""<div class="metric-box">
@@ -2059,7 +2038,7 @@ def tab_ic(results: dict):
     </div>""", unsafe_allow_html=True)
     ct3.markdown(f"""<div class="metric-box">
         <div class="metric-label">{tr("metric.n_periods")}</div>
-        <div class="metric-value neu">{len(turnover_vals)}회</div>
+        <div class="metric-value neu">{tr("metric.n_periods_unit", n=len(turnover_vals))}</div>
     </div>""", unsafe_allow_html=True)
 
     # 턴오버 추이 차트
@@ -2072,7 +2051,7 @@ def tab_ic(results: dict):
         ))
         fig_to.add_hline(y=avg_turnover, line_dash="dash", line_color="#7c4dff",
                          annotation_text=f"평균 {avg_turnover:.1%}", annotation_position="top right")
-        fig_to.update_layout(**PLOT_CFG, height=220, title="리밸런싱별 턴오버율",
+        fig_to.update_layout(**PLOT_CFG, height=220, title=tr("chart.turnover_per_rebal"),
                              yaxis_tickformat=".0%")
         st.plotly_chart(fig_to, use_container_width=True)
 
@@ -2114,7 +2093,7 @@ def tab_ic(results: dict):
                     hovertemplate=f"{name}<br>%{{x|%Y-%m}}: %{{y:.4f}}<extra></extra>",
                 ))
         fig_mic.add_hline(y=0, line_color="#888", line_width=1)
-        fig_mic.update_layout(**PLOT_CFG, height=320, title="리밸런싱별 모델 IC 비교",
+        fig_mic.update_layout(**PLOT_CFG, height=320, title=tr("chart.ic_per_model"),
                               hovermode="x unified")
         st.plotly_chart(fig_mic, use_container_width=True)
 
@@ -2131,7 +2110,7 @@ def tab_ic(results: dict):
                     x=ic_df["date"], y=ic_df[key].cumsum(),
                     name=name, line=dict(color=color, width=2 if key == "IC" else 1.5),
                 ))
-        fig_cum_mic.update_layout(**PLOT_CFG, height=280, title="누적 IC 비교 (모델별)")
+        fig_cum_mic.update_layout(**PLOT_CFG, height=280, title=tr("chart.cum_ic_per_model"))
         st.plotly_chart(fig_cum_mic, use_container_width=True)
 
         # 모델별 양(+)IC 비율 · IC IR 테이블
@@ -2143,10 +2122,10 @@ def tab_ic(results: dict):
             m, sd = s.mean(), s.std()
             model_stats.append({
                 "모델": name,
-                "평균 IC": f"{m:.4f}",
-                "IC 표준편차": f"{sd:.4f}",
-                "IC IR": f"{m/sd:.3f}" if sd > 0 else "N/A",
-                "양(+)IC 비율": f"{(s > 0).mean():.1%}",
+                tr("ic.mean"): f"{m:.4f}",
+                tr("ic.std"): f"{sd:.4f}",
+                tr("ic.ir"): f"{m/sd:.3f}" if sd > 0 else "N/A",
+                tr("ic.pos_rate"): f"{(s > 0).mean():.1%}",
             })
         if model_stats:
             st.dataframe(pd.DataFrame(model_stats), use_container_width=True, hide_index=True)
@@ -2164,7 +2143,7 @@ def tab_ic(results: dict):
     fig1.add_hline(y=0, line_color="white", opacity=0.4, line_width=1)
     fig1.add_hline(y=ic_mean, line_dash="dash", line_color="#7c4dff", line_width=2,
                    annotation_text=f"평균 {ic_mean:.3f}", annotation_position="top right")
-    fig1.update_layout(**PLOT_CFG, height=280, title="리밸런싱별 IC")
+    fig1.update_layout(**PLOT_CFG, height=280, title=tr("chart.ic_per_rebal"))
     fig1.update_xaxes(gridcolor="rgba(255,255,255,0.08)")
     fig1.update_yaxes(gridcolor="rgba(255,255,255,0.08)")
 
@@ -2175,7 +2154,7 @@ def tab_ic(results: dict):
         fillcolor="rgba(0,201,167,0.15)",
         hovertemplate="%{x|%Y-%m}<br>누적 IC: %{y:.3f}<extra></extra>",
     ))
-    fig2.update_layout(**PLOT_CFG, height=280, title="누적 IC")
+    fig2.update_layout(**PLOT_CFG, height=280, title=tr("chart.cum_ic"))
     fig2.update_xaxes(gridcolor="rgba(255,255,255,0.08)")
     fig2.update_yaxes(gridcolor="rgba(255,255,255,0.08)")
 
@@ -2193,7 +2172,7 @@ def tab_ic(results: dict):
     fig3.add_vline(x=0, line_dash="dash", line_color="white", opacity=0.5)
     fig3.add_vline(x=ic_mean, line_dash="dash", line_color="#00c9a7",
                    annotation_text=f"평균: {ic_mean:.3f}")
-    fig3.update_layout(**PLOT_CFG, height=240, title="IC 분포 히스토그램")
+    fig3.update_layout(**PLOT_CFG, height=240, title=tr("chart.ic_dist"))
     st.plotly_chart(fig3, use_container_width=True)
 
     # IC 테이블
@@ -2226,7 +2205,7 @@ def tab_history(results: dict):
         st.session_state.hist_sel_idx = len(opts) - 1
 
     sel = st.selectbox(
-        "리밸런싱 기간 선택",
+        tr("rh.select"),
         opts,
         index=st.session_state.hist_sel_idx,
         key="hist_period_select",
@@ -2240,10 +2219,10 @@ def tab_history(results: dict):
 
     c1, c2, c3, c4, c5 = st.columns(5)
     for col, lbl, val, clr in [
-        (c1, "리밸런싱 기준일", h["rebalance_date"].strftime("%Y-%m-%d"), "neu"),
-        (c2, "보유 기간",       h["holding_period"], "neu"),
-        (c3, "주가 학습 기간",  f"{h['learn_start']} ~", "neu"),
-        (c4, "기간 수익률",     f"{h['port_return']:.2%}", ret_c),
+        (c1, tr("rh.rebal_date"), h["rebalance_date"].strftime("%Y-%m-%d"), "neu"),
+        (c2, tr("rh.holding_period"),       h["holding_period"], "neu"),
+        (c3, tr("rh.learn_period"),  f"{h['learn_start']} ~", "neu"),
+        (c4, tr("rh.period_return"),     f"{h['port_return']:.2%}", ret_c),
         (c5, "IC",             f"{ic_v:.3f}" if not np.isnan(ic_v) else "N/A", ic_c),
     ]:
         col.markdown(f"""<div class="metric-box">
@@ -2289,7 +2268,7 @@ def tab_history(results: dict):
             fig.update_layout(
                 **PLOT_CFG, height=360,
                 margin=dict(l=130, r=10, t=10, b=30),
-                xaxis_title="중요도",
+                xaxis_title=tr("ax.importance"),
             )
             fig.update_yaxes(tickfont=dict(size=10))
             st.plotly_chart(fig, use_container_width=True, key="hist_top10_chart")
@@ -2312,16 +2291,7 @@ def tab_importance(results: dict):
 
     # ── 모델 설명 ─────────────────────────────────────────
     with st.expander(tr("exp.model_doc"), expanded=False):
-        st.markdown("""
-| 모델 | 특징 | 강점 | 약점 |
-|------|------|------|------|
-| **Random Forest (RF)** | 여러 결정 트리의 평균 예측. 각 트리는 랜덤 데이터·피처 조합으로 학습. | 과적합에 강건, 이상치에 안정적, 해석 용이 | 비선형 패턴 포착력이 부스팅 대비 약함 |
-| **XGBoost (XGB)** | 이전 트리의 오차를 다음 트리가 보정하는 그래디언트 부스팅. | 높은 예측 정확도, 복잡한 패턴 학습, 정규화 내장 | 과적합 위험, 하이퍼파라미터 민감 |
-| **LightGBM (LGBM)** | XGBoost와 유사하나 리프 기반 분할로 더 빠르고 메모리 효율적. | 대규모 데이터에 최적, 범주형 피처 지원, 학습 속도 | 소규모 데이터에서 과적합 가능 |
-
-**앙상블 효과**: 3모델이 서로 다른 방식으로 데이터를 해석하므로, 한 모델이 틀려도 나머지가 보완합니다.
-RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 포착합니다.
-        """)
+        st.markdown(tr("exp.model_doc_body"))
 
     avg_imp = fimp.mean().sort_values(ascending=False)
     top_n   = st.slider(tr("ui.show_n_features"), 5, min(25, len(fimp.columns)), 10, key="importance_top_n")
@@ -2354,7 +2324,7 @@ RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 
         fig_cmp.add_trace(go.Bar(name="LightGBM", x=labels, y=lgbm_norm.values, marker_color="#00c9a7"))
         fig_cmp.update_layout(
             **PLOT_CFG, height=400, barmode="group",
-            xaxis_tickangle=-45, yaxis_title="정규화 중요도 (비중)",
+            xaxis_tickangle=-45, yaxis_title=tr("chart.norm_importance"),
             yaxis_tickformat=".1%",
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         )
@@ -2395,7 +2365,7 @@ RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 
             ))
     fig1.update_layout(
         **PLOT_CFG, height=380,
-        xaxis_title="날짜", yaxis_title="중요도",
+        xaxis_title=tr("ax.date"), yaxis_title=tr("ax.importance"),
         hovermode="x unified",
         legend=dict(x=1.01, y=1),
     )
@@ -2429,10 +2399,10 @@ RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 
     st.markdown(f'<div class="section-hdr">{tr("sec.imp_recent")}</div>', unsafe_allow_html=True)
     latest = fimp.iloc[-1].sort_values(ascending=False)
     tbl = pd.DataFrame({
-        "순위":   range(1, len(latest) + 1),
+        tr("ax.rank"):   range(1, len(latest) + 1),
         "지표":   [FEAT_NAMES.get(k, k) for k in latest.index],
         "그룹":   [FEATURE_META.get(k, {}).get("group", "") for k in latest.index],
-        "중요도": latest.values.round(4),
+        tr("ax.importance"): latest.values.round(4),
         "비중":   (latest / latest.sum()).apply(lambda x: f"{x:.1%}"),
     }).head(20)
     st.dataframe(tbl, use_container_width=True, hide_index=True)
@@ -2464,7 +2434,7 @@ def tab_heatmap(results: dict):
         z=heat.values, x=xlbls, y=ylbls,
         colorscale="RdYlBu_r",
         hovertemplate="날짜: %{x}<br>지표: %{y}<br>중요도: %{z:.4f}<extra></extra>",
-        colorbar=dict(title="중요도"),
+        colorbar=dict(title=tr("ax.importance")),
     ))
     fig.update_layout(
         **PLOT_CFG,
@@ -2486,7 +2456,7 @@ def tab_heatmap(results: dict):
         colorscale="RdBu", zmin=-1, zmax=1,
         text=corr.values.round(2),
         texttemplate="%{text}",
-        colorbar=dict(title="상관계수"),
+        colorbar=dict(title=tr("chart.corr")),
         hovertemplate="%{y} vs %{x}<br>%{z:.3f}<extra></extra>",
     ))
     fig2.update_layout(
@@ -2542,7 +2512,7 @@ def tab_tracking(results: dict, price_data: dict):
             period_total = len(valid)
 
         rows.append({
-            "날짜":            h["rebalance_date"].strftime("%Y-%m-%d"),
+            tr("ax.date"):            h["rebalance_date"].strftime("%Y-%m-%d"),
             "보유기간":        h["holding_period"],
             "선정종목":        " / ".join(h["selected"]),
             "예측수익(평균)":  avg_pred,
@@ -2566,11 +2536,11 @@ def tab_tracking(results: dict, price_data: dict):
     st.markdown(f'<div class="section-hdr">{tr("sec.perf_overall")}</div>', unsafe_allow_html=True)
     c1, c2, c3, c4, c5 = st.columns(5)
     for col, lbl, val, fmt, color_rule in [
-        (c1, "리밸런싱 승률",   win_rate,   "pct",  "pos" if win_rate > 0.5 else "neg"),
-        (c2, "기간 평균 수익",  avg_ret,    "pct",  "pos" if avg_ret > 0 else "neg"),
-        (c3, "누적 수익률",     cumulative, "pct",  "pos" if cumulative > 0 else "neg"),
-        (c4, "최고 수익 기간",  best_ret,   "pct",  "pos"),
-        (c5, "최저 수익 기간",  worst_ret,  "pct",  "neg"),
+        (c1, tr("tk.win_rate"),   win_rate,   "pct",  "pos" if win_rate > 0.5 else "neg"),
+        (c2, tr("tk.avg_return"),  avg_ret,    "pct",  "pos" if avg_ret > 0 else "neg"),
+        (c3, tr("tk.cumulative"),     cumulative, "pct",  "pos" if cumulative > 0 else "neg"),
+        (c4, tr("tk.best"),  best_ret,   "pct",  "pos"),
+        (c5, tr("tk.worst"),  worst_ret,  "pct",  "neg"),
     ]:
         v_str = f"{val:.2%}" if fmt == "pct" else f"{val:.2f}"
         col.markdown(f"""<div class="metric-box">
@@ -2596,7 +2566,7 @@ def tab_tracking(results: dict, price_data: dict):
                       annotation_text=f"평균 {avg_ret:.2%}", annotation_position="top right")
     fig_bar.update_layout(
         **PLOT_CFG, height=320,
-        xaxis_title="리밸런싱 날짜", yaxis_title="수익률",
+        xaxis_title=tr("ax.rebalance_date"), yaxis_title=tr("ax.return_pct"),
         yaxis_tickformat=".1%",
     )
     st.plotly_chart(fig_bar, use_container_width=True)
@@ -2619,7 +2589,7 @@ def tab_tracking(results: dict, price_data: dict):
     fig_cum.add_hline(y=1.0, line_dash="dash", line_color="#888", line_width=1)
     fig_cum.update_layout(
         **PLOT_CFG, height=280,
-        xaxis_title="날짜", yaxis_title="누적 수익 (1.0 = 시작)",
+        xaxis_title=tr("ax.date"), yaxis_title=tr("ax.cum_return"),
     )
     st.plotly_chart(fig_cum, use_container_width=True)
 
@@ -2631,7 +2601,7 @@ def tab_tracking(results: dict, price_data: dict):
             avg_r = float(np.mean(stat["returns"])) if stat["returns"] else 0.0
             wr    = stat["wins"] / stat["total"] if stat["total"] else 0.0
             ticker_rows.append({
-                "티커":     t,
+                tr("ax.ticker"):     t,
                 "선정 횟수": stat["total"],
                 "승률":     wr,
                 "평균 수익률": avg_r,
@@ -2650,7 +2620,7 @@ def tab_tracking(results: dict, price_data: dict):
         top_tickers = tstat_df.nlargest(min(20, len(tstat_df)), "평균 수익률")
         clr = ["#2e7d32" if v > 0 else "#c62828" for v in top_tickers["평균 수익률"]]
         fig_tk = go.Figure(go.Bar(
-            x=top_tickers["티커"],
+            x=top_tickers[tr("ax.ticker")],
             y=top_tickers["평균 수익률"],
             marker_color=clr,
             hovertemplate="%{x}<br>평균 수익률: %{y:.2%}<extra></extra>",
@@ -2658,7 +2628,7 @@ def tab_tracking(results: dict, price_data: dict):
         fig_tk.add_hline(y=0, line_color="#555", line_width=1)
         fig_tk.update_layout(
             **PLOT_CFG, height=300,
-            title="종목별 평균 수익률 TOP 20",
+            title=tr("chart.top20_avg_return"),
             yaxis_tickformat=".1%",
         )
         st.plotly_chart(fig_tk, use_container_width=True)
@@ -2699,7 +2669,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     col_date, col_info = st.columns([2, 5])
     with col_date:
         sel_date = st.date_input(
-            "분석 기준일",
+            tr("pk.as_of"),
             value=default_date,
             min_value=min_avail,
             max_value=datetime.today().date(),
@@ -2794,21 +2764,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
 
     # ── 모델 설명 ─────────────────────────────────────────
     with st.expander(tr("exp.ai_model_doc"), expanded=False):
-        st.markdown("""
-| 모델 | 역할 |
-|------|------|
-| **Random Forest** | 안정적 기반. 여러 결정 트리의 평균으로 과적합에 강건. |
-| **XGBoost** | 세밀한 패턴 포착. 이전 트리의 오차를 반복 보정. |
-| **LightGBM** | 빠른 학습 + 대규모 데이터 최적화. 리프 기반 분할. |
-
-**합의도 (★)**
-- ★★★ : 3모델 모두 TOP N에 선정 → **가장 신뢰도 높음**
-- ★★ : 2모델이 TOP N에 선정 → 유력 후보
-- ★ : 1모델만 선정 → 특정 모델의 독자적 판단, 주의 필요
-- (빈칸) : 추천 대상 아님
-
-**활용법**: ★★★ 종목을 우선 검토하고, ★ 종목은 추가 확인 후 결정하세요.
-        """)
+        st.markdown(tr("exp.ai_model_doc_body"))
 
     # ── 전체 종목 상세 테이블 ──────────────────────────────
     st.markdown(tr("ui.all_rank_caption", date=today.strftime("%Y-%m-%d"), n=len(all_recs)))
@@ -2816,9 +2772,9 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     for rank, (t, score) in enumerate(all_recs.items(), 1):
         stars = consensus.get(t, 0)
         star_str = "★" * stars if stars > 0 else ""
-        row = {"순위": rank, "티커": t, "AI 점수": round(score, 3),
-               "추천": "O" if t in top_recs.index else "",
-               "합의도": star_str if consensus else ""}
+        row = {tr("ax.rank"): rank, tr("ax.ticker"): t, tr("ax.ai_score"): round(score, 3),
+               tr("pk.recommend"): "O" if t in top_recs.index else "",
+               tr("pk.consensus"): star_str if consensus else ""}
         for col, fmt in [
             ("Mom_1m",  "pct"), ("Mom_3m",  "pct"), ("Mom_6m",  "pct"),
             ("RSI_14",  "f1"),  ("P_E",     "f1"),  ("P_B",     "f2"),
@@ -2844,13 +2800,13 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     fig = go.Figure(go.Bar(
         x=top_recs.index, y=top_recs.values,
         marker=dict(color=top_recs.values, colorscale="Viridis", showscale=True,
-                    colorbar=dict(title="AI 점수")),
+                    colorbar=dict(title=tr("ax.ai_score"))),
         hovertemplate="%{x}<br>AI 점수: %{y:.3f}<extra></extra>",
     ))
     fig.update_layout(
         **PLOT_CFG, height=320,
-        title=f"AI 추천 종목 점수 ({today.strftime('%Y-%m-%d')})",
-        xaxis_title="티커", yaxis_title="AI 점수",
+        title=tr("pk.title", date=today.strftime("%Y-%m-%d")),
+        xaxis_title=tr("ax.ticker"), yaxis_title=tr("ax.ai_score"),
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -2866,7 +2822,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     ))
     fig2.update_layout(
         **PLOT_CFG, height=300, xaxis_tickangle=-45,
-        title="현재 지표 중요도 TOP 15",
+        title=tr("chart.current_top15_imp"),
     )
     st.plotly_chart(fig2, use_container_width=True)
 
@@ -3142,7 +3098,7 @@ def main():
     if cfg["run"]:
         universe = cfg["universe"]
         if not universe:
-            _status_slot.error("섹터를 선택해주세요.")
+            _status_slot.error(tr("settings.no_sector"))
             return
 
         _prog_slot.progress(0)
@@ -3156,7 +3112,7 @@ def main():
         current_sp500 = None
         extra_hist_tickers = []
         if cfg.get("use_surv_fix", False):
-            update_prog(0.01, "📜 S&P 500 변경 이력 로드 중 (생존자 편향 보정)...")
+            update_prog(0.01, tr("prog.surv_load"))
             sp500_changes = get_sp500_changes()
             current_sp500 = sp1500_df[sp1500_df["cap_tier"] == "Large Cap"]["ticker"].tolist()
             if not sp500_changes.empty:
@@ -3181,7 +3137,7 @@ def main():
 
         # 1. 가격 데이터
         all_tickers = list(set(universe + extra_hist_tickers))
-        update_prog(0.03, f"📡 {len(all_tickers)}개 종목 가격 데이터 다운로드 중...")
+        update_prog(0.03, tr("prog.dl_prices", n=len(all_tickers)))
         data_start = cfg["start"] - timedelta(days=400)  # 지표 warm-up
         price_data = download_price_data(
             tuple(all_tickers),
@@ -3194,22 +3150,22 @@ def main():
 
         available = list(price_data.keys())
         n_extra = len([t for t in extra_hist_tickers if t in price_data])
-        update_prog(0.12, f"✅ {len(available)}개 종목 ({n_extra}개 역사적 퇴출 종목 포함). 펀더멘털 로드 중...")
+        update_prog(0.12, tr("prog.prices_done", n=len(available), extra=n_extra))
 
         # 2. 펀더멘털 데이터 (.info — EV/EBITDA, FCF, 배당 등 유지)
         fund_map = get_fundamental_yf(tuple(available))
         fund_ok  = sum(1 for v in fund_map.values() if v)
-        update_prog(0.18, f"✅ 펀더멘털 완료: {fund_ok}/{len(available)}개. PIT 분기 재무제표 수집 중...")
+        update_prog(0.18, tr("prog.fund_done", ok=fund_ok, n=len(available)))
 
         # 2-b. PIT 분기 재무제표 수집 (P/E·P/B·P/S·ROE·ROA·마진·성장률 개선)
         # 종목 수에 따라 시간이 걸릴 수 있음 (종목당 ~0.5초)
-        update_prog(0.20, f"📋 분기 재무제표 수집 중... ({len(available)}개 · 시간이 걸릴 수 있습니다)")
+        update_prog(0.20, tr("prog.pit_loading", n=len(available)))
         pit_map = get_pit_financials(tuple(available))
         pit_ok  = sum(1 for v in pit_map.values() if not v["income"].empty)
-        update_prog(0.28, f"✅ PIT 재무제표 완료: {pit_ok}/{len(available)}개. 기술지표 계산 중...")
+        update_prog(0.28, tr("prog.pit_done", ok=pit_ok, n=len(available)))
 
         # 3. SPY + VIX 다운로드 + 기술지표 사전 계산
-        update_prog(0.28, "📡 SPY·VIX 다운로드 + 기술지표 계산 중...")
+        update_prog(0.28, tr("prog.tech_loading"))
         spy_close = None
         vix_close = None
         try:
@@ -3240,7 +3196,7 @@ def main():
                 tech_map[t] = calc_all_technical(ohlcv, spy_close=spy_close)
             except Exception:
                 pass
-        update_prog(0.30, f"📈 기술지표 계산 완료 ({len(tech_map)}종목). 백테스트 시작...")
+        update_prog(0.30, tr("prog.tech_done", n=len(tech_map)))
 
         # 4. 리밸런싱 날짜 생성
         # 유의미한 백테스트 조건:
@@ -3251,11 +3207,14 @@ def main():
         if len(rebal_dates) < n_needed + 1:
             needed_months = (n_needed + 1) * cfg["rebal_m"] + 12
             st.error(
-                f"백테스트 기간이 부족합니다. "
-                f"최소 {n_needed + 1}개 리밸런싱 날짜 필요 (현재 {len(rebal_dates)}개). "
-                f"학습 {cfg['rolling_w']}회 + 테스트 {MIN_TEST}회 + 지표 warm-up 1년 = "
-                f"약 {needed_months}개월 이상의 기간이 필요합니다. "
-                f"날짜를 자동 설정으로 변경하거나 시작일을 앞당겨 주세요."
+                tr(
+                    "chart.short_period_full",
+                    n_needed=n_needed + 1,
+                    n_have=len(rebal_dates),
+                    rolling=cfg["rolling_w"],
+                    min_test=MIN_TEST,
+                    months=needed_months,
+                )
             )
             return
 
@@ -3305,15 +3264,15 @@ def main():
         st.session_state.sector_map  = sector_map
         st.session_state.cfg         = cfg
 
-        _prog_slot.progress(1.0, "✅ 완료!")
+        _prog_slot.progress(1.0, tr("prog.done_short"))
         time.sleep(0.4)
         _prog_slot.empty()
-        _status_slot.success(
-            f"✅ 백테스트 완료! "
-            f"{len(rebal_dates)}회 리밸런싱 | "
-            f"{len(results['rebal_hist'])}회 학습 | "
-            f"{len(available)}개 종목 분석"
-        )
+        _status_slot.success(tr(
+            "prog.complete",
+            rebal=len(rebal_dates),
+            trains=len(results['rebal_hist']),
+            n=len(available),
+        ))
 
     # ── 결과 표시 ─────────────────────────────────────────
     if st.session_state.results is not None:
