@@ -37,9 +37,11 @@ warnings.filterwarnings("ignore")
 # Auth guard + shared site chrome
 from services.auth_service import require_auth  # noqa: E402
 from components.ui import inject_css  # noqa: E402
+from app_pages._quant_lab_i18n import t as tr, lang_toggle  # noqa: E402
 
 _user = require_auth()
 inject_css()  # site-wide CSS (cards, metric polish, sidebar collapse, etc.)
+lang_toggle()  # EN / KO toggle (default = EN)
 
 # AI Quant Lab specific styles — tuned to match the rest of the dashboard
 # (blue accent, gradient cards, soft borders)
@@ -317,10 +319,10 @@ def get_sp1500_info() -> tuple:
             raw["cap_tier"] = cap_tier
             frames.append(raw)
         except Exception as e:
-            st.warning(f"{cap_tier} ({url}) 조회 실패: {e}")
+            st.warning(tr("ui.warn_fetch_fail", tier=cap_tier, url=url, e=e))
 
     if not frames:
-        st.warning("S&P 1500 목록 조회 실패. 내장 리스트 사용.")
+        st.warning(tr("ui.warn_sp1500_fb"))
         return _fallback_sp500(), _fallback_sectors()
 
     df = pd.concat(frames, ignore_index=True).drop_duplicates(subset="ticker")
@@ -1885,7 +1887,7 @@ def tab_performance(results: dict, benchmarks: dict, price_data: dict, rf: float
     pv_ = results["port_values"]
 
     if len(pd_) < 2:
-        st.warning("백테스트 기간이 짧아 성과 데이터가 부족합니다.")
+        st.warning(tr("msg.short_period"))
         return
 
     # 실제 운용 시작 시점 = 첫 리밸런싱 날짜 (학습 기간 이후)
@@ -1946,7 +1948,7 @@ def tab_performance(results: dict, benchmarks: dict, price_data: dict, rf: float
         st.plotly_chart(fig, use_container_width=True)
 
     with col_metrics:
-        st.markdown('<div class="section-hdr">📈 성과 지표 비교</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-hdr">{tr("sec.perf_compare")}</div>', unsafe_allow_html=True)
         mdf = pd.DataFrame(metrics_all).set_index("전략").T
         st.dataframe(mdf, use_container_width=True, height=300)
 
@@ -1975,7 +1977,7 @@ def tab_performance(results: dict, benchmarks: dict, price_data: dict, rf: float
 
 def tab_ic(results: dict):
     # ── IC 분석 개념 설명 ──────────────────────────────────
-    with st.expander("📖 IC 분석이란?", expanded=False):
+    with st.expander(tr("exp.what_is_ic"), expanded=False):
         st.markdown("""
 **IC (Information Coefficient, 정보 계수)**는 AI 모델의 예측력을 평가하는 핵심 지표입니다.
 
@@ -1994,7 +1996,7 @@ def tab_ic(results: dict):
 
     ic_df = results.get("ic_df", pd.DataFrame())
     if ic_df.empty:
-        st.info("IC 데이터가 부족합니다. 백테스트 기간을 늘려주세요.")
+        st.info(tr("msg.no_ic"))
         return
 
     ic_df = ic_df.copy()
@@ -2018,7 +2020,7 @@ def tab_ic(results: dict):
     def _tcol(v): return "pos" if v < 0.5 else ("neg" if v > 0.8 else "neu")  # 낮을수록 좋음
 
     # ── IC 핵심 지표 ──────────────────────────────────────
-    st.markdown('<div class="section-hdr">📐 IC 핵심 지표</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.ic_core")}</div>', unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
     for col, lbl, val in [
         (c1, "평균 IC",     ic_mean),
@@ -2032,8 +2034,8 @@ def tab_ic(results: dict):
         </div>""", unsafe_allow_html=True)
 
     # ── 턴오버 지표 ───────────────────────────────────────
-    st.markdown('<div class="section-hdr">🔄 턴오버율 (거래 회전율)</div>', unsafe_allow_html=True)
-    with st.expander("📖 턴오버율이란?", expanded=False):
+    st.markdown(f'<div class="section-hdr">{tr("sec.turnover")}</div>', unsafe_allow_html=True)
+    with st.expander(tr("exp.what_is_to"), expanded=False):
         st.markdown("""
 | 지표 | 정의 | 기준 |
 |------|------|------|
@@ -2046,15 +2048,15 @@ def tab_ic(results: dict):
 
     ct1, ct2, ct3 = st.columns(3)
     ct1.markdown(f"""<div class="metric-box">
-        <div class="metric-label">평균 턴오버 (1회)</div>
+        <div class="metric-label">{tr("metric.avg_to")}</div>
         <div class="metric-value {_tcol(avg_turnover) if not np.isnan(avg_turnover) else 'neu'}">{avg_turnover:.1%}</div>
     </div>""", unsafe_allow_html=True)
     ct2.markdown(f"""<div class="metric-box">
-        <div class="metric-label">연간 턴오버</div>
+        <div class="metric-label">{tr("metric.annual_to")}</div>
         <div class="metric-value {_tcol(annual_turnover/2) if not np.isnan(annual_turnover) else 'neu'}">{annual_turnover:.1f}x</div>
     </div>""", unsafe_allow_html=True)
     ct3.markdown(f"""<div class="metric-box">
-        <div class="metric-label">분석 기간 수</div>
+        <div class="metric-label">{tr("metric.n_periods")}</div>
         <div class="metric-value neu">{len(turnover_vals)}회</div>
     </div>""", unsafe_allow_html=True)
 
@@ -2077,7 +2079,7 @@ def tab_ic(results: dict):
     # ── 모델별 IC 비교 (Ver3.8) ──────────────────────────
     is_ensemble = results.get("use_ensemble", False)
     if is_ensemble and "IC_RF" in ic_df.columns:
-        st.markdown('<div class="section-hdr">🤖 모델별 IC 비교</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-hdr">{tr("sec.ic_per_model")}</div>', unsafe_allow_html=True)
 
         # 모델별 평균 IC 요약
         mc1, mc2, mc3, mc4 = st.columns(4)
@@ -2090,7 +2092,7 @@ def tab_ic(results: dict):
             if key in ic_df.columns:
                 v = ic_df[key].mean()
                 col.markdown(f"""<div class="metric-box">
-                    <div class="metric-label">{lbl} 평균 IC</div>
+                    <div class="metric-label">{tr("metric.avg_ic", label=lbl)}</div>
                     <div class="metric-value {'pos' if v > 0.03 else ('neg' if v < 0 else 'neu')}">{v:.4f}</div>
                 </div>""", unsafe_allow_html=True)
 
@@ -2150,7 +2152,7 @@ def tab_ic(results: dict):
         st.markdown("<br>", unsafe_allow_html=True)
 
     # IC 막대 + 누적 IC (앙상블 기준)
-    st.markdown('<div class="section-hdr">📈 IC 추이 (앙상블)</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.ic_trend")}</div>', unsafe_allow_html=True)
     colors = ["#00c853" if x > 0 else "#ff1744" for x in ic_df["IC"]]
     fig1 = go.Figure()
     fig1.add_trace(go.Bar(
@@ -2193,7 +2195,7 @@ def tab_ic(results: dict):
     st.plotly_chart(fig3, use_container_width=True)
 
     # IC 테이블
-    st.markdown('<div class="section-hdr">📋 리밸런싱별 IC 상세</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.ic_per_rebal")}</div>', unsafe_allow_html=True)
     disp = ic_df.copy()
     disp["date"] = disp["date"].dt.strftime("%Y-%m-%d")
     disp["IC"]   = disp["IC"].round(4)
@@ -2209,10 +2211,10 @@ def tab_ic(results: dict):
 def tab_history(results: dict):
     hist = results.get("rebal_hist", [])
     if not hist:
-        st.info("리밸런싱 히스토리가 없습니다.")
+        st.info(tr("msg.no_history"))
         return
 
-    st.markdown(f"총 **{len(hist)}**회 리밸런싱 수행됨")
+    st.markdown(tr("ui.total_rebal", n=len(hist)))
 
     opts = [f"{h['rebalance_date'].strftime('%Y-%m-%d')} → {h['next_date'].strftime('%Y-%m-%d')}"
             for h in hist]
@@ -2252,7 +2254,7 @@ def tab_history(results: dict):
     col_l, col_r = st.columns([6, 4])
 
     with col_l:
-        st.markdown('<div class="section-hdr">📋 선정 종목 상세 지표</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-hdr">{tr("sec.picks_detail")}</div>', unsafe_allow_html=True)
         tdf = h.get("ticker_df", pd.DataFrame())
         if not tdf.empty:
             # 핵심 컬럼 우선 표시
@@ -2272,7 +2274,7 @@ def tab_history(results: dict):
                          key="hist_ticker_df")
 
     with col_r:
-        st.markdown('<div class="section-hdr">🏆 지표 중요도 TOP 10</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-hdr">{{TR:sec.feat_top10}}</div>', unsafe_allow_html=True)
         top10 = h.get("top10_features", [])
         if top10:
             names = [FEAT_NAMES.get(f, f) for f, _ in top10]
@@ -2298,7 +2300,7 @@ def tab_history(results: dict):
 def tab_importance(results: dict):
     fimp = results.get("fimp_df", pd.DataFrame())
     if fimp.empty:
-        st.info("지표 중요도 데이터가 없습니다.")
+        st.info(tr("msg.no_importance"))
         return
 
     is_ensemble = results.get("use_ensemble", False)
@@ -2307,7 +2309,7 @@ def tab_importance(results: dict):
     fimp_lgbm = results.get("fimp_lgbm_df", pd.DataFrame())
 
     # ── 모델 설명 ─────────────────────────────────────────
-    with st.expander("📖 사용 모델 설명", expanded=False):
+    with st.expander(tr("exp.model_doc"), expanded=False):
         st.markdown("""
 | 모델 | 특징 | 강점 | 약점 |
 |------|------|------|------|
@@ -2320,14 +2322,14 @@ RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 
         """)
 
     avg_imp = fimp.mean().sort_values(ascending=False)
-    top_n   = st.slider("표시할 지표 수", 5, min(25, len(fimp.columns)), 10, key="importance_top_n")
+    top_n   = st.slider(tr("ui.show_n_features"), 5, min(25, len(fimp.columns)), 10, key="importance_top_n")
     top_f   = avg_imp.head(top_n).index.tolist()
 
     palette = px.colors.qualitative.Plotly
 
     # ── 모델별 피처 중요도 비교 (Ver3.8) ──────────────────
     if is_ensemble and not fimp_rf.empty and not fimp_xgb.empty:
-        st.markdown('<div class="section-hdr">🤖 모델별 피처 중요도 비교 (TOP 15)</div>',
+        st.markdown(f'<div class="section-hdr">{tr("sec.feat_per_model")}</div>',
                     unsafe_allow_html=True)
         top15 = avg_imp.head(15).index.tolist()
 
@@ -2357,7 +2359,7 @@ RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 
         st.plotly_chart(fig_cmp, use_container_width=True)
 
         # 모델별 그룹 비중 비교
-        st.markdown('<div class="section-hdr">📊 모델별 그룹 비중 비교</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-hdr">{tr("sec.imp_per_model")}</div>', unsafe_allow_html=True)
         group_data = []
         for name, df in [("RF", fimp_rf), ("XGBoost", fimp_xgb), ("LightGBM", fimp_lgbm)]:
             if df.empty:
@@ -2378,7 +2380,7 @@ RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 
             st.plotly_chart(fig_grp, use_container_width=True)
 
     # 앙상블 중요도 추이 라인 그래프
-    st.markdown('<div class="section-hdr">📈 앙상블 주요 지표 중요도 추이</div>',
+    st.markdown(f'<div class="section-hdr">{tr("sec.imp_trend")}</div>',
                 unsafe_allow_html=True)
     fig1 = go.Figure()
     for i, f in enumerate(top_f):
@@ -2400,7 +2402,7 @@ RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 
     st.plotly_chart(fig1, use_container_width=True)
 
     # 지표 중요도 비중 누적 영역 그래프
-    st.markdown('<div class="section-hdr">📊 지표 중요도 비중 추이 (누적 스택)</div>',
+    st.markdown(f'<div class="section-hdr">{tr("sec.imp_stack")}</div>',
                 unsafe_allow_html=True)
     prop = fimp[top_f].div(fimp[top_f].sum(axis=1), axis=0)
     fig2 = go.Figure()
@@ -2422,7 +2424,7 @@ RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 
     st.plotly_chart(fig2, use_container_width=True)
 
     # 최근 중요도 순위 테이블
-    st.markdown('<div class="section-hdr">📋 최근 지표 중요도 순위</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.imp_recent")}</div>', unsafe_allow_html=True)
     latest = fimp.iloc[-1].sort_values(ascending=False)
     tbl = pd.DataFrame({
         "순위":   range(1, len(latest) + 1),
@@ -2441,13 +2443,13 @@ RF는 안정적 기반을 제공하고, XGBoost/LightGBM은 세밀한 패턴을 
 def tab_heatmap(results: dict):
     fimp = results.get("fimp_df", pd.DataFrame())
     if fimp.empty:
-        st.info("히트맵 데이터가 없습니다.")
+        st.info(tr("msg.no_heatmap"))
         return
 
-    st.markdown('<div class="section-hdr">🗺️ 지표 영향력 타임라인 히트맵</div>',
+    st.markdown(f'<div class="section-hdr">{tr("sec.heat_timeline")}</div>',
                 unsafe_allow_html=True)
 
-    n_feats = st.slider("표시할 지표 수", 5, min(len(fimp.columns), 50),
+    n_feats = st.slider(tr("ui.show_n_features"), 5, min(len(fimp.columns), 50),
                         min(30, len(fimp.columns)), key="heatmap_n_feats")
     avg_imp = fimp.mean().sort_values(ascending=False)
     top_f   = avg_imp.head(n_feats).index.tolist()
@@ -2472,7 +2474,7 @@ def tab_heatmap(results: dict):
     st.plotly_chart(fig, use_container_width=True)
 
     # 상관관계 히트맵
-    st.markdown('<div class="section-hdr">🔗 주요 지표 중요도 상관관계</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.heat_corr")}</div>', unsafe_allow_html=True)
     top10 = avg_imp.head(10).index.tolist()
     corr  = fimp[top10].corr()
     clbls = [FEAT_NAMES.get(f, f) for f in corr.index]
@@ -2499,11 +2501,11 @@ def tab_heatmap(results: dict):
 
 def tab_tracking(results: dict, price_data: dict):
     """과거 추천 종목의 실제 성과 추적 — 기간별 수익률·승률·종목별 통계."""
-    st.markdown('<div class="section-hdr">📊 추천 종목 성과 추적</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.live_importance")}</div>', unsafe_allow_html=True)
 
     hist = results.get("rebal_hist", [])
     if not hist:
-        st.info("백테스트를 먼저 실행하세요.")
+        st.info(tr("msg.run_first"))
         return
 
     # ── 기간별 요약 테이블 빌드 ───────────────────────────
@@ -2559,7 +2561,7 @@ def tab_tracking(results: dict, price_data: dict):
     worst_ret    = float(np.min(period_returns))  if period_returns else 0.0
     cumulative   = float(np.prod([1 + r for r in period_returns]) - 1)
 
-    st.markdown('<div class="section-hdr">📈 전체 성과 요약</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.perf_overall")}</div>', unsafe_allow_html=True)
     c1, c2, c3, c4, c5 = st.columns(5)
     for col, lbl, val, fmt, color_rule in [
         (c1, "리밸런싱 승률",   win_rate,   "pct",  "pos" if win_rate > 0.5 else "neg"),
@@ -2577,7 +2579,7 @@ def tab_tracking(results: dict, price_data: dict):
     st.markdown("<br>", unsafe_allow_html=True)
 
     # ── 기간별 수익률 막대 차트 ────────────────────────────
-    st.markdown('<div class="section-hdr">📊 리밸런싱 기간별 실제 수익률</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.real_returns")}</div>', unsafe_allow_html=True)
     dates_str = [h["rebalance_date"].strftime("%Y-%m-%d") for h in hist]
     colors_bar = ["#2e7d32" if r > 0 else "#c62828" for r in period_returns]
 
@@ -2598,7 +2600,7 @@ def tab_tracking(results: dict, price_data: dict):
     st.plotly_chart(fig_bar, use_container_width=True)
 
     # ── 누적 수익률 추이 ───────────────────────────────────
-    st.markdown('<div class="section-hdr">📈 추천 전략 누적 수익률 추이</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.cumulative")}</div>', unsafe_allow_html=True)
     cum_vals = [1.0]
     for r in period_returns:
         cum_vals.append(cum_vals[-1] * (1 + r))
@@ -2620,7 +2622,7 @@ def tab_tracking(results: dict, price_data: dict):
     st.plotly_chart(fig_cum, use_container_width=True)
 
     # ── 종목별 성과 통계 ───────────────────────────────────
-    st.markdown('<div class="section-hdr">🏆 종목별 성과 통계</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.per_stock")}</div>', unsafe_allow_html=True)
     if ticker_stats:
         ticker_rows = []
         for t, stat in ticker_stats.items():
@@ -2660,7 +2662,7 @@ def tab_tracking(results: dict, price_data: dict):
         st.plotly_chart(fig_tk, use_container_width=True)
 
     # ── 기간별 상세 테이블 ────────────────────────────────
-    st.markdown('<div class="section-hdr">📋 리밸런싱 기간별 상세 기록</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.rebal_log")}</div>', unsafe_allow_html=True)
     disp_summary = summary_df.copy()
     for c in ["예측수익(평균)", "실제수익률"]:
         disp_summary[c] = disp_summary[c].apply(
@@ -2678,11 +2680,11 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
                  results: dict, n_stocks: int, pit_map: dict = None,
                  spy_close: pd.Series = None, vix_close: pd.Series = None,
                  sector_map: dict = None):
-    st.markdown('<div class="section-hdr">🔴 AI 추천 종목</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="section-hdr">{tr("sec.ai_picks")}</div>', unsafe_allow_html=True)
 
     fimp = results.get("fimp_df", pd.DataFrame())
     if fimp.empty:
-        st.info("백테스트를 먼저 실행하세요.")
+        st.info(tr("msg.run_first"))
         return
 
     # ── 날짜 선택 UI ──────────────────────────────────────
@@ -2704,13 +2706,13 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     with col_info:
         is_today = (sel_date == datetime.today().date())
         if is_today:
-            st.info("💡 오늘 날짜 기준 최신 지표로 예측합니다.")
+            st.info(tr("msg.live_today"))
         else:
-            st.info(f"💡 **{sel_date}** 기준 지표로 예측합니다. 예측 모델은 백테스트의 마지막 학습 모델을 사용합니다.")
+            st.info(tr("msg.live_date", sel_date=sel_date))
 
     today = pd.Timestamp(sel_date)
 
-    with st.spinner("최신 지표 계산 중..."):
+    with st.spinner(tr("ui.spinner_features")):
         cur_snap = build_snapshot_df(list(price_data.keys()), tech_map, fund_map, today,
                                      pit_map=pit_map, price_data=price_data)
         if not cur_snap.empty:
@@ -2719,7 +2721,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
                                       sector_map=sector_map)
 
     if cur_snap.empty:
-        st.warning("현재 지표 데이터를 계산할 수 없습니다.")
+        st.warning(tr("msg.no_features"))
         return
 
     # ── Ver3.7: 앙상블 예측 (백테스트와 동일 전처리+모델) ──
@@ -2734,7 +2736,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     is_ensemble     = results.get("use_ensemble", False)
 
     if model_rf is None or last_imputer is None or not last_all_cols:
-        st.warning("저장된 모델이 없습니다. 백테스트를 다시 실행해 주세요.")
+        st.warning(tr("msg.no_model"))
         return
 
     avail_cols = [c for c in last_avail_cols if c in cur_snap.columns]
@@ -2763,10 +2765,10 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
         rank_lgbm = pred_lgbm_s.rank(ascending=False)
         avg_rank  = (rank_rf + rank_xgb + rank_lgbm) / 3
         composite = -avg_rank  # 높을수록 좋은 종목
-        st.caption("🤖 앙상블 예측 (Rank Average: RF + XGBoost + LightGBM)")
+        st.caption(tr("ui.ensemble_caption"))
     else:
         composite = pred_rf_s
-        st.caption("🤖 단일 RF 예측")
+        st.caption(tr("ui.single_caption"))
 
     # ── 모델 합의도 계산 (Ver3.8) ────────────────────────
     consensus = {}
@@ -2789,7 +2791,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     composite = composite_norm
 
     # ── 모델 설명 ─────────────────────────────────────────
-    with st.expander("📖 AI 모델 설명 · 합의도 해석", expanded=False):
+    with st.expander(tr("exp.ai_model_doc"), expanded=False):
         st.markdown("""
 | 모델 | 역할 |
 |------|------|
@@ -2807,7 +2809,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
         """)
 
     # ── 전체 종목 상세 테이블 ──────────────────────────────
-    st.markdown(f"**{today.strftime('%Y-%m-%d')} 기준 전체 분석 종목 AI 점수 순위 ({len(all_recs)}개)**")
+    st.markdown(tr("ui.all_rank_caption", date=today.strftime("%Y-%m-%d"), n=len(all_recs)))
     rec_rows = []
     for rank, (t, score) in enumerate(all_recs.items(), 1):
         stars = consensus.get(t, 0)
@@ -2851,7 +2853,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     st.plotly_chart(fig, use_container_width=True)
 
     # 현재 모델 지표 중요도
-    st.markdown('<div class="section-hdr">🔑 현재 AI 모델 지표 중요도 (최신 리밸런싱 기준)</div>',
+    st.markdown(f'<div class="section-hdr">{tr("sec.live_importance")}</div>',
                 unsafe_allow_html=True)
     top_imp = fimp.iloc[-1].sort_values(ascending=False).head(15)
     fig2 = go.Figure(go.Bar(
@@ -2868,7 +2870,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
 
     # 추천 종목 레이더 차트
     if len(top_recs) >= 3:
-        st.markdown('<div class="section-hdr">🕸️ TOP 5 종목 지표 레이더</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="section-hdr">{tr("sec.live_radar")}</div>', unsafe_allow_html=True)
         radar_feats = ["Mom_3m", "RSI_14", "ROE", "Op_Margin", "Mom_6m",
                        "Volatility_30d", "P_B", "Rev_Growth"]
         radar_feats = [f for f in radar_feats if f in cur_snap.columns]
@@ -2903,35 +2905,35 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
 # ═══════════════════════════════════════════════════════════
 
 def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
-    """사이드바 대신 페이지 상단 가로 배치 설정 UI."""
+    """Top settings bar (rendered in-page instead of in the sidebar)."""
 
     ALL_CAP_TIERS = ["Large Cap", "Mid Cap", "Small Cap"]
 
-    with st.expander("⚙️ 백테스트 설정 펼치기 / 접기", expanded=True):
+    with st.expander(tr("settings.expand"), expanded=True):
 
-        # ── Row 0: Cap Tier 선택 ────────────────────────────
-        st.markdown("**📊 시가총액 구간 선택**")
+        # ── Row 0: Market Cap Tier ────────────────────────────
+        st.markdown(tr("settings.cap_tier"))
         sel_cap = st.multiselect(
             "Cap Tier",
             ALL_CAP_TIERS,
             default=["Large Cap"],
             label_visibility="collapsed",
-            help="Large Cap = S&P 500 · Mid Cap = S&P 400 · Small Cap = S&P 600",
+            help=tr("settings.cap_help"),
         )
         if not sel_cap:
             sel_cap = ["Large Cap"]
 
         cap_filtered = sp1500_df[sp1500_df["cap_tier"].isin(sel_cap)]
 
-        # ── Row 1: 섹터 선택 ───────────────────────────────
-        st.markdown("**📂 분석 섹터 선택** (복수 선택 가능)")
+        # ── Row 1: Sector selection ───────────────────────────
+        st.markdown(tr("settings.sector"))
         default_sectors = ["Information Technology"] if "Information Technology" in all_sectors else all_sectors[:1]
         sel_sectors = st.multiselect(
-            "GICS 섹터",
+            tr("settings.sector_label"),
             all_sectors,
             default=default_sectors,
             label_visibility="collapsed",
-            help="포함할 GICS 섹터를 선택하세요",
+            help=tr("settings.sector_help"),
         )
         if not sel_sectors:
             sel_sectors = all_sectors[:2]
@@ -2939,97 +2941,98 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
         universe = cap_filtered[cap_filtered["sector"].isin(sel_sectors)]["ticker"].tolist()
 
         tier_counts = cap_filtered[cap_filtered["sector"].isin(sel_sectors)]["cap_tier"].value_counts()
-        tier_str = " · ".join([f"{t}: {c}개" for t, c in tier_counts.items()])
-        st.caption(f"선택된 유니버스: **{len(universe)}**개 종목  ({tier_str})")
+        tier_str = " · ".join(
+            tr("settings.tier_n", tier=ti, n=ci) for ti, ci in tier_counts.items()
+        )
+        st.caption(tr("settings.universe", count=len(universe), tier_str=tier_str))
 
         st.markdown("---")
 
-        # ── Row 2: 핵심 파라미터 ──────────────────────────
+        # ── Row 2: Core parameters ────────────────────────────
         c1, c2, c3, c4 = st.columns(4)
         with c1:
             rebal_m = st.slider(
-                "리밸런싱 기간 (개월)", 1, 12, 1, 1,
-                help="포트폴리오 리밸런싱 주기",
+                tr("settings.rebal"), 1, 12, 1, 1,
+                help=tr("settings.rebal_help"),
             )
         with c2:
             rolling_w = st.slider(
-                "롤링 학습 윈도우 (기간 수)", 2, 24, 12, 1,
-                help="모델 학습에 사용할 이전 리밸런싱 기간 수",
+                tr("settings.rolling"), 2, 24, 12, 1,
+                help=tr("settings.rolling_help"),
             )
         with c3:
-            n_stocks = st.slider("투자 종목 수", 1, 20, 5, 1)
+            n_stocks = st.slider(tr("settings.n_stocks"), 1, 20, 5, 1)
         with c4:
             tc_pct = st.number_input(
-                "거래비용 (%)", min_value=0.0, max_value=5.0,
+                tr("settings.tc_pct"), min_value=0.0, max_value=5.0,
                 value=0.3, step=0.05, format="%.2f",
-                help="왕복 총 거래비용 (수수료 + 슬리피지)",
+                help=tr("settings.tc_help"),
             )
 
-        # ── Row 3: 날짜 설정 ────────────────────────────────
+        # ── Row 3: Date range ─────────────────────────────────
         st.markdown("---")
-        # 유의미한 백테스트: rolling_win + min_test_periods 개 리밸런싱 날짜 필요
-        # 날짜 수 = rolling_w + MIN_TEST + 1 (마지막 날짜는 forward return 종료점)
-        MIN_TEST    = 5   # 최소 테스트(예측) 횟수
-        auto_months = (rolling_w + MIN_TEST) * rebal_m + 12  # +12개월 지표 warm-up
+        MIN_TEST    = 5   # minimum number of test periods
+        auto_months = (rolling_w + MIN_TEST) * rebal_m + 12  # +12 month indicator warm-up
         auto_end    = datetime.today()
         auto_start  = auto_end - timedelta(days=int(auto_months * 30.5))
 
-        use_custom = st.checkbox("날짜 직접 입력", value=False)
+        use_custom = st.checkbox(tr("settings.use_custom_date"), value=False)
         if use_custom:
             dc1, dc2 = st.columns(2)
-            sd = dc1.date_input("시작일", value=auto_start.date())
-            ed = dc2.date_input("종료일", value=auto_end.date(), min_value=sd)
+            sd = dc1.date_input(tr("settings.start_date"), value=auto_start.date())
+            ed = dc2.date_input(tr("settings.end_date"), value=auto_end.date(), min_value=sd)
         else:
             sd = auto_start.date()
             ed = auto_end.date()
-            st.info(
-                f"📅 자동 설정: **{sd}** ~ **{ed}** "
-                f"(약 {auto_months}개월 | 최소 {MIN_TEST}회 테스트 보장 | "
-                f"리밸런싱 1회 = {rebal_m}개월)"
-            )
+            st.info(tr(
+                "settings.auto_date",
+                sd=sd, ed=ed, months=auto_months, min_test=MIN_TEST, rebal=rebal_m,
+            ))
 
-        # ── Row 4: 고급 설정 (Ver3.5/3.6) ─────────────────────
+        # ── Row 4: Advanced settings ─────────────────────────
         st.markdown("---")
-        st.markdown("**🔬 고급 설정**")
+        st.markdown(tr("settings.advanced"))
         ac1, ac2, ac3 = st.columns(3)
         with ac1:
             min_dollar_vol = st.number_input(
-                "최소 일평균 거래대금 ($)",
+                tr("settings.min_dollar_vol"),
                 min_value=0, max_value=100_000_000,
                 value=10_000_000, step=500_000,
                 format="%d",
-                help="20일 평균 거래대금 기준, 미달 종목 제외 (0 = 필터 없음)",
+                help=tr("settings.min_dv_help"),
             )
         with ac2:
+            exec_close_label = tr("settings.exec_close")
+            exec_next_label = tr("settings.exec_next_open")
             exec_price = st.selectbox(
-                "체결가 가정",
-                ["당일 종가", "T+1 시가"],
+                tr("settings.exec_price"),
+                [exec_close_label, exec_next_label],
                 index=1,
-                help="당일 종가: 리밸런싱일 종가에 매매 / T+1 시가: 다음 영업일 시가에 매매 (더 현실적)",
+                help=tr("settings.exec_help"),
             )
         with ac3:
             use_surv_fix = st.checkbox(
-                "생존자 편향 보정",
+                tr("settings.surv_fix"),
                 value=("Large Cap" in sel_cap),
-                help="S&P 500 변경 이력으로 리밸런싱 시점의 실제 구성 종목 복원 (Large Cap 전용)",
+                help=tr("settings.surv_help"),
                 disabled=("Large Cap" not in sel_cap),
             )
-        use_next_open = (exec_price == "T+1 시가")
+        use_next_open = (exec_price == exec_next_label)
 
         ac4, ac5 = st.columns(2)
         with ac4:
             use_ensemble = st.checkbox(
-                "앙상블 모델 (RF + XGBoost + LightGBM)",
+                tr("settings.ensemble"),
                 value=False,
-                help="3개 모델의 예측을 평균하여 안정적인 종목 선정. 해제 시 RF 단일 모델 사용.",
+                help=tr("settings.ensemble_help"),
             )
 
-        # ── Row 5: 실행 버튼 (맨 아래) ─────────────────────
+        # ── Row 5: Run button (bottom, centered) ──────────────
         st.markdown("---")
         rb1, rb2, rb3 = st.columns([1, 2, 1])
         with rb2:
             run_btn = st.button(
-                "🚀 백테스트 실행",
+                tr("settings.run_btn"),
                 type="primary",
                 use_container_width=True,
             )
@@ -3060,53 +3063,57 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
 def main():
     # Hero card (matches Home / Dashboard tone)
     st.markdown(
-        """
+        f"""
         <div class="lab-hero">
-            <h1>AI Quant Lab</h1>
-            <p class="lab-sub">AI 퀀트 백테스팅 &amp; 실시간 종목 추천 플랫폼</p>
+            <h1>{tr("hero.title")}</h1>
+            <p class="lab-sub">{tr("hero.subtitle")}</p>
             <div class="lab-meta">
-                <span>RF + XGBoost + LightGBM Ensemble</span>
-                <span>66 Features</span>
-                <span>CS Normalization</span>
-                <span>Market Regime · VIX</span>
-                <span>Sector RS</span>
-                <span>Survivorship Bias Fix</span>
-                <span>PIT 22 지표</span>
+                <span>{tr("hero.pill.ensemble")}</span>
+                <span>{tr("hero.pill.features")}</span>
+                <span>{tr("hero.pill.cs_norm")}</span>
+                <span>{tr("hero.pill.regime")}</span>
+                <span>{tr("hero.pill.sector_rs")}</span>
+                <span>{tr("hero.pill.surv")}</span>
+                <span>{tr("hero.pill.pit")}</span>
             </div>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # S&P 1500 목록 로드
-    with st.spinner("S&P 1500 종목 목록 로드 중... (Large/Mid/Small Cap 합산)"):
+    with st.spinner(tr("spinner.sp1500")):
         sp1500_df, all_sectors = get_sp1500_info()
 
     cfg = render_topbar(sp1500_df, all_sectors)
 
-    # ── 세션 상태 초기화 ──────────────────────────────────
+    # ── Session-state init ─────────────────────────────────
     for k in ["results", "benchmarks", "price_data", "fund_map", "tech_map",
               "cfg", "rf_rate", "pit_map", "sp500_changes",
               "spy_close", "vix_close", "sector_map"]:
         if k not in st.session_state:
             st.session_state[k] = None
 
-    # ── 환영 화면 (gradient feature cards) ──────────────────
+    # ── Empty / welcome state ──────────────────────────────
     if not cfg["run"] and st.session_state.results is None:
         st.markdown(
-            '<div class="lab-cta-hint">'
-            '위 설정 바에서 원하는 조건을 선택한 후 <b>🚀 백테스트 실행</b> 버튼을 눌러주세요.'
-            '</div>',
+            f'<div class="lab-cta-hint">{tr("empty.cta_hint")}</div>',
             unsafe_allow_html=True,
         )
 
-        st.markdown('<div class="section-hdr">주요 기능</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="section-hdr">{tr("empty.section")}</div>',
+            unsafe_allow_html=True,
+        )
 
         feat_cards = [
-            ("🧠", "AI 모델",   ["Random Forest 예측", "Rolling 윈도우 학습", "피처 중요도 추출"]),
-            ("📐", "지표 (66종)", ["기술지표 25종", "펀더멘털 25종", "Cross-Section 정규화"]),
-            ("📊", "분석 뷰",   ["IC 분석", "리밸런싱 히스토리", "지표 히트맵"]),
-            ("🎯", "실시간 추천", ["특정일 추천 종목", "레이더 차트", "성과 추적 대시보드"]),
+            ("🧠", tr("feat.ai.title"),
+             [tr("feat.ai.1"), tr("feat.ai.2"), tr("feat.ai.3")]),
+            ("📐", tr("feat.metrics.title"),
+             [tr("feat.metrics.1"), tr("feat.metrics.2"), tr("feat.metrics.3")]),
+            ("📊", tr("feat.views.title"),
+             [tr("feat.views.1"), tr("feat.views.2"), tr("feat.views.3")]),
+            ("🎯", tr("feat.live.title"),
+             [tr("feat.live.1"), tr("feat.live.2"), tr("feat.live.3")]),
         ]
         cols = st.columns(4)
         for col, (icon, title, items) in zip(cols, feat_cards):
@@ -3180,7 +3187,7 @@ def main():
             cfg["end"].strftime("%Y-%m-%d"),
         )
         if not price_data:
-            st.error("가격 데이터를 불러올 수 없습니다.")
+            st.error(tr("msg.error_no_prices"))
             return
 
         available = list(price_data.keys())
@@ -3316,17 +3323,17 @@ def main():
         saved_cfg  = st.session_state.cfg        or cfg
         rf_rate    = st.session_state.get("rf_rate", 0.03)
 
-        # 무위험수익률 표시
-        st.caption(f"무위험수익률 (T-bill 3M 기간평균): **{rf_rate:.2%}**")
+        # Risk-free rate caption
+        st.caption(tr("caption.rf", rf=rf_rate))
 
         tabs = st.tabs([
-            "📈 성과 비교",
-            "🎯 IC 분석 & 턴오버",
-            "📋 리밸런싱 히스토리",
-            "🔍 지표 중요도",
-            "🗺️ 영향력 히트맵",
-            "📊 성과 추적",
-            "🔴 AI 추천",
+            tr("tab.performance"),
+            tr("tab.ic"),
+            tr("tab.history"),
+            tr("tab.importance"),
+            tr("tab.heatmap"),
+            tr("tab.tracking"),
+            tr("tab.live"),
         ])
 
         with tabs[0]:
