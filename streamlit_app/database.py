@@ -212,15 +212,24 @@ _SCHEMA_STATEMENTS = [
 
 
 def init_db() -> None:
-    """Initialize database with all required tables (works on both backends)."""
+    """Initialize database with all required tables (works on both backends).
+
+    Logs each failed CREATE statement with the actual underlying error so
+    cold-start schema problems on Streamlit Cloud are debuggable. Then
+    verifies the critical `users` table is reachable; if it isn't, raises
+    so the caller (auth_service) can react.
+    """
     conn = get_connection()
 
-    # Create all tables
+    failed: list[str] = []
     for stmt in _SCHEMA_STATEMENTS:
         try:
             conn.execute(stmt)
         except Exception as e:
-            logger.warning("Failed to create table: %s", e)
+            # Extract the table name for clearer logging
+            first_line = stmt.strip().split("\n", 1)[0]
+            logger.error("init_db: failed CREATE — %s — %s", first_line, e)
+            failed.append(first_line)
 
     # ALTER existing tables to add user_id (idempotent, for SQLite migration)
     for table in ("portfolios", "watchlist", "alerts"):
@@ -230,8 +239,22 @@ def init_db() -> None:
             try:
                 conn.execute(f"ALTER TABLE {table} ADD COLUMN user_id INTEGER")
                 logger.info("Added user_id column to %s", table)
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning("init_db: ALTER %s failed: %s", table, e)
 
-    conn.commit()
-    logger.info("Database initialized (backend: %s)", _backend)
+    try:
+        conn.commit()
+    except Exception as e:
+        logger.error("init_db: commit failed: %s", e)
+
+    # Verify the critical users table is actually reachable
+    try:
+        conn.execute("SELECT id FROM users LIMIT 1").fetchone()
+        logger.info("Database initialized (backend: %s)", _backend)
+    except Exception as e:
+        logger.error(
+            "init_db: users table NOT reachable after init (backend=%s): %s",
+            _backend, e,
+        )
+        if failed:
+            logger.error("init_db: %d CREATE statements failed", len(failed))
