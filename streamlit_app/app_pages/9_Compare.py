@@ -6,6 +6,7 @@ import pandas as pd
 
 from services.market_service import get_stock_detail, get_chart_data
 from services.auth_service import render_user_sidebar
+from services.i18n import t as tr
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
 
 page_header("page.compare.title", "page.compare.subtitle")
@@ -13,14 +14,14 @@ page_header("page.compare.title", "page.compare.subtitle")
 # --- Ticker Input ---
 default_tickers = "AAPL, MSFT, NVDA, GOOGL"
 ticker_input = st.text_input(
-    "Enter 2-5 tickers (comma-separated)",
+    tr("cmp.enter_2_5_label"),
     value=default_tickers,
     key="compare_input",
 )
 
 # Period
 period_label = st.selectbox(
-    "Period",
+    tr("common.period"),
     ["1M", "3M", "6M", "1Y", "2Y", "5Y"],
     index=3,
     key="compare_period",
@@ -30,12 +31,12 @@ period_map = {"1M": "1mo", "3M": "3mo", "6M": "6mo",
 period = period_map[period_label]
 
 if not ticker_input:
-    st.info("Enter ticker symbols above to compare.")
+    st.info(tr("cmp.enter_tickers"))
     st.stop()
 
 tickers = [t.strip().upper() for t in ticker_input.split(",") if t.strip()][:5]
 if len(tickers) < 2:
-    st.warning("Enter at least 2 tickers.")
+    st.warning(tr("cmp.min_tickers"))
     st.stop()
 
 # --- Fetch all data ---
@@ -52,11 +53,11 @@ with st.spinner(f"Loading {len(tickers)} stocks..."):
             chart_data[t] = data
 
 if not infos:
-    st.error("Could not load any stock data.")
+    st.error(tr("cmp.no_data"))
     st.stop()
 
 # --- Header cards ---
-st.subheader("Overview")
+st.subheader(tr("cmp.overview"))
 
 card_css = """
 <style>
@@ -119,7 +120,7 @@ for col, t in zip(cols, tickers):
         """, unsafe_allow_html=True)
 
 # --- Normalized Performance Chart ---
-st.subheader("Normalized Performance (rebased to 100)")
+st.subheader(tr("cmp.normalized"))
 
 colors = ["#3B82F6", "#EF4444", "#10B981", "#F59E0B", "#8B5CF6"]
 fig = go.Figure()
@@ -155,7 +156,7 @@ fig.update_xaxes(showgrid=False)
 st.plotly_chart(fig, use_container_width=True)
 
 # --- Returns Bar Chart ---
-st.subheader(f"{period_label} Return Comparison")
+st.subheader(tr("cmp.return_compare", period=period_label))
 returns = []
 for t in tickers:
     data = chart_data.get(t, [])
@@ -185,7 +186,7 @@ if returns:
     st.plotly_chart(bar_fig, use_container_width=True)
 
 # --- Fundamentals Comparison Table ---
-st.subheader("Fundamentals Comparison")
+st.subheader(tr("cmp.fundamentals_cmp"))
 
 metrics_rows = []
 for t in tickers:
@@ -208,7 +209,7 @@ for t in tickers:
 st.dataframe(pd.DataFrame(metrics_rows), use_container_width=True, hide_index=True)
 
 # --- Radar Chart for visual comparison ---
-st.subheader("Visual Profile (normalized)")
+st.subheader(tr("cmp.visual_profile"))
 
 # Pick numeric metrics
 radar_metrics = ["pe_ratio", "pb_ratio", "roe", "dividend_yield", "beta"]
@@ -253,4 +254,4 @@ radar_fig.update_layout(
     legend=dict(orientation="h", yanchor="bottom", y=-0.1),
 )
 st.plotly_chart(radar_fig, use_container_width=True)
-st.caption("Each metric is normalized 0-1 across the selected tickers. Larger area = stronger relative profile.")
+st.caption(tr("cmp.radar_caption"))

@@ -9,6 +9,7 @@ from services.market_service import (
     heatmap_cache_age_hours,
 )
 from services.auth_service import render_user_sidebar
+from services.i18n import t as tr
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
 
 page_header("page.heatmap.title", "page.heatmap.subtitle")
@@ -32,29 +33,29 @@ with col_info:
                 age_label = f" • Updated {int(age_hours / 24)}d ago ⚠️ stale"
         st.caption(f"Cached: {cache_status['count']} stocks | Last: {cache_status['last_date']}{age_label}")
     else:
-        st.warning("No cached data. Click Refresh to load.")
+        st.warning(tr("heat.no_cache"))
 with col_btn:
-    if st.button("Refresh Data", key="heatmap_refresh"):
-        progress = st.progress(0, text="Starting...")
+    if st.button(tr("common.refresh"), key="heatmap_refresh"):
+        progress = st.progress(0, text=tr("scr.starting"))
 
         def _cb(step: int, total: int, msg: str = "") -> None:
             progress.progress(step / total, text=msg)
 
         try:
-            with st.spinner("Refreshing heatmap data..."):
+            with st.spinner(tr("heat.refreshing")):
                 count = refresh_heatmap_cache(progress_callback=_cb)
-            progress.progress(1.0, text=f"Done! {count} stocks updated.")
+            progress.progress(1.0, text=tr("scr.done", n=count))
             st.rerun()
         except Exception as e:
-            st.error(f"Refresh failed: {e}")
+            st.error(tr("scr.refresh_failed", e=e))
 
 # Period + view mode selector
 ctrl_col1, ctrl_col2 = st.columns([1, 1])
 with ctrl_col1:
-    period = st.selectbox("Period", ["1d", "1w", "1m", "3m", "ytd", "1y"], index=0)
+    period = st.selectbox(tr("common.period"), ["1d", "1w", "1m", "3m", "ytd", "1y"], index=0)
 with ctrl_col2:
     view_mode = st.radio(
-        "View", ["Treemap", "Card Grid (with logos)"],
+        tr("pf.view"), ["Treemap", "Card Grid (with logos)"],
         horizontal=True, key="heatmap_view",
     )
 
@@ -62,7 +63,7 @@ data = get_heatmap_data(period)
 
 sectors = data.get("sectors", [])
 if not sectors:
-    st.info("No heatmap data. Click 'Refresh Data' to load.")
+    st.info(tr("heat.no_data_loaded"))
     st.stop()
 
 # Build treemap
@@ -206,7 +207,7 @@ else:
                     """, unsafe_allow_html=True)
 
 # Sector summary
-st.subheader("Sector Summary")
+st.subheader(tr("heat.sector_summary"))
 sector_rows = []
 for s in sectors:
     sector_rows.append({
@@ -218,7 +219,7 @@ for s in sectors:
 st.dataframe(pd.DataFrame(sector_rows), use_container_width=True, hide_index=True)
 
 # --- Top Gainers / Losers (Card Grid) ---
-st.subheader("Top Movers")
+st.subheader(tr("heat.top_movers"))
 
 st.markdown("""
 <style>

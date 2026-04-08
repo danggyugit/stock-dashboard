@@ -9,6 +9,7 @@ import numpy as np
 from services.market_service import get_stock_detail, get_chart_data, search_stocks
 from services.sentiment_service import get_stock_news
 from services.auth_service import render_user_sidebar
+from services.i18n import t as tr
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
 
 
@@ -50,34 +51,34 @@ if "recent_tickers" not in st.session_state:
     st.session_state.recent_tickers = []
 
 with st.sidebar:
-    st.subheader("Recently Viewed")
+    st.subheader(tr("sd.recently_viewed"))
     if st.session_state.recent_tickers:
         for rt in st.session_state.recent_tickers[:8]:
             if st.button(f"📈 {rt}", key=f"recent_{rt}", use_container_width=True):
                 st.session_state.recent_pick = rt
                 st.rerun()
-        if st.button("Clear", key="clear_recent", use_container_width=True):
+        if st.button(tr("common.clear"), key="clear_recent", use_container_width=True):
             st.session_state.recent_tickers = []
             st.rerun()
     else:
-        st.caption("Stocks you view will appear here.")
+        st.caption(tr("sd.recently_empty"))
 
 # --- Ticker Search ---
 # Handle pick from recent
 default_ticker = st.session_state.pop("recent_pick", "AAPL")
 
-query = st.text_input("Search Ticker", placeholder="e.g. AAPL, NVDA, MSFT")
+query = st.text_input(tr("sd.search_ticker"), placeholder=tr("sd.search_placeholder"))
 
 if query:
     results = search_stocks(query)
     if results:
         options = {r["ticker"]: f"{r['ticker']} — {r.get('name', '')}" for r in results}
-        selected = st.selectbox("Select Stock", options.keys(), format_func=lambda x: options[x])
+        selected = st.selectbox(tr("sd.select_stock"), options.keys(), format_func=lambda x: options[x])
     else:
         selected = query.upper().strip()
-        st.caption(f"No matches. Using: {selected}")
+        st.caption(tr("sd.no_match", ticker=selected))
 else:
-    selected = st.text_input("Or enter ticker directly", value=default_ticker).upper().strip()
+    selected = st.text_input(tr("sd.enter_directly"), value=default_ticker).upper().strip()
 
 if not selected:
     st.stop()
@@ -90,11 +91,11 @@ recent.insert(0, selected)
 st.session_state.recent_tickers = recent[:8]
 
 # --- Stock Info ---
-with st.spinner(f"Loading {selected}..."):
+with st.spinner(tr("sd.loading", ticker=selected)):
     info = get_stock_detail(selected)
 
 if not info:
-    st.error(f"Could not load data for {selected}")
+    st.error(tr("sd.could_not_load", ticker=selected))
     st.stop()
 
 # Header with company logo
@@ -111,11 +112,11 @@ st.markdown(header_html, unsafe_allow_html=True)
 c1, c2, c3, c4, c5 = st.columns(5)
 price = info.get("price")
 change = info.get("change_pct")
-c1.metric("Price", f"${price:,.2f}" if price else "N/A", delta=f"{change:+.2f}%" if change else None)
-c2.metric("Market Cap", f"${info.get('market_cap', 0) / 1e9:.1f}B" if info.get("market_cap") else "N/A")
-c3.metric("P/E", f"{info.get('pe_ratio'):.1f}" if info.get("pe_ratio") else "N/A")
-c4.metric("52W High", f"${info.get('fifty_two_week_high'):,.2f}" if info.get("fifty_two_week_high") else "N/A")
-c5.metric("52W Low", f"${info.get('fifty_two_week_low'):,.2f}" if info.get("fifty_two_week_low") else "N/A")
+c1.metric(tr("sd.price"), f"${price:,.2f}" if price else "N/A", delta=f"{change:+.2f}%" if change else None)
+c2.metric(tr("sd.market_cap"), f"${info.get('market_cap', 0) / 1e9:.1f}B" if info.get("market_cap") else "N/A")
+c3.metric(tr("sd.pe"), f"{info.get('pe_ratio'):.1f}" if info.get("pe_ratio") else "N/A")
+c4.metric(tr("sd.fifty_two_high"), f"${info.get('fifty_two_week_high'):,.2f}" if info.get("fifty_two_week_high") else "N/A")
+c5.metric(tr("sd.fifty_two_low"), f"${info.get('fifty_two_week_low'):,.2f}" if info.get("fifty_two_week_low") else "N/A")
 
 # --- 52-Week Range Slider (visual position) ---
 w52_high = info.get("fifty_two_week_high")
@@ -155,10 +156,10 @@ if price and w52_high and w52_low and w52_high > w52_low:
     st.markdown(slider_html, unsafe_allow_html=True)
 
 # --- Chart with mode toggle ---
-st.subheader("Price Chart")
+st.subheader(tr("sd.price_chart"))
 
 chart_mode = st.radio(
-    "Chart Mode",
+    tr("sd.chart_mode"),
     ["Plotly (custom)", "TradingView (advanced)"],
     horizontal=True,
     key=f"chart_mode_{selected}",
@@ -202,7 +203,7 @@ else:
     all_data = get_chart_data(selected, period="5y", interval="1d")
 
     if not all_data:
-        st.caption("No chart data available.")
+        st.caption(tr("sd.no_chart_data"))
     else:
         period_buttons = st.columns(7)
         periods = {"1W": 5, "1M": 22, "3M": 65, "6M": 130, "1Y": 252, "2Y": 504, "All": len(all_data)}
@@ -219,13 +220,13 @@ else:
         # Technical indicators toggle
         ind_col1, ind_col2, ind_col3, ind_col4 = st.columns([1, 1, 1, 1])
         with ind_col1:
-            show_bb = st.checkbox("Bollinger Bands", value=False, key=f"bb_{selected}")
+            show_bb = st.checkbox(tr("sd.bb"), value=False, key=f"bb_{selected}")
         with ind_col2:
-            show_ma = st.checkbox("MA (20/50)", value=False, key=f"ma_{selected}")
+            show_ma = st.checkbox(tr("sd.ma"), value=False, key=f"ma_{selected}")
         with ind_col3:
-            show_rsi = st.checkbox("RSI", value=False, key=f"rsi_{selected}")
+            show_rsi = st.checkbox(tr("sd.rsi"), value=False, key=f"rsi_{selected}")
         with ind_col4:
-            show_macd = st.checkbox("MACD", value=False, key=f"macd_{selected}")
+            show_macd = st.checkbox(tr("sd.macd"), value=False, key=f"macd_{selected}")
 
         active_period = st.session_state[range_key]
         visible_bars = periods.get(active_period, 22)
@@ -426,20 +427,20 @@ else:
             },
         )
 
-        st.caption("Drag to pan, scroll to zoom, double-click to reset.")
+        st.caption(tr("sd.chart_hint"))
 
 # --- Fundamentals ---
-st.subheader("Fundamentals")
+st.subheader(tr("sd.fundamentals"))
 fund_cols = st.columns(4)
 metrics = [
-    ("P/E Ratio", info.get("pe_ratio")),
-    ("P/B Ratio", info.get("pb_ratio")),
-    ("EPS", info.get("eps")),
-    ("ROE", f"{info.get('roe') * 100:.1f}%" if info.get("roe") else None),
-    ("Beta", info.get("beta")),
-    ("Dividend Yield", f"{info.get('dividend_yield') * 100:.2f}%" if info.get("dividend_yield") else None),
-    ("D/E Ratio", info.get("debt_to_equity")),
-    ("Avg Volume", f"{info.get('avg_volume'):,.0f}" if info.get("avg_volume") else None),
+    (tr("sd.pe_ratio"), info.get("pe_ratio")),
+    (tr("sd.pb_ratio"), info.get("pb_ratio")),
+    (tr("sd.eps"), info.get("eps")),
+    (tr("sd.roe"), f"{info.get('roe') * 100:.1f}%" if info.get("roe") else None),
+    (tr("sd.beta"), info.get("beta")),
+    (tr("sd.div_yield"), f"{info.get('dividend_yield') * 100:.2f}%" if info.get("dividend_yield") else None),
+    (tr("sd.de_ratio"), info.get("debt_to_equity")),
+    (tr("sd.avg_volume"), f"{info.get('avg_volume'):,.0f}" if info.get("avg_volume") else None),
 ]
 
 for i, (label, val) in enumerate(metrics):
@@ -449,11 +450,11 @@ for i, (label, val) in enumerate(metrics):
 
 # --- Company Description ---
 if info.get("description"):
-    with st.expander("Company Description"):
+    with st.expander(tr("sd.company_desc")):
         st.write(info["description"])
 
 # --- News ---
-st.subheader(f"Recent News — {selected}")
+st.subheader(tr("sd.recent_news", ticker=selected))
 articles = get_stock_news(selected)
 if articles:
     for a in articles[:10]:
@@ -467,4 +468,4 @@ if articles:
         else:
             st.markdown(f"{badge} {hl} — _{source}_")
 else:
-    st.caption("No recent news.")
+    st.caption(tr("dash.no_news"))

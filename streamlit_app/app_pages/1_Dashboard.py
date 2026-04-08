@@ -9,6 +9,7 @@ from services.market_service import get_indices, get_chart_data, get_heatmap_dat
 from services.portfolio_service import get_portfolios, get_holdings
 from services.sentiment_service import get_stock_news
 from services.auth_service import is_logged_in, get_or_create_user, render_user_sidebar
+from services.i18n import t as tr
 from components.ui import inject_css, page_header, render_sidebar_info
 
 page_header("page.dashboard.title", "page.dashboard.subtitle")
@@ -18,7 +19,7 @@ _user = get_or_create_user() if is_logged_in() else None
 USER_ID = _user["id"] if _user else None
 
 # --- Market Indices ---
-st.subheader("Market Indices")
+st.subheader(tr("dash.market_indices"))
 indices = get_indices()
 
 if indices:
@@ -34,7 +35,7 @@ if indices:
             )
 
 # --- Mini Index Charts ---
-st.subheader("Index Charts")
+st.subheader(tr("dash.index_charts"))
 index_tickers = {"^GSPC": "S&P 500", "^IXIC": "NASDAQ", "^DJI": "Dow Jones", "^VIX": "VIX"}
 chart_cols = st.columns(4)
 
@@ -129,12 +130,12 @@ if _market_is_open:
         '<meta http-equiv="refresh" content="300">',
         unsafe_allow_html=True,
     )
-    st.caption("Auto-refreshing every 5 minutes (market open)")
+    st.caption(tr("dash.auto_refresh"))
 
 # --- Market Heatmap ---
 st.markdown("---")
-st.subheader("S&P 500 Heatmap")
-heatmap_period = st.selectbox("Period", ["1d", "1w", "1m"], index=0, key="dash_heatmap_period")
+st.subheader(tr("dash.heatmap_title"))
+heatmap_period = st.selectbox(tr("common.period"), ["1d", "1w", "1m"], index=0, key="dash_heatmap_period")
 
 hm_data = get_heatmap_data(heatmap_period)
 
@@ -175,31 +176,31 @@ if sectors:
     )
     st.plotly_chart(fig, use_container_width=True)
 else:
-    st.info("No heatmap data cached. Go to Heatmap page and click 'Refresh Data'.")
+    st.info(tr("dash.no_heatmap"))
 
 # --- Portfolio Summary ---
 st.markdown("---")
-st.subheader("Portfolio Summary")
+st.subheader(tr("dash.portfolio_summary"))
 
 if not USER_ID:
-    st.info("🔒 Sign in to see your portfolio summary.")
+    st.info(tr("dash.signin_portfolio"))
     portfolios = []
 else:
     portfolios = get_portfolios(user_id=USER_ID)
 
 if not portfolios and USER_ID:
-    st.info("No portfolios yet. Go to the Portfolio page to create one.")
+    st.info(tr("dash.no_portfolio"))
 else:
     portfolio_options = {p["id"]: p["name"] for p in portfolios}
     selected_ids = st.multiselect(
-        "Select Portfolios",
+        tr("dash.select_portfolios"),
         options=list(portfolio_options.keys()),
         default=list(portfolio_options.keys()),
         format_func=lambda x: portfolio_options[x],
     )
 
     if not selected_ids:
-        st.caption("Select at least one portfolio above to see summary and news.")
+        st.caption(tr("dash.select_help"))
     else:
         all_holdings = []
         total_value = 0.0
@@ -231,9 +232,9 @@ else:
 
             with st.container(key="port_summary_metrics"):
                 m1, m2, m3 = st.columns(3)
-                m1.metric("Total Value", f"${total_value:,.2f}")
-                m2.metric("Total Cost", f"${total_cost:,.2f}")
-                m3.metric("Unrealized P&L", f"${gain:,.2f}", delta=f"{gain_pct:+.2f}%")
+                m1.metric(tr("dash.total_value"), f"${total_value:,.2f}")
+                m2.metric(tr("dash.total_cost"), f"${total_cost:,.2f}")
+                m3.metric(tr("dash.unrealized_pnl"), f"${gain:,.2f}", delta=f"{gain_pct:+.2f}%")
 
             # Allocation: By Stock + By Sector
             colors = [
@@ -246,7 +247,7 @@ else:
             with alloc_col1:
                 labels = [h["ticker"] for h in all_holdings]
                 values = [h.get("market_value") or h["total_cost"] for h in all_holdings]
-                fig = px.pie(names=labels, values=values, hole=0.5, title="By Stock")
+                fig = px.pie(names=labels, values=values, hole=0.5, title=tr("dash.by_stock"))
                 fig.update_layout(height=420, margin=dict(l=20, r=20, t=50, b=40))
                 st.plotly_chart(fig, use_container_width=True)
 
@@ -260,14 +261,14 @@ else:
                     fig = px.pie(
                         names=list(sector_totals.keys()),
                         values=list(sector_totals.values()),
-                        hole=0.5, title="By Sector",
+                        hole=0.5, title=tr("dash.by_sector"),
                     )
                     fig.update_layout(height=420, margin=dict(l=20, r=20, t=50, b=40))
                     st.plotly_chart(fig, use_container_width=True)
 
         # Holdings news — one section per holding (logo + ticker + name header)
         st.markdown("---")
-        st.subheader("Holdings News")
+        st.subheader(tr("dash.holdings_news"))
 
         # Sort holdings by market value desc, dedupe by ticker
         holdings_sorted = sorted(

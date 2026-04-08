@@ -8,6 +8,7 @@ from services.watchlist_service import (
     create_alert, delete_alert, get_alerts, check_alerts, reactivate_alert,
 )
 from services.auth_service import require_auth, render_user_sidebar
+from services.i18n import t as tr
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
 
 page_header("page.watchlist.title", "page.watchlist.subtitle")
@@ -20,41 +21,42 @@ USER_ID = current_user["id"]
 newly_triggered = check_alerts(user_id=USER_ID)
 if newly_triggered:
     for alert in newly_triggered:
-        cond_label = {
-            "above": "rose above",
-            "below": "fell below",
-            "change_above": "daily change exceeded",
-            "change_below": "daily change fell below",
-        }.get(alert["condition"], alert["condition"])
+        cond_key = {
+            "above": "wl.toast_rose_above",
+            "below": "wl.toast_fell_below",
+            "change_above": "wl.toast_chg_exceeded",
+            "change_below": "wl.toast_chg_below",
+        }.get(alert["condition"])
+        cond_label = tr(cond_key) if cond_key else alert["condition"]
         st.toast(
             f"🔔 {alert['ticker']} {cond_label} {alert['threshold']} (now ${alert['current']:.2f})",
             icon="🔔",
         )
 
-tab_watchlist, tab_alerts = st.tabs(["⭐ Watchlist", "🔔 Alerts"])
+tab_watchlist, tab_alerts = st.tabs([tr("wl.tab_watchlist"), tr("wl.tab_alerts")])
 
 # ===== WATCHLIST TAB =====
 with tab_watchlist:
     # --- Add ticker form ---
-    with st.expander("➕ Add to Watchlist", expanded=False):
+    with st.expander(tr("wl.add_to"), expanded=False):
         with st.form("add_watchlist", clear_on_submit=True):
             wcol1, wcol2 = st.columns([1, 2])
             with wcol1:
-                new_ticker = st.text_input("Ticker", placeholder="AAPL")
+                new_ticker = st.text_input(tr("common.ticker"), placeholder="AAPL")
             with wcol2:
-                new_note = st.text_input("Note (optional)", placeholder="Why are you watching?")
-            if st.form_submit_button("Add"):
+                new_note = st.text_input(tr("common.note_optional"), placeholder=tr("wl.note_placeholder"))
+            if st.form_submit_button(tr("wl.add_btn")):
                 if new_ticker:
                     if add_to_watchlist(new_ticker, new_note or None, user_id=USER_ID):
-                        st.success(f"Added {new_ticker.upper()}")
+                        st.success(tr("wl.added_msg", ticker=new_ticker.upper()))
                         st.rerun()
                     else:
-                        st.warning(f"{new_ticker.upper()} is already in your watchlist.")
+                        st.warning(tr("wl.already_in", ticker=new_ticker.upper()))
 
     # --- Watchlist display ---
     items = get_watchlist(user_id=USER_ID)
     if not items:
-        st.info("Your watchlist is empty. Add stocks above to start tracking.")
+        st.info(tr("wl.empty"))
     else:
         st.markdown("""
         <style>
@@ -127,64 +129,65 @@ with tab_watchlist:
                             </div>
                         </div>
                         <div class="wl-stats">
-                            <span class="wl-label">Current</span>
+                            <span class="wl-label">{tr("wl.current")}</span>
                             <span class="wl-value">{current_str}</span>
-                            <span class="wl-label">Day</span>
+                            <span class="wl-label">{tr("wl.day")}</span>
                             <span class="{day_class}">{day_arrow} {day_change:+.2f}%</span>
-                            <span class="wl-label">Added @</span>
+                            <span class="wl-label">{tr("wl.added_at")}</span>
                             <span class="wl-value">{added_str}</span>
-                            <span class="wl-label">Since</span>
+                            <span class="wl-label">{tr("wl.since")}</span>
                             {since_html}
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
 
-                    if st.button(f"Remove {ticker}", key=f"rm_wl_{ticker}", use_container_width=True):
+                    if st.button(tr("wl.remove", ticker=ticker), key=f"rm_wl_{ticker}", use_container_width=True):
                         remove_from_watchlist(ticker, user_id=USER_ID)
                         st.rerun()
 
 # ===== ALERTS TAB =====
 with tab_alerts:
     # --- Create alert form ---
-    with st.expander("➕ Create Alert", expanded=False):
+    with st.expander(tr("wl.create_alert_exp"), expanded=False):
         with st.form("create_alert", clear_on_submit=True):
             ac1, ac2, ac3 = st.columns(3)
             with ac1:
-                a_ticker = st.text_input("Ticker", placeholder="AAPL")
+                a_ticker = st.text_input(tr("common.ticker"), placeholder="AAPL")
             with ac2:
+                cond_labels = {
+                    "above": tr("wl.cond_above"),
+                    "below": tr("wl.cond_below"),
+                    "change_above": tr("wl.cond_chg_above"),
+                    "change_below": tr("wl.cond_chg_below"),
+                }
                 a_condition = st.selectbox(
-                    "Condition",
+                    tr("wl.condition"),
                     ["above", "below", "change_above", "change_below"],
-                    format_func=lambda x: {
-                        "above": "Price above",
-                        "below": "Price below",
-                        "change_above": "Daily change above (%)",
-                        "change_below": "Daily change below (%)",
-                    }[x],
+                    format_func=lambda x: cond_labels[x],
                 )
             with ac3:
-                a_threshold = st.number_input("Threshold", value=0.0, step=0.01, format="%.2f")
-            a_note = st.text_input("Note (optional)")
+                a_threshold = st.number_input(tr("wl.threshold"), value=0.0, step=0.01, format="%.2f")
+            a_note = st.text_input(tr("common.note_optional"))
 
-            if st.form_submit_button("Create Alert"):
+            if st.form_submit_button(tr("wl.create_btn")):
                 if a_ticker and a_threshold != 0:
                     create_alert(a_ticker, a_condition, a_threshold, a_note or None, user_id=USER_ID)
-                    st.success(f"Alert created for {a_ticker.upper()}")
+                    st.success(tr("wl.alert_created", ticker=a_ticker.upper()))
                     st.rerun()
 
     # --- Alerts display ---
     alerts = get_alerts(user_id=USER_ID)
     if not alerts:
-        st.info("No alerts yet. Create one above.")
+        st.info(tr("wl.no_alerts_yet"))
     else:
         active_alerts = [a for a in alerts if a["active"] and not a["triggered"]]
         triggered_alerts = [a for a in alerts if a["triggered"]]
 
-        st.markdown(f"**Active: {len(active_alerts)}** | **Triggered: {len(triggered_alerts)}**")
+        st.markdown(tr("wl.summary", active=len(active_alerts), triggered=len(triggered_alerts)))
 
         # --- Active alerts ---
         if active_alerts:
-            st.markdown("### 🟢 Active Alerts")
+            st.markdown(tr("wl.active_alerts"))
             for a in active_alerts:
                 cond_label = {
                     "above": "≥",
@@ -201,20 +204,21 @@ with tab_alerts:
                         + (f" — _{a['note']}_" if a.get("note") else "")
                     )
                 with col_btn:
-                    if st.button("Delete", key=f"del_alert_{a['id']}"):
+                    if st.button(tr("wl.delete"), key=f"del_alert_{a['id']}"):
                         delete_alert(a["id"], user_id=USER_ID)
                         st.rerun()
 
         # --- Triggered alerts ---
         if triggered_alerts:
-            st.markdown("### 🔴 Triggered Alerts")
+            st.markdown(tr("wl.triggered_alerts"))
             for a in triggered_alerts:
-                cond_label = {
-                    "above": "rose above",
-                    "below": "fell below",
-                    "change_above": "daily change exceeded",
-                    "change_below": "daily change fell below",
-                }.get(a["condition"], a["condition"])
+                cond_key = {
+                    "above": "wl.toast_rose_above",
+                    "below": "wl.toast_fell_below",
+                    "change_above": "wl.toast_chg_exceeded",
+                    "change_below": "wl.toast_chg_below",
+                }.get(a["condition"])
+                cond_label = tr(cond_key) if cond_key else a["condition"]
                 unit = "%" if "change" in a["condition"] else ""
 
                 col_info, col_react, col_del = st.columns([4, 1, 1])
@@ -224,10 +228,10 @@ with tab_alerts:
                         + (f" — _triggered at {a['triggered_at'][:16] if a['triggered_at'] else ''}_")
                     )
                 with col_react:
-                    if st.button("Reactivate", key=f"react_{a['id']}"):
+                    if st.button(tr("wl.reactivate"), key=f"react_{a['id']}"):
                         reactivate_alert(a["id"], user_id=USER_ID)
                         st.rerun()
                 with col_del:
-                    if st.button("Delete", key=f"del_t_{a['id']}"):
+                    if st.button(tr("wl.delete"), key=f"del_t_{a['id']}"):
                         delete_alert(a["id"], user_id=USER_ID)
                         st.rerun()

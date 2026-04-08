@@ -11,6 +11,7 @@ from services.market_service import get_indices, get_heatmap_data
 from services.portfolio_service import get_portfolios, get_holdings
 from services.sentiment_service import get_fear_greed
 from services.calendar_service import get_earnings_events
+from services.i18n import t as tr
 
 # ═══════════════════════════════════════════════════════════
 # CSS — hero, cards, gradients
@@ -481,7 +482,7 @@ if not is_logged_in():
         st.markdown(features_html, unsafe_allow_html=True)
 
     with col2:
-        if st.button("Sign in with Google", key="google_signin"):
+        if st.button(tr("home.signin"), key="google_signin"):
             st.login("google")
 
 else:
@@ -639,7 +640,7 @@ else:
             )
             cl1, cl2 = st.columns(2)
             with cl1:
-                if st.button("Claim them as mine", type="primary"):
+                if st.button(tr("home.claim_yes"), type="primary"):
                     counts = claim_legacy_data(user["id"])
                     st.success(
                         f"Claimed: {counts['portfolios']} portfolios, "
@@ -648,8 +649,8 @@ else:
                     )
                     st.rerun()
             with cl2:
-                if st.button("Ignore (start fresh)"):
-                    st.info("You can claim them later by visiting this page again.")
+                if st.button(tr("home.claim_no")):
+                    st.info(tr("home.claim_later"))
 
         # ═══════════════════════════════════════════════════
         # MY PORTFOLIO SUMMARY (logged in users only)
@@ -713,18 +714,18 @@ else:
             mc1, mc2, mc3, mc4 = st.columns(4)
             with mc1:
                 st.metric(
-                    "Total Value",
+                    tr("dash.total_value"),
                     f"${total_value:,.0f}" if total_value else "$0",
                 )
             with mc2:
                 st.metric(
-                    "Unrealized P&L",
+                    tr("dash.unrealized_pnl"),
                     f"${gain:+,.0f}" if gain else "$0",
                     delta=f"{gain_pct:+.2f}%" if gain_pct else None,
                 )
             with mc3:
                 st.metric(
-                    "Positions",
+                    tr("home.positions"),
                     f"{num_positions}",
                     help=f"{num_portfolios} portfolio(s)",
                 )
@@ -736,11 +737,11 @@ else:
                         delta=f"{top_gainer.get('unrealized_gain_pct', 0):+.2f}%",
                     )
                 else:
-                    st.metric("Top Position", "—")
+                    st.metric(tr("home.top_position"), "—")
 
             # Quick link to full portfolio page
             if st.button(
-                "→ Open full Portfolio page",
+                tr("home.open_full_portfolio"),
                 key="goto_portfolio",
                 use_container_width=True,
             ):
@@ -759,7 +760,7 @@ else:
 # ═══════════════════════════════════════════════════════════
 st.markdown('<div class="section-h">📊 Market Indices</div>', unsafe_allow_html=True)
 
-with st.spinner("Loading market indices..."):
+with st.spinner(tr("home.loading_indices")):
     indices = get_indices()
 
 if indices:

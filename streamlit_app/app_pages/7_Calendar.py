@@ -7,6 +7,7 @@ import calendar as cal_mod
 
 from services.calendar_service import get_economic_events, get_earnings_events
 from services.auth_service import render_user_sidebar
+from services.i18n import t as tr
 from components.ui import inject_css, page_header, render_sidebar_info
 
 page_header("page.calendar.title", "page.calendar.subtitle")
@@ -16,9 +17,9 @@ col1, col2 = st.columns(2)
 today = date.today()
 
 with col1:
-    year = st.selectbox("Year", [today.year - 1, today.year, today.year + 1], index=1)
+    year = st.selectbox(tr("common.year"), [today.year - 1, today.year, today.year + 1], index=1)
 with col2:
-    month = st.selectbox("Month", list(range(1, 13)), index=today.month - 1,
+    month = st.selectbox(tr("common.month"), list(range(1, 13)), index=today.month - 1,
                          format_func=lambda x: cal_mod.month_name[x])
 
 first_day = date(year, month, 1)
@@ -27,7 +28,9 @@ from_str = first_day.isoformat()
 to_str = last_day.isoformat()
 
 # --- Load Data ---
-tab_calendar, tab_economic, tab_earnings = st.tabs(["Monthly View", "Economic Events", "Earnings"])
+tab_calendar, tab_economic, tab_earnings = st.tabs(
+    [tr("cal.monthly_view"), tr("cal.economic_events"), tr("cal.earnings")]
+)
 
 with tab_economic:
     events = get_economic_events(from_str, to_str)
@@ -50,7 +53,7 @@ with tab_economic:
         available = [c for c in display_cols if c in df.columns]
         st.dataframe(df[available], use_container_width=True, hide_index=True)
     else:
-        st.info("No economic events for this period.")
+        st.info(tr("cal.no_events"))
 
 with tab_earnings:
     earnings = get_earnings_events(from_str, to_str)
@@ -59,7 +62,7 @@ with tab_earnings:
         st.caption(f"{len(earnings)} earnings reports")
 
         # Search filter
-        search = st.text_input("Filter by ticker", key="earn_search")
+        search = st.text_input(tr("common.filter_by_ticker"), key="earn_search")
         if search:
             df = df[df["ticker"].str.contains(search.upper())]
 
@@ -68,7 +71,7 @@ with tab_earnings:
         available = [c for c in display_cols if c in df.columns]
         st.dataframe(df[available], use_container_width=True, hide_index=True)
     else:
-        st.info("No earnings data for this period.")
+        st.info(tr("cal.no_earnings"))
 
 with tab_calendar:
     st.subheader(f"{cal_mod.month_name[month]} {year}")

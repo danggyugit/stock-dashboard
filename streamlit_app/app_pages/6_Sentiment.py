@@ -10,6 +10,7 @@ from services.sentiment_service import (
     analyze_with_ai, generate_report,
 )
 from services.auth_service import render_user_sidebar
+from services.i18n import t as tr
 from components.ui import inject_css, page_header, render_sidebar_info
 
 import io
@@ -65,7 +66,7 @@ def _build_wordcloud(headlines: list[str]) -> bytes | None:
 page_header("page.sentiment.title", "page.sentiment.subtitle")
 
 # --- Fear & Greed Index ---
-st.subheader("Fear & Greed Index")
+st.subheader(tr("sent.fg_index"))
 
 fg = get_fear_greed()
 
@@ -105,9 +106,9 @@ with col1:
 with col2:
     # Component scores
     components = [
-        ("VIX Score", fg.get("vix_score")),
-        ("Momentum Score", fg.get("momentum_score")),
-        ("Volume Score", fg.get("volume_score")),
+        (tr("sent.vix_score"), fg.get("vix_score")),
+        (tr("sent.momentum_score"), fg.get("momentum_score")),
+        (tr("sent.volume_score"), fg.get("volume_score")),
     ]
 
     for name, val in components:
@@ -119,14 +120,18 @@ with col2:
             st.markdown(f"**{name}**: N/A")
 
     if fg.get("updated_at"):
-        st.caption(f"Updated: {fg['updated_at'][:19]}")
+        st.caption(tr("sent.updated_at", ts=fg['updated_at'][:19]))
 
 st.markdown("---")
 
 # --- Market News ---
-st.subheader("Market News")
+st.subheader(tr("sent.market_news"))
 
-news_tab, stock_tab, ai_tab = st.tabs(["Market News", "Stock News", "AI Analysis"])
+news_tab, stock_tab, ai_tab = st.tabs([
+    tr("sent.market_news"),
+    tr("sent.stock_news"),
+    tr("sent.ai_analysis"),
+])
 
 with news_tab:
     articles = get_market_news()
@@ -135,15 +140,15 @@ with news_tab:
         headlines = [a.get("headline", "") for a in articles if a.get("headline")]
         wc_bytes = _build_wordcloud(headlines)
         if wc_bytes:
-            st.markdown("**🔤 Trending Keywords**")
+            st.markdown(tr("sent.trending_kw"))
             st.image(wc_bytes, use_container_width=True)
 
         # Sentiment distribution
         sentiments = [a.get("sentiment", 0) for a in articles]
         fig = px.histogram(
             x=sentiments, nbins=20,
-            labels={"x": "Sentiment Score", "y": "Count"},
-            title="News Sentiment Distribution",
+            labels={"x": tr("sent.dist_x"), "y": tr("sent.dist_y")},
+            title=tr("sent.dist_title"),
             color_discrete_sequence=["#3B82F6"],
         )
         fig.update_layout(height=250, margin=dict(l=0, r=0, t=40, b=0))
@@ -162,20 +167,20 @@ with news_tab:
             else:
                 st.markdown(f"{badge} {hl} — _{source}_ `{score:+.2f}`")
     else:
-        st.caption("No market news available.")
+        st.caption(tr("sent.no_market_news"))
 
 with stock_tab:
-    ticker = st.text_input("Ticker", value="NVDA", key="sentiment_ticker").upper().strip()
+    ticker = st.text_input(tr("common.ticker"), value="NVDA", key="sentiment_ticker").upper().strip()
     if ticker:
         articles = get_stock_news(ticker)
         if articles:
-            st.caption(f"{len(articles)} articles for {ticker}")
+            st.caption(tr("sent.articles_for", n=len(articles), ticker=ticker))
 
             # Word cloud
             headlines = [a.get("headline", "") for a in articles if a.get("headline")]
             wc_bytes = _build_wordcloud(headlines)
             if wc_bytes:
-                st.markdown(f"**🔤 Trending Keywords for {ticker}**")
+                st.markdown(tr("sent.trending_kw_for", ticker=ticker))
                 st.image(wc_bytes, use_container_width=True)
 
             # Sentiment summary
@@ -186,10 +191,10 @@ with stock_tab:
             neutral = len(scores) - bullish - bearish
 
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric("Avg Sentiment", f"{avg:+.2f}")
-            c2.metric("Bullish", bullish)
-            c3.metric("Neutral", neutral)
-            c4.metric("Bearish", bearish)
+            c1.metric(tr("sent.avg_sentiment"), f"{avg:+.2f}")
+            c2.metric(tr("sent.bullish"), bullish)
+            c3.metric(tr("sent.neutral"), neutral)
+            c4.metric(tr("sent.bearish"), bearish)
 
             for a in articles[:15]:
                 sentiment = a.get("sentiment_label", "Neutral")
@@ -202,31 +207,31 @@ with stock_tab:
                 else:
                     st.markdown(f"{badge} {hl} — _{source}_")
         else:
-            st.caption(f"No news for {ticker}.")
+            st.caption(tr("sent.no_news_for", ticker=ticker))
 
 with ai_tab:
-    st.caption("Claude AI analysis uses your API key and may incur costs.")
+    st.caption(tr("sent.api_warning"))
 
-    if st.button("Generate AI Market Report"):
-        with st.spinner("Generating report with Claude..."):
+    if st.button(tr("sent.gen_btn")):
+        with st.spinner(tr("sent.gen_spinner")):
             report = generate_report()
         if report:
             st.markdown(report)
         else:
-            st.warning("AI report unavailable. Check your ANTHROPIC_API_KEY in secrets.")
+            st.warning(tr("sent.gen_error"))
 
     st.markdown("---")
-    ai_ticker = st.text_input("Analyze stock news", value="AAPL", key="ai_ticker").upper()
-    if st.button("Analyze with AI"):
+    ai_ticker = st.text_input(tr("sent.analyze_label"), value="AAPL", key="ai_ticker").upper()
+    if st.button(tr("sent.analyze_btn")):
         articles = get_stock_news(ai_ticker)
         headlines = [a["headline"] for a in articles[:20] if a.get("headline")]
         if headlines:
-            with st.spinner("Running Claude sentiment analysis..."):
+            with st.spinner(tr("sent.analyze_spinner")):
                 results = analyze_with_ai(headlines)
             if results:
                 df = pd.DataFrame(results)
                 st.dataframe(df, use_container_width=True, hide_index=True)
             else:
-                st.warning("AI analysis unavailable.")
+                st.warning(tr("sent.analyze_unavailable"))
         else:
-            st.warning("No headlines to analyze.")
+            st.warning(tr("sent.no_headlines"))

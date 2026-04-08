@@ -15,6 +15,7 @@ from services.portfolio_service import (
 )
 from services.market_service import get_chart_data
 from services.auth_service import require_auth, render_user_sidebar
+from services.i18n import t as tr
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
 
 page_header("page.portfolio.title", "page.portfolio.subtitle")
@@ -29,32 +30,32 @@ portfolios = get_portfolios(user_id=USER_ID)
 mgmt_col1, mgmt_col2 = st.columns(2)
 
 with mgmt_col1:
-    with st.expander("➕ Create New Portfolio", expanded=not portfolios):
+    with st.expander(tr("pf.create_new"), expanded=not portfolios):
         with st.form("create_portfolio_form", clear_on_submit=True):
-            new_name = st.text_input("Portfolio Name", key="new_pf_name")
-            new_desc = st.text_input("Description (optional)", key="new_pf_desc")
-            if st.form_submit_button("Create", type="primary"):
+            new_name = st.text_input(tr("pf.portfolio_name"), key="new_pf_name")
+            new_desc = st.text_input(tr("pf.description_optional"), key="new_pf_desc")
+            if st.form_submit_button(tr("pf.create_btn"), type="primary"):
                 if new_name:
                     create_portfolio(new_name, new_desc or None, user_id=USER_ID)
                     st.rerun()
                 else:
-                    st.warning("Enter a portfolio name.")
+                    st.warning(tr("pf.enter_name"))
 
 with mgmt_col2:
     if portfolios:
-        with st.expander("🗑️ Delete Portfolio"):
+        with st.expander(tr("pf.delete_portfolio")):
             all_ids_tmp = [p["id"] for p in portfolios]
             pf_options_tmp = {p["id"]: p["name"] for p in portfolios}
             del_id = st.selectbox(
-                "Portfolio to delete", all_ids_tmp,
+                tr("pf.delete_portfolio"), all_ids_tmp,
                 format_func=lambda x: pf_options_tmp[x], key="del_pf",
             )
-            if st.button("Delete", type="secondary", key="del_pf_btn"):
+            if st.button(tr("common.delete"), type="secondary", key="del_pf_btn"):
                 delete_portfolio(del_id, user_id=USER_ID)
                 st.rerun()
 
 if not portfolios:
-    st.info("Create your first portfolio above to get started.")
+    st.info(tr("pf.create_first"))
     st.stop()
 
 pf_options = {p["id"]: p["name"] for p in portfolios}
@@ -64,7 +65,8 @@ st.markdown("---")
 
 # --- Tabs ---
 tab_holdings, tab_trades, tab_performance, tab_dividends, tab_tax = st.tabs(
-    ["Holdings", "Trades", "Performance", "Dividends", "Tax"]
+    [tr("pf.holdings"), tr("pf.trades"), tr("pf.performance"),
+     tr("pf.dividends"), tr("pf.tax")]
 )
 
 
@@ -178,9 +180,9 @@ with tab_holdings:
 
         with st.container(key="port_holdings_metrics"):
             m1, m2, m3 = st.columns(3)
-            m1.metric("Total Value", f"${total_value:,.2f}")
-            m2.metric("Total Cost", f"${total_cost:,.2f}")
-            m3.metric("Unrealized P&L", f"${gain:,.2f}", delta=f"{gain_pct:+.2f}%")
+            m1.metric(tr("dash.total_value"), f"${total_value:,.2f}")
+            m2.metric(tr("dash.total_cost"), f"${total_cost:,.2f}")
+            m3.metric(tr("dash.unrealized_pnl"), f"${gain:,.2f}", delta=f"{gain_pct:+.2f}%")
 
         # Allocation charts (top)
         alloc = _build_allocation(merged_holdings, total_value)
@@ -190,7 +192,7 @@ with tab_holdings:
                 fig = px.pie(
                     names=[s["label"] for s in alloc["by_stock"]],
                     values=[s["value"] for s in alloc["by_stock"]],
-                    hole=0.5, title="By Stock",
+                    hole=0.5, title=tr("dash.by_stock"),
                 )
                 fig.update_layout(height=420, margin=dict(l=20, r=20, t=50, b=40))
                 st.plotly_chart(fig, use_container_width=True)
@@ -199,7 +201,7 @@ with tab_holdings:
                     fig = px.pie(
                         names=[s["label"] for s in alloc["by_sector"]],
                         values=[s["value"] for s in alloc["by_sector"]],
-                        hole=0.5, title="By Sector",
+                        hole=0.5, title=tr("dash.by_sector"),
                     )
                     fig.update_layout(height=420, margin=dict(l=20, r=20, t=50, b=40))
                     st.plotly_chart(fig, use_container_width=True)
@@ -247,15 +249,15 @@ with tab_holdings:
             st.plotly_chart(tm_fig, use_container_width=True)
 
         st.markdown("---")
-        st.subheader("Holdings Detail")
+        st.subheader(tr("pf.holdings_detail"))
 
         # View toggle: Card Grid / Table
         view_mode = st.radio(
-            "View", ["Card Grid", "Table"],
+            tr("pf.view"), [tr("pf.card_grid"), tr("pf.table")],
             horizontal=True, key="holdings_view",
         )
 
-        if view_mode == "Table":
+        if view_mode == tr("pf.table"):
             df = pd.DataFrame(merged_holdings)
             display_cols = ["ticker", "name", "quantity", "avg_cost", "current_price",
                            "market_value", "unrealized_gain", "unrealized_gain_pct"]
@@ -367,6 +369,10 @@ with tab_holdings:
 
                     with col:
                         # Render card header info
+                        _qty_lbl = tr("pf.qty")
+                        _avg_lbl = tr("pf.avg_cost")
+                        _cur_lbl = tr("pf.current")
+                        _val_lbl = tr("pf.value")
                         st.markdown(f"""
                         <div class="holding-card">
                             <div class="holding-header">
@@ -378,13 +384,13 @@ with tab_holdings:
                                 </div>
                             </div>
                             <div class="holding-stats">
-                                <span class="stat-label">Qty</span>
+                                <span class="stat-label">{_qty_lbl}</span>
                                 <span class="stat-value">{qty_str}</span>
-                                <span class="stat-label">Avg Cost</span>
+                                <span class="stat-label">{_avg_lbl}</span>
                                 <span class="stat-value">{avg_cost_str}</span>
-                                <span class="stat-label">Current</span>
+                                <span class="stat-label">{_cur_lbl}</span>
                                 <span class="stat-value">{current_str}</span>
-                                <span class="stat-label">Value</span>
+                                <span class="stat-label">{_val_lbl}</span>
                                 <span class="stat-value">{mv_str}</span>
                             </div>
                             <div class="holding-pnl">
@@ -428,23 +434,23 @@ with tab_holdings:
                         except Exception:
                             pass
     else:
-        st.info("No holdings. Add trades to see your portfolio.")
+        st.info(tr("pf.no_holdings"))
 
 # ===== TRADES TAB =====
 with tab_trades:
-    st.subheader("Add Trade")
+    st.subheader(tr("pf.add_trade"))
     active_pf = st.selectbox(
-        "Target Portfolio", all_ids,
+        tr("pf.portfolio_name"), all_ids,
         format_func=lambda x: pf_options[x], key="trade_target",
     )
 
     t_col1, t_col2, t_col3 = st.columns(3)
     with t_col1:
-        trade_type = st.selectbox("Type", ["BUY", "SELL"], key="trade_type_sel")
+        trade_type = st.selectbox(tr("pf.action"), ["BUY", "SELL"], key="trade_type_sel")
     with t_col2:
-        ticker_input = st.text_input("Ticker", placeholder="AAPL", key="trade_ticker").upper().strip()
+        ticker_input = st.text_input(tr("common.ticker"), placeholder="AAPL", key="trade_ticker").upper().strip()
     with t_col3:
-        trade_date_input = st.date_input("Date", value=date.today(), key="trade_date")
+        trade_date_input = st.date_input(tr("pf.date"), value=date.today(), key="trade_date")
 
     auto_price = 0.0
     if ticker_input and trade_date_input:
@@ -460,14 +466,14 @@ with tab_trades:
     with st.form("add_trade"):
         p_col1, p_col2, p_col3 = st.columns(3)
         with p_col1:
-            price = st.number_input("Price ($)", min_value=0.0, value=auto_price, step=0.01, format="%.2f")
+            price = st.number_input(tr("pf.price"), min_value=0.0, value=auto_price, step=0.01, format="%.2f")
         with p_col2:
-            quantity = st.number_input("Quantity", min_value=0.0, step=1.0)
+            quantity = st.number_input(tr("pf.quantity"), min_value=0.0, step=1.0)
         with p_col3:
             commission = st.number_input("Commission ($)", min_value=0.0, value=0.0, step=0.01)
 
-        note = st.text_input("Note (optional)")
-        submitted = st.form_submit_button("Add Trade")
+        note = st.text_input(tr("common.note_optional"))
+        submitted = st.form_submit_button(tr("pf.submit_trade"))
 
         if submitted and ticker_input and quantity > 0 and price > 0:
             add_trade(active_pf, {
@@ -486,7 +492,7 @@ with tab_trades:
             elif price <= 0:
                 st.warning("Price must be > 0.")
 
-    st.subheader("Trade History")
+    st.subheader(tr("pf.trade_history"))
     for pid in all_ids:
         pf_name = pf_options.get(pid, f"Portfolio {pid}")
         trades = get_trades(pid)
@@ -499,17 +505,17 @@ with tab_trades:
 
             trade_ids = {t["id"]: f"{t['ticker']} {t['trade_type']} {t['quantity']}@{t['price']} ({t['trade_date']})"
                         for t in trades}
-            with st.expander(f"Delete trade from {pf_name}"):
-                del_tid = st.selectbox("Trade", list(trade_ids.keys()),
+            with st.expander(tr("pf.delete_trade_from", name=pf_name)):
+                del_tid = st.selectbox(tr("pf.trade_label"), list(trade_ids.keys()),
                                        format_func=lambda x: trade_ids[x], key=f"del_trade_{pid}")
-                if st.button("Delete Trade", key=f"del_trade_btn_{pid}"):
+                if st.button(tr("pf.delete_trade"), key=f"del_trade_btn_{pid}"):
                     delete_trade(pid, del_tid)
                     st.rerun()
 
 # ===== PERFORMANCE TAB =====
 with tab_performance:
     perf_selected = _portfolio_selector("perf")
-    perf_period = st.selectbox("Period", ["1m", "3m", "6m", "1y", "ytd"], key="perf_period")
+    perf_period = st.selectbox(tr("common.period"), ["1m", "3m", "6m", "1y", "ytd"], key="perf_period")
 
     # Merge performance across selected portfolios
     all_points: dict[str, dict] = {}  # date -> merged point
@@ -541,7 +547,7 @@ with tab_performance:
         qqq_return = sorted_points[-1].get("qqq_pct") if sorted_points else None
 
         r1, r2, r3 = st.columns(3)
-        r1.metric("Portfolio Return", f"{total_return:+.2f}%")
+        r1.metric(tr("pf.portfolio_return"), f"{total_return:+.2f}%")
         r2.metric("SPY", f"{spy_return:+.2f}%" if spy_return is not None else "N/A")
         r3.metric("QQQ", f"{qqq_return:+.2f}%" if qqq_return is not None else "N/A")
 
@@ -571,7 +577,7 @@ with tab_performance:
         st.plotly_chart(fig, use_container_width=True)
 
         # --- Drawdown chart ---
-        st.markdown("**Drawdown** (peak-to-trough decline from running maximum)")
+        st.markdown(tr("pf.drawdown_label"))
         values = [p["portfolio_value"] for p in sorted_points]
         if len(values) >= 2:
             running_max = []
@@ -620,7 +626,7 @@ with tab_performance:
             rm2.metric("Volatility (annualized)", f"{vol:.2f}%")
             rm3.metric("Sharpe Ratio", f"{sharpe:.2f}")
     else:
-        st.caption("No performance data.")
+        st.caption(tr("pf.no_perf"))
 
     # --- Correlation Matrix of holdings ---
     st.markdown("---")
@@ -686,7 +692,7 @@ with tab_performance:
 # ===== DIVIDENDS TAB =====
 with tab_dividends:
     div_selected = _portfolio_selector("div")
-    div_year = st.number_input("Year", min_value=2020, max_value=2030,
+    div_year = st.number_input(tr("common.year"), min_value=2020, max_value=2030,
                                 value=date.today().year, key="div_year")
 
     # Merge dividends
@@ -701,7 +707,7 @@ with tab_dividends:
         for k, v in div_data.get("monthly_breakdown", {}).items():
             all_monthly[k] = all_monthly.get(k, 0) + v
 
-    st.metric("Total Annual Dividends", f"${total_annual:,.2f}")
+    st.metric(tr("pf.total_annual_div"), f"${total_annual:,.2f}")
 
     if all_events:
         st.dataframe(pd.DataFrame(all_events), use_container_width=True, hide_index=True)
@@ -709,18 +715,18 @@ with tab_dividends:
         if all_monthly:
             fig = px.bar(
                 x=sorted(all_monthly.keys()), y=[all_monthly[k] for k in sorted(all_monthly.keys())],
-                labels={"x": "Month", "y": "Dividends ($)"},
-                title="Monthly Dividends",
+                labels={"x": tr("pf.month"), "y": tr("pf.dividends_dollar")},
+                title=tr("pf.monthly_div"),
             )
             fig.update_layout(height=300, margin=dict(l=0, r=0, t=40, b=0))
             st.plotly_chart(fig, use_container_width=True)
     else:
-        st.caption("No dividend events this year.")
+        st.caption(tr("pf.no_div"))
 
 # ===== TAX TAB =====
 with tab_tax:
     tax_selected = _portfolio_selector("tax")
-    tax_year = st.number_input("Tax Year", min_value=2020, max_value=2030,
+    tax_year = st.number_input(tr("pf.tax_year"), min_value=2020, max_value=2030,
                                 value=date.today().year, key="tax_year")
 
     # Merge tax
@@ -738,15 +744,15 @@ with tab_tax:
         all_tax_trades.extend(tax.get("trades", []))
 
     c1, c2, c3 = st.columns(3)
-    c1.metric("Net Gain/Loss", f"${merged_tax['net_gain']:,.2f}")
-    c2.metric("Realized Gains", f"${merged_tax['realized_gains']:,.2f}")
-    c3.metric("Realized Losses", f"-${merged_tax['realized_losses']:,.2f}")
+    c1.metric(tr("pf.net_gain_loss"), f"${merged_tax['net_gain']:,.2f}")
+    c2.metric(tr("pf.realized_gains"), f"${merged_tax['realized_gains']:,.2f}")
+    c3.metric(tr("pf.realized_losses"), f"-${merged_tax['realized_losses']:,.2f}")
 
     c4, c5, c6, c7 = st.columns(4)
-    c4.metric("Short-Term Gain", f"${merged_tax['short_term_gain']:,.2f}")
-    c5.metric("Long-Term Gain", f"${merged_tax['long_term_gain']:,.2f}")
-    c6.metric("Short-Term Loss", f"-${merged_tax['short_term_loss']:,.2f}")
-    c7.metric("Long-Term Loss", f"-${merged_tax['long_term_loss']:,.2f}")
+    c4.metric(tr("pf.st_gain"), f"${merged_tax['short_term_gain']:,.2f}")
+    c5.metric(tr("pf.lt_gain"), f"${merged_tax['long_term_gain']:,.2f}")
+    c6.metric(tr("pf.st_loss"), f"-${merged_tax['short_term_loss']:,.2f}")
+    c7.metric(tr("pf.lt_loss"), f"-${merged_tax['long_term_loss']:,.2f}")
 
     if all_tax_trades:
         st.dataframe(pd.DataFrame(all_tax_trades), use_container_width=True, hide_index=True)

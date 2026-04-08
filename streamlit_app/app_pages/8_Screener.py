@@ -9,6 +9,7 @@ from services.market_service import (
     get_fundamentals_cache_status, refresh_fundamentals_cache,
 )
 from services.auth_service import render_user_sidebar
+from services.i18n import t as tr
 from components.ui import inject_css, page_header, render_sidebar_info
 
 page_header("page.screener.title", "page.screener.subtitle")
@@ -18,27 +19,29 @@ cache_status = get_fundamentals_cache_status()
 cached_count = cache_status["count"]
 
 if cached_count > 0:
-    st.caption(
-        f"Cached: {cached_count} stocks | Last updated: {cache_status['newest'][:16] if cache_status['newest'] else 'N/A'}"
-    )
+    st.caption(tr(
+        "scr.cached_status",
+        n=cached_count,
+        ts=cache_status['newest'][:16] if cache_status['newest'] else "N/A",
+    ))
 else:
-    st.warning("No fundamental data cached yet. Click 'Refresh Data' to load (takes 3-5 min, one-time).")
+    st.warning(tr("scr.cache_warning"))
 
-if st.button("Refresh Data", help="Fetch latest fundamentals for all S&P 500 stocks"):
-    progress_bar = st.progress(0, text="Starting...")
+if st.button(tr("common.refresh"), help=tr("scr.refresh_help")):
+    progress_bar = st.progress(0, text=tr("scr.starting"))
 
     def _update_progress(current: int, total: int) -> None:
         pct = current / total
-        progress_bar.progress(pct, text=f"Fetching fundamentals... {current}/{total}")
+        progress_bar.progress(pct, text=tr("scr.fetching_progress", cur=current, total=total))
 
     try:
-        with st.spinner("Fetching fundamentals (this may take a few minutes)..."):
+        with st.spinner(tr("scr.refreshing")):
             count = refresh_fundamentals_cache(progress_callback=_update_progress)
-        progress_bar.progress(1.0, text=f"Done! Updated {count} stocks.")
-        st.success(f"Updated {count} stocks.")
+        progress_bar.progress(1.0, text=tr("scr.done", n=count))
+        st.success(tr("scr.refresh_done", n=count))
         st.rerun()
     except Exception as e:
-        st.error(f"Refresh failed: {e}")
+        st.error(tr("scr.refresh_failed", e=e))
 
 # --- Load Data ---
 if cached_count > 0:
@@ -47,11 +50,11 @@ else:
     df = get_stock_list()
 
 if df.empty:
-    st.warning("No stock data available. Please refresh.")
+    st.warning(tr("scr.no_data"))
     st.stop()
 
 # --- Filters ---
-st.subheader("Filters")
+st.subheader(tr("scr.filters"))
 
 has_fundamentals = "pe_ratio" in df.columns and cached_count > 0
 
@@ -59,7 +62,7 @@ has_fundamentals = "pe_ratio" in df.columns and cached_count > 0
 f1, f2, f3 = st.columns(3)
 with f1:
     sectors = ["All"] + sorted(df["sector"].dropna().unique().tolist())
-    selected_sector = st.selectbox("Sector", sectors)
+    selected_sector = st.selectbox(tr("scr.sector"), sectors)
 with f2:
     if "industry" in df.columns:
         if selected_sector != "All":
@@ -68,15 +71,15 @@ with f2:
             )
         else:
             industries = ["All"] + sorted(df["industry"].dropna().unique().tolist())
-        selected_industry = st.selectbox("Industry", industries)
+        selected_industry = st.selectbox(tr("scr.industry"), industries)
     else:
         selected_industry = "All"
 with f3:
-    search = st.text_input("Search", placeholder="AAPL, Apple...")
+    search = st.text_input(tr("common.search"), placeholder=tr("scr.search_placeholder"))
 
 # Row 2: Valuation filters
 if has_fundamentals:
-    st.markdown("**Valuation**")
+    st.markdown(f"**{tr('scr.valuation')}**")
     v1, v2, v3, v4 = st.columns(4)
     with v1:
         pe_filter = st.selectbox("P/E", ["Any", "Under 5", "Under 10", "Under 15",
@@ -88,10 +91,10 @@ if has_fundamentals:
         ps_filter = st.selectbox("P/S", ["Any", "Under 1", "Under 2", "Under 5",
                                           "Under 10", "Over 10"])
     with v4:
-        div_filter = st.selectbox("Dividend Yield", ["Any", "Over 0%", "Over 1%", "Over 2%",
+        div_filter = st.selectbox(tr("scr.dividend_yield"), ["Any", "Over 0%", "Over 1%", "Over 2%",
                                                       "Over 3%", "Over 5%", "Over 7%"])
 
-    st.markdown("**Fundamentals**")
+    st.markdown(f"**{tr('scr.fundamentals')}**")
     f4, f5, f6, f7 = st.columns(4)
     with f4:
         roe_filter = st.selectbox("ROE", ["Any", "Positive (>0%)", "Over 5%", "Over 10%",
@@ -106,13 +109,13 @@ if has_fundamentals:
         beta_filter = st.selectbox("Beta", ["Any", "Under 0.5", "Under 1",
                                              "1 to 1.5", "1.5 to 2", "Over 2"])
 
-    st.markdown("**Market Cap & Volume**")
+    st.markdown(f"**{tr('scr.market_cap_volume')}**")
     m1, m2 = st.columns(2)
     with m1:
-        cap_filter = st.selectbox("Market Cap", ["Any", "Mega (>200B)", "Large (10B-200B)",
+        cap_filter = st.selectbox(tr("scr.market_cap"), ["Any", "Mega (>200B)", "Large (10B-200B)",
                                                    "Mid (2B-10B)", "Small (300M-2B)", "Micro (<300M)"])
     with m2:
-        vol_filter = st.selectbox("Avg Volume", ["Any", "Over 100K", "Over 500K",
+        vol_filter = st.selectbox(tr("scr.avg_volume"), ["Any", "Over 100K", "Over 500K",
                                                    "Over 1M", "Over 5M"])
 else:
     pe_filter = pb_filter = ps_filter = div_filter = "Any"
@@ -201,18 +204,20 @@ available_sorts = {k: v for k, v in sort_options.items() if v in filtered.column
 
 sc1, sc2 = st.columns([2, 1])
 with sc1:
-    sort_by = st.selectbox("Sort By", list(available_sorts.keys()))
+    sort_by = st.selectbox(tr("scr.sort_by"), list(available_sorts.keys()))
 with sc2:
-    sort_order = st.selectbox("Order", ["Descending", "Ascending"])
+    desc_label = tr("scr.descending")
+    asc_label = tr("scr.ascending")
+    sort_order = st.selectbox(tr("scr.order"), [desc_label, asc_label])
 
 sort_field = available_sorts.get(sort_by, "ticker")
 if sort_field in filtered.columns:
-    filtered = filtered.sort_values(sort_field, ascending=(sort_order == "Ascending"), na_position="last")
+    filtered = filtered.sort_values(sort_field, ascending=(sort_order == asc_label), na_position="last")
 filtered = filtered.reset_index(drop=True)
 
 # --- Results ---
 st.markdown("---")
-st.caption(f"{len(filtered)} stocks found")
+st.caption(tr("scr.found", n=len(filtered)))
 
 # Build display columns
 base_cols = ["ticker", "name", "sector"]
@@ -244,7 +249,7 @@ for col, fn in fmt_map.items():
 st.dataframe(display_df, use_container_width=True, hide_index=True)
 
 # --- Sector Distribution ---
-st.subheader("Sector Distribution")
+st.subheader(tr("scr.sector_dist"))
 sector_counts = filtered["sector"].value_counts()
 
 if not sector_counts.empty:
@@ -265,4 +270,4 @@ if not sector_counts.empty:
     )
     st.plotly_chart(fig, use_container_width=True)
 else:
-    st.caption("No data to display.")
+    st.caption(tr("scr.no_dist_data"))
