@@ -11,7 +11,7 @@ from services.sentiment_service import get_stock_news
 from services.auth_service import is_logged_in, get_or_create_user, render_user_sidebar
 from components.ui import inject_css, page_header, render_sidebar_info
 
-page_header("Dashboard", "Real-time market overview and portfolio summary")
+page_header("page.dashboard.title", "page.dashboard.subtitle")
 
 # User context (Dashboard works without login but portfolio requires it)
 _user = get_or_create_user() if is_logged_in() else None

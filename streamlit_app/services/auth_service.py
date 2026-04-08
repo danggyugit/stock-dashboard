@@ -135,7 +135,16 @@ def claim_legacy_data(user_id: int) -> dict:
 
 
 def render_user_sidebar() -> None:
-    """Render user info + compact logout button at top of sidebar."""
+    """Render user info + compact logout button at top of sidebar.
+
+    Also renders the global EN/KO language toggle right above the
+    account block — this is the only place we mount it so every page
+    sees the same toggle in the same location.
+    """
+    # Lazy import to avoid circular deps
+    from services.i18n import render_lang_toggle
+    render_lang_toggle(location="sidebar")
+
     if not is_logged_in():
         return
 
@@ -161,7 +170,7 @@ def render_user_sidebar() -> None:
     SB_LOGOUT_BTN_WIDTH  = "50px"  # button width: "100%" | "120%" | "60px" etc.
     SB_LOGOUT_RADIUS     = 8       # logout button border radius (px)
     SB_LOGOUT_FONT       = 16      # logout icon size (px)
-    SB_LOGOUT_OFFSET_X   = 600       # horizontal shift in px (negative=left, positive=right)
+    SB_LOGOUT_OFFSET_X   = 80       # horizontal shift in px (negative=left, positive=right)
     SB_LOGOUT_LABEL      = "⇥"     # button text/icon
 
     # Subtle gray logout button

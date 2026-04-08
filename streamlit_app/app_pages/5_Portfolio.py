@@ -17,7 +17,7 @@ from services.market_service import get_chart_data
 from services.auth_service import require_auth, render_user_sidebar
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
 
-page_header("Portfolio", "Track holdings, performance, dividends, and taxes")
+page_header("page.portfolio.title", "page.portfolio.subtitle")
 
 # Auth guard
 current_user = require_auth()

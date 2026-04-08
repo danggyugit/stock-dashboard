@@ -178,7 +178,20 @@ def market_status() -> tuple[bool, str]:
 
 
 def page_header(title: str, subtitle: str | None = None) -> None:
-    """Render page header with market status badge."""
+    """Render page header with market status badge.
+
+    Both `title` and `subtitle` may be either raw strings OR i18n keys
+    of the form "page.something.title" — keys are auto-detected by the
+    "page." prefix and run through services.i18n.t().
+    """
+    # Lazy import to avoid a circular dependency at module load time
+    from services.i18n import t as _tr
+
+    if title and title.startswith("page."):
+        title = _tr(title)
+    if subtitle and subtitle.startswith("page."):
+        subtitle = _tr(subtitle)
+
     is_open, status = market_status()
     badge_class = "market-badge-open" if is_open else "market-badge-closed"
 

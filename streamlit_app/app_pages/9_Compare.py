@@ -8,7 +8,7 @@ from services.market_service import get_stock_detail, get_chart_data
 from services.auth_service import render_user_sidebar
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
 
-page_header("Stock Comparison", "Compare 2-5 stocks side by side")
+page_header("page.compare.title", "page.compare.subtitle")
 
 # --- Ticker Input ---
 default_tickers = "AAPL, MSFT, NVDA, GOOGL"

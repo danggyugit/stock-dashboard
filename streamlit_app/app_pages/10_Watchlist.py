@@ -10,7 +10,7 @@ from services.watchlist_service import (
 from services.auth_service import require_auth, render_user_sidebar
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
 
-page_header("Watchlist & Alerts", "Track stocks and get notified on price moves")
+page_header("page.watchlist.title", "page.watchlist.subtitle")
 
 # Auth guard
 current_user = require_auth()

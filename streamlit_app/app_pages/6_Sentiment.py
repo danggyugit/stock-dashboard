@@ -62,7 +62,7 @@ def _build_wordcloud(headlines: list[str]) -> bytes | None:
     except Exception:
         return None
 
-page_header("Market Sentiment", "Fear & Greed index, news sentiment, AI analysis")
+page_header("page.sentiment.title", "page.sentiment.subtitle")
 
 # --- Fear & Greed Index ---
 st.subheader("Fear & Greed Index")

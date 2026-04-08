@@ -43,7 +43,7 @@ def _calc_bollinger(closes: list[float], period: int = 20, std_dev: float = 2.0)
     lower = middle - std * std_dev
     return middle.tolist(), upper.tolist(), lower.tolist()
 
-page_header("Stock Detail", "Individual stock analysis with interactive chart")
+page_header("page.stock_detail.title", "page.stock_detail.subtitle")
 
 # --- Recently viewed sidebar ---
 if "recent_tickers" not in st.session_state:

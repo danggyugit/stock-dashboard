@@ -1,75 +1,29 @@
-"""i18n strings for AI Quant Lab — English (default) + Korean.
+"""AI Quant Lab translation entries — registered into the global i18n.
 
-Usage:
-    from app_pages._quant_lab_i18n import t, lang_toggle
+The toggle and t() helper now live in services/i18n.py. This file
+just defines the page-specific strings and registers them so the
+existing call sites (`tr("hero.title")` etc.) keep working.
 
-    lang_toggle()              # render the EN / KO toggle (call once at top)
-    st.markdown(t("hero.title"))
-    st.button(t("settings.run_btn"))
+Re-exports `t` and a no-op `lang_toggle` for backwards compatibility
+with the existing import in 2_AI_Quant_Lab.py.
 """
 
 from __future__ import annotations
 
-import streamlit as st
-
-
-# ─────────────────────────────────────────────────────────────
-# Language state
-# ─────────────────────────────────────────────────────────────
-
-LANG_KEY = "quant_lab_lang"
-DEFAULT_LANG = "en"
-
-
-def get_lang() -> str:
-    return st.session_state.get(LANG_KEY, DEFAULT_LANG)
+from services.i18n import t, register_strings  # noqa: F401  (re-export)
 
 
 def lang_toggle() -> None:
-    """Render a small EN / KO toggle. Default = English."""
-    if LANG_KEY not in st.session_state:
-        st.session_state[LANG_KEY] = DEFAULT_LANG
-
-    # Compact pill-style toggle aligned to the right
-    st.markdown(
-        """
-        <style>
-        div.st-key-quant_lab_lang_toggle {
-            display: flex !important;
-            justify-content: flex-end !important;
-            margin-bottom: 4px;
-        }
-        div.st-key-quant_lab_lang_toggle [data-testid="stSegmentedControl"] button {
-            font-size: 12px !important;
-            padding: 4px 12px !important;
-            min-height: 0 !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    with st.container(key="quant_lab_lang_toggle"):
-        choice = st.segmented_control(
-            "lang",
-            options=["EN", "KO"],
-            default="EN" if get_lang() == "en" else "KO",
-            label_visibility="collapsed",
-            key="quant_lab_lang_seg",
-        )
-        if choice == "EN" and get_lang() != "en":
-            st.session_state[LANG_KEY] = "en"
-            st.rerun()
-        elif choice == "KO" and get_lang() != "ko":
-            st.session_state[LANG_KEY] = "ko"
-            st.rerun()
+    """Backwards-compat shim — the global sidebar toggle is rendered
+    by render_user_sidebar() now, so this is a no-op."""
+    return
 
 
 # ─────────────────────────────────────────────────────────────
-# Translation table
+# Translation table — merged into services/i18n.STRINGS at import
 # ─────────────────────────────────────────────────────────────
 
-STRINGS: dict[str, dict[str, str]] = {
+_QUANT_LAB_STRINGS: dict[str, dict[str, str]] = {
     # Hero
     "hero.title":      {"en": "AI Quant Lab",
                         "ko": "AI 퀀트 랩"},
@@ -322,15 +276,5 @@ STRINGS: dict[str, dict[str, str]] = {
 }
 
 
-def t(key: str, **kwargs) -> str:
-    """Translate a key. Falls back to the key itself if not found."""
-    entry = STRINGS.get(key)
-    if not entry:
-        return key
-    text = entry.get(get_lang()) or entry.get("en") or key
-    if kwargs:
-        try:
-            return text.format(**kwargs)
-        except (KeyError, IndexError):
-            return text
-    return text
+# Merge into the global table at import time so tr("hero.title") works.
+register_strings(_QUANT_LAB_STRINGS)

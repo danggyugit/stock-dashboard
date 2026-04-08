@@ -11,7 +11,7 @@ from services.market_service import (
 from services.auth_service import render_user_sidebar
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
 
-page_header("S&P 500 Market Heatmap", "Sector-grouped treemap with live price changes")
+page_header("page.heatmap.title", "page.heatmap.subtitle")
 
 # Cache status & refresh
 cache_status = get_heatmap_cache_status()

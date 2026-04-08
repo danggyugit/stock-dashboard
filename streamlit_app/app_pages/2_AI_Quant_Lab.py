@@ -37,11 +37,13 @@ warnings.filterwarnings("ignore")
 # Auth guard + shared site chrome
 from services.auth_service import require_auth  # noqa: E402
 from components.ui import inject_css  # noqa: E402
-from app_pages._quant_lab_i18n import t as tr, lang_toggle  # noqa: E402
+# Importing this module registers AI Quant Lab strings into the global
+# i18n table (services/i18n.py).
+import app_pages._quant_lab_i18n  # noqa: F401, E402
+from services.i18n import t as tr  # noqa: E402
 
 _user = require_auth()
 inject_css()  # site-wide CSS (cards, metric polish, sidebar collapse, etc.)
-lang_toggle()  # EN / KO toggle (default = EN)
 
 # AI Quant Lab specific styles — tuned to match the rest of the dashboard
 # (blue accent, gradient cards, soft borders)

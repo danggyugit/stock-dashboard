@@ -11,7 +11,7 @@ from services.market_service import (
 from services.auth_service import render_user_sidebar
 from components.ui import inject_css, page_header, render_sidebar_info
 
-page_header("Stock Screener", "Filter S&P 500 stocks by fundamentals")
+page_header("page.screener.title", "page.screener.subtitle")
 
 # --- Cache Status & Refresh ---
 cache_status = get_fundamentals_cache_status()
