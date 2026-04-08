@@ -23,8 +23,8 @@ cd /d "%REPO%\streamlit_app" || (
     exit /b 1
 )
 
-echo [%date% %time%] Running fetch_cache.py --fundamentals >> "%LOG%"
-python scripts\fetch_cache.py --fundamentals >> "%LOG%" 2>&1
+echo [%date% %time%] Running fetch_cache.py --fundamentals-all (S^&P 1500) >> "%LOG%"
+python scripts\fetch_cache.py --fundamentals-all >> "%LOG%" 2>&1
 if errorlevel 1 (
     echo [%date% %time%] ERROR: fetch_cache.py failed >> "%LOG%"
     exit /b 1
