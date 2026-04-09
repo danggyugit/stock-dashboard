@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-claude_backtest_Ver3.9.py
+claude_backtest_Ver4.2.py
 AI 퀀트 백테스팅 & 실시간 종목 추천 플랫폼
-Ver3.0~3.8: (이전 변경 이력 생략)
-Ver3.9: 피처 다양화 — 앙상블 성능 향상 목적
-        Cross-Sectional 정규화: 핵심 피처 5개의 전체 종목 대비 백분위(pct) 추가
-        Regime Feature: Market_Regime(SPY/SMA200), VIX_Level
-        Sector Relative Strength: RS_Sector_1m, RS_Sector_3m
-        총 66개 피처 (가격 35 + CS 5 + Regime 2 + Sector RS 2 + 펀더멘털 22)
+Ver3.0~4.0: (이전 변경 이력 생략)
+Ver4.2: 백테스트 신뢰성 개선
+        ① 윈저화 순서 수정 (결측대체 → 윈저화)
+        ② Purged CV 엠바고 (훈련/예측 간 21일 gap으로 데이터 누수 차단)
+        ③ RF 하이퍼파라미터 자동 튜닝 (GridSearchCV)
+        ④ 턴오버 버퍼존 옵션 (보유 종목 가산점으로 불필요한 교체 방지)
+        ⑤ 역변동성 가중 옵션 (변동성 역수 비중 → MDD 축소)
 """
 
 import streamlit as st
@@ -19,6 +20,7 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.impute import SimpleImputer
+from sklearn.model_selection import GridSearchCV
 from scipy.stats import spearmanr
 from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
@@ -1409,9 +1411,13 @@ def run_backtest(
     spy_close:      pd.Series = None,
     vix_close:      pd.Series = None,
     sector_map:     dict = None,
+    use_mom_filter:      bool = True,
+    use_turnover_buffer: bool = False,
+    turnover_buffer_pct: float = 0.05,
+    use_inv_vol_weight:  bool = False,
 ) -> dict:
     """메인 백테스트 엔진.
-    Ver3.9: enrich_snapshot으로 CS정규화 + Regime + Sector RS 추가.
+    Ver4.2: 엠바고 + 윈저화순서 + GridSearchCV + 턴오버버퍼 + 역변동성가중.
     """
     n_dates = len(rebal_dates)
     feature_cols = FEAT_COLS
@@ -1483,8 +1489,6 @@ def run_backtest(
     rebal_history  = []
     prev_selected  = set()   # 직전 기간 보유 종목 (turnover 계산용)
 
-    imputer = SimpleImputer(strategy="median")
-
     # 마지막 학습 정보 (tab_realtime 전달용)
     last_win_bounds  = {}
     last_miss_src    = []
@@ -1495,10 +1499,16 @@ def run_backtest(
         date      = rebal_dates[i]
         next_date = rebal_dates[i + 1]
 
-        # ── 훈련 데이터 수집 ──────────────────────────────
+        # ── 훈련 데이터 수집 (Ver4.2: 엠바고 적용) ─────────
+        # 예측 날짜와 21일 이내 겹치는 스냅샷 제외 → 데이터 누수 방지
+        EMBARGO_DAYS = 21
         X_list, y_list = [], []
         for j in range(i - rolling_win, i):
-            snap = snapshots.get(rebal_dates[j])
+            snap_date = rebal_dates[j]
+            # 엠바고: 훈련 스냅샷의 forward return 종료일이 예측일과 겹치면 제외
+            if (date - snap_date).days < EMBARGO_DAYS:
+                continue
+            snap = snapshots.get(snap_date)
             if snap is None or snap.empty or "_fwd_return" not in snap.columns:
                 continue
             cols = [c for c in feature_cols if c in snap.columns]
@@ -1514,14 +1524,6 @@ def run_backtest(
         y_train = pd.concat(y_list)
         avail_cols = X_train.columns.tolist()
 
-        # ── 윈저화 (1%/99%) ──────────────────────────────
-        win_bounds = {}
-        for col in avail_cols:
-            lo, hi = X_train[col].quantile(0.01), X_train[col].quantile(0.99)
-            if lo < hi:
-                win_bounds[col] = (lo, hi)
-                X_train[col] = X_train[col].clip(lo, hi)
-
         # ── 결측 플래그 (펀더멘털 피처) ───────────────────
         miss_src = [c for c in avail_cols
                     if FEATURE_META.get(c, {}).get("group", "") in _FUND_GROUPS]
@@ -1529,15 +1531,30 @@ def run_backtest(
             X_train[f"{mc}_miss"] = X_train[mc].isna().astype(int)
         all_train_cols = X_train.columns.tolist()
 
-        # ── 결측 대체 + 모델 학습 ─────────────────────────
-        X_imp = imputer.fit_transform(X_train)
-
-        # RF (항상 학습)
-        model_rf = RandomForestRegressor(
-            n_estimators=100, max_depth=5, min_samples_leaf=3,
-            random_state=42, n_jobs=1,
+        # ── Ver4.2: 결측 대체 먼저 → 윈저화 (순서 수정) ──
+        # keep_empty_features=True로 all-NaN 컬럼도 유지 (컬럼 수 불일치 방지)
+        imputer_step = SimpleImputer(strategy="median", keep_empty_features=True)
+        X_imp_df = pd.DataFrame(
+            imputer_step.fit_transform(X_train),
+            columns=all_train_cols, index=X_train.index,
         )
-        model_rf.fit(X_imp, y_train)
+        win_bounds = {}
+        for col in avail_cols:
+            lo, hi = X_imp_df[col].quantile(0.01), X_imp_df[col].quantile(0.99)
+            if lo < hi:
+                win_bounds[col] = (lo, hi)
+                X_imp_df[col] = X_imp_df[col].clip(lo, hi)
+        X_imp = X_imp_df.values
+
+        # ── Ver4.2: RF 하이퍼파라미터 자동 튜닝 ──────────
+        param_grid = {"max_depth": [3, 5, 7], "min_samples_leaf": [5, 10, 20]}
+        base_rf = RandomForestRegressor(
+            n_estimators=100, random_state=42, n_jobs=1,
+        )
+        gcv = GridSearchCV(base_rf, param_grid, cv=3, scoring="neg_mean_squared_error",
+                           n_jobs=1, refit=True)
+        gcv.fit(X_imp, y_train)
+        model_rf = gcv.best_estimator_
 
         # XGBoost + LightGBM (앙상블 모드 시)
         model_xgb = None
@@ -1597,18 +1614,21 @@ def run_backtest(
 
         X_pred = cur_snap[[c for c in avail_cols if c in cur_snap.columns]].reindex(columns=avail_cols)
 
-        # 윈저화 적용 (학습과 동일 기준)
-        for col in avail_cols:
-            if col in win_bounds and col in X_pred.columns:
-                lo, hi = win_bounds[col]
-                X_pred[col] = X_pred[col].clip(lo, hi)
-
         # 결측 플래그 추가
         for mc in miss_src:
             X_pred[f"{mc}_miss"] = X_pred[mc].isna().astype(int) if mc in X_pred.columns else 0
         X_pred = X_pred.reindex(columns=all_train_cols)
 
-        X_pred_imp = imputer.transform(X_pred)
+        # Ver4.2: 결측 대체 먼저 → 윈저화 (학습과 동일 순서)
+        X_pred_imp_df = pd.DataFrame(
+            imputer_step.transform(X_pred),
+            columns=all_train_cols, index=cur_snap.index,
+        )
+        for col in avail_cols:
+            if col in win_bounds and col in X_pred_imp_df.columns:
+                lo, hi = win_bounds[col]
+                X_pred_imp_df[col] = X_pred_imp_df[col].clip(lo, hi)
+        X_pred_imp = X_pred_imp_df.values
 
         # 앙상블 예측: Rank Average (각 모델 예측 → 순위 변환 → 순위 평균)
         pred_rf_s = pd.Series(model_rf.predict(X_pred_imp), index=cur_snap.index)
@@ -1646,20 +1666,73 @@ def run_backtest(
             ic_rec["IC"] = ic_val
             ic_records.append(ic_rec)
 
-        # ── 종목 선정 ─────────────────────────────────────
-        selected = pred_series.nlargest(n_stocks)
+        # ── 종목 선정 (모멘텀 필터 + 턴오버 버퍼) ──────────
+        if use_mom_filter and "Mom_1m" in cur_snap.columns:
+            mom_ok = cur_snap["Mom_1m"] > 0
+            candidates = pred_series[pred_series.index.isin(cur_snap[mom_ok].index)]
+        else:
+            candidates = pred_series
+        # Ver4.2: 턴오버 버퍼 — 보유 종목에 가산점 부여
+        if use_turnover_buffer and prev_selected:
+            candidates_adj = candidates.copy()
+            for t in prev_selected:
+                if t in candidates_adj.index:
+                    candidates_adj[t] *= (1 + turnover_buffer_pct)
+            if len(candidates_adj) >= n_stocks:
+                selected = candidates_adj.nlargest(n_stocks)
+            else:
+                selected = pred_series.nlargest(n_stocks)
+        elif len(candidates) >= n_stocks:
+            selected = candidates.nlargest(n_stocks)
+        else:
+            selected = pred_series.nlargest(n_stocks)
 
-        # ── 포트폴리오 수익률 (상폐 종목 처리 포함) ────────
+        # ── Ver4.2: 포트폴리오 가중치 결정 ────────────────
+        n_sel = len(selected)
+        if n_sel == 0:
+            continue
+        if use_inv_vol_weight and "Volatility_30d" in cur_snap.columns:
+            vols = {}
+            for t in selected.index:
+                v = cur_snap.loc[t, "Volatility_30d"] if t in cur_snap.index else np.nan
+                vols[t] = v if (not np.isnan(v) and v > 0) else 0.30
+            inv_vols = {t: 1 / v for t, v in vols.items()}
+            total_inv = sum(inv_vols.values())
+            weights_dict = {t: iv / total_inv for t, iv in inv_vols.items()}
+        else:
+            w = 1 / n_sel
+            weights_dict = {t: w for t in selected.index}
+
+        # ── 포트폴리오 수익률 (가중 적용) ─────────────────
         port_ret = 0.0
-        n_sel    = len(selected)
+        sel_returns = {}
         for t in selected.index:
             r = fwd_ret_from_price(price_data, t, date, next_date, use_next_open)
             if np.isnan(r):
-                # 상폐/거래중단: 마지막 거래가 기준 수익률 (데이터 전무 시 -100%)
                 r = _delisted_return(price_data, t, date, next_date, use_next_open)
-            port_ret += r
-        if n_sel > 0:
-            port_ret /= n_sel
+            sel_returns[t] = r
+            port_ret += weights_dict[t] * r
+
+        # ── 유니버스 평균·Bottom N 수익률 (선정 품질 지표용) ──
+        all_fwd = cur_snap["_fwd_return"].dropna()
+        univ_avg_ret = float(all_fwd.mean()) if len(all_fwd) > 0 else np.nan
+        # Bottom N: 예측 점수 최하위 N개
+        bottom_n = pred_series.nsmallest(n_stocks)
+        bottom_ret = 0.0
+        n_bot = len(bottom_n)
+        for t in bottom_n.index:
+            r = fwd_ret_from_price(price_data, t, date, next_date, use_next_open)
+            if np.isnan(r):
+                r = _delisted_return(price_data, t, date, next_date, use_next_open)
+            bottom_ret += r
+        if n_bot > 0:
+            bottom_ret /= n_bot
+        # 적중률: TOP N 중 유니버스 평균 초과 종목 비율
+        if not np.isnan(univ_avg_ret) and sel_returns:
+            precision = sum(1 for r in sel_returns.values()
+                           if not np.isnan(r) and r > univ_avg_ret) / len(sel_returns)
+        else:
+            precision = np.nan
 
         # ── Turnover 계산 + 거래비용 적용 ─────────────────
         # turnover = 신규 편입 종목 수 / 전체 보유 종목 수
@@ -1683,6 +1756,7 @@ def run_backtest(
         for t in selected.index:
             if use_ensemble:
                 row_d = {"ticker": t,
+                         "비중": f"{weights_dict.get(t, 0):.1%}",
                          "평균순위": avg_rank.get(t, np.nan),
                          "RF순위": rank_rf.get(t, np.nan),
                          "XGB순위": rank_xgb.get(t, np.nan),
@@ -1690,6 +1764,7 @@ def run_backtest(
                          "실제수익률": actual.get(t, np.nan)}
             else:
                 row_d = {"ticker": t,
+                         "비중": f"{weights_dict.get(t, 0):.1%}",
                          "예측수익률": pred_series[t],
                          "실제수익률": actual.get(t, np.nan)}
             for fc in feature_cols:
@@ -1709,6 +1784,9 @@ def run_backtest(
             "ic":              ic_val,
             "turnover":        turnover,
             "tc_actual":       tc_actual,
+            "univ_avg_ret":    univ_avg_ret,
+            "bottom_ret":      bottom_ret,
+            "precision":       precision,
         })
 
         # 마지막 학습 정보 갱신
@@ -1751,7 +1829,7 @@ def run_backtest(
         "last_model_rf":    model_rf   if "model_rf"   in dir() else None,
         "last_model_xgb":   model_xgb  if "model_xgb"  in dir() else None,
         "last_model_lgbm":  model_lgbm if "model_lgbm" in dir() else None,
-        "last_imputer":     imputer    if "imputer"    in dir() else None,
+        "last_imputer":     imputer_step if "imputer_step" in dir() else None,
         "last_avail_cols":  last_avail_cols,
         "last_all_cols":    last_all_cols,
         "last_win_bounds":  last_win_bounds,
@@ -1878,6 +1956,411 @@ def norm_series(s: pd.Series, ref: pd.Timestamp) -> pd.Series:
     if not len(idx):
         return s
     return s[idx] / s[idx[0]]
+
+
+# ═══════════════════════════════════════════════════════════
+# TAB 0 ── 요약 (Summary)
+# ═══════════════════════════════════════════════════════════
+
+def tab_summary(results: dict, benchmarks: dict, price_data: dict,
+                fund_map: dict = None, tech_map: dict = None, n_stocks: int = 5,
+                rf: float = 0.03,
+                pit_map: dict = None, spy_close: pd.Series = None,
+                vix_close: pd.Series = None, sector_map: dict = None):
+    """전체 탭의 핵심 항목을 한 화면에 요약."""
+    pd_ = results["port_dates"]
+    pv_ = results["port_values"]
+    rebal_hist = results.get("rebal_hist", [])
+    ic_df = results.get("ic_df", pd.DataFrame())
+    fimp = results.get("fimp_df", pd.DataFrame())
+    is_ensemble = results.get("use_ensemble", False)
+
+    if len(pd_) < 2:
+        st.warning(tr("msg.short_period"))
+        return
+
+    # ── 운용 시작 시점 ────────────────────────────────────
+    trade_start = rebal_hist[0]["rebalance_date"] if rebal_hist else pd.Timestamp(pd_[0])
+    port_period = pd.Series(pv_, index=pd.DatetimeIndex(pd_))
+    port_active = port_period[port_period.index >= trade_start]
+    if len(port_active) >= 2:
+        port_active = port_active / port_active.iloc[0]
+
+    ai_metrics = calc_metrics(port_active, tr("ax.ai_strategy"), rf=rf)
+    spy_metrics = {}
+    if "SPY" in benchmarks:
+        ns = norm_series(benchmarks["SPY"], trade_start)
+        if len(ns) > 1:
+            spy_metrics = calc_metrics(ns, "S&P 500", rf=rf)
+
+    # ════════════════════════════════════════════════════════
+    # SECTION 1: 핵심 성과 지표
+    # ════════════════════════════════════════════════════════
+    st.markdown(f'<div class="section-hdr">{tr("sum.sec_perf")}</div>', unsafe_allow_html=True)
+
+    def _parse(s):
+        try:
+            return float(str(s).strip("%").strip("x"))
+        except Exception:
+            return 0.0
+
+    cagr_ai  = _parse(ai_metrics.get("CAGR", "0"))
+    sharp_ai = _parse(ai_metrics.get("Sharpe", "0"))
+    mdd_ai   = _parse(ai_metrics.get("Max DD", "0"))
+    total_ai = _parse(ai_metrics.get("총수익률", "0"))
+    sort_ai  = _parse(ai_metrics.get("Sortino", "0"))
+    winr_ai  = _parse(ai_metrics.get("월승률", "0"))
+
+    cagr_spy  = _parse(spy_metrics.get("CAGR", "0"))
+    sharp_spy = _parse(spy_metrics.get("Sharpe", "0"))
+
+    c1, c2, c3, c4, c5, c6 = st.columns(6)
+    for col, lbl, val, unit, clr in [
+        (c1, tr("sum.total_return"), total_ai, "%", "pos" if total_ai > 0 else "neg"),
+        (c2, "CAGR",     cagr_ai,  "%", "pos" if cagr_ai > 0 else "neg"),
+        (c3, "Sharpe",   sharp_ai, "",  "pos" if sharp_ai > 0.5 else ("neg" if sharp_ai < 0 else "neu")),
+        (c4, "Sortino",  sort_ai,  "",  "pos" if sort_ai > 0.5 else "neu"),
+        (c5, "Max DD",   mdd_ai,   "%", "neg"),
+        (c6, tr("sum.win_rate"), winr_ai, "%", "pos" if winr_ai > 50 else "neg"),
+    ]:
+        col.markdown(f"""<div class="metric-box">
+            <div class="metric-label">{lbl}</div>
+            <div class="metric-value {clr}">{val:.1f}{unit}</div>
+        </div>""", unsafe_allow_html=True)
+
+    if spy_metrics:
+        alpha = cagr_ai - cagr_spy
+        alpha_clr = "pos" if alpha > 0 else "neg"
+        st.markdown(
+            f'<div style="text-align:center; font-size:0.85rem; margin:0.3rem 0 0.8rem;">'
+            f'vs S&P 500 — CAGR {tr("sum.diff")}: '
+            f'<span class="{alpha_clr}" style="font-weight:700;">{alpha:+.1f}%p</span> · '
+            f'Sharpe {tr("sum.diff")}: <span class="{alpha_clr}" style="font-weight:700;">'
+            f'{sharp_ai - sharp_spy:+.2f}</span></div>',
+            unsafe_allow_html=True,
+        )
+
+    # ════════════════════════════════════════════════════════
+    # SECTION 2: 누적 수익률 + 성과 지표 테이블
+    # ════════════════════════════════════════════════════════
+    col_chart, col_tbl = st.columns([6, 4])
+
+    with col_chart:
+        st.markdown(f'<div class="section-hdr">{tr("sec.cumulative")}</div>', unsafe_allow_html=True)
+        port_daily = build_daily_portfolio(results, price_data)
+        port_daily_active = port_daily[port_daily.index >= trade_start]
+        if len(port_daily_active) >= 2:
+            port_daily_active = port_daily_active / port_daily_active.iloc[0]
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=port_daily_active.index, y=port_daily_active.values,
+            name=tr("ax.ai_strategy"), line=dict(color="#7c4dff", width=2.5),
+        ))
+        colors_bm = {"SPY": "#ff6b35", "QQQ": "#00c9a7"}
+        bm_metrics_list = []
+        for tk, label in BENCHMARKS.items():
+            if tk in benchmarks and tk in colors_bm:
+                ns = norm_series(benchmarks[tk], trade_start)
+                if len(ns) > 1:
+                    fig.add_trace(go.Scatter(
+                        x=ns.index, y=ns.values, name=label,
+                        line=dict(color=colors_bm[tk], width=1.8),
+                    ))
+                    bm_metrics_list.append(calc_metrics(ns, label, rf=rf))
+        fig.update_layout(
+            **PLOT_CFG, height=300, margin=dict(l=40, r=10, t=10, b=30),
+            legend=dict(orientation="h", yanchor="bottom", y=1.01, x=0),
+            hovermode="x unified",
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col_tbl:
+        st.markdown(f'<div class="section-hdr">{tr("sum.metrics_compare")}</div>', unsafe_allow_html=True)
+        all_metrics = [ai_metrics] + bm_metrics_list
+        mdf = pd.DataFrame(all_metrics).set_index("전략").T
+        st.dataframe(mdf, use_container_width=True, height=300)
+
+    # ════════════════════════════════════════════════════════
+    # SECTION 2b: IC & 모델 예측력
+    # ════════════════════════════════════════════════════════
+    st.markdown(f'<div class="section-hdr">{tr("sum.sec_ic")}</div>', unsafe_allow_html=True)
+    if not ic_df.empty:
+        ic_df_c = ic_df.copy()
+        ic_df_c["date"] = pd.to_datetime(ic_df_c["date"])
+        ic_mean = ic_df_c["IC"].mean()
+        ic_std  = ic_df_c["IC"].std()
+        ic_ir   = ic_mean / ic_std if ic_std > 0 else 0
+        pos_r   = (ic_df_c["IC"] > 0).mean()
+
+        ic1, ic2, ic3, ic4 = st.columns(4)
+        for col, lbl, val in [
+            (ic1, tr("ic.mean"), ic_mean),
+            (ic2, tr("ic.ir"), ic_ir),
+            (ic3, tr("ic.pos_rate"), pos_r),
+            (ic4, tr("ic.std"), ic_std),
+        ]:
+            clr = "pos" if val > 0.03 else ("neg" if val < 0 else "neu")
+            col.markdown(f"""<div class="metric-box">
+                <div class="metric-label">{lbl}</div>
+                <div class="metric-value {clr}">{val:.3f}</div>
+            </div>""", unsafe_allow_html=True)
+    else:
+        st.info(tr("msg.no_ic"))
+
+    # ════════════════════════════════════════════════════════
+    # SECTION 3: 종목 선정 품질
+    # ════════════════════════════════════════════════════════
+    st.markdown(f'<div class="section-hdr">{tr("sum.sec_quality")}</div>', unsafe_allow_html=True)
+
+    period_returns = [h["port_return"] for h in rebal_hist]
+    univ_avgs   = [h.get("univ_avg_ret", np.nan) for h in rebal_hist]
+    bottom_rets = [h.get("bottom_ret", np.nan) for h in rebal_hist]
+    precisions  = [h.get("precision", np.nan) for h in rebal_hist]
+
+    # ① Top N vs 유니버스 평균 (선정 초과수익)
+    excess_vs_univ = [p - u for p, u in zip(period_returns, univ_avgs)
+                      if not np.isnan(u)]
+    avg_excess = float(np.mean(excess_vs_univ)) if excess_vs_univ else np.nan
+
+    # ② 롱숏 스프레드 (Top N - Bottom N)
+    ls_spreads = [p - b for p, b in zip(period_returns, bottom_rets)
+                  if not np.isnan(b)]
+    avg_ls = float(np.mean(ls_spreads)) if ls_spreads else np.nan
+
+    # ③ 적중률 (Top N 중 유니버스 평균 초과 비율)
+    valid_prec = [p for p in precisions if not np.isnan(p)]
+    avg_precision = float(np.mean(valid_prec)) if valid_prec else np.nan
+
+    # ④ Profit Factor (총이익 / 총손실)
+    gains  = sum(r for r in period_returns if r > 0)
+    losses = sum(abs(r) for r in period_returns if r < 0)
+    profit_factor = gains / losses if losses > 0 else float("inf")
+
+    q1, q2, q3, q4 = st.columns(4)
+    q1.markdown(f"""<div class="metric-box">
+        <div class="metric-label">{tr("sum.excess_return")}</div>
+        <div class="metric-value {'pos' if avg_excess > 0 else 'neg'}">{avg_excess:+.2%}</div>
+    </div>""", unsafe_allow_html=True)
+    q2.markdown(f"""<div class="metric-box">
+        <div class="metric-label">{tr("sum.long_short")}</div>
+        <div class="metric-value {'pos' if avg_ls > 0 else 'neg'}">{avg_ls:+.2%}</div>
+    </div>""", unsafe_allow_html=True)
+    q3.markdown(f"""<div class="metric-box">
+        <div class="metric-label">{tr("sum.precision")}</div>
+        <div class="metric-value {'pos' if avg_precision > 0.5 else 'neg'}">{avg_precision:.1%}</div>
+    </div>""", unsafe_allow_html=True)
+    pf_clr = "pos" if profit_factor > 1.5 else ("neu" if profit_factor > 1 else "neg")
+    pf_str = f"{profit_factor:.2f}" if profit_factor < 100 else "∞"
+    q4.markdown(f"""<div class="metric-box">
+        <div class="metric-label">{tr("sum.profit_factor")}</div>
+        <div class="metric-value {pf_clr}">{pf_str}</div>
+    </div>""", unsafe_allow_html=True)
+
+    # 선정 초과수익 추이 차트
+    if excess_vs_univ:
+        col_ex, col_ls = st.columns(2)
+        with col_ex:
+            ex_dates = [h["rebalance_date"] for h, u in zip(rebal_hist, univ_avgs) if not np.isnan(u)]
+            clrs = ["#2e7d32" if v > 0 else "#c62828" for v in excess_vs_univ]
+            fig_ex = go.Figure(go.Bar(
+                x=[d.strftime("%Y-%m") for d in ex_dates], y=excess_vs_univ,
+                marker_color=clrs,
+                hovertemplate="%{x}<br>%{y:.2%}<extra></extra>",
+            ))
+            fig_ex.add_hline(y=0, line_color="#555", line_width=1)
+            fig_ex.add_hline(y=avg_excess, line_dash="dash", line_color="#7c4dff",
+                             annotation_text=f"{tr('sum.avg')} {avg_excess:+.2%}", annotation_position="top right")
+            fig_ex.update_layout(**PLOT_CFG, height=200, title=tr("sum.chart_excess"),
+                                 yaxis_tickformat=".1%", margin=dict(l=40, r=10, t=30, b=30))
+            st.plotly_chart(fig_ex, use_container_width=True)
+
+        with col_ls:
+            ls_dates = [h["rebalance_date"] for h, b in zip(rebal_hist, bottom_rets) if not np.isnan(b)]
+            clrs2 = ["#2e7d32" if v > 0 else "#c62828" for v in ls_spreads]
+            fig_ls = go.Figure(go.Bar(
+                x=[d.strftime("%Y-%m") for d in ls_dates], y=ls_spreads,
+                marker_color=clrs2,
+                hovertemplate="%{x}<br>%{y:.2%}<extra></extra>",
+            ))
+            fig_ls.add_hline(y=0, line_color="#555", line_width=1)
+            fig_ls.add_hline(y=avg_ls, line_dash="dash", line_color="#7c4dff",
+                             annotation_text=f"{tr('sum.avg')} {avg_ls:+.2%}", annotation_position="top right")
+            fig_ls.update_layout(**PLOT_CFG, height=200, title=tr("sum.chart_longshort"),
+                                 yaxis_tickformat=".1%", margin=dict(l=40, r=10, t=30, b=30))
+            st.plotly_chart(fig_ls, use_container_width=True)
+
+    # ════════════════════════════════════════════════════════
+    # SECTION 4: 거래 효율 & 승률
+    # ════════════════════════════════════════════════════════
+    st.markdown(f'<div class="section-hdr">{tr("sum.sec_trade")}</div>', unsafe_allow_html=True)
+    turnover_vals = [h["turnover"] for h in rebal_hist if "turnover" in h]
+    avg_to = np.mean(turnover_vals) if turnover_vals else 0
+    win_cnt = sum(1 for r in period_returns if r > 0)
+    win_rate = win_cnt / len(period_returns) if period_returns else 0
+    avg_ret = float(np.mean(period_returns)) if period_returns else 0
+
+    t1, t2, t3, t4 = st.columns(4)
+    t1.markdown(f"""<div class="metric-box"><div class="metric-label">{tr("sum.n_rebal")}</div>
+        <div class="metric-value neu">{len(rebal_hist)}{tr("sum.unit_times")}</div></div>""", unsafe_allow_html=True)
+    t2.markdown(f"""<div class="metric-box"><div class="metric-label">{tr("tk.win_rate")}</div>
+        <div class="metric-value {'pos' if win_rate > 0.5 else 'neg'}">{win_rate:.1%}</div></div>""", unsafe_allow_html=True)
+    t3.markdown(f"""<div class="metric-box"><div class="metric-label">{tr("tk.avg_return")}</div>
+        <div class="metric-value {'pos' if avg_ret > 0 else 'neg'}">{avg_ret:.2%}</div></div>""", unsafe_allow_html=True)
+    t4.markdown(f"""<div class="metric-box"><div class="metric-label">{tr("metric.avg_to")}</div>
+        <div class="metric-value {'pos' if avg_to < 0.5 else 'neg'}">{avg_to:.1%}</div></div>""", unsafe_allow_html=True)
+
+    # ════════════════════════════════════════════════════════
+    # SECTION 5: 최근 리밸런싱 + AI 추천
+    # ════════════════════════════════════════════════════════
+    col_recent, col_rec = st.columns(2)
+
+    with col_recent:
+        st.markdown(f'<div class="section-hdr">{tr("sum.sec_recent")}</div>', unsafe_allow_html=True)
+        if rebal_hist:
+            h = rebal_hist[-1]
+            ret_c = "pos" if h["port_return"] > 0 else "neg"
+            st.markdown(
+                f'**{h["rebalance_date"].strftime("%Y-%m-%d")}** → '
+                f'{h["next_date"].strftime("%Y-%m-%d")} · '
+                f'{tr("rh.period_return")}: <span class="{ret_c}" style="font-weight:700;">{h["port_return"]:.2%}</span>',
+                unsafe_allow_html=True,
+            )
+            tdf = h.get("ticker_df", pd.DataFrame())
+            if not tdf.empty:
+                priority = ["ticker", "비중"]
+                if is_ensemble:
+                    priority += ["평균순위", "실제수익률"]
+                else:
+                    priority += ["예측수익률", "실제수익률"]
+                show_cols = [c for c in priority if c in tdf.columns]
+                disp = tdf[show_cols].copy()
+                if "실제수익률" in disp.columns:
+                    disp["실제수익률"] = disp["실제수익률"].apply(
+                        lambda x: f"{x:.2%}" if pd.notna(x) and isinstance(x, float) else x)
+                st.dataframe(disp, use_container_width=True, hide_index=True, height=260)
+
+    with col_rec:
+        st.markdown(f'<div class="section-hdr">{tr("sec.ai_picks")}</div>', unsafe_allow_html=True)
+        model_rf      = results.get("last_model_rf")
+        model_xgb     = results.get("last_model_xgb")
+        model_lgbm    = results.get("last_model_lgbm")
+        last_imputer  = results.get("last_imputer")
+        last_avail_cols = results.get("last_avail_cols", [])
+        last_all_cols   = results.get("last_all_cols", [])
+        last_win_bounds = results.get("last_win_bounds", {})
+        last_miss_src   = results.get("last_miss_src", [])
+        _cfg = st.session_state.get("cfg") or {}
+        _use_inv_vol = _cfg.get("use_inv_vol_weight", False)
+
+        if (model_rf is not None and last_imputer is not None
+                and last_all_cols and price_data and tech_map is not None
+                and fund_map is not None):
+            all_max = [ohlcv.index.max() for ohlcv in price_data.values() if len(ohlcv) > 0]
+            latest_date = max(all_max) if all_max else pd.Timestamp.today()
+            st.caption(f"{tr('pk.as_of')}: {latest_date.strftime('%Y-%m-%d')}")
+
+            cur_snap = build_snapshot_df(
+                list(price_data.keys()), tech_map, fund_map, latest_date,
+                pit_map=pit_map, price_data=price_data,
+            )
+            if not cur_snap.empty:
+                cur_snap = enrich_snapshot(
+                    cur_snap, latest_date,
+                    spy_close=spy_close, vix_close=vix_close,
+                    sector_map=sector_map,
+                )
+                avail = [c for c in last_avail_cols if c in cur_snap.columns]
+                X_pred = cur_snap[avail].reindex(columns=last_avail_cols)
+                for mc in last_miss_src:
+                    X_pred[f"{mc}_miss"] = X_pred[mc].isna().astype(int) if mc in X_pred.columns else 0
+                X_pred = X_pred.reindex(columns=last_all_cols)
+                X_imp = last_imputer.transform(X_pred)
+
+                pred_rf = pd.Series(model_rf.predict(X_imp), index=cur_snap.index)
+                if is_ensemble and model_xgb is not None and model_lgbm is not None:
+                    pred_xgb  = pd.Series(model_xgb.predict(X_imp), index=cur_snap.index)
+                    pred_lgbm = pd.Series(model_lgbm.predict(X_imp), index=cur_snap.index)
+                    avg_rank = (pred_rf.rank(ascending=False) +
+                                pred_xgb.rank(ascending=False) +
+                                pred_lgbm.rank(ascending=False)) / 3
+                    composite = -avg_rank
+                else:
+                    composite = pred_rf
+
+                _use_mom = _cfg.get("use_mom_filter", True)
+                if _use_mom and "Mom_1m" in cur_snap.columns:
+                    mom_ok = cur_snap["Mom_1m"] > 0
+                    filtered = composite[composite.index.isin(cur_snap[mom_ok].index)]
+                    top = filtered.nlargest(n_stocks) if len(filtered) >= n_stocks else composite.nlargest(n_stocks)
+                else:
+                    top = composite.nlargest(n_stocks)
+
+                # 비중 계산 (역변동성 ON이면)
+                _rec_weights = {}
+                if _use_inv_vol and "Volatility_30d" in cur_snap.columns:
+                    vols = {}
+                    for t in top.index:
+                        v = cur_snap.loc[t, "Volatility_30d"] if t in cur_snap.index else np.nan
+                        vols[t] = v if (not np.isnan(v) and v > 0) else 0.30
+                    inv_v = {t: 1 / v for t, v in vols.items()}
+                    total_iv = sum(inv_v.values())
+                    _rec_weights = {t: iv / total_iv for t, iv in inv_v.items()}
+
+                rec_rows = []
+                for t in top.index:
+                    row = {tr("ax.ticker"): t}
+                    if _use_inv_vol and _rec_weights:
+                        row["비중"] = f"{_rec_weights.get(t, 0):.1%}"
+                    for col_name, fmt in [
+                        ("Mom_1m","pct"), ("Mom_3m","pct"), ("Mom_6m","pct"), ("Mom_12m","pct"),
+                    ]:
+                        if col_name in cur_snap.columns and t in cur_snap.index:
+                            v = cur_snap.loc[t, col_name]
+                            row[FEAT_NAMES.get(col_name, col_name)] = f"{v:.1%}" if not pd.isna(v) else "N/A"
+                    rec_rows.append(row)
+                st.dataframe(pd.DataFrame(rec_rows), use_container_width=True,
+                             hide_index=True, height=260)
+            else:
+                st.info(tr("msg.no_features"))
+        else:
+            st.info(tr("msg.run_first"))
+
+    # ════════════════════════════════════════════════════════
+    # SECTION 6: 지표 중요도 TOP 10
+    # ════════════════════════════════════════════════════════
+    st.markdown(f'<div class="section-hdr">{tr("sec.feat_top10")}</div>', unsafe_allow_html=True)
+    if not fimp.empty:
+        latest_imp = fimp.iloc[-1].sort_values(ascending=False).head(10)
+        names = [FEAT_NAMES.get(f, f) for f in latest_imp.index]
+        fig_imp = go.Figure(go.Bar(
+            x=latest_imp.values[::-1], y=names[::-1], orientation="h",
+            marker=dict(color=latest_imp.values[::-1], colorscale="Viridis"),
+            hovertemplate="%{y}<br>%{x:.4f}<extra></extra>",
+        ))
+        fig_imp.update_layout(
+            **PLOT_CFG, height=260, margin=dict(l=120, r=10, t=5, b=5),
+        )
+        fig_imp.update_yaxes(tickfont=dict(size=10))
+        st.plotly_chart(fig_imp, use_container_width=True)
+
+    # ════════════════════════════════════════════════════════
+    # SECTION 7: 리밸런싱별 수익률
+    # ════════════════════════════════════════════════════════
+    if period_returns:
+        st.markdown(f'<div class="section-hdr">{tr("sec.real_returns")}</div>', unsafe_allow_html=True)
+        dates_str = [h["rebalance_date"].strftime("%Y-%m") for h in rebal_hist]
+        colors_bar = ["#2e7d32" if r > 0 else "#c62828" for r in period_returns]
+        fig_bar = go.Figure(go.Bar(
+            x=dates_str, y=period_returns, marker_color=colors_bar,
+            hovertemplate="%{x}<br>%{y:.2%}<extra></extra>",
+        ))
+        fig_bar.add_hline(y=0, line_color="#555", line_width=1)
+        fig_bar.add_hline(y=avg_ret, line_dash="dash", line_color="#7c4dff",
+                          annotation_text=f"{tr('sum.avg')} {avg_ret:.2%}", annotation_position="top right")
+        fig_bar.update_layout(**PLOT_CFG, height=220, yaxis_tickformat=".1%",
+                              margin=dict(l=40, r=10, t=10, b=30))
+        st.plotly_chart(fig_bar, use_container_width=True)
 
 
 # ═══════════════════════════════════════════════════════════
@@ -2867,47 +3350,37 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
 
     ALL_CAP_TIERS = ["Large Cap", "Mid Cap", "Small Cap"]
 
-    with st.expander(tr("settings.expand"), expanded=True):
+    # st.form: 모든 위젯 변경이 Run 클릭 전까지 리런을 유발하지 않음
+    with st.form("backtest_settings"):
 
-        # ── Row 0: Market Cap Tier ────────────────────────────
-        st.markdown(tr("settings.cap_tier"))
-        sel_cap = st.multiselect(
-            "Cap Tier",
-            ALL_CAP_TIERS,
-            default=["Large Cap"],
-            label_visibility="collapsed",
-            help=tr("settings.cap_help"),
-        )
-        if not sel_cap:
-            sel_cap = ["Large Cap"]
-
-        cap_filtered = sp1500_df[sp1500_df["cap_tier"].isin(sel_cap)]
-
-        # ── Row 1: Sector selection ───────────────────────────
-        st.markdown(tr("settings.sector"))
-        default_sectors = ["Information Technology"] if "Information Technology" in all_sectors else all_sectors[:1]
-        sel_sectors = st.multiselect(
-            tr("settings.sector_label"),
-            all_sectors,
-            default=default_sectors,
-            label_visibility="collapsed",
-            help=tr("settings.sector_help"),
-        )
-        if not sel_sectors:
-            sel_sectors = all_sectors[:2]
-
-        universe = cap_filtered[cap_filtered["sector"].isin(sel_sectors)]["ticker"].tolist()
-
-        tier_counts = cap_filtered[cap_filtered["sector"].isin(sel_sectors)]["cap_tier"].value_counts()
-        tier_str = " · ".join(
-            tr("settings.tier_n", tier=ti, n=ci) for ti, ci in tier_counts.items()
-        )
-        st.caption(tr("settings.universe", count=len(universe), tier_str=tier_str))
+        # ── Universe: Cap Tier + Sector ───────────────────────
+        uc1, uc2 = st.columns(2)
+        with uc1:
+            st.markdown(tr("settings.cap_tier"))
+            sel_cap = st.multiselect(
+                "Cap Tier",
+                ALL_CAP_TIERS,
+                default=["Large Cap"],
+                label_visibility="collapsed",
+                help=tr("settings.cap_help"),
+            )
+        with uc2:
+            st.markdown(tr("settings.sector"))
+            _SELECT_ALL = tr("settings.select_all_sectors")
+            _sector_options = [_SELECT_ALL] + list(all_sectors)
+            default_sectors = ["Information Technology"] if "Information Technology" in all_sectors else all_sectors[:1]
+            _raw_sel = st.multiselect(
+                tr("settings.sector_label"),
+                _sector_options,
+                default=default_sectors,
+                label_visibility="collapsed",
+                help=tr("settings.sector_help"),
+            )
 
         st.markdown("---")
 
-        # ── Row 2: Core parameters ────────────────────────────
-        c1, c2, c3, c4 = st.columns(4)
+        # ── Core parameters (3 columns) ──────────────────────
+        c1, c2, c3 = st.columns(3)
         with c1:
             rebal_m = st.slider(
                 tr("settings.rebal"), 1, 12, 1, 1,
@@ -2920,45 +3393,45 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
             )
         with c3:
             n_stocks = st.slider(tr("settings.n_stocks"), 1, 20, 5, 1)
-        with c4:
-            tc_pct = st.number_input(
-                tr("settings.tc_pct"), min_value=0.0, max_value=5.0,
-                value=0.3, step=0.05, format="%.2f",
-                help=tr("settings.tc_help"),
-            )
 
-        # ── Row 3: Date range ─────────────────────────────────
+        # ── Date range ───────────────────────────────────────
+        MIN_TEST = 5
+        auto_end = datetime.today()
+        # form 내에서는 슬라이더 값이 기본값으로 계산됨 (리런 전까지)
+        _default_months = (12 + MIN_TEST) * 1 + 12  # defaults: rolling=12, rebal=1
+        auto_start = auto_end - timedelta(days=int(_default_months * 30.5))
+
+        dc1, dc2 = st.columns(2)
+        sd = dc1.date_input(tr("settings.start_date"), value=auto_start.date())
+        ed = dc2.date_input(tr("settings.end_date"), value=auto_end.date())
+        st.caption(tr("settings.form_date_hint"))
+
         st.markdown("---")
-        MIN_TEST    = 5   # minimum number of test periods
-        auto_months = (rolling_w + MIN_TEST) * rebal_m + 12  # +12 month indicator warm-up
-        auto_end    = datetime.today()
-        auto_start  = auto_end - timedelta(days=int(auto_months * 30.5))
 
-        use_custom = st.checkbox(tr("settings.use_custom_date"), value=False)
-        if use_custom:
-            dc1, dc2 = st.columns(2)
-            sd = dc1.date_input(tr("settings.start_date"), value=auto_start.date())
-            ed = dc2.date_input(tr("settings.end_date"), value=auto_end.date(), min_value=sd)
-        else:
-            sd = auto_start.date()
-            ed = auto_end.date()
-            st.info(tr(
-                "settings.auto_date",
-                sd=sd, ed=ed, months=auto_months, min_test=MIN_TEST, rebal=rebal_m,
-            ))
-
-        # ── Row 4: Advanced settings ─────────────────────────
-        st.markdown("---")
-        st.markdown(tr("settings.advanced"))
-        ac1, ac2, ac3 = st.columns(3)
+        # ── Advanced: Data Quality ───────────────────────────
+        st.markdown(
+            f'<div style="font-size:0.8rem;font-weight:600;color:#94a3b8;'
+            f'text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;">'
+            f'📊 {tr("settings.adv_data_quality")}</div>',
+            unsafe_allow_html=True,
+        )
+        ac1, ac2, ac3, ac4 = st.columns(4)
         with ac1:
-            min_dollar_vol = st.number_input(
+            _VOL_OPTIONS = {
+                tr("settings.vol_no_filter"): 0,
+                "$1,000,000":   1_000_000,
+                "$5,000,000":   5_000_000,
+                "$10,000,000":  10_000_000,
+                "$50,000,000":  50_000_000,
+                "$100,000,000": 100_000_000,
+            }
+            vol_label = st.selectbox(
                 tr("settings.min_dollar_vol"),
-                min_value=0, max_value=100_000_000,
-                value=10_000_000, step=500_000,
-                format="%d",
+                list(_VOL_OPTIONS.keys()),
+                index=3,
                 help=tr("settings.min_dv_help"),
             )
+            min_dollar_vol = _VOL_OPTIONS[vol_label]
         with ac2:
             exec_close_label = tr("settings.exec_close")
             exec_next_label = tr("settings.exec_next_open")
@@ -2969,31 +3442,74 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
                 help=tr("settings.exec_help"),
             )
         with ac3:
+            tc_pct = st.number_input(
+                tr("settings.tc_pct"), min_value=0.0, max_value=5.0,
+                value=0.3, step=0.05, format="%.2f",
+                help=tr("settings.tc_help"),
+            )
+        with ac4:
             use_surv_fix = st.checkbox(
-                tr("settings.surv_fix"),
-                value=("Large Cap" in sel_cap),
+                "📜 " + tr("settings.surv_fix"),
+                value=True,
                 help=tr("settings.surv_help"),
-                disabled=("Large Cap" not in sel_cap),
             )
         use_next_open = (exec_price == exec_next_label)
 
-        ac4, ac5 = st.columns(2)
-        with ac4:
+        st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
+
+        # ── Advanced: Strategy Options ───────────────────────
+        st.markdown(
+            f'<div style="font-size:0.8rem;font-weight:600;color:#94a3b8;'
+            f'text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;">'
+            f'🎯 {tr("settings.adv_strategy")}</div>',
+            unsafe_allow_html=True,
+        )
+        sk1, sk2, sk3, sk4 = st.columns(4)
+        with sk1:
             use_ensemble = st.checkbox(
-                tr("settings.ensemble"),
+                "🤖 " + tr("settings.ensemble"),
                 value=False,
                 help=tr("settings.ensemble_help"),
             )
-
-        # ── Row 5: Run button (bottom, centered) ──────────────
-        st.markdown("---")
-        rb1, rb2, rb3 = st.columns([1, 2, 1])
-        with rb2:
-            run_btn = st.button(
-                tr("settings.run_btn"),
-                type="primary",
-                use_container_width=True,
+        with sk2:
+            use_turnover_buffer = st.checkbox(
+                "🔄 " + tr("settings.turnover_buffer"),
+                value=True,
+                help=tr("settings.turnover_buffer_help"),
             )
+        with sk3:
+            use_mom_filter = st.checkbox(
+                "📈 " + tr("settings.mom_filter"),
+                value=False,
+                help=tr("settings.mom_filter_help"),
+            )
+        with sk4:
+            use_inv_vol_weight = st.checkbox(
+                "⚖️ " + tr("settings.inv_vol"),
+                value=False,
+                help=tr("settings.inv_vol_help"),
+            )
+
+        # ── Run button (form submit) ─────────────────────────
+        st.markdown("---")
+        run_btn = st.form_submit_button(
+            tr("settings.run_btn"),
+            type="primary",
+            use_container_width=True,
+        )
+
+    # ── form 밖에서 값 후처리 ─────────────────────────────
+    if not sel_cap:
+        sel_cap = ["Large Cap"]
+    if _SELECT_ALL in _raw_sel:
+        sel_sectors = list(all_sectors)
+    else:
+        sel_sectors = [s for s in _raw_sel if s != _SELECT_ALL]
+        if not sel_sectors:
+            sel_sectors = all_sectors[:2]
+
+    cap_filtered = sp1500_df[sp1500_df["cap_tier"].isin(sel_cap)]
+    universe = cap_filtered[cap_filtered["sector"].isin(sel_sectors)]["ticker"].tolist()
 
     return {
         "cap_tiers":      sel_cap,
@@ -3010,7 +3526,10 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
         "min_dollar_vol": min_dollar_vol,
         "use_next_open":  use_next_open,
         "use_surv_fix":   use_surv_fix and ("Large Cap" in sel_cap),
-        "use_ensemble":   use_ensemble,
+        "use_ensemble":          use_ensemble,
+        "use_mom_filter":        use_mom_filter,
+        "use_turnover_buffer":   use_turnover_buffer,
+        "use_inv_vol_weight":    use_inv_vol_weight,
     }
 
 
@@ -3237,6 +3756,9 @@ def main():
             spy_close=spy_close,
             vix_close=vix_close,
             sector_map=sector_map,
+            use_mom_filter=cfg.get("use_mom_filter", True),
+            use_turnover_buffer=cfg.get("use_turnover_buffer", False),
+            use_inv_vol_weight=cfg.get("use_inv_vol_weight", False),
         )
 
         # 6. 벤치마크 데이터
@@ -3288,6 +3810,7 @@ def main():
         st.caption(tr("caption.rf", rf=rf_rate))
 
         tabs = st.tabs([
+            tr("tab.summary"),
             tr("tab.performance"),
             tr("tab.ic"),
             tr("tab.history"),
@@ -3298,18 +3821,27 @@ def main():
         ])
 
         with tabs[0]:
-            tab_performance(results, benchmarks, price_data, rf=rf_rate)
+            tab_summary(results, benchmarks, price_data,
+                        fund_map=fund_map, tech_map=tech_map,
+                        n_stocks=saved_cfg.get("n_stocks", 5),
+                        rf=rf_rate,
+                        pit_map=st.session_state.get("pit_map"),
+                        spy_close=st.session_state.get("spy_close"),
+                        vix_close=st.session_state.get("vix_close"),
+                        sector_map=st.session_state.get("sector_map"))
         with tabs[1]:
-            tab_ic(results)
+            tab_performance(results, benchmarks, price_data, rf=rf_rate)
         with tabs[2]:
-            tab_history(results)
+            tab_ic(results)
         with tabs[3]:
-            tab_importance(results)
+            tab_history(results)
         with tabs[4]:
-            tab_heatmap(results)
+            tab_importance(results)
         with tabs[5]:
-            tab_tracking(results, price_data)
+            tab_heatmap(results)
         with tabs[6]:
+            tab_tracking(results, price_data)
+        with tabs[7]:
             tab_realtime(price_data, fund_map, tech_map, results,
                          saved_cfg.get("n_stocks", 10),
                          pit_map=st.session_state.get("pit_map"),

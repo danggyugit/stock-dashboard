@@ -514,6 +514,85 @@ _QUANT_LAB_STRINGS: dict[str, dict[str, str]] = {
                "warm-up 1년 = 약 {months}개월 이상의 기간이 필요합니다. "
                "날짜를 자동 설정으로 변경하거나 시작일을 앞당겨 주세요."),
     },
+
+    # ── Ver4.2: New settings strings ──────────────────────
+    "settings.turnover_buffer":      {"en": "Turnover buffer (prefer existing holdings)",
+                                      "ko": "턴오버 버퍼 (보유 종목 우선)"},
+    "settings.turnover_buffer_help": {
+        "en": ("Gives a 5% bonus score to existing holdings. "
+               "Keeps stocks that slip slightly in rank, reducing unnecessary trades. "
+               "Effect: 30-50% turnover reduction → lower transaction costs, less noise trading."),
+        "ko": ("이미 보유 중인 종목에 5% 가산점을 부여합니다. "
+               "순위가 약간 밀려도 기존 보유 종목을 유지하여 불필요한 매매를 줄입니다. "
+               "효과: 턴오버 30~50% 감소 → 거래비용 절약, 노이즈성 교체 방지."),
+    },
+    "settings.mom_filter":      {"en": "Momentum filter (exclude falling stocks)",
+                                 "ko": "모멘텀 필터 (하락 종목 제외)"},
+    "settings.mom_filter_help": {
+        "en": ("Excludes stocks with negative 1-month return from recommendations. "
+               "Even if AI score is high, stocks in a downtrend are filtered out. "
+               "Effect: avoids falling stocks → improves excess return & Profit Factor."),
+        "ko": ("최근 1개월 수익률이 마이너스인 종목을 추천 후보에서 제외합니다. "
+               "AI 점수가 높아도 현재 하락 추세인 종목은 선정하지 않습니다. "
+               "효과: 하락 종목 회피 → 선정 초과수익·Profit Factor 개선."),
+    },
+    "settings.inv_vol":      {"en": "Inverse volatility weighting (Risk-Parity)",
+                              "ko": "역변동성 가중 (Risk-Parity)"},
+    "settings.inv_vol_help": {
+        "en": ("Allocates more weight to lower-volatility stocks. "
+               "E.g., 15% vol → 28% weight, 50% vol → 11% weight. "
+               "Effect: lower MDD, higher Sharpe. But may reduce gains from volatile winners. "
+               "Shows per-stock weight (%) in the Picks tab."),
+        "ko": ("변동성이 낮은 종목에 더 많은 비중을 배분합니다. "
+               "예: 변동성 15% 종목에 28%, 변동성 50% 종목에 11%. "
+               "효과: MDD 축소, Sharpe 개선. 단, 고변동 종목의 급등 수익은 줄어들 수 있습니다. "
+               "추천 탭에서 종목별 투자 비중(%)을 함께 표시합니다."),
+    },
+
+    # ── Ver4.2: Summary tab strings ───────────────────────
+    "tab.summary":          {"en": "🏠 Summary",        "ko": "🏠 요약"},
+    "sum.sec_perf":         {"en": "🏆 Key Performance Summary",
+                             "ko": "🏆 핵심 성과 요약"},
+    "sum.total_return":     {"en": "Total Return",      "ko": "총수익률"},
+    "sum.win_rate":         {"en": "Monthly Win Rate",   "ko": "월승률"},
+    "sum.diff":             {"en": "Diff",               "ko": "차이"},
+    "sum.metrics_compare":  {"en": "📊 Metrics Comparison",
+                             "ko": "📊 성과 지표 비교"},
+    "sum.sec_ic":           {"en": "🎯 IC & Model Predictive Power",
+                             "ko": "🎯 IC & 모델 예측력"},
+    "sum.sec_quality":      {"en": "🎯 Stock Selection Quality",
+                             "ko": "🎯 종목 선정 품질"},
+    "sum.excess_return":    {"en": "Selection Excess Return<br>(Top N − Universe Avg)",
+                             "ko": "선정 초과수익<br>(Top N - 유니버스 평균)"},
+    "sum.long_short":       {"en": "Long-Short Spread<br>(Top N − Bottom N)",
+                             "ko": "롱숏 스프레드<br>(Top N - Bottom N)"},
+    "sum.precision":        {"en": "Hit Rate<br>(Above-Avg Ratio)",
+                             "ko": "적중률<br>(평균 초과 종목 비율)"},
+    "sum.profit_factor":    {"en": "Profit Factor<br>(Gain / Loss)",
+                             "ko": "Profit Factor<br>(총이익 / 총손실)"},
+    "sum.avg":              {"en": "Avg",                "ko": "평균"},
+    "sum.chart_excess":     {"en": "Top N vs Universe Avg (Excess Return)",
+                             "ko": "Top N vs 유니버스 평균 (초과수익)"},
+    "sum.chart_longshort":  {"en": "Long-Short Spread (Top N − Bottom N)",
+                             "ko": "롱숏 스프레드 (Top N - Bottom N)"},
+    "sum.sec_trade":        {"en": "🔄 Trade Efficiency & Win Rate",
+                             "ko": "🔄 거래 효율 & 승률"},
+    "sum.n_rebal":          {"en": "Rebalance Count",    "ko": "리밸런싱 횟수"},
+    "sum.unit_times":       {"en": " runs",              "ko": "회"},
+    "sum.sec_recent":       {"en": "📋 Latest Rebalance",
+                             "ko": "📋 최근 리밸런싱"},
+
+    # ── Ver4.2: Advanced settings section labels ──────────
+    "settings.adv_data_quality": {"en": "Data Quality",
+                                  "ko": "데이터 품질"},
+    "settings.adv_strategy":     {"en": "Strategy Options",
+                                  "ko": "전략 옵션"},
+    "settings.vol_no_filter":    {"en": "$0 (No filter)",
+                                  "ko": "$0 (필터 없음)"},
+    "settings.select_all_sectors": {"en": "Select all sectors",
+                                    "ko": "전체 섹터 선택"},
+    "settings.form_date_hint":  {"en": "💡 Dates auto-adjust based on rolling window & rebalance period at run time.",
+                                 "ko": "💡 날짜는 실행 시 롤링 윈도우·리밸런싱 기간에 맞춰 자동 조정됩니다."},
 }
 
 
