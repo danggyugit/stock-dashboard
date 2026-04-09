@@ -4,13 +4,16 @@ on:
   # Manual trigger from GitHub UI
   workflow_dispatch:
     inputs:
-      with_fundamentals:
-        description: "Also fetch fundamentals (slow, ~5min)"
-        required: false
-        default: "true"
+      mode:
+        description: "Fetch mode"
+        required: true
+        default: "prices_only"
+        type: choice
+        options:
+          - prices_only           # heatmap + stocks only (~3 min)
+          - fundamentals_chunked  # +full S&P 1500 fundamentals (~75 min)
 
-  # Scheduled runs (UTC)
-  # Times in KST = UTC + 9
+  # Scheduled runs (UTC) — prices/heatmap only
   schedule:
     # 22:30 KST (US market open)        = 13:30 UTC
     - cron: "30 13 * * 1-5"
@@ -27,7 +30,8 @@ permissions:
 jobs:
   update-cache:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # 90 min: enough for chunked S&P 1500 fundamentals (~75 min) + slack
+    timeout-minutes: 90
 
     steps:
       - name: Checkout repo
@@ -41,19 +45,23 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install yfinance pandas requests lxml
+          pip install yfinance pandas requests lxml curl_cffi
 
-      - name: Fetch cache (heatmap + stocks only — fundamentals fetched locally)
+      - name: Fetch cache
         run: |
-          # NOTE: yfinance .info (quoteSummary endpoint) is blocked from
-          # GitHub Actions data center IPs (returns 0/1500 tickers).
-          # Fundamentals are fetched manually from a residential IP via the
-          # local Windows Task Scheduler — see scripts/fetch_cache.py for
-          # the --fundamentals flag.
-          # This workflow only refreshes prices + market caps (heatmap).
-          echo "Running prices/heatmap only (fundamentals via local cron)"
+          # Determine the flag based on trigger type:
+          #   - workflow_dispatch with mode=fundamentals_chunked → chunked
+          #   - everything else (cron, manual prices_only)       → prices/heatmap only
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && \
+             [ "${{ github.event.inputs.mode }}" = "fundamentals_chunked" ]; then
+            EXTRA_ARGS="--fundamentals-chunked"
+            echo "Mode: fundamentals_chunked (S&P 1500, ~75 min)"
+          else
+            EXTRA_ARGS=""
+            echo "Mode: prices/heatmap only"
+          fi
           cd streamlit_app
-          python scripts/fetch_cache.py
+          python scripts/fetch_cache.py $EXTRA_ARGS
 
       - name: Commit and push if changed
         run: |

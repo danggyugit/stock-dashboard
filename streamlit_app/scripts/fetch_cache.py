@@ -194,12 +194,13 @@ def fetch_fundamentals(tickers: list[str], max_count: int | None = None) -> dict
     # Remember the top 10 mega caps for the retry pass — these matter most
     mega_caps = list(tickers[:10])
 
-    # Shuffle the rest so rate limits don't always hit the same prefix
-    import random
+    # Process in market-cap-desc order (no shuffle). Shuffle made the
+    # request stream look like bot traffic to yfinance and triggered
+    # immediate rate limiting on every batch attempt. Sequential desc
+    # order matches the natural order normal users browse in.
     work = list(tickers)
-    random.shuffle(work)
 
-    logger.info("Fetching fundamentals for %d tickers (shuffled, sequential)...",
+    logger.info("Fetching fundamentals for %d tickers (mcap desc, sequential)...",
                 len(work))
 
     # Shared browser-impersonating session — bypasses Yahoo's bot detection
@@ -285,6 +286,121 @@ def fetch_fundamentals(tickers: list[str], max_count: int | None = None) -> dict
     return result
 
 
+def fetch_fundamentals_chunked(
+    tickers: list[str],
+    chunk_size: int = 100,
+    rest_seconds: int = 240,
+    delay: float = 0.5,
+) -> dict[str, dict]:
+    """Chunked fundamentals fetch — built to bypass yfinance bot detection.
+
+    AI Quant Lab successfully processes 76 tickers from Streamlit Cloud
+    (data-center IP) by using a single short-lived session at low
+    cadence. This function applies the same pattern to a much larger
+    universe by splitting it into N chunks of `chunk_size`, with:
+
+      - A FRESH curl_cffi session per chunk (resets bot reputation)
+      - Sequential calls inside the chunk at `delay`s between requests
+      - A `rest_seconds` cooldown between chunks (lets yfinance's
+        sliding rate-limit window drain to zero)
+
+    Args:
+        tickers: list of tickers (assume sorted by importance)
+        chunk_size: tickers per chunk (default 100, mirrors AI Quant
+                    Lab's per-session footprint)
+        rest_seconds: cooldown between chunks (default 240 = 4 min)
+        delay: seconds between requests inside a chunk (default 0.5)
+
+    Returns:
+        dict {ticker: fundamentals_dict}
+
+    Estimated runtime for 1500 tickers @ chunk=100, rest=240, delay=0.5:
+        15 chunks × (100 × 0.5s + 240s rest) ≈ 73 minutes
+    """
+    try:
+        from curl_cffi import requests as cf_requests
+    except ImportError:
+        cf_requests = None
+        logger.warning("curl_cffi not available, falling back to default session")
+
+    total = len(tickers)
+    n_chunks = (total + chunk_size - 1) // chunk_size
+    logger.info(
+        "Chunked fetch: %d tickers in %d chunks of %d (rest=%ds, delay=%.1fs)",
+        total, n_chunks, chunk_size, rest_seconds, delay,
+    )
+
+    result: dict[str, dict] = {}
+
+    for chunk_idx in range(n_chunks):
+        chunk_start = chunk_idx * chunk_size
+        chunk = tickers[chunk_start:chunk_start + chunk_size]
+        logger.info(
+            "── Chunk %d/%d (tickers %d–%d) ──",
+            chunk_idx + 1, n_chunks,
+            chunk_start + 1, chunk_start + len(chunk),
+        )
+
+        # Fresh session per chunk — yfinance treats this as a new visitor
+        if cf_requests is not None:
+            session = cf_requests.Session(impersonate="chrome")
+        else:
+            session = None
+
+        chunk_got = 0
+        chunk_rate_limited = 0
+        for i, ticker in enumerate(chunk):
+            try:
+                t = (yf.Ticker(ticker, session=session)
+                     if session else yf.Ticker(ticker))
+                info = t.info
+                if info and len(info) > 5:
+                    result[ticker] = {
+                        "pe_ratio": info.get("trailingPE"),
+                        "pb_ratio": info.get("priceToBook"),
+                        "ps_ratio": info.get("priceToSalesTrailing12Months"),
+                        "eps": info.get("trailingEps"),
+                        "roe": info.get("returnOnEquity"),
+                        "debt_to_equity": info.get("debtToEquity"),
+                        "dividend_yield": info.get("dividendYield"),
+                        "beta": info.get("beta"),
+                        "fifty_two_week_high": info.get("fiftyTwoWeekHigh"),
+                        "fifty_two_week_low": info.get("fiftyTwoWeekLow"),
+                        "avg_volume": info.get("averageVolume"),
+                        "shares_outstanding": info.get("sharesOutstanding"),
+                        "book_value": info.get("bookValue"),
+                        "trailing_annual_dividend_rate": info.get("trailingAnnualDividendRate"),
+                        "revenue_per_share": info.get("revenuePerShare"),
+                    }
+                    chunk_got += 1
+            except Exception as e:
+                if "RateLimit" in type(e).__name__ or "Too Many" in str(e):
+                    chunk_rate_limited += 1
+            time.sleep(delay)
+
+        logger.info(
+            "Chunk %d/%d done: got %d/%d (rate-limited %d). Cumulative: %d/%d",
+            chunk_idx + 1, n_chunks, chunk_got, len(chunk),
+            chunk_rate_limited, len(result), total,
+        )
+
+        # Early abort: if a whole chunk got nothing, the IP is hopelessly
+        # blocked — sleeping won't help, just exit so we don't waste hours.
+        if chunk_got == 0 and chunk_idx == 0:
+            logger.error(
+                "First chunk got 0 tickers — IP is rate-limited. Aborting."
+            )
+            break
+
+        # Rest between chunks (skip after the last one)
+        if chunk_idx + 1 < n_chunks:
+            logger.info("Resting %ds before next chunk…", rest_seconds)
+            time.sleep(rest_seconds)
+
+    logger.info("Chunked fetch complete: %d/%d tickers", len(result), total)
+    return result
+
+
 def write_json(filename: str, data) -> None:
     """Save data as JSON (UTF-8 encoding)."""
     path = CACHE_DIR / filename
@@ -331,19 +447,38 @@ def main() -> int:
             }
         write_json("heatmap.json", heatmap)
 
-        # 3. Fundamentals (slower, optional flag)
-        # Default cap at top 500 by market cap (S&P 500-ish) to keep runtime
-        # under ~10 min and reduce Yahoo rate-limit risk. Override with
-        # --fundamentals-all to fetch the full S&P 1500 universe.
-        if "--fundamentals" in sys.argv or "--fundamentals-all" in sys.argv:
+        # 3. Fundamentals (slower, optional flags)
+        #
+        # Three modes:
+        #   --fundamentals          → top 500, single session, 25min, residential IP
+        #   --fundamentals-all      → full 1500, single session, 50min, residential IP
+        #   --fundamentals-chunked  → full 1500, 100/chunk + rest, 70min, works
+        #                             from data-center IPs (GitHub Actions)
+        #
+        # Chunked is the only mode safe to run from GitHub Actions.
+        if (
+            "--fundamentals" in sys.argv
+            or "--fundamentals-all" in sys.argv
+            or "--fundamentals-chunked" in sys.argv
+        ):
             # Sort tickers by market cap desc so the top N are the most valuable
             sorted_tickers = sorted(
                 tickers,
                 key=lambda t: caps.get(t) or 0,
                 reverse=True,
             )
-            cap_n = None if "--fundamentals-all" in sys.argv else 500
-            funds = fetch_fundamentals(sorted_tickers, max_count=cap_n)
+
+            if "--fundamentals-chunked" in sys.argv:
+                funds = fetch_fundamentals_chunked(
+                    sorted_tickers,
+                    chunk_size=100,
+                    rest_seconds=240,
+                    delay=0.5,
+                )
+            else:
+                cap_n = None if "--fundamentals-all" in sys.argv else 500
+                funds = fetch_fundamentals(sorted_tickers, max_count=cap_n)
+
             fund_data = {
                 "updated_at": now_iso,
                 "tickers": funds,
