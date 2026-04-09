@@ -479,11 +479,35 @@ def main() -> int:
                 cap_n = None if "--fundamentals-all" in sys.argv else 500
                 funds = fetch_fundamentals(sorted_tickers, max_count=cap_n)
 
-            fund_data = {
-                "updated_at": now_iso,
-                "tickers": funds,
-            }
-            write_json("fundamentals.json", fund_data)
+            # Safety: refuse to overwrite an existing non-empty cache with
+            # an empty/tiny result. This prevents accidental data loss when
+            # the IP is rate-limited and we got 0/N tickers.
+            existing_count = 0
+            try:
+                existing_path = CACHE_DIR / "fundamentals.json"
+                if existing_path.exists():
+                    existing = json.loads(existing_path.read_text(encoding="utf-8"))
+                    existing_count = len(existing.get("tickers") or {})
+            except Exception:
+                pass
+
+            if len(funds) == 0:
+                logger.error(
+                    "Fundamentals fetch returned 0 tickers — keeping existing "
+                    "cache (%d tickers) instead of overwriting.", existing_count,
+                )
+            elif existing_count > 0 and len(funds) < existing_count // 2:
+                logger.error(
+                    "Fundamentals fetch returned %d tickers, less than half of "
+                    "existing %d — keeping existing cache to avoid regression.",
+                    len(funds), existing_count,
+                )
+            else:
+                fund_data = {
+                    "updated_at": now_iso,
+                    "tickers": funds,
+                }
+                write_json("fundamentals.json", fund_data)
 
         # 4. Meta
         meta = {
