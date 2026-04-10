@@ -9,7 +9,7 @@ from datetime import date, timedelta
 
 from services.portfolio_service import (
     create_portfolio, get_portfolios, delete_portfolio,
-    add_trade, delete_trade, get_trades,
+    add_trade, update_trade, delete_trade, get_trades,
     get_holdings, get_allocation, get_performance,
     get_dividends, get_tax_summary,
 )
@@ -440,35 +440,51 @@ with tab_holdings:
 with tab_trades:
     st.subheader(tr("pf.add_trade"))
 
-    # Single form: every input lives inside it so the page does NOT
-    # rerun on each keystroke / date change. yfinance auto-price lookup
-    # only fires once on submit.
-    with st.form("add_trade", clear_on_submit=True):
-        # Row 1: portfolio + type + ticker + date
-        r1c1, r1c2, r1c3, r1c4 = st.columns([2, 1, 2, 2])
-        with r1c1:
-            active_pf = st.selectbox(
-                tr("pf.portfolio_name"), all_ids,
-                format_func=lambda x: pf_options[x], key="trade_target",
-            )
-        with r1c2:
-            trade_type = st.selectbox(tr("pf.action"), ["BUY", "SELL"], key="trade_type_sel")
-        with r1c3:
-            ticker_input = st.text_input(
-                tr("common.ticker"), placeholder="AAPL", key="trade_ticker"
-            )
-        with r1c4:
-            trade_date_input = st.date_input(
-                tr("pf.date"), value=date.today(), key="trade_date"
-            )
+    # ── Helper: auto-fetch price on ticker + date change ──
+    @st.cache_data(ttl=300, show_spinner=False)
+    def _fetch_close(ticker: str, d: str) -> float:
+        """Get closing price for ticker on date via yfinance."""
+        try:
+            start = pd.Timestamp(d)
+            end = start + timedelta(days=5)
+            hist = yf.Ticker(ticker).history(start=str(start.date()), end=str(end.date()))
+            if not hist.empty:
+                return round(float(hist["Close"].iloc[0]), 2)
+        except Exception:
+            pass
+        return 0.0
 
-        # Row 2: price + qty + commission
+    # Row 1: portfolio + type + ticker + date (outside form for auto-price)
+    r1c1, r1c2, r1c3, r1c4 = st.columns([2, 1, 2, 2])
+    with r1c1:
+        active_pf = st.selectbox(
+            tr("pf.portfolio_name"), all_ids,
+            format_func=lambda x: pf_options[x], key="trade_target",
+        )
+    with r1c2:
+        trade_type = st.selectbox(tr("pf.action"), ["BUY", "SELL"], key="trade_type_sel")
+    with r1c3:
+        ticker_input = st.text_input(
+            tr("common.ticker"), placeholder="AAPL", key="trade_ticker"
+        )
+    with r1c4:
+        trade_date_input = st.date_input(
+            tr("pf.date"), value=date.today(), key="trade_date"
+        )
+
+    # Auto-fetch price when ticker + date are set
+    _auto_price = 0.0
+    _ticker_clean = (ticker_input or "").upper().strip()
+    if _ticker_clean and len(_ticker_clean) <= 5:
+        _auto_price = _fetch_close(_ticker_clean, str(trade_date_input))
+
+    # Row 2: price + qty + commission + submit (form for batch submit)
+    with st.form("add_trade", clear_on_submit=True):
         r2c1, r2c2, r2c3 = st.columns(3)
         with r2c1:
-            # 0 = auto-fill on submit from yfinance close at trade_date
             price = st.number_input(
-                tr("pf.price") + " (0 = auto)",
-                min_value=0.0, value=0.0, step=0.01, format="%.2f",
+                tr("pf.price"),
+                min_value=0.0, value=_auto_price, step=0.01, format="%.2f",
             )
         with r2c2:
             quantity = st.number_input(tr("pf.quantity"), min_value=0.0, step=1.0)
@@ -476,61 +492,151 @@ with tab_trades:
             commission = st.number_input("Commission ($)", min_value=0.0, value=0.0, step=0.01)
 
         note = st.text_input(tr("common.note_optional"))
-        submitted = st.form_submit_button(tr("pf.submit_trade"), type="primary")
+        submitted = st.form_submit_button(tr("pf.submit_trade"), type="primary",
+                                          use_container_width=True)
 
         if submitted:
-            ticker_clean = (ticker_input or "").upper().strip()
-            if not ticker_clean:
+            if not _ticker_clean:
                 st.warning("Enter a ticker.")
             elif quantity <= 0:
                 st.warning("Enter quantity.")
+            elif price <= 0:
+                st.warning("Could not auto-fetch price — please enter manually.")
             else:
-                # Auto-fetch price if user left it at 0
-                final_price = price
-                if final_price <= 0:
-                    try:
-                        start = trade_date_input
-                        end = trade_date_input + timedelta(days=5)
-                        hist = yf.Ticker(ticker_clean).history(
-                            start=str(start), end=str(end)
-                        )
-                        if not hist.empty:
-                            final_price = round(float(hist["Close"].iloc[0]), 2)
-                    except Exception:
-                        pass
+                add_trade(active_pf, {
+                    "ticker": _ticker_clean, "trade_type": trade_type,
+                    "quantity": quantity, "price": price,
+                    "commission": commission,
+                    "trade_date": str(trade_date_input), "note": note or None,
+                })
+                st.success(
+                    f"Added {trade_type} {quantity} {_ticker_clean} @ ${price:.2f}"
+                )
+                st.rerun()
 
-                if final_price <= 0:
-                    st.warning("Could not auto-fetch price — please enter manually.")
-                else:
-                    add_trade(active_pf, {
-                        "ticker": ticker_clean, "trade_type": trade_type,
-                        "quantity": quantity, "price": final_price,
-                        "commission": commission,
-                        "trade_date": str(trade_date_input), "note": note or None,
-                    })
-                    st.success(
-                        f"Added {trade_type} {quantity} {ticker_clean} @ ${final_price:.2f}"
-                    )
-                    st.rerun()
-
+    # ── Trade History (edit/done toggle + per-row delete) ──
     st.subheader(tr("pf.trade_history"))
+
+    # session state for edit mode per trade
+    if "_edit_trades" not in st.session_state:
+        st.session_state._edit_trades = set()
+
+    _COL_WEIGHTS = [1, 0.7, 0.8, 0.8, 0.7, 1, 1.2, 0.5, 0.35]
+    _HDR_LABELS = ["Ticker", "Action", "Qty", "Price", "Comm.", "Date", "Note", "", ""]
+
     for pid in all_ids:
         pf_name = pf_options.get(pid, f"Portfolio {pid}")
         trades = get_trades(pid)
-        if trades:
-            st.caption(f"**{pf_name}**")
-            trade_df = pd.DataFrame(trades)
-            display = ["ticker", "trade_type", "quantity", "price", "commission", "trade_date", "note"]
-            available = [c for c in display if c in trade_df.columns]
-            st.dataframe(trade_df[available], use_container_width=True, hide_index=True)
+        if not trades:
+            continue
 
-            trade_ids = {t["id"]: f"{t['ticker']} {t['trade_type']} {t['quantity']}@{t['price']} ({t['trade_date']})"
-                        for t in trades}
-            with st.expander(tr("pf.delete_trade_from", name=pf_name)):
-                del_tid = st.selectbox(tr("pf.trade_label"), list(trade_ids.keys()),
-                                       format_func=lambda x: trade_ids[x], key=f"del_trade_{pid}")
-                if st.button(tr("pf.delete_trade"), key=f"del_trade_btn_{pid}"):
-                    delete_trade(pid, del_tid)
+        # Portfolio section card
+        st.markdown(
+            f'<div style="background:linear-gradient(135deg,#1e293b,#0f172a);'
+            f'border:1px solid #334155;border-radius:10px;padding:12px 18px;'
+            f'margin:18px 0 8px;">'
+            f'<span style="font-size:1rem;font-weight:700;color:#e2e8f0;">'
+            f'📁 {pf_name}</span>'
+            f'<span style="font-size:0.8rem;color:#64748b;margin-left:10px;">'
+            f'{len(trades)} trades</span></div>',
+            unsafe_allow_html=True,
+        )
+
+        # Column headers
+        hdr = st.columns(_COL_WEIGHTS)
+        for col, label in zip(hdr, _HDR_LABELS):
+            col.markdown(
+                f'<div style="font-size:0.7rem;font-weight:600;color:#64748b;'
+                f'text-transform:uppercase;letter-spacing:0.05em;padding:0 0 4px;">'
+                f'{label}</div>',
+                unsafe_allow_html=True,
+            )
+
+        for t in trades:
+            tid = t["id"]
+            editing = tid in st.session_state._edit_trades
+            cols = st.columns(_COL_WEIGHTS)
+
+            # Ticker + Action (always read-only)
+            cols[0].markdown(
+                f'<div style="font-weight:700;padding:8px 0;">{t["ticker"]}</div>',
+                unsafe_allow_html=True,
+            )
+            _act_color = "#22c55e" if t["trade_type"] == "BUY" else "#ef4444"
+            cols[1].markdown(
+                f'<div style="color:{_act_color};font-weight:600;padding:8px 0;">'
+                f'{t["trade_type"]}</div>',
+                unsafe_allow_html=True,
+            )
+
+            if editing:
+                # Editable inputs
+                new_qty = cols[2].number_input(
+                    "qty", value=float(t["quantity"]), step=1.0,
+                    min_value=0.0, label_visibility="collapsed", key=f"eq_{pid}_{tid}",
+                )
+                new_price = cols[3].number_input(
+                    "price", value=float(t["price"]), step=0.01,
+                    min_value=0.0, format="%.2f", label_visibility="collapsed", key=f"ep_{pid}_{tid}",
+                )
+                new_comm = cols[4].number_input(
+                    "comm", value=float(t["commission"] or 0), step=0.01,
+                    min_value=0.0, format="%.2f", label_visibility="collapsed", key=f"ec_{pid}_{tid}",
+                )
+                new_date = cols[5].date_input(
+                    "date", value=pd.Timestamp(t["trade_date"]).date(),
+                    label_visibility="collapsed", key=f"ed_{pid}_{tid}",
+                )
+                new_note = cols[6].text_input(
+                    "note", value=t["note"] or "",
+                    label_visibility="collapsed", key=f"en_{pid}_{tid}",
+                )
+
+                # Done button — save and exit edit mode
+                with cols[7]:
+                    if st.button("✅", key=f"done_{pid}_{tid}", help="Save & done"):
+                        update_trade(pid, tid, {
+                            "quantity": new_qty, "price": new_price,
+                            "commission": new_comm, "trade_date": str(new_date),
+                            "note": new_note or None,
+                        })
+                        st.session_state._edit_trades.discard(tid)
+                        st.rerun()
+            else:
+                # Read-only display
+                cols[2].markdown(
+                    f'<div style="padding:8px 0;">{t["quantity"]:g}</div>',
+                    unsafe_allow_html=True,
+                )
+                cols[3].markdown(
+                    f'<div style="padding:8px 0;">${t["price"]:.2f}</div>',
+                    unsafe_allow_html=True,
+                )
+                cols[4].markdown(
+                    f'<div style="padding:8px 0;">${(t["commission"] or 0):.2f}</div>',
+                    unsafe_allow_html=True,
+                )
+                cols[5].markdown(
+                    f'<div style="padding:8px 0;">{t["trade_date"]}</div>',
+                    unsafe_allow_html=True,
+                )
+                cols[6].markdown(
+                    f'<div style="padding:8px 0;color:#94a3b8;">'
+                    f'{t["note"] or "—"}</div>',
+                    unsafe_allow_html=True,
+                )
+
+                # Edit button — enter edit mode
+                with cols[7]:
+                    if st.button("✏️", key=f"edit_{pid}_{tid}", help="Edit trade"):
+                        st.session_state._edit_trades.add(tid)
+                        st.rerun()
+
+            # Delete button (always visible)
+            with cols[8]:
+                if st.button("✕", key=f"dl_{pid}_{tid}", help="Delete trade"):
+                    delete_trade(pid, tid)
+                    st.session_state._edit_trades.discard(tid)
                     st.rerun()
 
 # ===== PERFORMANCE TAB =====

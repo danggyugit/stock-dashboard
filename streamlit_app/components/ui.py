@@ -40,6 +40,22 @@ section[data-testid="stSidebar"] [data-testid="stSidebarUserContent"] {
 }
 
 /* ============================================ */
+/* Nav section separators — visual distinction   */
+/* ============================================ */
+[data-testid="stSidebarNavSeparator"] {
+    margin-top: 12px !important;
+    padding-top: 10px !important;
+    border-top: 1px solid rgba(100, 116, 139, 0.25) !important;
+}
+[data-testid="stSidebarNavSeparator"] span {
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    color: #64748b !important;
+}
+
+/* ============================================ */
 /* Highlight the AI Quant Lab nav item — it's    */
 /* the flagship feature of the app.              */
 /* Streamlit renders nav items as <a> tags whose */

@@ -8,6 +8,7 @@ import pandas as pd
 from services.sentiment_service import (
     get_fear_greed, get_market_news, get_stock_news,
     analyze_with_ai, generate_report,
+    get_vix_history, get_sector_returns, get_market_breadth, get_risk_on_off,
 )
 from services.auth_service import render_user_sidebar
 from services.i18n import t as tr
@@ -121,6 +122,157 @@ with col2:
 
     if fg.get("updated_at"):
         st.caption(tr("sent.updated_at", ts=fg['updated_at'][:19]))
+
+st.markdown("---")
+
+# ═══════════════════════════════════════════════════════════
+# VIX Trend + Market Breadth (side by side)
+# ═══════════════════════════════════════════════════════════
+vix_col, breadth_col = st.columns(2)
+
+with vix_col:
+    st.subheader("📉 VIX Trend (90D)")
+    vix_df = get_vix_history(90)
+    if not vix_df.empty:
+        fig_vix = go.Figure()
+        fig_vix.add_trace(go.Scatter(
+            x=vix_df["date"], y=vix_df["VIX"],
+            line=dict(color="#EF4444", width=2),
+            fill="tozeroy", fillcolor="rgba(239,68,68,0.1)",
+            hovertemplate="%{x|%m/%d}<br>VIX: %{y:.1f}<extra></extra>",
+        ))
+        # Reference lines
+        fig_vix.add_hline(y=20, line_dash="dash", line_color="#64748b",
+                          annotation_text="20 (Neutral)", annotation_position="bottom right",
+                          annotation_font_size=10, annotation_font_color="#64748b")
+        fig_vix.add_hline(y=30, line_dash="dash", line_color="#F59E0B",
+                          annotation_text="30 (Fear)", annotation_position="bottom right",
+                          annotation_font_size=10, annotation_font_color="#F59E0B")
+        fig_vix.update_layout(
+            height=280, margin=dict(l=0, r=0, t=10, b=0),
+            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            yaxis=dict(gridcolor="rgba(100,116,139,0.2)"),
+            xaxis=dict(gridcolor="rgba(100,116,139,0.1)"),
+            showlegend=False,
+        )
+        st.plotly_chart(fig_vix, use_container_width=True)
+        latest_vix = vix_df["VIX"].iloc[-1]
+        _vix_clr = "#22C55E" if latest_vix < 20 else ("#EAB308" if latest_vix < 30 else "#EF4444")
+        _vix_lbl = "Low Fear" if latest_vix < 20 else ("Elevated" if latest_vix < 30 else "High Fear")
+        st.markdown(
+            f'<div style="text-align:center;font-size:1.3rem;font-weight:700;color:{_vix_clr};">'
+            f'VIX {latest_vix:.1f} — {_vix_lbl}</div>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.caption("VIX data unavailable")
+
+with breadth_col:
+    st.subheader("📊 Market Breadth")
+    breadth = get_market_breadth()
+    if breadth:
+        spread_s = breadth["spread_series"]
+        fig_br = go.Figure()
+        colors = ["#22C55E" if v >= 0 else "#EF4444" for v in spread_s.values]
+        fig_br.add_trace(go.Bar(
+            x=spread_s.index, y=spread_s.values,
+            marker_color=colors,
+            hovertemplate="%{x|%m/%d}<br>%{y:+.1f}%<extra></extra>",
+        ))
+        fig_br.add_hline(y=0, line_color="#64748b", line_width=1)
+        fig_br.update_layout(
+            height=280, margin=dict(l=0, r=0, t=10, b=0),
+            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            yaxis=dict(gridcolor="rgba(100,116,139,0.2)", ticksuffix="%"),
+            xaxis=dict(type="category", gridcolor="rgba(100,116,139,0.1)",
+                       tickvals=spread_s.index[::20],
+                       ticktext=[d.strftime("%m/%d") for d in spread_s.index[::20]]),
+            showlegend=False,
+        )
+        st.plotly_chart(fig_br, use_container_width=True)
+        pct = breadth["above_pct"]
+        _br_clr = "#22C55E" if pct > 0 else "#EF4444"
+        st.markdown(
+            f'<div style="text-align:center;font-size:0.9rem;">'
+            f'S&P 500: <b>${breadth["current_close"]:,.0f}</b> vs '
+            f'SMA200: <b>${breadth["current_sma200"]:,.0f}</b> '
+            f'(<span style="color:{_br_clr};font-weight:700;">{pct:+.1f}%</span>)</div>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.caption("Breadth data unavailable")
+
+st.markdown("---")
+
+# ═══════════════════════════════════════════════════════════
+# Sector Returns Heatmap + Risk-On/Off (side by side)
+# ═══════════════════════════════════════════════════════════
+sector_col, risk_col = st.columns([3, 2])
+
+with sector_col:
+    st.subheader("🏭 Sector Returns")
+    sector_df = get_sector_returns()
+    if not sector_df.empty:
+        # Heatmap-style colored table
+        fig_sec = go.Figure()
+        for col_name, period_label in [("1W %", "1 Week"), ("1M %", "1 Month")]:
+            vals = sector_df[col_name]
+            colors = [f"rgba(34,197,94,{min(abs(v)/5,1)*0.7})" if v >= 0
+                      else f"rgba(239,68,68,{min(abs(v)/5,1)*0.7})" for v in vals]
+            fig_sec.add_trace(go.Bar(
+                y=sector_df["Sector"], x=vals, orientation="h",
+                name=period_label, text=[f"{v:+.1f}%" for v in vals],
+                textposition="inside", textfont=dict(size=11, color="white"),
+                marker_color=colors,
+            ))
+        fig_sec.update_layout(
+            height=380, margin=dict(l=0, r=0, t=10, b=0),
+            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(gridcolor="rgba(100,116,139,0.2)", ticksuffix="%", zeroline=True,
+                       zerolinecolor="#64748b"),
+            yaxis=dict(autorange="reversed"),
+            barmode="group", legend=dict(orientation="h", y=1.05),
+        )
+        st.plotly_chart(fig_sec, use_container_width=True)
+    else:
+        st.caption("Sector data unavailable")
+
+with risk_col:
+    st.subheader("⚖️ Risk-On / Off")
+    risk_df = get_risk_on_off(90)
+    if not risk_df.empty:
+        fig_risk = go.Figure()
+        fig_risk.add_trace(go.Scatter(
+            x=risk_df["date"], y=risk_df["XLY/XLP"],
+            line=dict(color="#3B82F6", width=2),
+            fill="tozeroy", fillcolor="rgba(59,130,246,0.08)",
+            hovertemplate="%{x|%m/%d}<br>XLY/XLP: %{y:.3f}<extra></extra>",
+        ))
+        avg_ratio = risk_df["XLY/XLP"].mean()
+        fig_risk.add_hline(y=avg_ratio, line_dash="dash", line_color="#94a3b8",
+                           annotation_text=f"Avg {avg_ratio:.3f}",
+                           annotation_position="bottom right",
+                           annotation_font_size=10, annotation_font_color="#94a3b8")
+        fig_risk.update_layout(
+            height=340, margin=dict(l=0, r=0, t=10, b=0),
+            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            yaxis=dict(gridcolor="rgba(100,116,139,0.2)"),
+            xaxis=dict(gridcolor="rgba(100,116,139,0.1)"),
+            showlegend=False,
+        )
+        st.plotly_chart(fig_risk, use_container_width=True)
+        latest_r = risk_df["XLY/XLP"].iloc[-1]
+        _risk_label = "Risk-On 📈" if latest_r > avg_ratio else "Risk-Off 📉"
+        _risk_clr = "#22C55E" if latest_r > avg_ratio else "#EF4444"
+        st.markdown(
+            f'<div style="text-align:center;">'
+            f'<span style="font-size:0.8rem;color:#94a3b8;">XLY(경기민감) ÷ XLP(방어) = </span>'
+            f'<span style="font-size:1.1rem;font-weight:700;color:{_risk_clr};">'
+            f'{latest_r:.3f} {_risk_label}</span></div>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.caption("Risk-On/Off data unavailable")
 
 st.markdown("---")
 

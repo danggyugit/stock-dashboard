@@ -155,6 +155,21 @@ def add_trade(portfolio_id: int, data: dict) -> dict:
     return {"id": cur.lastrowid, "portfolio_id": portfolio_id, **data}
 
 
+def update_trade(portfolio_id: int, trade_id: int, data: dict) -> bool:
+    """Update editable fields of a trade."""
+    conn = get_connection()
+    conn.execute(
+        """UPDATE trades
+           SET quantity = ?, price = ?, commission = ?, trade_date = ?, note = ?
+           WHERE id = ? AND portfolio_id = ?""",
+        (data["quantity"], data["price"], data.get("commission", 0.0),
+         data["trade_date"], data.get("note"), trade_id, portfolio_id),
+    )
+    conn.commit()
+    _invalidate_portfolio_caches()
+    return True
+
+
 def delete_trade(portfolio_id: int, trade_id: int) -> bool:
     """Delete a trade."""
     conn = get_connection()

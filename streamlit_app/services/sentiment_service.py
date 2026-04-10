@@ -132,6 +132,135 @@ def get_stock_news(ticker: str) -> list[dict]:
     return articles
 
 
+# ═══════════════════════════════════════════════════════════
+# Market Sentiment Indicators (yfinance-based)
+# ═══════════════════════════════════════════════════════════
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def get_vix_history(days: int = 90) -> pd.DataFrame:
+    """VIX closing prices for the last N days."""
+    import yfinance as yf
+    try:
+        df = yf.download("^VIX", period=f"{days}d", auto_adjust=True, progress=False)
+        if df.empty:
+            return pd.DataFrame()
+        close = df["Close"].squeeze()
+        return pd.DataFrame({"date": close.index, "VIX": close.values})
+    except Exception:
+        return pd.DataFrame()
+
+
+_SECTOR_ETFS = {
+    "XLK": "Technology", "XLF": "Financials", "XLV": "Healthcare",
+    "XLY": "Cons. Disc.", "XLP": "Cons. Staples", "XLE": "Energy",
+    "XLI": "Industrials", "XLB": "Materials", "XLRE": "Real Estate",
+    "XLC": "Comm. Svc.", "XLU": "Utilities",
+}
+
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def get_sector_returns() -> pd.DataFrame:
+    """1-week and 1-month returns for 11 GICS sector ETFs."""
+    import yfinance as yf
+    tickers = list(_SECTOR_ETFS.keys())
+    try:
+        df = yf.download(tickers, period="35d", auto_adjust=True, progress=False)
+        if df.empty:
+            return pd.DataFrame()
+        close = df["Close"]
+        if isinstance(close, pd.Series):
+            close = close.to_frame()
+    except Exception:
+        return pd.DataFrame()
+
+    rows = []
+    for tk, name in _SECTOR_ETFS.items():
+        if tk not in close.columns:
+            continue
+        s = close[tk].dropna()
+        if len(s) < 6:
+            continue
+        ret_1w = (s.iloc[-1] / s.iloc[-5] - 1) * 100 if len(s) >= 6 else np.nan
+        ret_1m = (s.iloc[-1] / s.iloc[0] - 1) * 100
+        rows.append({"Sector": name, "Ticker": tk, "1W %": round(ret_1w, 2), "1M %": round(ret_1m, 2)})
+    return pd.DataFrame(rows)
+
+
+@st.cache_data(ttl=3600, show_spinner=False)
+def get_market_breadth() -> dict:
+    """Percentage of S&P 500 stocks above their 200-day SMA."""
+    import yfinance as yf
+    try:
+        # Use a pre-built breadth indicator proxy
+        # S&P 500 vs SMA200 ratio as breadth estimate
+        df = yf.download("^GSPC", period="250d", auto_adjust=True, progress=False)
+        if df.empty or len(df) < 200:
+            return {}
+        close = df["Close"].squeeze()
+        sma200 = close.rolling(200).mean()
+        # Latest: is S&P above its SMA200?
+        above_pct = (close.iloc[-1] / sma200.iloc[-1] - 1) * 100
+
+        # Build daily breadth-like series: close vs SMA200 spread
+        spread = ((close / sma200) - 1) * 100
+        spread = spread.dropna()
+        return {
+            "above_pct": round(above_pct, 2),
+            "spread_series": spread,
+            "current_close": round(float(close.iloc[-1]), 2),
+            "current_sma200": round(float(sma200.iloc[-1]), 2),
+        }
+    except Exception:
+        return {}
+
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def get_risk_on_off(days: int = 90) -> pd.DataFrame:
+    """XLY/XLP ratio as Risk-On/Off indicator."""
+    import yfinance as yf
+    try:
+        df = yf.download(["XLY", "XLP"], period=f"{days}d", auto_adjust=True, progress=False)
+        if df.empty:
+            return pd.DataFrame()
+        close = df["Close"]
+        ratio = (close["XLY"] / close["XLP"]).dropna()
+        result = pd.DataFrame({"date": ratio.index, "XLY/XLP": ratio.values})
+        return result
+    except Exception:
+        return pd.DataFrame()
+
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def get_money_supply() -> pd.DataFrame:
+    """M1 & M2 money supply from FRED (monthly, seasonally adjusted)."""
+    try:
+        m1_url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=M1SL&cosd=2021-01-01"
+        m2_url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=M2SL&cosd=2021-01-01"
+        m1 = pd.read_csv(m1_url)
+        m2 = pd.read_csv(m2_url)
+        # FRED CSV uses 'observation_date' as the date column
+        m1_date_col = [c for c in m1.columns if "date" in c.lower()][0]
+        m2_date_col = [c for c in m2.columns if "date" in c.lower()][0]
+        m1 = m1.rename(columns={m1_date_col: "date"})
+        m2 = m2.rename(columns={m2_date_col: "date"})
+        m1["date"] = pd.to_datetime(m1["date"])
+        m2["date"] = pd.to_datetime(m2["date"])
+        m1_val_col = [c for c in m1.columns if c != "date"][0]
+        m2_val_col = [c for c in m2.columns if c != "date"][0]
+        m1 = m1.rename(columns={m1_val_col: "M1"})
+        m2 = m2.rename(columns={m2_val_col: "M2"})
+        df = pd.merge(m1[["date", "M1"]], m2[["date", "M2"]], on="date", how="outer").sort_values("date")
+        df["M1"] = pd.to_numeric(df["M1"], errors="coerce")
+        df["M2"] = pd.to_numeric(df["M2"], errors="coerce")
+        df = df.dropna(subset=["M1", "M2"])
+        # Convert billions to trillions for readability
+        df["M1"] = df["M1"] / 1000
+        df["M2"] = df["M2"] / 1000
+        return df
+    except Exception:
+        return pd.DataFrame()
+
+
 def analyze_with_ai(headlines: list[str]) -> list[dict] | None:
     """Run Claude sentiment analysis (user-triggered only)."""
     return _llm_provider.analyze_sentiment(headlines)
