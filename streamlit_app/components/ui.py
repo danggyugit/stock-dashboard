@@ -301,9 +301,6 @@ def render_sidebar_info() -> None:
 
     try:
         conn = get_connection()
-        hm_age = conn.execute(
-            "SELECT updated_at FROM cache_meta WHERE key = 'heatmap'"
-        ).fetchone()
         sc = conn.execute("SELECT COUNT(*) FROM stocks").fetchone()
         stock_count = sc[0] if sc else 0
         fc = conn.execute("SELECT COUNT(*) FROM fundamentals").fetchone()
@@ -311,26 +308,31 @@ def render_sidebar_info() -> None:
         pc = conn.execute("SELECT COUNT(*) FROM portfolios").fetchone()
         portfolio_count = pc[0] if pc else 0
 
-        def _age_label(iso_str: str | None) -> str:
-            if not iso_str:
-                return "never"
-            try:
-                last = datetime.fromisoformat(iso_str)
-                age_h = (datetime.now() - last).total_seconds() / 3600
-                if age_h < 1:
-                    return f"{int(age_h * 60)}m ago"
-                if age_h < 24:
-                    return f"{age_h:.1f}h ago"
-                return f"{int(age_h / 24)}d ago"
-            except Exception:
-                return "?"
+        # Read cache timestamps from JSON files (more accurate than DB)
+        import json
+        from pathlib import Path
+        _cache_dir = Path(__file__).resolve().parent.parent / "data" / "cache"
 
-        hm_label = _age_label(hm_age[0] if hm_age else None)
+        def _cache_date(filename: str) -> str:
+            """Read updated_at from cache JSON, return formatted date string."""
+            try:
+                data = json.loads((_cache_dir / filename).read_text(encoding="utf-8"))
+                iso = data.get("updated_at", "")
+                if not iso:
+                    return "—"
+                dt = datetime.fromisoformat(iso)
+                # Convert UTC to KST (+9)
+                kst = dt + timedelta(hours=9) if dt.tzinfo else dt
+                return kst.strftime("%m/%d %H:%M")
+            except Exception:
+                return "—"
+
+        hm_date = _cache_date("heatmap.json")
+        fund_date = _cache_date("fundamentals.json")
     except Exception:
         st.sidebar.caption("Status unavailable.")
         return
 
-    # Render entire status block in a single markdown call so CSS scoping works
     status_html = f"""
 <style>
 .sb-status {{ margin-top: 14px; padding: 0 4px; }}
@@ -355,6 +357,11 @@ def render_sidebar_info() -> None:
     color: #F8FAFC;
     font-weight: 600;
 }}
+.sb-status .row .val-sub {{
+    color: #64748B;
+    font-size: 11px;
+    font-weight: 400;
+}}
 </style>
 <div class="sb-status">
     <div class="title">Status</div>
@@ -362,7 +369,8 @@ def render_sidebar_info() -> None:
     <div class="row"><span>Stocks</span><span class="val">{stock_count}</span></div>
     <div class="row"><span>Fundamentals</span><span class="val">{fund_count}</span></div>
     <div class="row"><span>Portfolios</span><span class="val">{portfolio_count}</span></div>
-    <div class="row"><span>Heatmap cache</span><span class="val">{hm_label}</span></div>
+    <div class="row"><span>Heatmap</span><span class="val">{hm_date} <span class="val-sub">KST</span></span></div>
+    <div class="row"><span>Fundamentals</span><span class="val">{fund_date} <span class="val-sub">KST</span></span></div>
 </div>
 """
     st.sidebar.markdown(status_html, unsafe_allow_html=True)

@@ -416,6 +416,10 @@ def main() -> int:
     start = time.time()
     now_iso = datetime.now(timezone.utc).isoformat()
 
+    # --fundamentals-only: skip heatmap/prices, just fetch fundamentals
+    # This avoids rate-limit contamination from batch yf.download() calls
+    fundamentals_only = "--fundamentals-only" in sys.argv
+
     try:
         # 1. Stock list (S&P 1500: Large + Mid + Small Cap)
         stocks_df = fetch_sp1500_list()
@@ -425,41 +429,47 @@ def main() -> int:
 
         tickers = stocks_df["ticker"].tolist()
 
-        # Save stocks.json
-        stocks_data = stocks_df.to_dict(orient="records")
-        write_json("stocks.json", stocks_data)
+        if not fundamentals_only:
+            # Save stocks.json
+            stocks_data = stocks_df.to_dict(orient="records")
+            write_json("stocks.json", stocks_data)
 
-        # 2. Heatmap (prices + caps)
-        prices = fetch_batch_prices(tickers)
-        caps = fetch_market_caps(tickers)
+            # 2. Heatmap (prices + caps)
+            prices = fetch_batch_prices(tickers)
+            caps = fetch_market_caps(tickers)
 
-        heatmap = {
-            "updated_at": now_iso,
-            "tickers": {},
-        }
-        for ticker in tickers:
-            row = stocks_df[stocks_df["ticker"] == ticker].iloc[0]
-            heatmap["tickers"][ticker] = {
-                "name": row["name"],
-                "sector": row["sector"],
-                "market_cap": caps.get(ticker),
-                "prices": prices.get(ticker, []),
+            heatmap = {
+                "updated_at": now_iso,
+                "tickers": {},
             }
-        write_json("heatmap.json", heatmap)
+            for ticker in tickers:
+                row = stocks_df[stocks_df["ticker"] == ticker].iloc[0]
+                heatmap["tickers"][ticker] = {
+                    "name": row["name"],
+                    "sector": row["sector"],
+                    "market_cap": caps.get(ticker),
+                    "prices": prices.get(ticker, []),
+                }
+            write_json("heatmap.json", heatmap)
+        else:
+            logger.info("--fundamentals-only: skipping heatmap/prices")
+            caps = {}  # empty — sort by ticker list order
 
         # 3. Fundamentals (slower, optional flags)
         #
-        # Three modes:
-        #   --fundamentals          → top 500, single session, 25min, residential IP
-        #   --fundamentals-all      → full 1500, single session, 50min, residential IP
-        #   --fundamentals-chunked  → full 1500, 100/chunk + rest, 70min, works
-        #                             from data-center IPs (GitHub Actions)
+        # Modes:
+        #   --fundamentals          → top 500, single session, residential IP
+        #   --fundamentals-all      → full 1500, single session, residential IP
+        #   --fundamentals-only     → full 1500, NO heatmap fetch first
+        #   --fundamentals-chunked  → full 1500, 100/chunk + rest, data-center IP
         #
-        # Chunked is the only mode safe to run from GitHub Actions.
+        # --fundamentals-only is the safest for local scheduler — no batch
+        # yf.download() calls that trigger rate limits before .info calls.
         if (
             "--fundamentals" in sys.argv
             or "--fundamentals-all" in sys.argv
             or "--fundamentals-chunked" in sys.argv
+            or fundamentals_only
         ):
             # Sort tickers by market cap desc so the top N are the most valuable
             sorted_tickers = sorted(
@@ -475,19 +485,20 @@ def main() -> int:
                     rest_seconds=240,
                     delay=0.5,
                 )
+            elif fundamentals_only or "--fundamentals-all" in sys.argv:
+                funds = fetch_fundamentals(sorted_tickers, max_count=None)
             else:
-                cap_n = None if "--fundamentals-all" in sys.argv else 500
-                funds = fetch_fundamentals(sorted_tickers, max_count=cap_n)
+                funds = fetch_fundamentals(sorted_tickers, max_count=500)
 
-            # Safety: refuse to overwrite an existing non-empty cache with
-            # an empty/tiny result. This prevents accidental data loss when
-            # the IP is rate-limited and we got 0/N tickers.
+            # Load existing cache for merge / safety check
+            existing_tickers = {}
             existing_count = 0
             try:
                 existing_path = CACHE_DIR / "fundamentals.json"
                 if existing_path.exists():
                     existing = json.loads(existing_path.read_text(encoding="utf-8"))
-                    existing_count = len(existing.get("tickers") or {})
+                    existing_tickers = existing.get("tickers") or {}
+                    existing_count = len(existing_tickers)
             except Exception:
                 pass
 
@@ -496,18 +507,36 @@ def main() -> int:
                     "Fundamentals fetch returned 0 tickers — keeping existing "
                     "cache (%d tickers) instead of overwriting.", existing_count,
                 )
-            elif existing_count > 0 and len(funds) < existing_count // 2:
-                logger.error(
-                    "Fundamentals fetch returned %d tickers, less than half of "
-                    "existing %d — keeping existing cache to avoid regression.",
-                    len(funds), existing_count,
-                )
             else:
-                fund_data = {
-                    "updated_at": now_iso,
-                    "tickers": funds,
-                }
-                write_json("fundamentals.json", fund_data)
+                # Incremental merge: keep existing data, overwrite only
+                # tickers that were successfully fetched this run.
+                # This means partial failures don't wipe out old data.
+                if "--merge" in sys.argv and existing_tickers:
+                    merged = dict(existing_tickers)  # start with old
+                    merged.update(funds)              # overwrite with new
+                    logger.info(
+                        "Incremental merge: %d existing + %d new → %d total "
+                        "(%d updated, %d added)",
+                        existing_count, len(funds), len(merged),
+                        len(set(funds) & set(existing_tickers)),
+                        len(set(funds) - set(existing_tickers)),
+                    )
+                    funds = merged
+                elif existing_count > 0 and len(funds) < existing_count // 2:
+                    logger.error(
+                        "Fundamentals fetch returned %d tickers, less than half "
+                        "of existing %d — keeping existing cache to avoid "
+                        "regression. Use --merge to do incremental update.",
+                        len(funds), existing_count,
+                    )
+                    funds = None  # skip write
+
+                if funds is not None:
+                    fund_data = {
+                        "updated_at": now_iso,
+                        "tickers": funds,
+                    }
+                    write_json("fundamentals.json", fund_data)
 
         # 4. Meta
         meta = {

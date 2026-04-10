@@ -1,15 +1,19 @@
 @echo off
 REM ====================================================================
 REM  Local fundamentals refresh — runs from a residential IP to bypass
-REM  yfinance's data center IP blocks. Schedule weekly via Windows Task
-REM  Scheduler (e.g. Sundays 03:00).
+REM  yfinance's data-center IP blocks.
+REM
+REM  Uses --fundamentals-all --merge:
+REM    - Fetches all S&P 1500 tickers sequentially (0.5s delay)
+REM    - Merges into existing fundamentals.json (partial success OK)
+REM    - Pushes to GitHub → Streamlit Cloud picks up automatically
+REM
+REM  Schedule via Windows Task Scheduler:
+REM    Daily at 11:00 KST
 REM
 REM  Setup:
-REM    1. Win + R -> taskschd.msc
-REM    2. Create Basic Task -> Weekly -> Sunday 03:00
-REM    3. Action: Start a program
-REM    4. Program: c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\update_fundamentals.bat
-REM    5. Check "Run whether user is logged on or not" + "Run with highest privileges"
+REM    Run as Administrator:
+REM    powershell -File scripts\register_scheduler_daily.ps1
 REM ====================================================================
 
 setlocal
@@ -23,8 +27,13 @@ cd /d "%REPO%\streamlit_app" || (
     exit /b 1
 )
 
-echo [%date% %time%] Running fetch_cache.py --fundamentals-all (S^&P 1500) >> "%LOG%"
-python scripts\fetch_cache.py --fundamentals-all >> "%LOG%" 2>&1
+REM Pull latest to avoid push conflicts
+cd /d "%REPO%"
+git pull --rebase origin main >> "%LOG%" 2>&1
+cd /d "%REPO%\streamlit_app"
+
+echo [%date% %time%] Running fetch_cache.py --fundamentals-only --merge >> "%LOG%"
+python scripts\fetch_cache.py --fundamentals-only --merge >> "%LOG%" 2>&1
 if errorlevel 1 (
     echo [%date% %time%] ERROR: fetch_cache.py failed >> "%LOG%"
     exit /b 1
@@ -39,7 +48,7 @@ REM Skip commit if no changes
 git diff --staged --quiet
 if errorlevel 1 (
     echo [%date% %time%] Committing changes >> "%LOG%"
-    git commit -m "chore: refresh fundamentals (local cron)" >> "%LOG%" 2>&1
+    git commit -m "chore: refresh fundamentals cache (local scheduler)" >> "%LOG%" 2>&1
     git push origin main >> "%LOG%" 2>&1
     if errorlevel 1 (
         echo [%date% %time%] ERROR: git push failed >> "%LOG%"
