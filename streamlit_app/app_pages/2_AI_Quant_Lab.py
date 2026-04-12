@@ -3147,11 +3147,11 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     all_dates_min = [ohlcv.index.min().date() for ohlcv in price_data.values() if len(ohlcv) > 0]
     max_avail = max(all_dates_max) if all_dates_max else datetime.today().date()
     min_avail = min(all_dates_min) if all_dates_min else datetime.today().date() - timedelta(days=365)
-    # 백테스트 end date + 1일을 기본값으로 사용
+    # 백테스트 end date를 기본값으로 사용
     _cfg_end = (st.session_state.get("cfg") or {}).get("end")
     if _cfg_end:
-        _end_plus1 = (_cfg_end + timedelta(days=1)).date() if isinstance(_cfg_end, datetime) else _cfg_end + timedelta(days=1)
-        default_date = min(_end_plus1, max_avail)
+        _end_date = _cfg_end.date() if isinstance(_cfg_end, datetime) else _cfg_end
+        default_date = min(_end_date, max_avail)
     else:
         default_date = min(datetime.today().date(), max_avail)
 
