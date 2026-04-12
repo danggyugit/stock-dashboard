@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueries } from "@tanstack/react-query";
-import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
+import { ArrowRight, Check, ChevronsUpDown, CalendarDays } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,6 +17,7 @@ import PerformanceChart from "@/components/portfolio/PerformanceChart";
 import { getIndices, getHeatmapData, getChartData } from "@/api/market";
 import { getPortfolios, getPortfolioDetail, getPerformance } from "@/api/portfolio";
 import { getNews } from "@/api/sentiment";
+import { getCalendarCombined } from "@/api/calendar";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import type {
   IndexInfo,
@@ -27,6 +28,7 @@ import type {
   PerformanceResponse,
   AllocationResponse,
   NewsArticle,
+  CalendarResponse,
 } from "@/types";
 
 const INDEX_TICKERS = [
@@ -573,7 +575,91 @@ const Dashboard = () => {
           </div>
         </section>
       )}
+      {/* ── This Week's Events ── */}
+      <WeekEvents />
     </div>
+  );
+};
+
+/* ─── This Week Events Summary ─── */
+const WeekEvents = () => {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+
+  const from = monday.toISOString().slice(0, 10);
+  const to = friday.toISOString().slice(0, 10);
+
+  const { data } = useQuery<CalendarResponse>({
+    queryKey: ["weekCalendar", from, to],
+    queryFn: () => getCalendarCombined(from, to),
+    staleTime: 10 * 60_000,
+  });
+
+  const highEvents = data?.economic_events.filter((e) => e.importance === "high") ?? [];
+  const topEarnings = data?.earnings_events.slice(0, 8) ?? [];
+
+  if (!highEvents.length && !topEarnings.length) return null;
+
+  return (
+    <section>
+      <div className="flex items-center justify-between mb-1">
+        <h2 className="text-sm font-semibold flex items-center gap-1.5">
+          <CalendarDays className="h-4 w-4" />
+          This Week
+        </h2>
+        <Link to="/calendar">
+          <Button variant="ghost" size="sm" className="h-7 text-xs">
+            Full Calendar <ArrowRight className="ml-1 h-3 w-3" />
+          </Button>
+        </Link>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        {highEvents.length > 0 && (
+          <Card>
+            <CardContent className="p-3">
+              <p className="text-xs font-semibold mb-2 text-red-600">Key Economic Events</p>
+              <div className="space-y-1.5">
+                {highEvents.slice(0, 6).map((e, i) => (
+                  <div key={i} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                      <span className="text-muted-foreground w-10">{e.event_date.slice(5)}</span>
+                      <span className="truncate max-w-[200px]">{e.event_name}</span>
+                    </div>
+                    <span className="text-muted-foreground tabular-nums">
+                      {e.forecast ?? "--"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        {topEarnings.length > 0 && (
+          <Card>
+            <CardContent className="p-3">
+              <p className="text-xs font-semibold mb-2 text-blue-600">Earnings This Week</p>
+              <div className="flex flex-wrap gap-1.5">
+                {topEarnings.map((e, i) => (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-[10px] font-medium px-2 py-0.5 rounded"
+                    title={`${e.ticker} — ${e.earnings_date}\nEPS Est: ${e.eps_estimate ?? "N/A"}`}
+                  >
+                    {e.ticker}
+                    <span className="text-blue-400">{e.earnings_date.slice(5)}</span>
+                  </span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </section>
   );
 };
 

@@ -314,6 +314,41 @@ export interface DailyReport {
 }
 
 // ============================================================
+// Calendar Types
+// ============================================================
+
+export interface EconomicEvent {
+  event_name: string;
+  country: string;
+  event_date: string;
+  event_time: string | null;
+  actual: number | null;
+  forecast: number | null;
+  previous: number | null;
+  importance: "high" | "medium" | "low";
+  unit: string | null;
+  source: string;
+}
+
+export interface EarningsEvent {
+  ticker: string;
+  company_name: string | null;
+  earnings_date: string;
+  eps_estimate: number | null;
+  eps_actual: number | null;
+  revenue_estimate: number | null;
+  revenue_actual: number | null;
+  source: string;
+}
+
+export interface CalendarResponse {
+  economic_events: EconomicEvent[];
+  earnings_events: EarningsEvent[];
+  from_date: string;
+  to_date: string;
+}
+
+// ============================================================
 // Common Types
 // ============================================================
 

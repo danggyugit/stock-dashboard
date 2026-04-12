@@ -13,6 +13,7 @@ import Tax from "@/pages/Tax";
 import Sentiment from "@/pages/Sentiment";
 import AIReport from "@/pages/AIReport";
 import Login from "@/pages/Login";
+import EconomicCalendar from "@/pages/EconomicCalendar";
 import useAuthStore from "@/stores/authStore";
 
 const App = () => {
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/portfolio/trades" element={<Trades />} />
         <Route path="/portfolio/dividends" element={<Dividends />} />
         <Route path="/portfolio/tax" element={<Tax />} />
+        <Route path="/calendar" element={<EconomicCalendar />} />
         <Route path="/sentiment" element={<Sentiment />} />
         <Route path="/sentiment/report" element={<AIReport />} />
       </Route>

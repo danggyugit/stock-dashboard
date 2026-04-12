@@ -141,6 +141,15 @@ def start_scheduler() -> BackgroundScheduler:
 
     _scheduler = BackgroundScheduler()
 
+    # Cache warm: every 5 minutes (keeps all dashboard data fresh)
+    _scheduler.add_job(
+        _warm_all_caches,
+        trigger=IntervalTrigger(minutes=5),
+        id="warm_caches",
+        name="Warm all data caches (5min interval)",
+        replace_existing=True,
+    )
+
     # Market data refresh (stock list + market caps) every 15 min during trading hours
     _scheduler.add_job(
         _refresh_market_data,

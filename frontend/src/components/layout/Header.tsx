@@ -3,6 +3,7 @@ import {
   BarChart3,
   Briefcase,
   Brain,
+  CalendarDays,
   LayoutDashboard,
   Menu,
   LogIn,
@@ -25,6 +26,7 @@ const navItems = [
   { to: "/market", label: "Market", icon: BarChart3 },
   { to: "/screener", label: "Screener", icon: BarChart3 },
   { to: "/portfolio", label: "Portfolio", icon: Briefcase },
+  { to: "/calendar", label: "Calendar", icon: CalendarDays },
   { to: "/sentiment", label: "Sentiment", icon: Brain },
 ];
 

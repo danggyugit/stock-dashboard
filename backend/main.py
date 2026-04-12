@@ -61,8 +61,20 @@ async def lifespan(app: FastAPI):
     except Exception:
         logger.exception("F&G backfill failed (non-critical).")
 
-    # Skip initial cache warm on free tier to avoid memory issues
-    logger.info("Skipping initial cache warm (free tier).")
+    # Initial cache warm runs via scheduler (first job triggers immediately)
+    from scheduler import _warm_all_caches
+    from datetime import datetime as _dt
+    try:
+        scheduler.add_job(
+            _warm_all_caches,
+            id="initial_warm",
+            name="Initial cache warm",
+            next_run_time=_dt.now(),
+            replace_existing=True,
+        )
+        logger.info("Initial cache warm scheduled.")
+    except Exception:
+        logger.exception("Failed to schedule initial cache warm.")
 
     yield
 
@@ -104,11 +116,13 @@ from auth import router as auth_router
 from routers.market import router as market_router
 from routers.portfolio import router as portfolio_router
 from routers.sentiment import router as sentiment_router
+from routers.calendar import router as calendar_router
 
 app.include_router(auth_router)
 app.include_router(market_router)
 app.include_router(portfolio_router)
 app.include_router(sentiment_router)
+app.include_router(calendar_router)
 
 
 @app.get("/")

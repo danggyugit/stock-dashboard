@@ -168,6 +168,40 @@ def init_db() -> None:
         )
     """)
 
+    # --- Calendar Tables ---
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS economic_events (
+            id           INTEGER PRIMARY KEY,
+            event_name   VARCHAR NOT NULL,
+            country      VARCHAR DEFAULT 'US',
+            event_date   DATE NOT NULL,
+            event_time   VARCHAR,
+            actual       DOUBLE,
+            forecast     DOUBLE,
+            previous     DOUBLE,
+            importance   VARCHAR DEFAULT 'medium',
+            unit         VARCHAR,
+            cached_at    TIMESTAMP DEFAULT current_timestamp
+        )
+    """)
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS earnings_calendar (
+            id              INTEGER PRIMARY KEY,
+            ticker          VARCHAR NOT NULL,
+            company_name    VARCHAR,
+            earnings_date   DATE NOT NULL,
+            eps_estimate    DOUBLE,
+            eps_actual      DOUBLE,
+            revenue_estimate DOUBLE,
+            revenue_actual  DOUBLE,
+            cached_at       TIMESTAMP DEFAULT current_timestamp
+        )
+    """)
+
+    _create_sequence_if_not_exists(conn, "seq_econ_event_id")
+    _create_sequence_if_not_exists(conn, "seq_earnings_id")
+
     # --- Sentiment Tables ---
     conn.execute("""
         CREATE TABLE IF NOT EXISTS news_articles (
