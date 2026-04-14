@@ -1393,6 +1393,124 @@ def generate_rebalance_dates(start: datetime, end: datetime, months: int) -> lis
     return dates
 
 
+# ═══════════════════════════════════════════════════════════
+# CASH ALLOCATION: HMM Regime + Volatility Targeting
+# ═══════════════════════════════════════════════════════════
+
+def _fit_hmm_regimes(spy_returns: pd.Series, n_regimes: int = 3) -> object:
+    """Fit a Gaussian HMM on SPY daily returns to detect Bull/Normal/Bear regimes.
+
+    Returns fitted HMM model, or None if insufficient data / import fails.
+    """
+    try:
+        from hmmlearn.hmm import GaussianHMM
+    except ImportError:
+        return None
+
+    returns = spy_returns.dropna().values.reshape(-1, 1)
+    if len(returns) < 60:
+        return None
+
+    model = GaussianHMM(
+        n_components=n_regimes,
+        covariance_type="full",
+        n_iter=200,
+        random_state=42,
+    )
+    model.fit(returns)
+    return model
+
+
+def _get_regime_at_date(hmm_model, spy_close: pd.Series, date: pd.Timestamp,
+                        lookback: int = 60) -> dict:
+    """Predict current regime and return regime info.
+
+    Returns:
+        {"regime": 0|1|2, "label": "Bull"|"Normal"|"Bear",
+         "target_vol": float, "regime_probs": array}
+    """
+    if hmm_model is None:
+        return {"regime": 1, "label": "Normal", "target_vol": 0.15, "regime_probs": None}
+
+    mask = spy_close.index <= date
+    recent = spy_close[mask].tail(lookback + 1)
+    if len(recent) < 30:
+        return {"regime": 1, "label": "Normal", "target_vol": 0.15, "regime_probs": None}
+
+    returns = recent.pct_change().dropna().values.reshape(-1, 1)
+    states = hmm_model.predict(returns)
+    current_state = int(states[-1])
+
+    # Map states to regimes by mean return:
+    # highest mean → Bull, lowest mean → Bear, middle → Normal
+    means = hmm_model.means_.flatten()
+    sorted_idx = np.argsort(means)  # ascending: [Bear, Normal, Bull]
+    state_to_regime = {}
+    for rank, state_id in enumerate(sorted_idx):
+        state_to_regime[state_id] = rank  # 0=Bear, 1=Normal, 2=Bull
+
+    regime_rank = state_to_regime[current_state]
+
+    REGIME_CONFIG = {
+        0: {"label": "Bear",   "target_vol": 0.05},
+        1: {"label": "Normal", "target_vol": 0.15},
+        2: {"label": "Bull",   "target_vol": 0.20},
+    }
+    cfg = REGIME_CONFIG[regime_rank]
+
+    # Regime probabilities
+    try:
+        probs = hmm_model.predict_proba(returns)[-1]
+        # Reorder to [Bear, Normal, Bull]
+        ordered_probs = [probs[sorted_idx[0]], probs[sorted_idx[1]], probs[sorted_idx[2]]]
+    except Exception:
+        ordered_probs = None
+
+    return {
+        "regime": regime_rank,
+        "label": cfg["label"],
+        "target_vol": cfg["target_vol"],
+        "regime_probs": ordered_probs,
+    }
+
+
+def _calc_portfolio_vol(price_data: dict, tickers: list,
+                        date: pd.Timestamp, window: int = 30) -> float:
+    """Calculate realized portfolio volatility (equal-weight) over last N days."""
+    daily_returns = []
+    for t in tickers:
+        ohlcv = price_data.get(t)
+        if ohlcv is None:
+            continue
+        mask = ohlcv.index <= date
+        close = ohlcv[mask]["Close"].tail(window + 1)
+        if len(close) >= 10:
+            daily_returns.append(close.pct_change().dropna())
+
+    if not daily_returns:
+        return 0.20  # fallback 20%
+
+    # Equal-weight portfolio returns
+    min_len = min(len(r) for r in daily_returns)
+    aligned = np.column_stack([r.values[-min_len:] for r in daily_returns])
+    port_daily = aligned.mean(axis=1)
+    realized_vol = float(np.std(port_daily) * np.sqrt(252))
+    return max(realized_vol, 0.01)  # floor at 1%
+
+
+def _calc_cash_ratio(regime_info: dict, realized_vol: float) -> float:
+    """Volatility Targeting: investment ratio = target_vol / realized_vol.
+
+    Returns cash_ratio (0.0 ~ 0.90). Capped at 90% cash.
+    """
+    target_vol = regime_info["target_vol"]
+    invest_ratio = target_vol / realized_vol
+    invest_ratio = min(invest_ratio, 1.0)  # cap at 100% investment
+    cash_ratio = 1.0 - invest_ratio
+    cash_ratio = min(cash_ratio, 0.90)     # max 90% cash
+    return round(cash_ratio, 4)
+
+
 def run_backtest(
     price_data:   dict,
     fund_map:     dict,
@@ -1415,9 +1533,11 @@ def run_backtest(
     use_turnover_buffer: bool = False,
     turnover_buffer_pct: float = 0.05,
     use_inv_vol_weight:  bool = False,
+    cash_strategy:       str = "none",  # "none" | "vol_target" | "regime" | "combined"
+    rf_annual:           float = 0.04,  # annual risk-free rate for cash return
 ) -> dict:
     """메인 백테스트 엔진.
-    Ver4.2: 엠바고 + 윈저화순서 + GridSearchCV + 턴오버버퍼 + 역변동성가중.
+    Ver4.3: + HMM Regime-Based Cash Allocation + Volatility Targeting.
     """
     n_dates = len(rebal_dates)
     feature_cols = FEAT_COLS
@@ -1426,7 +1546,7 @@ def run_backtest(
     _FUND_GROUPS = {"밸류에이션", "수익성", "성장성", "재무안정성", "효율성", "규모"}
 
     # ── Step 1: 모든 리밸런싱 날짜의 스냅샷 + 실제 수익률 계산 ──
-    progress(0.05, "📊 지표 스냅샷 계산 중...")
+    progress(0.05, tr("prog.snapshot_init"))
     snapshots: dict = {}  # date → pd.DataFrame (includes forward_return)
 
     for i, date in enumerate(rebal_dates[:-1]):
@@ -1474,6 +1594,15 @@ def run_backtest(
         progress(0.05 + 0.25 * (i / max(n_dates - 2, 1)),
                  tr("prog.snapshot", i=i+1, total=n_dates-1))
 
+    # ── Step 1b: HMM Regime 학습 (cash_strategy 사용 시) ──
+    hmm_model = None
+    use_cash = cash_strategy in ("vol_target", "regime", "combined")
+    if use_cash and spy_close is not None and len(spy_close) > 60:
+        spy_returns = spy_close.pct_change().dropna()
+        hmm_model = _fit_hmm_regimes(spy_returns)
+        if hmm_model is not None:
+            progress(0.28, "🧠 HMM Regime model trained (3 states)")
+
     # ── Step 2: 롤링 모델 학습 + 포트폴리오 시뮬레이션 ──
     progress(0.30, tr("prog.training"))
 
@@ -1487,6 +1616,7 @@ def run_backtest(
     feat_imp_xgb_rows  = []
     feat_imp_lgbm_rows = []
     rebal_history  = []
+    cash_history   = []  # 현금 비중 이력
     prev_selected  = set()   # 직전 기간 보유 종목 (turnover 계산용)
 
     # 마지막 학습 정보 (tab_realtime 전달용)
@@ -1745,11 +1875,48 @@ def run_backtest(
             turnover = newly_bought / max(len(new_selected), 1)
         prev_selected = new_selected
 
+        # ── 현금 비중 결정 (Vol Targeting + Regime) ────────
+        cash_ratio = 0.0
+        regime_info = {"regime": 1, "label": "Normal", "target_vol": 0.15, "regime_probs": None}
+        if use_cash:
+            regime_info = _get_regime_at_date(hmm_model, spy_close, date)
+            realized_vol = _calc_portfolio_vol(price_data, list(selected.index), date)
+
+            if cash_strategy == "vol_target":
+                # Pure vol targeting with fixed target 15%
+                invest = min(0.15 / realized_vol, 1.0)
+                cash_ratio = round(1.0 - invest, 4)
+            elif cash_strategy == "regime":
+                # Pure regime-based (fixed cash per regime)
+                cash_ratio = {0: 0.60, 1: 0.20, 2: 0.0}.get(regime_info["regime"], 0.0)
+            elif cash_strategy == "combined":
+                # Regime-adjusted vol targeting (recommended)
+                cash_ratio = _calc_cash_ratio(regime_info, realized_vol)
+            cash_ratio = min(cash_ratio, 0.90)
+
+        invest_ratio = 1.0 - cash_ratio
+
         # 실제 거래비용 = 설정 TC × turnover (교체된 비중에만 비용 발생)
         tc_actual = (tc_pct / 100) * turnover
-        current_value *= (1 + port_ret - tc_actual)
+
+        # 리밸런싱 기간의 무위험수익률 (일할 계산)
+        days_held = (next_date - date).days
+        rf_period = (1 + rf_annual) ** (days_held / 365) - 1
+
+        # 포트폴리오 수익률 = 투자비중 × 종목수익 + 현금비중 × 무위험수익 - 거래비용
+        blended_ret = invest_ratio * port_ret + cash_ratio * rf_period - tc_actual
+        current_value *= (1 + blended_ret)
         portfolio_dates.append(next_date)
         portfolio_values.append(current_value)
+
+        # 현금 이력 기록
+        cash_history.append({
+            "date": date,
+            "cash_ratio": cash_ratio,
+            "regime": regime_info["label"],
+            "regime_probs": regime_info.get("regime_probs"),
+            "realized_vol": realized_vol if use_cash else None,
+        })
 
         # ── 리밸런싱 히스토리 ─────────────────────────────
         ticker_rows = []
@@ -1780,10 +1947,13 @@ def run_backtest(
             "selected":        list(selected.index),
             "ticker_df":       pd.DataFrame(ticker_rows),
             "top10_features":  top10,
-            "port_return":     port_ret,
+            "port_return":     blended_ret if use_cash else port_ret,
+            "stock_return":    port_ret,
             "ic":              ic_val,
             "turnover":        turnover,
             "tc_actual":       tc_actual,
+            "cash_ratio":      cash_ratio,
+            "regime":          regime_info["label"] if use_cash else "N/A",
             "univ_avg_ret":    univ_avg_ret,
             "bottom_ret":      bottom_ret,
             "precision":       precision,
@@ -1796,9 +1966,9 @@ def run_backtest(
         last_avail_cols = avail_cols
 
         pct = 0.30 + 0.65 * (i - rolling_win) / max(n_dates - rolling_win - 1, 1)
-        progress(min(pct, 0.95), f"백테스트 진행 중 ({date.strftime('%Y-%m')})...")
+        progress(min(pct, 0.95), tr("prog.backtest_running", ym=date.strftime('%Y-%m')))
 
-    progress(0.98, "결과 정리 중...")
+    progress(0.98, tr("prog.finalizing"))
 
     # ── feat_imp_history DataFrame ────────────────────────
     def _to_fimp_df(rows):
@@ -1836,6 +2006,8 @@ def run_backtest(
         "last_miss_src":    last_miss_src,
         "use_ensemble":     use_ensemble,
         "rebal_m":          rolling_win,   # tab_ic 연간 턴오버 계산용
+        "cash_history":     cash_history,
+        "cash_strategy":    cash_strategy,
     }
 
 
@@ -2211,6 +2383,51 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
         <div class="metric-value {'pos' if avg_to < 0.5 else 'neg'}">{avg_to:.1%}</div></div>""", unsafe_allow_html=True)
 
     # ════════════════════════════════════════════════════════
+    # SECTION 4b: 현금 비중 & 레짐 추이 (cash_strategy 사용 시)
+    # ════════════════════════════════════════════════════════
+    cash_hist = results.get("cash_history", [])
+    if cash_hist and any(c.get("cash_ratio", 0) > 0 for c in cash_hist):
+        st.markdown(f'<div class="section-hdr">{tr("sum.sec_cash")}</div>', unsafe_allow_html=True)
+
+        ch_dates = [c["date"] for c in cash_hist]
+        ch_cash = [c["cash_ratio"] for c in cash_hist]
+        ch_regime = [c.get("regime", "N/A") for c in cash_hist]
+
+        # Regime background colors
+        _regime_clr = {"Bull": "rgba(34,197,94,0.15)", "Normal": "rgba(234,179,8,0.10)", "Bear": "rgba(239,68,68,0.15)"}
+
+        fig_cash = go.Figure()
+        # Cash ratio bars
+        bar_colors = ["#EF4444" if r == "Bear" else ("#EAB308" if r == "Normal" else "#22C55E")
+                      for r in ch_regime]
+        fig_cash.add_trace(go.Bar(
+            x=[d.strftime("%Y-%m") for d in ch_dates], y=ch_cash,
+            marker_color=bar_colors,
+            hovertemplate="%{x}<br>Cash: %{y:.0%}<extra></extra>",
+        ))
+        fig_cash.update_layout(
+            **PLOT_CFG, height=200, yaxis_tickformat=".0%",
+            margin=dict(l=40, r=10, t=10, b=30), showlegend=False,
+        )
+        st.plotly_chart(fig_cash, use_container_width=True)
+
+        # Regime + cash summary metrics
+        avg_cash = float(np.mean(ch_cash))
+        max_cash = float(max(ch_cash))
+        bull_pct = sum(1 for r in ch_regime if r == "Bull") / len(ch_regime)
+        bear_pct = sum(1 for r in ch_regime if r == "Bear") / len(ch_regime)
+
+        mc1, mc2, mc3, mc4 = st.columns(4)
+        mc1.markdown(f"""<div class="metric-box"><div class="metric-label">{tr("sum.avg_cash")}</div>
+            <div class="metric-value neu">{avg_cash:.0%}</div></div>""", unsafe_allow_html=True)
+        mc2.markdown(f"""<div class="metric-box"><div class="metric-label">{tr("sum.max_cash")}</div>
+            <div class="metric-value neg">{max_cash:.0%}</div></div>""", unsafe_allow_html=True)
+        mc3.markdown(f"""<div class="metric-box"><div class="metric-label">Bull %</div>
+            <div class="metric-value pos">{bull_pct:.0%}</div></div>""", unsafe_allow_html=True)
+        mc4.markdown(f"""<div class="metric-box"><div class="metric-label">Bear %</div>
+            <div class="metric-value neg">{bear_pct:.0%}</div></div>""", unsafe_allow_html=True)
+
+    # ════════════════════════════════════════════════════════
     # SECTION 5: 최근 리밸런싱 + AI 추천
     # ════════════════════════════════════════════════════════
     col_recent, col_rec = st.columns(2)
@@ -2220,10 +2437,18 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
         if rebal_hist:
             h = rebal_hist[-1]
             ret_c = "pos" if h["port_return"] > 0 else "neg"
+            _h_cash_r = h.get("cash_ratio", 0)
+            _h_regime_l = h.get("regime", "N/A")
+            _cash_info = ""
+            if _h_cash_r > 0 or _h_regime_l != "N/A":
+                _re = {"Bull": "🟢", "Normal": "🟡", "Bear": "🔴"}.get(_h_regime_l, "⚪")
+                _cash_info = (f' · {_re} {_h_regime_l} · '
+                              f'{tr("rh.cash_ratio")}: <b>{_h_cash_r:.0%}</b>')
             st.markdown(
                 f'**{h["rebalance_date"].strftime("%Y-%m-%d")}** → '
                 f'{h["next_date"].strftime("%Y-%m-%d")} · '
-                f'{tr("rh.period_return")}: <span class="{ret_c}" style="font-weight:700;">{h["port_return"]:.2%}</span>',
+                f'{tr("rh.period_return")}: <span class="{ret_c}" style="font-weight:700;">{h["port_return"]:.2%}</span>'
+                f'{_cash_info}',
                 unsafe_allow_html=True,
             )
             tdf = h.get("ticker_df", pd.DataFrame())
@@ -2258,6 +2483,26 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                 and fund_map is not None):
             all_max = [ohlcv.index.max() for ohlcv in price_data.values() if len(ohlcv) > 0]
             latest_date = max(all_max) if all_max else pd.Timestamp.today()
+
+            # Regime + Cash 배너 (cash_strategy 사용 시)
+            _sum_cash_strat = _cfg.get("cash_strategy", results.get("cash_strategy", "none"))
+            if _sum_cash_strat != "none" and spy_close is not None and len(spy_close) > 60:
+                _sr = spy_close.pct_change().dropna()
+                _sh = _fit_hmm_regimes(_sr)
+                _sri = _get_regime_at_date(_sh, spy_close, latest_date)
+                _sv = _calc_portfolio_vol(price_data, list(price_data.keys())[:20], latest_date)
+                _sc = _calc_cash_ratio(_sri, _sv) if _sum_cash_strat == "combined" else (
+                    round(max(1.0 - 0.15 / _sv, 0), 4) if _sum_cash_strat == "vol_target" else
+                    {0: 0.60, 1: 0.20, 2: 0.0}.get(_sri["regime"], 0.0))
+                _se = {"Bull": "🟢", "Normal": "🟡", "Bear": "🔴"}.get(_sri["label"], "⚪")
+                st.markdown(
+                    f'<div style="font-size:0.78rem;padding:4px 0;">'
+                    f'{_se} <b>{_sri["label"]}</b> · '
+                    f'{tr("rh.cash_ratio")} <b>{_sc:.0%}</b> · '
+                    f'Invest <b style="color:#22C55E">{1-_sc:.0%}</b></div>',
+                    unsafe_allow_html=True,
+                )
+
             st.caption(f"{tr('pk.as_of')}: {latest_date.strftime('%Y-%m-%d')}")
 
             cur_snap = build_snapshot_df(
@@ -2700,14 +2945,29 @@ def tab_history(results: dict):
     ic_v  = h["ic"]
     ic_c  = "pos" if (not np.isnan(ic_v) and ic_v > 0) else "neg"
 
-    c1, c2, c3, c4, c5 = st.columns(5)
-    for col, lbl, val, clr in [
+    _h_cash = h.get("cash_ratio", 0)
+    _h_regime = h.get("regime", "N/A")
+    _has_cash = _h_cash > 0 or _h_regime != "N/A"
+
+    if _has_cash:
+        c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
+    else:
+        c1, c2, c3, c4, c5 = st.columns(5)
+        c6 = c7 = None
+
+    _regime_clr_map = {"Bull": "pos", "Normal": "neu", "Bear": "neg"}
+    _metrics = [
         (c1, tr("rh.rebal_date"), h["rebalance_date"].strftime("%Y-%m-%d"), "neu"),
         (c2, tr("rh.holding_period"),       h["holding_period"], "neu"),
         (c3, tr("rh.learn_period"),  f"{h['learn_start']} ~", "neu"),
         (c4, tr("rh.period_return"),     f"{h['port_return']:.2%}", ret_c),
         (c5, "IC",             f"{ic_v:.3f}" if not np.isnan(ic_v) else "N/A", ic_c),
-    ]:
+    ]
+    if _has_cash:
+        _metrics.append((c6, tr("rh.cash_ratio"), f"{_h_cash:.0%}", "neg" if _h_cash > 0.3 else "neu"))
+        _metrics.append((c7, tr("rh.regime"), _h_regime, _regime_clr_map.get(_h_regime, "neu")))
+
+    for col, lbl, val, clr in _metrics:
         col.markdown(f"""<div class="metric-box">
             <div class="metric-label">{lbl}</div>
             <div class="metric-value {clr}" style="font-size:0.95rem">{val}</div>
@@ -3185,6 +3445,44 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
         st.warning(tr("msg.no_features"))
         return
 
+    # ── 현재 레짐 + 현금 비중 표시 (cash_strategy 사용 시) ──
+    _saved_cfg = st.session_state.get("cfg") or {}
+    _cash_strat = _saved_cfg.get("cash_strategy", results.get("cash_strategy", "none"))
+    if _cash_strat != "none" and spy_close is not None and len(spy_close) > 60:
+        _spy_ret = spy_close.pct_change().dropna()
+        _rt_hmm = _fit_hmm_regimes(_spy_ret)
+        _rt_regime = _get_regime_at_date(_rt_hmm, spy_close, today)
+        _rt_tickers = list(cur_snap.index[:20])  # proxy for portfolio
+        _rt_vol = _calc_portfolio_vol(price_data, _rt_tickers, today)
+
+        if _cash_strat == "vol_target":
+            _rt_cash = round(max(1.0 - 0.15 / _rt_vol, 0), 4)
+        elif _cash_strat == "regime":
+            _rt_cash = {0: 0.60, 1: 0.20, 2: 0.0}.get(_rt_regime["regime"], 0.0)
+        else:  # combined
+            _rt_cash = _calc_cash_ratio(_rt_regime, _rt_vol)
+
+        _rt_invest = 1.0 - _rt_cash
+        _regime_emoji = {"Bull": "🟢", "Normal": "🟡", "Bear": "🔴"}.get(_rt_regime["label"], "⚪")
+        st.markdown(
+            f'<div style="background:linear-gradient(135deg,#1e293b,#0f172a);'
+            f'border:1px solid #334155;border-radius:10px;padding:14px 20px;margin:10px 0;">'
+            f'<span style="font-size:0.8rem;color:#94a3b8;">REGIME</span> '
+            f'<span style="font-size:1.1rem;font-weight:700;">{_regime_emoji} {_rt_regime["label"]}</span>'
+            f'<span style="margin:0 16px;color:#334155;">|</span>'
+            f'<span style="font-size:0.8rem;color:#94a3b8;">CASH</span> '
+            f'<span style="font-size:1.1rem;font-weight:700;color:{"#EF4444" if _rt_cash > 0.3 else "#94a3b8"};">'
+            f'{_rt_cash:.0%}</span>'
+            f'<span style="margin:0 16px;color:#334155;">|</span>'
+            f'<span style="font-size:0.8rem;color:#94a3b8;">INVEST</span> '
+            f'<span style="font-size:1.1rem;font-weight:700;color:#22C55E;">{_rt_invest:.0%}</span>'
+            f'<span style="margin:0 16px;color:#334155;">|</span>'
+            f'<span style="font-size:0.8rem;color:#94a3b8;">VOL</span> '
+            f'<span style="font-size:1.1rem;font-weight:700;">{_rt_vol:.1%}</span>'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
+
     # ── Ver3.7: 앙상블 예측 (백테스트와 동일 전처리+모델) ──
     model_rf      = results.get("last_model_rf")
     model_xgb     = results.get("last_model_xgb")
@@ -3251,6 +3549,28 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     # 표시용 점수는 정규화 버전 사용
     composite = composite_norm
 
+    # ── 투자 비중 계산 (현금 비중 반영) ─────────────────────
+    _use_inv = _saved_cfg.get("use_inv_vol_weight", False)
+    _pick_weights = {}
+    if _use_inv and "Volatility_30d" in cur_snap.columns:
+        vols = {}
+        for t in top_recs.index:
+            v = cur_snap.loc[t, "Volatility_30d"] if t in cur_snap.index else np.nan
+            vols[t] = v if (not np.isnan(v) and v > 0) else 0.30
+        inv_v = {t: 1 / v for t, v in vols.items()}
+        total_iv = sum(inv_v.values())
+        _pick_weights = {t: iv / total_iv for t, iv in inv_v.items()}
+    else:
+        w = 1 / max(len(top_recs), 1)
+        _pick_weights = {t: w for t in top_recs.index}
+
+    # 현금 비중 반영
+    _rt_cash_for_weight = 0.0
+    if _cash_strat != "none" and "_rt_cash" in dir():
+        _rt_cash_for_weight = _rt_cash
+    _invest_for_weight = 1.0 - _rt_cash_for_weight
+    _final_weights = {t: w * _invest_for_weight for t, w in _pick_weights.items()}
+
     # ── 모델 설명 ─────────────────────────────────────────
     with st.expander(tr("exp.ai_model_doc"), expanded=False):
         st.markdown(tr("exp.ai_model_doc_body"))
@@ -3261,8 +3581,10 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
     for rank, (t, score) in enumerate(all_recs.items(), 1):
         stars = consensus.get(t, 0)
         star_str = "★" * stars if stars > 0 else ""
+        _w = _final_weights.get(t, 0)
         row = {tr("ax.rank"): rank, tr("ax.ticker"): t, tr("ax.ai_score"): round(score, 3),
                tr("pk.recommend"): "O" if t in top_recs.index else "",
+               "Weight": f"{_w:.1%}" if t in top_recs.index else "",
                tr("pk.consensus"): star_str if consensus else ""}
         for col, fmt in [
             ("Mom_1m",  "pct"), ("Mom_3m",  "pct"), ("Mom_6m",  "pct"),
@@ -3496,6 +3818,29 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
                 help=tr("settings.inv_vol_help"),
             )
 
+        st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
+
+        # ── Cash Allocation Strategy ─────────────────────────
+        st.markdown(
+            f'<div style="font-size:0.8rem;font-weight:600;color:#94a3b8;'
+            f'text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;">'
+            f'💰 {tr("settings.adv_cash")}</div>',
+            unsafe_allow_html=True,
+        )
+        _CASH_OPTIONS = {
+            tr("settings.cash_none"): "none",
+            tr("settings.cash_vol"): "vol_target",
+            tr("settings.cash_regime"): "regime",
+            tr("settings.cash_combined"): "combined",
+        }
+        cash_label = st.selectbox(
+            tr("settings.cash_strategy"),
+            list(_CASH_OPTIONS.keys()),
+            index=0,
+            help=tr("settings.cash_help"),
+        )
+        cash_strategy = _CASH_OPTIONS[cash_label]
+
         # ── Run button (form submit) ─────────────────────────
         st.markdown("---")
         run_btn = st.form_submit_button(
@@ -3536,6 +3881,7 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
         "use_mom_filter":        use_mom_filter,
         "use_turnover_buffer":   use_turnover_buffer,
         "use_inv_vol_weight":    use_inv_vol_weight,
+        "cash_strategy":         cash_strategy,
     }
 
 
@@ -3765,6 +4111,7 @@ def main():
             use_mom_filter=cfg.get("use_mom_filter", True),
             use_turnover_buffer=cfg.get("use_turnover_buffer", False),
             use_inv_vol_weight=cfg.get("use_inv_vol_weight", False),
+            cash_strategy=cfg.get("cash_strategy", "none"),
         )
 
         # 6. 벤치마크 데이터

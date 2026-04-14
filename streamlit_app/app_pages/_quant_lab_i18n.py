@@ -295,8 +295,14 @@ _QUANT_LAB_STRINGS: dict[str, dict[str, str]] = {
                                "ko": "🤖 AI 모델 학습 및 백테스트 실행 중..."},
     "prog.complete":          {"en": "✅ Backtest complete! {rebal} rebalances | {trains} trainings | {n} tickers analyzed",
                                "ko": "✅ 백테스트 완료! {rebal}회 리밸런싱 | {trains}회 학습 | {n}개 종목 분석"},
+    "prog.snapshot_init":     {"en": "📊 Computing indicator snapshots…",
+                               "ko": "📊 지표 스냅샷 계산 중..."},
     "prog.snapshot":          {"en": "Computing snapshots ({i}/{total})…",
                                "ko": "스냅샷 계산 중 ({i}/{total})..."},
+    "prog.backtest_running":  {"en": "Running backtest ({ym})…",
+                               "ko": "백테스트 진행 중 ({ym})..."},
+    "prog.finalizing":        {"en": "Finalizing results…",
+                               "ko": "결과 정리 중..."},
     "prog.done_short":        {"en": "✅ Done!",
                                "ko": "✅ 완료!"},
     "prog.short_period":      {"en": "Backtest period too short — not enough analytics data.",
@@ -593,6 +599,40 @@ _QUANT_LAB_STRINGS: dict[str, dict[str, str]] = {
                                     "ko": "전체 섹터 선택"},
     "settings.form_date_hint":  {"en": "💡 Dates auto-adjust based on rolling window & rebalance period at run time.",
                                  "ko": "💡 날짜는 실행 시 롤링 윈도우·리밸런싱 기간에 맞춰 자동 조정됩니다."},
+
+    # ── Ver4.3: Cash Allocation Strategy ──────────────────
+    "settings.adv_cash":        {"en": "Cash Allocation (Regime + Vol Targeting)",
+                                 "ko": "현금 비중 전략 (레짐 + 변동성 타겟팅)"},
+    "settings.cash_strategy":   {"en": "Cash allocation strategy",
+                                 "ko": "현금 비중 전략"},
+    "settings.cash_none":       {"en": "None (100% invested)",
+                                 "ko": "없음 (100% 투자)"},
+    "settings.cash_vol":        {"en": "Volatility Targeting (target 15%)",
+                                 "ko": "변동성 타겟팅 (목표 15%)"},
+    "settings.cash_regime":     {"en": "HMM Regime-Based (Bull/Normal/Bear)",
+                                 "ko": "HMM 레짐 기반 (Bull/Normal/Bear)"},
+    "settings.cash_combined":   {"en": "Combined: Regime + Vol Targeting (recommended)",
+                                 "ko": "결합: 레짐 + 변동성 타겟팅 (추천)"},
+    # Summary tab — cash section
+    "sum.sec_cash":     {"en": "💰 Cash Allocation & Regime",
+                         "ko": "💰 현금 비중 & 레짐 추이"},
+    "sum.avg_cash":     {"en": "Avg Cash Ratio",    "ko": "평균 현금 비중"},
+    "sum.max_cash":     {"en": "Max Cash Ratio",    "ko": "최대 현금 비중"},
+
+    # History tab — cash columns
+    "rh.cash_ratio":    {"en": "Cash",              "ko": "현금"},
+    "rh.regime":        {"en": "Regime",             "ko": "레짐"},
+
+    "settings.cash_help":       {
+        "en": ("Uses Hidden Markov Model to detect market regime (Bull/Normal/Bear) "
+               "and adjusts portfolio cash ratio via Volatility Targeting. "
+               "Based on AQR & Moreira-Muir (2017) methodology. "
+               "In Bear regime, up to 90% cash. In Bull, 100% invested."),
+        "ko": ("Hidden Markov Model로 시장 레짐(Bull/Normal/Bear)을 판별하고 "
+               "변동성 타겟팅으로 현금 비중을 자동 조절합니다. "
+               "AQR & Moreira-Muir(2017) 방법론 기반. "
+               "Bear 레짐 시 최대 90% 현금, Bull 레짐 시 100% 투자."),
+    },
 }
 
 
