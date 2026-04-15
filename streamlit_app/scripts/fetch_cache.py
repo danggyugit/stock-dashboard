@@ -538,11 +538,11 @@ def main() -> int:
                     }
                     write_json("fundamentals.json", fund_data)
 
-        # 4. Meta
+        # 4. Meta (prices/caps may be absent in --fundamentals-only mode)
         meta = {
             "updated_at": now_iso,
             "stock_count": len(stocks_df),
-            "price_count": len(prices),
+            "price_count": len(prices) if "prices" in dir() else 0,
             "market_cap_count": len(caps),
             "duration_seconds": round(time.time() - start, 1),
         }
