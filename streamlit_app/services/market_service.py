@@ -510,9 +510,60 @@ def get_chart_data(ticker: str, period: str = "1mo", interval: str | None = None
     return result
 
 
+def _enrich_from_github_cache(ticker: str, base: dict) -> dict:
+    """Fill missing fields from GitHub-cached stocks.json + fundamentals.json + heatmap.json.
+
+    Used when yfinance .info is rate-limited (data-center IP) but cache is fresh.
+    Only fills fields that are None/empty in `base` — does not overwrite live values.
+    """
+    try:
+        from services.cache_loader import (
+            get_cached_stocks, get_cached_fundamentals, get_cached_heatmap,
+        )
+    except Exception:
+        return base
+
+    # 1) stocks.json — name, sector, industry
+    try:
+        stocks = get_cached_stocks() or []
+        for s in stocks:
+            if s.get("ticker") == ticker:
+                if not base.get("name") or base.get("name") == ticker:
+                    base["name"] = s.get("name") or ticker
+                base["sector"] = base.get("sector") or s.get("sector")
+                base["industry"] = base.get("industry") or s.get("industry")
+                break
+    except Exception:
+        pass
+
+    # 2) fundamentals.json — pe, pb, ps, eps, roe, d/e, beta, div_yield, 52w, avg_vol
+    try:
+        funds = get_cached_fundamentals() or {}
+        f_t = (funds.get("tickers") or {}).get(ticker) or {}
+        for key in ("pe_ratio", "pb_ratio", "ps_ratio", "eps", "roe",
+                    "debt_to_equity", "dividend_yield", "beta",
+                    "fifty_two_week_high", "fifty_two_week_low", "avg_volume"):
+            if not base.get(key) and f_t.get(key) is not None:
+                base[key] = f_t[key]
+    except Exception:
+        pass
+
+    # 3) heatmap.json — market_cap fallback
+    try:
+        if not base.get("market_cap"):
+            hm = get_cached_heatmap() or {}
+            t_data = (hm.get("tickers") or {}).get(ticker) or {}
+            if t_data.get("market_cap"):
+                base["market_cap"] = t_data["market_cap"]
+    except Exception:
+        pass
+
+    return base
+
+
 @st.cache_data(ttl=900, show_spinner=False)
 def _get_stock_detail_cached(ticker: str) -> dict | None:
-    """Internal cached call."""
+    """Internal cached call. yfinance .info → fast_info fallback → GitHub cache enrichment."""
     info = _provider.get_stock_info(ticker)
 
     # If info is empty or has no price, build minimal detail from history + fast_info
@@ -532,7 +583,7 @@ def _get_stock_detail_cached(ticker: str) -> dict | None:
             if price and prev and prev != 0:
                 change_pct = round(((price - prev) / prev) * 100, 2)
 
-            return {
+            base = {
                 "ticker": ticker,
                 "name": ticker,
                 "price": price,
@@ -549,8 +600,13 @@ def _get_stock_detail_cached(ticker: str) -> dict | None:
                 "eps": None, "roe": None, "debt_to_equity": None,
                 "dividend_yield": None, "beta": None,
             }
+            return _enrich_from_github_cache(ticker, base)
         except Exception:
-            return None
+            # Last-resort: pure cache (no live data at all)
+            return _enrich_from_github_cache(ticker, {
+                "ticker": ticker, "name": ticker,
+                "price": None, "prev_close": None, "change_pct": None,
+            })
 
     price = info.get("price")
     prev = info.get("prev_close")
@@ -559,7 +615,8 @@ def _get_stock_detail_cached(ticker: str) -> dict | None:
         change_pct = round(((price - prev) / prev) * 100, 2)
 
     info["change_pct"] = change_pct
-    return info
+    # Also enrich from cache for any fields .info didn't populate
+    return _enrich_from_github_cache(ticker, info)
 
 
 def get_stock_detail(ticker: str) -> dict | None:
