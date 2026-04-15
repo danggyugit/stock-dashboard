@@ -8,6 +8,16 @@ import numpy as np
 
 from services.market_service import get_stock_detail, get_chart_data, search_stocks
 from services.sentiment_service import get_stock_news
+from services.valuation_service import (
+    get_valuation_core, get_analyst_consensus,
+    build_fair_value_table, build_scenario_bands,
+    get_individual_analyst_targets,
+)
+from services.ai_valuation_service import (
+    is_available as ai_val_available,
+    get_ai_scenario_analysis,
+    MODEL_FLASH,
+)
 from services.auth_service import render_user_sidebar
 from services.i18n import t as tr
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
@@ -65,7 +75,7 @@ with st.sidebar:
 
 # --- Ticker Search ---
 # Handle pick from recent
-default_ticker = st.session_state.pop("recent_pick", "AAPL")
+default_ticker = st.session_state.pop("recent_pick", "NVDA")
 
 query = st.text_input(tr("sd.search_ticker"), placeholder=tr("sd.search_placeholder"))
 
@@ -155,50 +165,42 @@ if price and w52_high and w52_low and w52_high > w52_low:
     """
     st.markdown(slider_html, unsafe_allow_html=True)
 
-# --- Chart with mode toggle ---
+# --- Chart (TradingView only; Plotly disabled) ---
 st.subheader(tr("sd.price_chart"))
 
-chart_mode = st.radio(
-    tr("sd.chart_mode"),
-    ["Plotly (custom)", "TradingView (advanced)"],
-    horizontal=True,
-    key=f"chart_mode_{selected}",
-)
+# TradingView Advanced Chart Widget — full-featured live chart
+tv_html = f"""
+<div class="tradingview-widget-container" style="height:600px;">
+  <div id="tv_{selected}" style="height:600px; border-radius:12px; overflow:hidden;"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+  <script type="text/javascript">
+  new TradingView.widget({{
+    "autosize": true,
+    "symbol": "{selected}",
+    "interval": "D",
+    "timezone": "America/New_York",
+    "theme": "dark",
+    "style": "1",
+    "locale": "en",
+    "toolbar_bg": "#0F172A",
+    "enable_publishing": false,
+    "withdateranges": true,
+    "hide_side_toolbar": false,
+    "allow_symbol_change": true,
+    "studies": [
+      "Volume@tv-basicstudies",
+      "MASimple@tv-basicstudies"
+    ],
+    "container_id": "tv_{selected}"
+  }});
+  </script>
+</div>
+"""
+import streamlit.components.v1 as components
+components.html(tv_html, height=620)
 
-if chart_mode == "TradingView (advanced)":
-    # TradingView Advanced Chart Widget — full-featured live chart
-    # Most US stocks use NASDAQ/NYSE prefix; let TradingView resolve automatically
-    tv_html = f"""
-    <div class="tradingview-widget-container" style="height:600px;">
-      <div id="tv_{selected}" style="height:600px; border-radius:12px; overflow:hidden;"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-      <script type="text/javascript">
-      new TradingView.widget({{
-        "autosize": true,
-        "symbol": "{selected}",
-        "interval": "D",
-        "timezone": "America/New_York",
-        "theme": "dark",
-        "style": "1",
-        "locale": "en",
-        "toolbar_bg": "#0F172A",
-        "enable_publishing": false,
-        "withdateranges": true,
-        "hide_side_toolbar": false,
-        "allow_symbol_change": true,
-        "studies": [
-          "Volume@tv-basicstudies",
-          "MASimple@tv-basicstudies"
-        ],
-        "container_id": "tv_{selected}"
-      }});
-      </script>
-    </div>
-    """
-    import streamlit.components.v1 as components
-    components.html(tv_html, height=620)
-
-else:
+# ── Plotly custom chart (DISABLED — kept for reference) ──────
+if False:
     # --- Plotly chart (custom) ---
     all_data = get_chart_data(selected, period="5y", interval="1d")
 
@@ -429,7 +431,388 @@ else:
 
         st.caption(tr("sd.chart_hint"))
 
-# --- Fundamentals ---
+# ══════════════════════════════════════════════════════════════
+# --- Valuation / Fair Value (yfinance + Finnhub + AI) ---
+# ══════════════════════════════════════════════════════════════
+with st.spinner("Loading valuation data…"):
+    _val_core = get_valuation_core(selected)
+    _consensus = get_analyst_consensus(selected)
+
+if _val_core:
+    st.markdown("---")
+    st.subheader("💰 Fair Value Analysis")
+
+    # ── Helper formatters (used across sections) ──────────────
+    def _fmt_money(v):
+        if v is None or pd.isna(v):
+            return "N/A"
+        if abs(v) >= 1e12: return f"${v/1e12:.2f}T"
+        if abs(v) >= 1e9:  return f"${v/1e9:.2f}B"
+        if abs(v) >= 1e6:  return f"${v/1e6:.0f}M"
+        return f"${v:,.2f}"
+
+    def _fmt_pct(v, decimals=1):
+        return f"{v*100:+.{decimals}f}%" if v is not None and not pd.isna(v) else "N/A"
+
+    _cp = _val_core.get("current_price")
+    _bands = build_scenario_bands(_val_core, selected)
+
+    # ══════════════════════════════════════════════════════════
+    # SECTION 1: 🤖 AI Scenario Narrative (top — primary insight)
+    # ══════════════════════════════════════════════════════════
+    st.markdown(
+        '<div style="font-size:0.8rem;font-weight:600;color:#94a3b8;'
+        'text-transform:uppercase;letter-spacing:0.05em;margin:6px 0;">'
+        '🤖 AI Scenario Narrative</div>',
+        unsafe_allow_html=True,
+    )
+
+    if ai_val_available() and _bands:
+        with st.spinner("Generating AI scenario analysis (Gemini 2.5 Flash)…"):
+            _ai_dual = {
+                "flash": get_ai_scenario_analysis(
+                    selected, _val_core, _consensus, _bands, MODEL_FLASH,
+                ),
+            }
+    else:
+        _ai_dual = None
+        if not ai_val_available():
+            st.caption(
+                "⚠️ Gemini API key not configured. "
+                "Set `GEMINI_API_KEY` in `.streamlit/secrets.toml` "
+                "(free tier at ai.google.dev)."
+            )
+
+    def _render_ai_result(_ai_result, label_prefix=""):
+        if not _ai_result:
+            st.info(f"{label_prefix}No result.")
+            return
+        if _ai_result.get("error"):
+            st.error(f"{label_prefix}Failed: {_ai_result['error']}")
+            return
+
+        eps_basis = _ai_result.get("eps_basis", {}) or {}
+        eps_val = eps_basis.get("value")
+        eps_label = eps_basis.get("label", "EPS basis")
+        eps_line = (
+            f'<div style="font-size:0.82rem;color:#a5b4fc;margin-top:10px;'
+            f'background:rgba(99,102,241,0.12);padding:6px 12px;border-radius:6px;'
+            f'display:inline-block;">'
+            f'<b>AI EPS basis:</b> ${eps_val:.2f} <span style="color:#94a3b8;">({eps_label})</span>'
+            f'</div>'
+        ) if eps_val else ""
+
+        st.markdown(
+            f'<div style="background:rgba(168,85,247,0.08);'
+            f'border:1px solid rgba(168,85,247,0.3);'
+            f'border-radius:10px;padding:14px 18px;margin:10px 0;">'
+            f'<div style="font-size:0.75rem;color:#c4b5fd;font-weight:600;'
+            f'text-transform:uppercase;letter-spacing:0.05em;">'
+            f'Sector Classification</div>'
+            f'<div style="font-size:1.05rem;font-weight:600;margin-top:4px;">'
+            f'{_ai_result.get("sector_classification", "N/A")}</div>'
+            f'<div style="font-size:0.85rem;color:#cbd5e1;margin-top:10px;'
+            f'line-height:1.5;">{_ai_result.get("multiple_rationale", "")}</div>'
+            f'{eps_line}'
+            f'</div>',
+            unsafe_allow_html=True,
+        )
+
+        ai_sc1, ai_sc2, ai_sc3 = st.columns(3)
+        for col, key, title, bg, border in [
+            (ai_sc1, "bear", "🐻 Bear",  "rgba(239,68,68,0.10)",  "#EF4444"),
+            (ai_sc2, "base", "🎯 Base",  "rgba(59,130,246,0.10)", "#3B82F6"),
+            (ai_sc3, "bull", "🚀 Bull",  "rgba(34,197,94,0.10)",  "#22C55E"),
+        ]:
+            sc = _ai_result.get(key) or {}
+            lo = sc.get("low")
+            hi = sc.get("high")
+            m_lo = sc.get("multiple_low")
+            m_hi = sc.get("multiple_high")
+            narr = sc.get("narrative", "")
+
+            price_line = f'${lo:,.0f} – ${hi:,.0f}' if lo is not None and hi is not None else "N/A"
+            mult_line = (f'P/E {m_lo}x–{m_hi}x'
+                         if m_lo is not None and m_hi is not None else '')
+
+            up_line = ""
+            if _cp and lo and hi:
+                mid = (lo + hi) / 2
+                up = (mid / _cp - 1) * 100
+                _up_c = "#22C55E" if up > 0 else "#EF4444"
+                up_line = (
+                    f'<div style="font-size:0.75rem;color:#94a3b8;margin-top:2px;">'
+                    f'Mid upside: <span style="color:{_up_c};font-weight:700;">'
+                    f'{up:+.1f}%</span></div>'
+                )
+
+            col.markdown(
+                f'<div style="background:{bg};border:1px solid {border};'
+                f'border-radius:10px;padding:14px 18px;margin:6px 0;">'
+                f'<div style="color:{border};font-size:0.85rem;font-weight:700;">{title}</div>'
+                f'<div style="font-size:1.2rem;font-weight:800;margin:6px 0;">'
+                f'{price_line}</div>'
+                f'<div style="font-size:0.7rem;color:#94a3b8;">{mult_line}</div>'
+                f'{up_line}'
+                f'<div style="font-size:0.78rem;color:#cbd5e1;line-height:1.45;'
+                f'margin-top:8px;padding-top:8px;border-top:1px solid rgba(148,163,184,0.15);">'
+                f'{narr}</div>'
+                f'</div>',
+                unsafe_allow_html=True,
+            )
+
+        risks = _ai_result.get("key_risks") or []
+        catalysts = _ai_result.get("key_catalysts") or []
+        if risks or catalysts:
+            rc1, rc2 = st.columns(2)
+            with rc1:
+                st.markdown(
+                    '<div style="color:#EF4444;font-weight:700;'
+                    'margin-top:10px;font-size:0.85rem;">⚠️ Key Risks</div>',
+                    unsafe_allow_html=True,
+                )
+                for r in risks:
+                    st.markdown(f"- {r}")
+            with rc2:
+                st.markdown(
+                    '<div style="color:#22C55E;font-weight:700;'
+                    'margin-top:10px;font-size:0.85rem;">✨ Key Catalysts</div>',
+                    unsafe_allow_html=True,
+                )
+                for c in catalysts:
+                    st.markdown(f"- {c}")
+
+    if _ai_dual:
+        _render_ai_result(_ai_dual.get("flash"))
+        st.caption(
+            "Powered by Gemini 2.5 Flash · Cached 24h per ticker · "
+            "AI output — not investment advice."
+        )
+
+    # ══════════════════════════════════════════════════════════
+    # SECTION 2: 🎓 Analyst Consensus (Wall Street targets)
+    # ══════════════════════════════════════════════════════════
+    st.markdown(
+        '<div style="font-size:0.8rem;font-weight:600;color:#94a3b8;'
+        'text-transform:uppercase;letter-spacing:0.05em;margin:20px 0 6px;">'
+        '🎓 Analyst Consensus (Wall Street Targets)</div>',
+        unsafe_allow_html=True,
+    )
+
+    _tm = _consensus.get("target_mean")
+    _tmed = _consensus.get("target_median")
+    _th = _consensus.get("target_high")
+    _tl = _consensus.get("target_low")
+
+    if any([_tm, _tmed, _th, _tl]):
+        # Horizontal bar chart
+        bar_rows = []
+        for lbl, val, clr in [
+            ("Low",    _tl,  "#EF4444"),
+            ("Mean",   _tm,  "#3B82F6"),
+            ("Median", _tmed, "#8B5CF6"),
+            ("High",   _th,  "#22C55E"),
+        ]:
+            if val is not None:
+                bar_rows.append({"label": lbl, "val": val, "color": clr})
+
+        if bar_rows:
+            fig = go.Figure()
+            for r in bar_rows:
+                fig.add_trace(go.Bar(
+                    y=[r["label"]], x=[r["val"]], orientation="h",
+                    marker_color=r["color"],
+                    text=[f"${r['val']:,.2f}"], textposition="outside",
+                    name=r["label"], showlegend=False,
+                ))
+            if _cp:
+                fig.add_vline(
+                    x=_cp, line_color="#FBBF24", line_width=2, line_dash="dash",
+                    annotation_text=f"Current ${_cp:,.2f}",
+                    annotation_position="top right",
+                    annotation_font_color="#FBBF24",
+                )
+            fig.update_layout(
+                height=240, margin=dict(l=40, r=80, t=10, b=30),
+                paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                xaxis=dict(gridcolor="rgba(100,116,139,0.2)", tickprefix="$"),
+                yaxis=dict(autorange="reversed"),
+            )
+            st.plotly_chart(fig, use_container_width=True)
+
+        # Recommendation breakdown
+        n = _consensus.get("n_analysts") or 0
+        sb = _consensus.get("rec_strong_buy", 0)
+        b  = _consensus.get("rec_buy", 0)
+        h  = _consensus.get("rec_hold", 0)
+        s  = _consensus.get("rec_sell", 0)
+        ss = _consensus.get("rec_strong_sell", 0)
+        rec_key = (_consensus.get("rec_key") or "").upper()
+
+        meta_line = f"**Analysts: {n}**" if n else ""
+        if sb + b + h + s + ss > 0:
+            meta_line += (
+                f" · Strong Buy {sb} · Buy {b} · Hold {h} · Sell {s} · Strong Sell {ss}"
+            )
+        if rec_key:
+            _rec_clr = {"STRONG_BUY": "#22C55E", "BUY": "#22C55E",
+                        "HOLD": "#EAB308", "SELL": "#EF4444",
+                        "STRONG_SELL": "#EF4444"}.get(rec_key, "#94A3B8")
+            meta_line += f' · <span style="color:{_rec_clr};font-weight:700;">{rec_key}</span>'
+        if meta_line:
+            st.markdown(meta_line, unsafe_allow_html=True)
+
+        # Upside vs current
+        if _cp and _tm:
+            up = (_tm / _cp - 1) * 100
+            _up_clr = "#22C55E" if up > 0 else "#EF4444"
+            st.markdown(
+                f'<div style="font-size:0.9rem;margin-top:6px;">'
+                f'Mean target upside: '
+                f'<span style="color:{_up_clr};font-weight:700;">{up:+.1f}%</span></div>',
+                unsafe_allow_html=True,
+            )
+    else:
+        st.info("No analyst targets available from yfinance / Finnhub.")
+
+    # ── Individual analyst targets (per-firm breakdown) ───────
+    _indiv = get_individual_analyst_targets(selected, limit=20)
+    if not _indiv.empty:
+        st.markdown(
+            '<div style="font-size:0.78rem;font-weight:600;color:#94a3b8;'
+            'text-transform:uppercase;letter-spacing:0.05em;margin:18px 0 4px;">'
+            '🏦 Individual Analyst Targets</div>',
+            unsafe_allow_html=True,
+        )
+
+        # Color each bar by position vs current price
+        colors = []
+        for tgt in _indiv["target"]:
+            if _cp and tgt > _cp * 1.1:
+                colors.append("#22C55E")   # strong upside
+            elif _cp and tgt > _cp:
+                colors.append("#86EFAC")   # mild upside
+            elif _cp and tgt > _cp * 0.9:
+                colors.append("#FBBF24")   # near current
+            else:
+                colors.append("#EF4444")   # downside
+
+        labels = [f"{r.firm} ({r.date})" if r.date else r.firm
+                  for r in _indiv.itertuples()]
+
+        height = max(260, 22 * len(_indiv))  # 개별 애널리스트 수에 비례, narrower than consensus
+        fig_ind = go.Figure(go.Bar(
+            y=labels, x=_indiv["target"].values,
+            orientation="h",
+            marker_color=colors,
+            text=[f"${v:,.0f}" for v in _indiv["target"]],
+            textposition="outside",
+            textfont=dict(size=11),
+            hovertemplate="<b>%{y}</b><br>Target: $%{x:,.2f}<extra></extra>",
+            width=0.55,  # narrower than consensus bars
+        ))
+        if _cp:
+            fig_ind.add_vline(
+                x=_cp, line_color="#FBBF24", line_width=2, line_dash="dash",
+                annotation_text=f"Current ${_cp:,.2f}",
+                annotation_position="top right",
+                annotation_font_color="#FBBF24",
+            )
+        fig_ind.update_layout(
+            height=height, margin=dict(l=40, r=80, t=10, b=30),
+            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+            xaxis=dict(gridcolor="rgba(100,116,139,0.2)", tickprefix="$"),
+            yaxis=dict(autorange="reversed", tickfont=dict(size=11)),
+            showlegend=False,
+            bargap=0.4,
+        )
+        st.plotly_chart(fig_ind, use_container_width=True)
+        st.caption(
+            f"Showing {len(_indiv)} most recent analyst targets · "
+            f"Source: yfinance upgrades_downgrades"
+        )
+
+    # ══════════════════════════════════════════════════════════
+    # SECTION 4: 🎯 Multiple-Based Fair Value (data-only table)
+    # ══════════════════════════════════════════════════════════
+    st.markdown(
+        '<div style="font-size:0.8rem;font-weight:600;color:#94a3b8;'
+        'text-transform:uppercase;letter-spacing:0.05em;margin:20px 0 6px;">'
+        '🎯 Multiple-Based Fair Value (Forward EPS × P/E)</div>',
+        unsafe_allow_html=True,
+    )
+    _fv_df = build_fair_value_table(_val_core)
+    if not _fv_df.empty:
+        _disp = _fv_df.drop(columns=["_fv", "_upside"])
+        st.dataframe(_disp, use_container_width=True, hide_index=True)
+    else:
+        st.info("Forward EPS unavailable — fair value table skipped.")
+
+    # ══════════════════════════════════════════════════════════
+    # SECTION 5: 🎲 Scenario Bands (Data-based: P/E percentiles)
+    # ══════════════════════════════════════════════════════════
+    st.markdown(
+        '<div style="font-size:0.8rem;font-weight:600;color:#94a3b8;'
+        'text-transform:uppercase;letter-spacing:0.05em;margin:20px 0 6px;">'
+        '🎲 Scenario Bands (Data-based — Historical P/E Percentiles)</div>',
+        unsafe_allow_html=True,
+    )
+    if _bands:
+        sc1, sc2, sc3 = st.columns(3)
+        for col, key, title, bg, border in [
+            (sc1, "bear",  "🐻 Bear",  "rgba(239,68,68,0.10)",  "#EF4444"),
+            (sc2, "base",  "🎯 Base",  "rgba(59,130,246,0.10)", "#3B82F6"),
+            (sc3, "bull",  "🚀 Bull",  "rgba(34,197,94,0.10)",  "#22C55E"),
+        ]:
+            b = _bands[key]
+            col.markdown(
+                f'<div style="background:{bg};border:1px solid {border};'
+                f'border-radius:10px;padding:14px 18px;">'
+                f'<div style="font-size:0.85rem;font-weight:700;color:{border};">{title}</div>'
+                f'<div style="font-size:1.3rem;font-weight:800;margin:6px 0;">'
+                f'${b["low"]:,.0f} – ${b["high"]:,.0f}</div>'
+                f'<div style="font-size:0.78rem;color:#94a3b8;">'
+                f'P/E {b["mult_range"]}<br>{b["note"]}</div>'
+                f'</div>',
+                unsafe_allow_html=True,
+            )
+        if _bands.get("_source"):
+            st.caption(f"Bands source: {_bands['_source']}")
+    else:
+        st.info("Forward EPS unavailable — scenario bands skipped.")
+
+    # ══════════════════════════════════════════════════════════
+    # SECTION 6: 📊 Core Financial Metrics (reference data)
+    # ══════════════════════════════════════════════════════════
+    st.markdown(
+        '<div style="font-size:0.8rem;font-weight:600;color:#94a3b8;'
+        'text-transform:uppercase;letter-spacing:0.05em;margin:20px 0 6px;">'
+        '📊 Core Financial Metrics</div>',
+        unsafe_allow_html=True,
+    )
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Current Price", _fmt_money(_val_core.get("current_price")))
+    c2.metric("Market Cap", _fmt_money(_val_core.get("market_cap")))
+    _tte = _val_core.get("trailing_eps")
+    c3.metric("TTM EPS", f"${_tte:.2f}" if _tte else "N/A")
+    _fe = _val_core.get("forward_eps")
+    c4.metric("Forward EPS", f"${_fe:.2f}" if _fe else "N/A")
+
+    c5, c6, c7, c8 = st.columns(4)
+    _q_rev = _val_core.get("latest_q_revenue")
+    c5.metric("Latest Q Revenue", _fmt_money(_q_rev) if _q_rev else "N/A")
+    _yoy = _val_core.get("q_yoy") or _val_core.get("revenue_growth_yoy")
+    _qoq = _val_core.get("q_qoq")
+    c6.metric("Revenue YoY / QoQ",
+              f"{_fmt_pct(_yoy)} / {_fmt_pct(_qoq)}" if _yoy or _qoq else "N/A")
+    _gm = _val_core.get("gross_margin")
+    c7.metric("Gross Margin (TTM)", _fmt_pct(_gm, 1) if _gm else "N/A")
+    _om = _val_core.get("operating_margin")
+    c8.metric("Operating Margin (TTM)", _fmt_pct(_om, 1) if _om else "N/A")
+
+# --- Fundamentals (compact reference card grid) ---
+st.markdown("---")
 st.subheader(tr("sd.fundamentals"))
 fund_cols = st.columns(4)
 metrics = [
@@ -442,18 +825,13 @@ metrics = [
     (tr("sd.de_ratio"), info.get("debt_to_equity")),
     (tr("sd.avg_volume"), f"{info.get('avg_volume'):,.0f}" if info.get("avg_volume") else None),
 ]
-
 for i, (label, val) in enumerate(metrics):
     with fund_cols[i % 4]:
         display = f"{val:.2f}" if isinstance(val, (int, float)) else (val or "N/A")
         st.metric(label, display)
 
-# --- Company Description ---
-if info.get("description"):
-    with st.expander(tr("sd.company_desc")):
-        st.write(info["description"])
-
 # --- News ---
+st.markdown("---")
 st.subheader(tr("sd.recent_news", ticker=selected))
 articles = get_stock_news(selected)
 if articles:
@@ -469,3 +847,8 @@ if articles:
             st.markdown(f"{badge} {hl} — _{source}_")
 else:
     st.caption(tr("dash.no_news"))
+
+# --- Company Description (expander, end) ---
+if info.get("description"):
+    with st.expander(tr("sd.company_desc")):
+        st.write(info["description"])
