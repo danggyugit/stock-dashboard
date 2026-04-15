@@ -42,20 +42,17 @@ def get_or_create_user() -> dict | None:
     if not email:
         return None
 
-    conn = get_connection()
-
-    # Try by google_sub first, then email. Wrap in try/except so a missing
-    # `users` table (cold start, schema drift, locked DB) doesn't crash the
-    # whole app — we'll attempt to recreate the table once and retry.
     def _lookup() -> tuple | None:
+        # Always fetch a fresh connection — handles libsql stream expiry
+        c = get_connection()
         r = None
         if google_sub:
-            r = conn.execute(
+            r = c.execute(
                 "SELECT id, google_sub, email, name, picture FROM users WHERE google_sub = ?",
                 (google_sub,),
             ).fetchone()
         if not r:
-            r = conn.execute(
+            r = c.execute(
                 "SELECT id, google_sub, email, name, picture FROM users WHERE email = ?",
                 (email,),
             ).fetchone()
@@ -64,14 +61,17 @@ def get_or_create_user() -> dict | None:
     try:
         row = _lookup()
     except Exception as e:
-        logger.warning("users lookup failed (%s) — re-running init_db()", e)
+        logger.warning("users lookup failed (%s) — resetting conn + re-running init_db()", e)
         try:
-            from database import init_db as _init
+            from database import init_db as _init, reset_connection
+            reset_connection()
             _init()
             row = _lookup()
         except Exception:
             logger.exception("users lookup retry also failed")
             return None
+
+    conn = get_connection()
 
     now = datetime.now().isoformat()
 

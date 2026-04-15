@@ -26,31 +26,74 @@ def _get_turso_config() -> tuple[str | None, str | None]:
         return None, None
 
 
-def get_connection():
-    """Return a singleton DB connection. Uses Turso if configured, else SQLite."""
-    global _conn, _backend
-    if _conn is not None:
-        return _conn
-
+def _open_new_connection():
+    """Open a fresh DB connection (Turso if configured, else SQLite)."""
+    global _backend
     url, token = _get_turso_config()
     if url and token:
         try:
             import libsql
-            _conn = libsql.connect(database=url, auth_token=token)
+            conn = libsql.connect(database=url, auth_token=token)
             _backend = "turso"
             logger.info("Connected to Turso: %s", url)
-            return _conn
+            return conn
         except Exception as e:
             logger.exception("Turso connection failed, falling back to SQLite: %s", e)
 
-    # SQLite fallback
     _DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    _conn = sqlite3.connect(str(_DB_PATH), check_same_thread=False)
-    _conn.execute("PRAGMA journal_mode=WAL")
-    _conn.execute("PRAGMA foreign_keys=ON")
-    _conn.row_factory = sqlite3.Row
+    conn = sqlite3.connect(str(_DB_PATH), check_same_thread=False)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA foreign_keys=ON")
+    conn.row_factory = sqlite3.Row
     _backend = "sqlite"
     logger.info("Connected to SQLite: %s", _DB_PATH)
+    return conn
+
+
+def _is_stream_error(err: Exception) -> bool:
+    """Detect Turso/libsql stale-stream errors that require reconnection."""
+    msg = str(err).lower()
+    return (
+        "stream not found" in msg
+        or "stream expired" in msg
+        or "hrana" in msg and "404" in msg
+    )
+
+
+def reset_connection() -> None:
+    """Force-close the current connection so the next call reopens fresh."""
+    global _conn
+    if _conn is not None:
+        try:
+            _conn.close()
+        except Exception:
+            pass
+    _conn = None
+    logger.info("DB connection reset — will reconnect on next use")
+
+
+def get_connection():
+    """Return a singleton DB connection with auto-reconnect on stream errors.
+
+    Turso/libsql streams can expire after idle timeout. On next use we get
+    `stream not found` — detect and reopen a fresh connection transparently.
+    """
+    global _conn
+
+    if _conn is not None:
+        # Cheap liveness probe — reconnect if stream is dead
+        try:
+            _conn.execute("SELECT 1")
+            return _conn
+        except Exception as e:
+            if _is_stream_error(e):
+                logger.warning("DB stream stale (%s) — reconnecting", e)
+                reset_connection()
+            else:
+                # Some other error — let caller see it, but keep conn
+                return _conn
+
+    _conn = _open_new_connection()
     return _conn
 
 
