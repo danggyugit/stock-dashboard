@@ -28,8 +28,8 @@ if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
 # Action: run the batch file
 $action = New-ScheduledTaskAction -Execute $BatchPath
 
-# Trigger: every day at 11:00 KST
-$trigger = New-ScheduledTaskTrigger -Daily -At "11:00"
+# Trigger: every day at 13:00 KST
+$trigger = New-ScheduledTaskTrigger -Daily -At "13:00"
 
 # Settings: be resilient to PC sleep / power state / network
 $settings = New-ScheduledTaskSettingsSet `
@@ -57,7 +57,7 @@ Register-ScheduledTask `
 
 Write-Host ""
 Write-Host "==> Registered: $TaskName" -ForegroundColor Green
-Write-Host "    Schedule: every day at 11:00 KST"
+Write-Host "    Schedule: every day at 13:00 KST"
 Write-Host "    Batch:    $BatchPath"
 Write-Host ""
 Write-Host "View it in: taskschd.msc -> Task Scheduler Library"

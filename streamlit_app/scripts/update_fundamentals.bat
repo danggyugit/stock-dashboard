@@ -9,7 +9,7 @@ REM    - Merges into existing fundamentals.json (partial success OK)
 REM    - Pushes to GitHub → Streamlit Cloud picks up automatically
 REM
 REM  Schedule via Windows Task Scheduler:
-REM    Daily at 11:00 KST
+REM    Daily at 13:00 KST
 REM
 REM  Setup:
 REM    Run as Administrator:
@@ -51,8 +51,13 @@ if errorlevel 1 (
     git commit -m "chore: refresh fundamentals cache (local scheduler)" >> "%LOG%" 2>&1
     git push origin main >> "%LOG%" 2>&1
     if errorlevel 1 (
-        echo [%date% %time%] ERROR: git push failed >> "%LOG%"
-        exit /b 1
+        echo [%date% %time%] Initial push failed — pull rebase + retry >> "%LOG%"
+        git pull --rebase -X ours origin main >> "%LOG%" 2>&1
+        git push origin main >> "%LOG%" 2>&1
+        if errorlevel 1 (
+            echo [%date% %time%] ERROR: git push failed after retry >> "%LOG%"
+            exit /b 1
+        )
     )
     echo [%date% %time%] === Pushed successfully === >> "%LOG%"
 ) else (
