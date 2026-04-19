@@ -1,0 +1,78 @@
+{
+  "preset_id": "it_equal",
+  "name": "IT Equal-Weight (No Cash)",
+  "description": "IT 섹터, 균등 가중, 현금 없음",
+  "config": {
+    "cap_tiers": [
+      "Large Cap"
+    ],
+    "sectors": [
+      "Information Technology"
+    ],
+    "rebal_m": 1,
+    "rolling_w": 12,
+    "n_stocks": 5,
+    "tc_pct": 0.3,
+    "min_dollar_vol": 10000000,
+    "use_next_open": true,
+    "use_surv_fix": true,
+    "use_ensemble": false,
+    "use_mom_filter": false,
+    "use_turnover_buffer": true,
+    "start": "2022-01-01T00:00:00",
+    "end": "2026-04-19T00:00:00",
+    "min_test": 5,
+    "use_inv_vol_weight": false,
+    "cash_strategy": "none"
+  },
+  "summary": {
+    "n_rebalances": 39,
+    "total_return_pct": 149.9,
+    "cagr_pct": 24.1,
+    "sharpe": 0.8,
+    "sortino": 2.48,
+    "max_dd_pct": -25.7,
+    "monthly_win_rate_pct": 41.2,
+    "volatility_pct": null,
+    "rebal_win_rate_pct": 53.85,
+    "avg_period_return_pct": 3.13,
+    "avg_excess_return_pct": 1.37,
+    "profit_factor": 2.38
+  },
+  "last_rebalance_date": "2026-03-01",
+  "last_regime": "N/A",
+  "last_cash_ratio_pct": 0.0,
+  "latest_picks": [
+    {
+      "ticker": "SNDK",
+      "비중": "20.0%",
+      "예측수익률": 0.2078,
+      "실제수익률": 0.0379
+    },
+    {
+      "ticker": "MU",
+      "비중": "20.0%",
+      "예측수익률": 0.1872,
+      "실제수익률": -0.1494
+    },
+    {
+      "ticker": "WDC",
+      "비중": "20.0%",
+      "예측수익률": 0.1864,
+      "실제수익률": 0.0288
+    },
+    {
+      "ticker": "TER",
+      "비중": "20.0%",
+      "예측수익률": 0.1518,
+      "실제수익률": -0.066
+    },
+    {
+      "ticker": "CIEN",
+      "비중": "20.0%",
+      "예측수익률": 0.1406,
+      "실제수익률": 0.1335
+    }
+  ],
+  "updated_at": "2026-04-19T19:06:01.216484+00:00"
+}
