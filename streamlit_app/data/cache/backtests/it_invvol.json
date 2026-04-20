@@ -27,17 +27,17 @@
   },
   "summary": {
     "n_rebalances": 39,
-    "total_return_pct": 161.2,
-    "cagr_pct": 25.4,
-    "sharpe": 0.93,
-    "sortino": 2.62,
-    "max_dd_pct": -23.1,
+    "total_return_pct": 137.0,
+    "cagr_pct": 22.5,
+    "sharpe": 0.83,
+    "sortino": 2.47,
+    "max_dd_pct": -25.1,
     "monthly_win_rate_pct": 41.2,
     "volatility_pct": null,
     "rebal_win_rate_pct": 53.85,
-    "avg_period_return_pct": 3.13,
-    "avg_excess_return_pct": 1.36,
-    "profit_factor": 2.53
+    "avg_period_return_pct": 2.88,
+    "avg_excess_return_pct": 1.12,
+    "profit_factor": 2.27
   },
   "last_rebalance_date": "2026-03-01",
   "last_regime": "N/A",
@@ -74,5 +74,5 @@
       "실제수익률": 0.1335
     }
   ],
-  "updated_at": "2026-04-19T18:57:34.299166+00:00"
+  "updated_at": "2026-04-20T02:09:47.311707+00:00"
 }
