@@ -57,10 +57,23 @@ def get_economic_events(from_date: str, to_date: str) -> list[dict]:
                     name = ev.get("event", "")
                     if not name:
                         continue
+                    # Finnhub puts date+time in `time` field as "YYYY-MM-DD HH:MM:SS"
+                    # and does NOT provide a separate `date` field.
+                    raw_time = ev.get("time") or ""
+                    ev_date = ev.get("date")
+                    ev_time = None
+                    if raw_time:
+                        parts = raw_time.split(" ", 1)
+                        if not ev_date and parts[0]:
+                            ev_date = parts[0]
+                        if len(parts) == 2 and parts[1]:
+                            ev_time = parts[1]
+                    if not ev_date:
+                        continue  # skip events with no parseable date
                     events.append({
                         "event_name": name, "country": "US",
-                        "event_date": ev.get("date", from_date),
-                        "event_time": ev.get("time"),
+                        "event_date": ev_date,
+                        "event_time": ev_time,
                         "actual": ev.get("actual"),
                         "forecast": ev.get("estimate") or ev.get("forecast"),
                         "previous": ev.get("prev") or ev.get("previous"),
