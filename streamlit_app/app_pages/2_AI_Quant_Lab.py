@@ -2570,6 +2570,29 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                              hide_index=True, height=260)
             else:
                 st.info(tr("msg.no_features"))
+        elif rebal_hist:
+            # Cached preset fallback: show the last rebalance's picks
+            last = rebal_hist[-1]
+            tdf = last.get("ticker_df", pd.DataFrame())
+            if not tdf.empty:
+                _rdate = last.get("rebalance_date")
+                if _rdate is not None:
+                    try:
+                        _rdate_str = pd.Timestamp(_rdate).strftime("%Y-%m-%d")
+                    except Exception:
+                        _rdate_str = str(_rdate)
+                    st.caption(f"{tr('pk.as_of')}: {_rdate_str} (from last rebalance)")
+                priority = ["ticker", "비중", "평균순위", "예측수익률", "실제수익률"]
+                show_cols = [c for c in priority if c in tdf.columns]
+                disp = tdf[show_cols].copy()
+                for pct_col in ("비중", "예측수익률", "실제수익률"):
+                    if pct_col in disp.columns:
+                        disp[pct_col] = disp[pct_col].apply(
+                            lambda x: f"{x:.2%}" if pd.notna(x) and isinstance(x, (int, float)) else x
+                        )
+                st.dataframe(disp, use_container_width=True, hide_index=True, height=260)
+            else:
+                st.info(tr("msg.run_first"))
         else:
             st.info(tr("msg.run_first"))
 
