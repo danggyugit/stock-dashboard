@@ -1,6 +1,6 @@
 """Daily preset backtest runner — headless execution of AI Quant Lab.
 
-Runs 3 preset configurations on IT sector from 2022-01-01 to yesterday,
+Runs 3 preset configurations on IT sector from 2023-01-01 to yesterday,
 saves summary + latest AI recommendations to JSON files for MCP consumption.
 
 Triggered by Windows Task Scheduler (11:00 KST daily) via
@@ -181,7 +181,7 @@ def _common_config() -> dict:
     """Common settings shared across the 3 presets."""
     today = date.today()
     end_dt = today - timedelta(days=1)           # yesterday
-    start_dt = date(2022, 1, 1)
+    start_dt = date(2023, 1, 1)
     return {
         "cap_tiers": ["Large Cap"],
         "sectors": ["Information Technology"],
