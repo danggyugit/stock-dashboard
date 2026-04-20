@@ -31,8 +31,10 @@ import concurrent.futures
 import time
 import random
 import os
+import json
 import calendar
 from datetime import datetime, timedelta
+from pathlib import Path
 
 warnings.filterwarnings("ignore")
 
@@ -3889,6 +3891,170 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
 # MAIN
 # ═══════════════════════════════════════════════════════════
 
+# ═══════════════════════════════════════════════════════════
+# Preset Backtest Loader — read daily JSON cache and reconstruct
+# session_state so the existing tabs can render without re-running.
+# ═══════════════════════════════════════════════════════════
+
+_BACKTEST_CACHE_DIR = Path(__file__).resolve().parent.parent / "data" / "cache" / "backtests"
+
+PRESET_OPTIONS = {
+    "it_invvol":        "IT Inverse-Vol (No Cash)",
+    "it_equal":         "IT Equal-Weight (No Cash)",
+    "it_invvol_regime": "IT Inverse-Vol + Regime Cash",
+}
+
+
+def _deserialize_preset(data: dict) -> tuple[dict, dict]:
+    """Reconstruct (results_dict, cfg_dict) from a preset JSON record."""
+    full = data.get("full", {}) or {}
+    raw_cfg = data.get("config", {}) or {}
+
+    # Parse dates back to datetime
+    def _parse_dt(s):
+        if not s:
+            return None
+        try:
+            return pd.Timestamp(s)
+        except Exception:
+            try:
+                return datetime.fromisoformat(str(s))
+            except Exception:
+                return None
+
+    # rebal_hist reconstruction
+    rebal_hist = []
+    for h in full.get("rebal_hist", []):
+        entry = dict(h)
+        for k in ("rebalance_date", "next_date"):
+            if k in entry:
+                entry[k] = _parse_dt(entry[k])
+        tdf_list = entry.get("ticker_df")
+        if isinstance(tdf_list, list):
+            entry["ticker_df"] = pd.DataFrame(tdf_list)
+        rebal_hist.append(entry)
+
+    # cash_history reconstruction
+    cash_history = []
+    for c in full.get("cash_history", []):
+        entry = dict(c)
+        if "date" in entry:
+            entry["date"] = _parse_dt(entry["date"])
+        cash_history.append(entry)
+
+    # Feature importance dataframes
+    def _build_fimp(records):
+        if not records:
+            return pd.DataFrame()
+        df = pd.DataFrame(records)
+        if "date" in df.columns:
+            df["date"] = pd.to_datetime(df["date"])
+            df = df.set_index("date")
+        return df
+
+    results = {
+        "port_dates": [_parse_dt(d) for d in full.get("port_dates", [])],
+        "port_values": list(full.get("port_values", [])),
+        "rebal_hist": rebal_hist,
+        "cash_history": cash_history,
+        "ic_df": pd.DataFrame(full.get("ic_records", [])),
+        "fimp_df":      _build_fimp(full.get("fimp_data")),
+        "fimp_rf_df":   _build_fimp(full.get("fimp_rf_data")),
+        "fimp_xgb_df":  _build_fimp(full.get("fimp_xgb_data")),
+        "fimp_lgbm_df": _build_fimp(full.get("fimp_lgbm_data")),
+        "use_ensemble": full.get("use_ensemble", False),
+        "rebal_m": full.get("rebal_m", 1),
+        "cash_strategy": full.get("cash_strategy", "none"),
+        # ML model/imputer intentionally None → AI Picks tab shows "no model"
+        "last_model_rf": None,
+        "last_model_xgb": None,
+        "last_model_lgbm": None,
+        "last_imputer": None,
+        "last_avail_cols": [],
+        "last_all_cols": [],
+        "last_win_bounds": {},
+        "last_miss_src": [],
+    }
+
+    # Config — parse back start/end to datetime for downstream code
+    cfg = dict(raw_cfg)
+    for k in ("start", "end"):
+        v = cfg.get(k)
+        if isinstance(v, str):
+            try:
+                cfg[k] = datetime.fromisoformat(v)
+            except Exception:
+                pass
+
+    return results, cfg
+
+
+def _load_preset_into_session(preset_id: str) -> str | None:
+    """Load a saved preset into session_state. Returns error message or None."""
+    try:
+        import json as _json
+        path = _BACKTEST_CACHE_DIR / f"{preset_id}.json"
+        if not path.exists():
+            return f"Preset file not found: {preset_id}.json"
+        data = _json.loads(path.read_text(encoding="utf-8"))
+
+        results, cfg = _deserialize_preset(data)
+
+        # Fetch fresh benchmarks + rf_rate for the period
+        benchmarks = {}
+        rf_rate = 0.04
+        try:
+            start = cfg.get("start")
+            end = cfg.get("end")
+            if start and end:
+                benchmarks = get_benchmark_prices(
+                    start.strftime("%Y-%m-%d"),
+                    end.strftime("%Y-%m-%d"),
+                )
+                rf_rate = get_riskfree_rate(
+                    start.strftime("%Y-%m-%d"),
+                    end.strftime("%Y-%m-%d"),
+                )
+        except Exception as e:
+            logger = __import__("logging").getLogger(__name__)
+            logger.warning("Benchmark fetch failed in preset load: %s", e)
+
+        st.session_state.results    = results
+        st.session_state.benchmarks = benchmarks
+        st.session_state.rf_rate    = rf_rate
+        st.session_state.cfg        = cfg
+        # price_data etc intentionally left empty — AI Picks tab will gracefully skip
+        st.session_state.price_data = {}
+        st.session_state.fund_map   = {}
+        st.session_state.tech_map   = {}
+        st.session_state.pit_map    = {}
+        st.session_state.spy_close  = None
+        st.session_state.vix_close  = None
+        st.session_state.sector_map = {}
+        st.session_state["_loaded_preset"] = data.get("name", preset_id)
+        return None
+    except Exception as e:
+        return f"Load failed: {e}"
+
+
+def _backtest_updated_at() -> str:
+    """Read _metadata.json to show the last auto-run timestamp."""
+    try:
+        import json as _json
+        meta_path = _BACKTEST_CACHE_DIR / "_metadata.json"
+        if not meta_path.exists():
+            return "—"
+        m = _json.loads(meta_path.read_text(encoding="utf-8"))
+        iso = m.get("updated_at", "")
+        if not iso:
+            return "—"
+        dt = datetime.fromisoformat(iso)
+        kst = dt + timedelta(hours=9) if dt.tzinfo else dt
+        return kst.strftime("%m/%d %H:%M KST")
+    except Exception:
+        return "—"
+
+
 def main():
     # Hero card (matches Home / Dashboard tone)
     st.markdown(
@@ -3909,6 +4075,38 @@ def main():
         """,
         unsafe_allow_html=True,
     )
+
+    # ── Load Preset Backtest (cached daily results) ────────
+    _updated_at = _backtest_updated_at()
+    with st.expander(f"📦 Load Saved Preset Backtest — Last updated: {_updated_at}",
+                     expanded=False):
+        col_sel, col_btn = st.columns([3, 1])
+        with col_sel:
+            _preset_label = st.selectbox(
+                "Preset",
+                options=list(PRESET_OPTIONS.values()),
+                key="preset_selector",
+                label_visibility="collapsed",
+            )
+        with col_btn:
+            if st.button("Load", use_container_width=True, key="preset_load_btn"):
+                pid = next(
+                    (k for k, v in PRESET_OPTIONS.items() if v == _preset_label),
+                    None,
+                )
+                if pid:
+                    err = _load_preset_into_session(pid)
+                    if err:
+                        st.error(err)
+                    else:
+                        st.success(f"Loaded: {_preset_label}")
+                        st.rerun()
+        st.caption(
+            "Pre-computed daily at 11:00 KST. Loads all tabs except AI Picks "
+            "(requires live models — run a backtest below to enable)."
+        )
+        if st.session_state.get("_loaded_preset"):
+            st.info(f"Currently showing: **{st.session_state['_loaded_preset']}**")
 
     with st.spinner(tr("spinner.sp1500")):
         sp1500_df, all_sectors = get_sp1500_info()
@@ -4203,5 +4401,9 @@ def main():
                          sector_map=st.session_state.get("sector_map"))
 
 
-# Multipage entry: Streamlit runs this file top-to-bottom on each page load
-main()
+# Multipage entry: Streamlit runs this file top-to-bottom on each page load.
+# Skip auto-execution when loaded as a module for batch backtests
+# (scripts/run_preset_backtests.py sets QUANT_LAB_BATCH=1).
+import os as _os
+if not _os.environ.get("QUANT_LAB_BATCH"):
+    main()
