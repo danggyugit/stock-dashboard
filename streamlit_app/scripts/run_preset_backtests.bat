@@ -34,7 +34,7 @@ git stash list | findstr /C:"%STASH_MSG%" >nul
 if not errorlevel 1 set "STASHED=1"
 
 REM ── Pull latest to avoid push conflicts later.
-git pull --rebase -X ours origin main >> "%LOG%" 2>&1
+git pull --rebase --autostash -X ours origin main >> "%LOG%" 2>&1
 
 cd /d "%REPO%\streamlit_app"
 
@@ -68,7 +68,7 @@ if errorlevel 1 (
                 set "PUSH_OK=1"
             ) else (
                 echo [%date% %time%] Push attempt %%i failed - pull rebase and retry >> "%LOG%"
-                git pull --rebase -X ours origin main >> "%LOG%" 2>&1
+                git pull --rebase --autostash -X ours origin main >> "%LOG%" 2>&1
             )
         )
     )

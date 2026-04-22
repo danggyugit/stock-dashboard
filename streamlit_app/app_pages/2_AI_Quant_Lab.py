@@ -1476,10 +1476,25 @@ def _get_regime_at_date(hmm_model, spy_close: pd.Series, date: pd.Timestamp,
     }
 
 
-def _calc_portfolio_vol(price_data: dict, tickers: list,
-                        date: pd.Timestamp, window: int = 30) -> float:
-    """Calculate realized portfolio volatility (equal-weight) over last N days."""
-    daily_returns = []
+def _calc_portfolio_vol(price_data: dict, weights, date: pd.Timestamp,
+                        window: int = 30) -> float:
+    """Calculate realized portfolio volatility over last N days.
+
+    `weights` may be either:
+      * list/iterable of tickers → equal-weight (legacy behavior)
+      * dict {ticker: weight}     → weighted portfolio vol (Ver4.3-fix)
+    """
+    if isinstance(weights, dict):
+        tickers = list(weights.keys())
+        w_map = dict(weights)
+    else:
+        tickers = list(weights)
+        if not tickers:
+            return 0.20
+        equal_w = 1.0 / len(tickers)
+        w_map = {t: equal_w for t in tickers}
+
+    per_ticker = []
     for t in tickers:
         ohlcv = price_data.get(t)
         if ohlcv is None:
@@ -1487,15 +1502,20 @@ def _calc_portfolio_vol(price_data: dict, tickers: list,
         mask = ohlcv.index <= date
         close = ohlcv[mask]["Close"].tail(window + 1)
         if len(close) >= 10:
-            daily_returns.append(close.pct_change().dropna())
+            per_ticker.append((t, close.pct_change().dropna()))
 
-    if not daily_returns:
+    if not per_ticker:
         return 0.20  # fallback 20%
 
-    # Equal-weight portfolio returns
-    min_len = min(len(r) for r in daily_returns)
-    aligned = np.column_stack([r.values[-min_len:] for r in daily_returns])
-    port_daily = aligned.mean(axis=1)
+    # Align to common tail length
+    min_len = min(len(r) for _, r in per_ticker)
+    aligned = np.column_stack([r.values[-min_len:] for _, r in per_ticker])
+    w_vec = np.array([w_map.get(t, 0.0) for t, _ in per_ticker], dtype=float)
+    w_sum = w_vec.sum()
+    if w_sum <= 0:
+        return 0.20
+    w_vec = w_vec / w_sum  # renormalize in case some tickers had no price data
+    port_daily = aligned @ w_vec
     realized_vol = float(np.std(port_daily) * np.sqrt(252))
     return max(realized_vol, 0.01)  # floor at 1%
 
@@ -1596,14 +1616,16 @@ def run_backtest(
         progress(0.05 + 0.25 * (i / max(n_dates - 2, 1)),
                  tr("prog.snapshot", i=i+1, total=n_dates-1))
 
-    # ── Step 1b: HMM Regime 학습 (cash_strategy 사용 시) ──
+    # ── Step 1b: HMM Regime 준비 (cash_strategy 사용 시) ──
+    # Ver4.3-fix: HMM must be refit per rebalance date using past SPY data
+    # only. Fitting once on the full series leaked future returns into
+    # every historical regime decision (`_get_regime_at_date`).
     hmm_model = None
     use_cash = cash_strategy in ("vol_target", "regime", "combined")
+    spy_returns_full = None
     if use_cash and spy_close is not None and len(spy_close) > 60:
-        spy_returns = spy_close.pct_change().dropna()
-        hmm_model = _fit_hmm_regimes(spy_returns)
-        if hmm_model is not None:
-            progress(0.28, "🧠 HMM Regime model trained (3 states)")
+        spy_returns_full = spy_close.pct_change().dropna()
+        progress(0.28, "🧠 HMM Regime will refit per rebalance (no lookahead)")
 
     # ── Step 2: 롤링 모델 학습 + 포트폴리오 시뮬레이션 ──
     progress(0.30, tr("prog.training"))
@@ -1619,7 +1641,7 @@ def run_backtest(
     feat_imp_lgbm_rows = []
     rebal_history  = []
     cash_history   = []  # 현금 비중 이력
-    prev_selected  = set()   # 직전 기간 보유 종목 (turnover 계산용)
+    prev_weights   = {}      # Ver4.3-fix: ticker → weight for weight-aware turnover
 
     # 마지막 학습 정보 (tab_realtime 전달용)
     last_win_bounds  = {}
@@ -1805,9 +1827,9 @@ def run_backtest(
         else:
             candidates = pred_series
         # Ver4.2: 턴오버 버퍼 — 보유 종목에 가산점 부여
-        if use_turnover_buffer and prev_selected:
+        if use_turnover_buffer and prev_weights:
             candidates_adj = candidates.copy()
-            for t in prev_selected:
+            for t in prev_weights:
                 if t in candidates_adj.index:
                     candidates_adj[t] *= (1 + turnover_buffer_pct)
             if len(candidates_adj) >= n_stocks:
@@ -1867,22 +1889,31 @@ def run_backtest(
             precision = np.nan
 
         # ── Turnover 계산 + 거래비용 적용 ─────────────────
-        # turnover = 신규 편입 종목 수 / 전체 보유 종목 수
-        # 첫 리밸런싱은 전체 신규 매수이므로 turnover = 1.0
-        new_selected = set(selected.index)
-        if not prev_selected:
+        # Ver4.3-fix: weight-aware turnover = 0.5 × Σ|w_new - w_old|.
+        # Count-based turnover missed weight shifts under inverse-vol
+        # (same names, different weights → real trades with zero TC).
+        if not prev_weights:
             turnover = 1.0
         else:
-            newly_bought = len(new_selected - prev_selected)
-            turnover = newly_bought / max(len(new_selected), 1)
-        prev_selected = new_selected
+            all_names = set(weights_dict) | set(prev_weights)
+            turnover = 0.5 * sum(
+                abs(weights_dict.get(t, 0.0) - prev_weights.get(t, 0.0))
+                for t in all_names
+            )
+        prev_weights = dict(weights_dict)
 
         # ── 현금 비중 결정 (Vol Targeting + Regime) ────────
         cash_ratio = 0.0
         regime_info = {"regime": 1, "label": "Normal", "target_vol": 0.15, "regime_probs": None}
+        realized_vol = None
         if use_cash:
+            # Ver4.3-fix: refit HMM with only past returns at this rebalance date
+            if spy_returns_full is not None:
+                past_returns = spy_returns_full[spy_returns_full.index <= date]
+                if len(past_returns) > 60:
+                    hmm_model = _fit_hmm_regimes(past_returns)
             regime_info = _get_regime_at_date(hmm_model, spy_close, date)
-            realized_vol = _calc_portfolio_vol(price_data, list(selected.index), date)
+            realized_vol = _calc_portfolio_vol(price_data, weights_dict, date)
 
             if cash_strategy == "vol_target":
                 # Pure vol targeting with fixed target 15%
