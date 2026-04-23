@@ -2613,6 +2613,23 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                     except Exception:
                         _rdate_str = str(_rdate)
                     st.caption(f"{tr('pk.as_of')}: {_rdate_str} (from last rebalance)")
+
+                # Regime + Cash 배너 (cash_strategy 사용 시)
+                _cached_cash_strat = (
+                    _cfg.get("cash_strategy") or results.get("cash_strategy", "none")
+                )
+                _last_cash = last.get("cash_ratio")
+                _last_regime = last.get("regime")
+                if (_cached_cash_strat != "none" and _last_cash is not None
+                        and _last_regime and _last_regime != "N/A"):
+                    _se = {"Bull": "🟢", "Normal": "🟡", "Bear": "🔴"}.get(_last_regime, "⚪")
+                    st.markdown(
+                        f'<div style="font-size:0.78rem;padding:4px 0;">'
+                        f'{_se} <b>{_last_regime}</b> · '
+                        f'{tr("rh.cash_ratio")} <b>{_last_cash:.0%}</b> · '
+                        f'Invest <b style="color:#22C55E">{1-_last_cash:.0%}</b></div>',
+                        unsafe_allow_html=True,
+                    )
                 priority = ["ticker", "비중", "평균순위", "예측수익률", "실제수익률"]
                 show_cols = [c for c in priority if c in tdf.columns]
                 disp = tdf[show_cols].copy()
