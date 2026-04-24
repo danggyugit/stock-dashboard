@@ -470,6 +470,23 @@ def _serialize_full_results(results: dict, cfg: dict) -> dict:
                         d[col] = val
             ic_records.append(d)
 
+    # Last-rebalance full universe ranking (so cached Summary tab can show
+    # all tickers, not just the top N that ended up in the portfolio).
+    ranking_out = []
+    full_rank_df = results.get("last_full_ranking_df")
+    if full_rank_df is not None and not full_rank_df.empty:
+        for _, row in full_rank_df.iterrows():
+            rec = {"ticker": str(row.get("ticker", ""))}
+            for col in ("composite_score", "Mom_1m", "Mom_3m", "Mom_6m",
+                        "Mom_12m", "Volatility_30d"):
+                if col in full_rank_df.columns:
+                    val = row[col]
+                    try:
+                        rec[col] = None if pd.isna(val) else float(val)
+                    except Exception:
+                        rec[col] = None
+            ranking_out.append(rec)
+
     return {
         "port_dates": port_dates,
         "port_values": port_values,
@@ -480,6 +497,7 @@ def _serialize_full_results(results: dict, cfg: dict) -> dict:
         "fimp_rf_data": _serialize_fimp(results.get("fimp_rf_df")),
         "fimp_xgb_data": _serialize_fimp(results.get("fimp_xgb_df")),
         "fimp_lgbm_data": _serialize_fimp(results.get("fimp_lgbm_df")),
+        "last_full_ranking": ranking_out,
         "use_ensemble": bool(cfg.get("use_ensemble", False)),
         "rebal_m": int(cfg.get("rebal_m", 1)),
         "cash_strategy": cfg.get("cash_strategy", "none"),

@@ -1648,6 +1648,7 @@ def run_backtest(
     last_miss_src    = []
     last_all_cols    = []
     last_avail_cols  = []
+    last_full_ranking_df = pd.DataFrame()  # Ver4.3: last-rebalance full universe ranking
 
     for i in range(rolling_win, n_dates - 1):
         date      = rebal_dates[i]
@@ -1819,6 +1820,17 @@ def run_backtest(
                 ic_val = ic_rf
             ic_rec["IC"] = ic_val
             ic_records.append(ic_rec)
+
+        # Ver4.3: save full universe ranking for the latest rebalance — used by
+        # cached-preset Summary view so it can show ALL tickers (not just top N).
+        _ranking_cols = {
+            "ticker": cur_snap.index,
+            "composite_score": pred_series.reindex(cur_snap.index).values,
+        }
+        for _mc in ("Mom_1m", "Mom_3m", "Mom_6m", "Mom_12m", "Volatility_30d"):
+            if _mc in cur_snap.columns:
+                _ranking_cols[_mc] = cur_snap[_mc].values
+        last_full_ranking_df = pd.DataFrame(_ranking_cols)
 
         # ── 종목 선정 (모멘텀 필터 + 턴오버 버퍼) ──────────
         if use_mom_filter and "Mom_1m" in cur_snap.columns:
@@ -2041,6 +2053,7 @@ def run_backtest(
         "rebal_m":          rolling_win,   # tab_ic 연간 턴오버 계산용
         "cash_history":     cash_history,
         "cash_strategy":    cash_strategy,
+        "last_full_ranking_df": last_full_ranking_df,
     }
 
 
@@ -2567,14 +2580,16 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                     composite = pred_rf
 
                 _use_mom = _cfg.get("use_mom_filter", True)
+                # Selected portfolio (top n_stocks)
                 if _use_mom and "Mom_1m" in cur_snap.columns:
                     mom_ok = cur_snap["Mom_1m"] > 0
                     filtered = composite[composite.index.isin(cur_snap[mom_ok].index)]
                     top = filtered.nlargest(n_stocks) if len(filtered) >= n_stocks else composite.nlargest(n_stocks)
                 else:
                     top = composite.nlargest(n_stocks)
+                _selected_set = set(top.index)
 
-                # 비중 계산 (역변동성 ON이면)
+                # 비중 계산 (역변동성 ON이면) — 선별된 n_stocks에만 적용
                 _rec_weights = {}
                 if _use_inv_vol and "Volatility_30d" in cur_snap.columns:
                     vols = {}
@@ -2585,11 +2600,17 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                     total_iv = sum(inv_v.values())
                     _rec_weights = {t: iv / total_iv for t, iv in inv_v.items()}
 
+                # Full universe ranked by composite score
+                full_ranked = composite.sort_values(ascending=False)
                 rec_rows = []
-                for t in top.index:
-                    row = {tr("ax.ticker"): t}
+                for rank_i, t in enumerate(full_ranked.index, start=1):
+                    row = {
+                        "#": rank_i,
+                        tr("ax.ticker"): t,
+                        "Portfolio": "✓" if t in _selected_set else "",
+                    }
                     if _use_inv_vol and _rec_weights:
-                        row["비중"] = f"{_rec_weights.get(t, 0):.1%}"
+                        row["비중"] = f"{_rec_weights.get(t, 0):.1%}" if t in _selected_set else "—"
                     for col_name, fmt in [
                         ("Mom_1m","pct"), ("Mom_3m","pct"), ("Mom_6m","pct"), ("Mom_12m","pct"),
                     ]:
@@ -2597,8 +2618,12 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                             v = cur_snap.loc[t, col_name]
                             row[FEAT_NAMES.get(col_name, col_name)] = f"{v:.1%}" if not pd.isna(v) else "N/A"
                     rec_rows.append(row)
+                st.caption(
+                    f"Ranked universe: {len(rec_rows)} tickers · "
+                    f"✓ = selected for portfolio (top {n_stocks})"
+                )
                 st.dataframe(pd.DataFrame(rec_rows), use_container_width=True,
-                             hide_index=True, height=260)
+                             hide_index=True, height=420)
             else:
                 st.info(tr("msg.no_features"))
         elif rebal_hist:
@@ -2630,15 +2655,55 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                         f'Invest <b style="color:#22C55E">{1-_last_cash:.0%}</b></div>',
                         unsafe_allow_html=True,
                     )
-                priority = ["ticker", "비중", "평균순위", "예측수익률", "실제수익률"]
-                show_cols = [c for c in priority if c in tdf.columns]
-                disp = tdf[show_cols].copy()
-                for pct_col in ("비중", "예측수익률", "실제수익률"):
-                    if pct_col in disp.columns:
-                        disp[pct_col] = disp[pct_col].apply(
-                            lambda x: f"{x:.2%}" if pd.notna(x) and isinstance(x, (int, float)) else x
-                        )
-                st.dataframe(disp, use_container_width=True, hide_index=True, height=260)
+                # Ver4.3: if the preset saved a full-universe ranking, render
+                # all tickers with a ✓ marker for the portfolio-selected ones.
+                full_rank = results.get("last_full_ranking_df", pd.DataFrame())
+                selected_set = set(tdf["ticker"].astype(str)) if "ticker" in tdf.columns else set()
+                # Weight lookup from the portfolio holdings
+                weight_map = {}
+                if "ticker" in tdf.columns and "비중" in tdf.columns:
+                    for _, r in tdf.iterrows():
+                        weight_map[str(r["ticker"])] = r["비중"]
+
+                if not full_rank.empty and "composite_score" in full_rank.columns:
+                    ranked = full_rank.sort_values("composite_score", ascending=False).reset_index(drop=True)
+                    rows = []
+                    for i, r in ranked.iterrows():
+                        t = str(r["ticker"])
+                        row = {
+                            "#": i + 1,
+                            "ticker": t,
+                            "Portfolio": "✓" if t in selected_set else "",
+                            "비중": (f"{weight_map[t]:.1%}"
+                                    if t in weight_map and isinstance(weight_map[t], (int, float))
+                                    and pd.notna(weight_map[t]) else "—"),
+                        }
+                        for src, label in [
+                            ("Mom_1m", FEAT_NAMES.get("Mom_1m", "Mom_1m")),
+                            ("Mom_3m", FEAT_NAMES.get("Mom_3m", "Mom_3m")),
+                            ("Mom_6m", FEAT_NAMES.get("Mom_6m", "Mom_6m")),
+                            ("Mom_12m", FEAT_NAMES.get("Mom_12m", "Mom_12m")),
+                        ]:
+                            v = r.get(src)
+                            row[label] = f"{v:.1%}" if pd.notna(v) else "—"
+                        rows.append(row)
+                    st.caption(
+                        f"Ranked universe: {len(rows)} tickers · "
+                        f"✓ = selected for portfolio (top {len(selected_set)})"
+                    )
+                    st.dataframe(pd.DataFrame(rows), use_container_width=True,
+                                 hide_index=True, height=420)
+                else:
+                    # Fallback: older presets without full ranking — show selected only
+                    priority = ["ticker", "비중", "평균순위", "예측수익률", "실제수익률"]
+                    show_cols = [c for c in priority if c in tdf.columns]
+                    disp = tdf[show_cols].copy()
+                    for pct_col in ("비중", "예측수익률", "실제수익률"):
+                        if pct_col in disp.columns:
+                            disp[pct_col] = disp[pct_col].apply(
+                                lambda x: f"{x:.2%}" if pd.notna(x) and isinstance(x, (int, float)) else x
+                            )
+                    st.dataframe(disp, use_container_width=True, hide_index=True, height=260)
             else:
                 st.info(tr("msg.run_first"))
         else:
@@ -4035,6 +4100,12 @@ def _deserialize_preset(data: dict) -> tuple[dict, dict]:
             df = df.set_index("date")
         return df
 
+    # Full universe ranking at the last rebalance (for Summary tab)
+    ranking_records = full.get("last_full_ranking") or []
+    last_full_ranking_df = (
+        pd.DataFrame(ranking_records) if ranking_records else pd.DataFrame()
+    )
+
     results = {
         "port_dates": [_parse_dt(d) for d in full.get("port_dates", [])],
         "port_values": list(full.get("port_values", [])),
@@ -4045,6 +4116,7 @@ def _deserialize_preset(data: dict) -> tuple[dict, dict]:
         "fimp_rf_df":   _build_fimp(full.get("fimp_rf_data")),
         "fimp_xgb_df":  _build_fimp(full.get("fimp_xgb_data")),
         "fimp_lgbm_df": _build_fimp(full.get("fimp_lgbm_data")),
+        "last_full_ranking_df": last_full_ranking_df,
         "use_ensemble": full.get("use_ensemble", False),
         "rebal_m": full.get("rebal_m", 1),
         "cash_strategy": full.get("cash_strategy", "none"),
