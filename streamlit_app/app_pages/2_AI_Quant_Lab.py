@@ -3475,6 +3475,18 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
         st.info(tr("msg.run_first"))
         return
 
+    # Cached preset fallback: live-prediction path needs price_data / models,
+    # which are intentionally NOT serialized into preset JSONs (too large).
+    if not price_data or results.get("last_model_rf") is None:
+        st.info(
+            "📦 **Preset loaded from cache.**  Live AI Picks require a fresh "
+            "backtest run — the preset only stores the summary, rebalance "
+            "history, and feature importances, not the raw prices or trained "
+            "models.  Click **Run Backtest** above with the same settings "
+            "to enable today's live predictions."
+        )
+        return
+
     # ── 날짜 선택 UI ──────────────────────────────────────
     all_dates_max = [ohlcv.index.max().date() for ohlcv in price_data.values() if len(ohlcv) > 0]
     all_dates_min = [ohlcv.index.min().date() for ohlcv in price_data.values() if len(ohlcv) > 0]
