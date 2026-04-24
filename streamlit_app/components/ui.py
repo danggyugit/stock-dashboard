@@ -329,6 +329,24 @@ def render_sidebar_info() -> None:
 
         hm_date = _cache_date("heatmap.json")
         fund_date = _cache_date("fundamentals.json")
+
+        # Backtests: read _metadata.json from backtests/ sub-directory
+        def _backtest_date() -> str:
+            try:
+                m_path = _cache_dir / "backtests" / "_metadata.json"
+                if not m_path.exists():
+                    return "—"
+                data = json.loads(m_path.read_text(encoding="utf-8"))
+                iso = data.get("updated_at", "")
+                if not iso:
+                    return "—"
+                dt = datetime.fromisoformat(iso)
+                kst = dt + timedelta(hours=9) if dt.tzinfo else dt
+                return kst.strftime("%m/%d %H:%M")
+            except Exception:
+                return "—"
+
+        backtest_date = _backtest_date()
     except Exception:
         st.sidebar.caption("Status unavailable.")
         return
@@ -371,6 +389,7 @@ def render_sidebar_info() -> None:
     <div class="row"><span>Portfolios</span><span class="val">{portfolio_count}</span></div>
     <div class="row"><span>Heatmap</span><span class="val">{hm_date} <span class="val-sub">KST</span></span></div>
     <div class="row"><span>Fundamentals</span><span class="val">{fund_date} <span class="val-sub">KST</span></span></div>
+    <div class="row"><span>Backtests</span><span class="val">{backtest_date} <span class="val-sub">KST</span></span></div>
 </div>
 """
     st.sidebar.markdown(status_html, unsafe_allow_html=True)

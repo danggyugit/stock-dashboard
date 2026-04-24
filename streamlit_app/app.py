@@ -42,6 +42,7 @@ PAGES = {
         st.Page("app_pages/5_Portfolio.py", title="Portfolio", icon=":material/folder:"),
         st.Page("app_pages/10_Watchlist.py", title="Watchlist", icon=":material/star:"),
         st.Page("app_pages/2_AI_Quant_Lab.py", title="AI Quant Lab", icon=":material/science:"),
+        st.Page("app_pages/12_Factor_Lab.py", title="Factor Lab", icon=":material/functions:"),
     ],
     "Research": [
         st.Page("app_pages/11_Macro.py", title="Macro", icon=":material/trending_up:"),
