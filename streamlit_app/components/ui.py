@@ -140,31 +140,42 @@ footer { visibility: hidden !important; }
 
 /* ===================================================== */
 /* Streamlit Community Cloud free-tier viewer badges     */
-/* These appear floating at bottom on mobile / desktop:  */
-/*   - "Created by @username" (links to the creator's    */
-/*      Streamlit Cloud profile → leaks other projects)  */
-/*   - "Hosted with Streamlit" (red badge)               */
-/*   - Running status widget (top-right cyclist + Stop)  */
-/* Class hashes rotate between Streamlit versions, so    */
-/* we use [class*=...] attribute selectors to be robust. */
+/* "Created by @user" / "Hosted with Streamlit" / status */
+/* Class hashes rotate, so use [class*=...] selectors.   */
 /* ===================================================== */
 [class*="viewerBadge"],
 [class*="ViewerBadge"],
 [class*="hostedBadge"],
+[class*="HostedBadge"],
 [class*="streamlitBadge"],
 [class*="StreamlitBadge"],
+[class*="stViewerBadge"],
 [data-testid="stStatusWidget"],
 [data-testid="stViewerBadge"],
-[data-testid*="viewerBadge"] {
+[data-testid*="viewerBadge"],
+[data-testid*="StatusWidget"],
+.viewerBadge_container__r5tak,
+.viewerBadge_link__qRIco,
+.viewerBadge_text__1JaDK,
+#stViewerBadge {
     display: none !important;
     visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
-/* Belt-and-suspenders: hide any anchor that links to   */
-/* Streamlit Cloud / streamlit.io regardless of class.  */
-a[href*="share.streamlit.io/user"],
+/* Hide any anchor that links to Streamlit infra.        */
+a[href*="share.streamlit.io"],
 a[href*="streamlit.io/cloud"],
-a[href*="streamlit.io/?utm_medium=viewer_badge"] {
+a[href*="streamlit.io/?utm"],
+a[href*="streamlit.app/?utm"] {
+    display: none !important;
+}
+
+/* Hide bottom-fixed elements that aren't ours (catches  */
+/* badges injected by the host wrapper).                 */
+body > a[target="_blank"][rel*="noopener"][href*="streamlit"],
+body > div[style*="position: fixed"][style*="bottom"] a[href*="streamlit"] {
     display: none !important;
 }
 
@@ -265,6 +276,45 @@ h2, h3 {
 def inject_css() -> None:
     """Inject custom CSS once. Call at top of each page."""
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+    # Belt-and-suspenders: text-based hiding for the Streamlit Cloud
+    # viewer badges. CSS attribute selectors miss them when the class
+    # hash rotates; this script catches them by their visible label.
+    st.markdown(
+        """
+        <script>
+        (function hideStreamlitBadges() {
+            const PATTERNS = [
+                /Hosted with Streamlit/i,
+                /Created by/i,
+                /Manage app/i,
+                /Made with Streamlit/i,
+            ];
+            const sweep = () => {
+                document.querySelectorAll('a, span, div').forEach(el => {
+                    if (el.children.length > 3) return;
+                    const t = (el.textContent || '').trim();
+                    if (t.length > 60) return;
+                    if (PATTERNS.some(p => p.test(t))) {
+                        const target = el.closest('a, [class*="Badge"], [class*="badge"]') || el;
+                        target.style.display = 'none';
+                    }
+                });
+                // Also hide running-status cyclist widget
+                document.querySelectorAll('[data-testid="stStatusWidget"]').forEach(el => {
+                    el.style.display = 'none';
+                });
+            };
+            sweep();
+            // Streamlit re-renders frequently; observe for re-additions.
+            const obs = new MutationObserver(sweep);
+            obs.observe(document.body, { childList: true, subtree: true });
+            // Stop after 30s to avoid forever-running observer.
+            setTimeout(() => obs.disconnect(), 30000);
+        })();
+        </script>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def market_status() -> tuple[bool, str]:
