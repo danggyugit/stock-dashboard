@@ -138,6 +138,36 @@ header[data-testid="stHeader"] {
 footer { visibility: hidden !important; }
 .stDeployButton { display: none !important; }
 
+/* ===================================================== */
+/* Streamlit Community Cloud free-tier viewer badges     */
+/* These appear floating at bottom on mobile / desktop:  */
+/*   - "Created by @username" (links to the creator's    */
+/*      Streamlit Cloud profile → leaks other projects)  */
+/*   - "Hosted with Streamlit" (red badge)               */
+/*   - Running status widget (top-right cyclist + Stop)  */
+/* Class hashes rotate between Streamlit versions, so    */
+/* we use [class*=...] attribute selectors to be robust. */
+/* ===================================================== */
+[class*="viewerBadge"],
+[class*="ViewerBadge"],
+[class*="hostedBadge"],
+[class*="streamlitBadge"],
+[class*="StreamlitBadge"],
+[data-testid="stStatusWidget"],
+[data-testid="stViewerBadge"],
+[data-testid*="viewerBadge"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Belt-and-suspenders: hide any anchor that links to   */
+/* Streamlit Cloud / streamlit.io regardless of class.  */
+a[href*="share.streamlit.io/user"],
+a[href*="streamlit.io/cloud"],
+a[href*="streamlit.io/?utm_medium=viewer_badge"] {
+    display: none !important;
+}
+
 /* Metric card hover + glow effect */
 [data-testid="stMetric"] {
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.4));

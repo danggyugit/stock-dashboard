@@ -12,3 +12,8 @@ fileWatcherType = "none"
 
 [browser]
 gatherUsageStats = false
+
+[client]
+# Streamlit 메뉴(View source / Settings / Print 등) 최소화
+# minimal: 햄버거 메뉴 숨김, "Manage app" 등 host UI 숨김
+toolbarMode = "minimal"
