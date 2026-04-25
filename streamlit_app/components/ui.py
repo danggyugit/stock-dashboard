@@ -150,57 +150,30 @@ footer { visibility: hidden !important; }
 [class*="streamlitBadge"],
 [class*="StreamlitBadge"],
 [class*="stViewerBadge"],
-[class*="stCreatorBadge"],
-[class*="creatorBadge"],
-[class*="CreatorBadge"],
-[class*="stProfileBadge"],
-[class*="profileBadge"],
-[class*="appCreator"],
-[class*="AppCreator"],
 [data-testid="stStatusWidget"],
 [data-testid="stViewerBadge"],
-[data-testid="stCreatorBadge"],
 [data-testid*="viewerBadge"],
 [data-testid*="StatusWidget"],
-[data-testid*="CreatedBy"],
-[data-testid*="createdBy"],
 .viewerBadge_container__r5tak,
 .viewerBadge_link__qRIco,
 .viewerBadge_text__1JaDK,
-#stViewerBadge,
-#stCreatorBadge {
+#stViewerBadge {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
-    position: absolute !important;
-    left: -9999px !important;
 }
 
-/* Any anchor → Streamlit Cloud profile / share infra. */
+/* Hide any anchor that links to Streamlit infra.        */
 a[href*="share.streamlit.io"],
 a[href*="streamlit.io/cloud"],
 a[href*="streamlit.io/?utm"],
-a[href*="streamlit.app/?utm"],
-a[href*="share.streamlit.io/user"],
-a[href*="share.streamlit.io/@"] {
+a[href*="streamlit.app/?utm"] {
     display: none !important;
 }
 
-/* Profile-image avatars near the bottom that link to    */
-/* Streamlit Cloud user pages (Created by [avatar]).     */
-a[href*="streamlit"] > img,
-a[href*="streamlit"] img[alt*="profile" i],
-a[href*="streamlit"] img[alt*="avatar" i] {
-    display: none !important;
-}
-a:has(> img[alt*="profile" i][src*="streamlit"]),
-a:has(> img[src*="profile_pic"]),
-a:has(> img[src*="googleusercontent"][src*="streamlit"]) {
-    display: none !important;
-}
-
-/* Hide bottom-fixed elements that aren't ours.          */
+/* Hide bottom-fixed elements that aren't ours (catches  */
+/* badges injected by the host wrapper).                 */
 body > a[target="_blank"][rel*="noopener"][href*="streamlit"],
 body > div[style*="position: fixed"][style*="bottom"] a[href*="streamlit"] {
     display: none !important;
@@ -315,75 +288,28 @@ def inject_css() -> None:
                 /Created by/i,
                 /Manage app/i,
                 /Made with Streamlit/i,
-                /Streamlit Cloud/i,
             ];
-            const URL_PATTERNS = [
-                /share\\.streamlit\\.io/i,
-                /streamlit\\.io\\/cloud/i,
-                /streamlit\\.io\\/\\?utm/i,
-            ];
-            const hide = (el) => {
-                el.style.display = 'none';
-                el.style.visibility = 'hidden';
-                el.style.opacity = '0';
-                el.style.pointerEvents = 'none';
-            };
             const sweep = () => {
-                // 1) Text-pattern based hide
                 document.querySelectorAll('a, span, div').forEach(el => {
-                    if (el.children.length > 5) return;
+                    if (el.children.length > 3) return;
                     const t = (el.textContent || '').trim();
-                    if (t.length === 0 || t.length > 100) return;
+                    if (t.length > 60) return;
                     if (PATTERNS.some(p => p.test(t))) {
-                        const target = el.closest(
-                            'a, [class*="Badge"], [class*="badge"], ' +
-                            '[class*="Creator"], [class*="creator"]'
-                        ) || el.parentElement || el;
-                        hide(target);
+                        const target = el.closest('a, [class*="Badge"], [class*="badge"]') || el;
+                        target.style.display = 'none';
                     }
                 });
-                // 2) URL-based hide for any anchor pointing to Streamlit infra
-                document.querySelectorAll('a[href]').forEach(a => {
-                    if (URL_PATTERNS.some(p => p.test(a.href))) {
-                        hide(a.closest('div, span') || a);
-                    }
+                // Also hide running-status cyclist widget
+                document.querySelectorAll('[data-testid="stStatusWidget"]').forEach(el => {
+                    el.style.display = 'none';
                 });
-                // 3) Status widget (cyclist + Stop button)
-                document.querySelectorAll('[data-testid="stStatusWidget"]').forEach(hide);
-                // 4) Avatar images linking to Streamlit profiles
-                document.querySelectorAll('img').forEach(img => {
-                    const parentA = img.closest('a');
-                    if (parentA && URL_PATTERNS.some(p => p.test(parentA.href))) {
-                        hide(parentA);
-                    }
-                });
-                // 5) Try to reach the parent window if app is in iframe
-                try {
-                    if (window.parent && window.parent !== window) {
-                        const pdoc = window.parent.document;
-                        if (pdoc) {
-                            pdoc.querySelectorAll(
-                                '[class*="viewerBadge"], [class*="hostedBadge"], ' +
-                                '[class*="creatorBadge"], [data-testid*="viewerBadge"]'
-                            ).forEach(hide);
-                            pdoc.querySelectorAll('a[href]').forEach(a => {
-                                if (URL_PATTERNS.some(p => p.test(a.href))) hide(a);
-                            });
-                        }
-                    }
-                } catch (e) { /* cross-origin iframe — can't reach */ }
             };
             sweep();
-            // Run repeatedly for 60s in case badge is injected late
-            let count = 0;
-            const tick = setInterval(() => {
-                sweep();
-                if (++count > 120) clearInterval(tick);  // 60s @ 500ms
-            }, 500);
-            // MutationObserver for dynamic re-renders
+            // Streamlit re-renders frequently; observe for re-additions.
             const obs = new MutationObserver(sweep);
             obs.observe(document.body, { childList: true, subtree: true });
-            setTimeout(() => obs.disconnect(), 60000);
+            // Stop after 30s to avoid forever-running observer.
+            setTimeout(() => obs.disconnect(), 30000);
         })();
         </script>
         """,
