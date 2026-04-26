@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-04-26T02:21:51.793987+00:00",
+  "updated_at": "2026-04-26T05:44:22.565312+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -26,19 +26,19 @@
       "name": "IT Inverse-Vol (No Cash)",
       "description": "IT 섹터, Inverse-Vol 가중, 현금 없음",
       "success": true,
-      "updated_at": "2026-04-26T02:08:47.003319+00:00"
+      "updated_at": "2026-04-26T05:31:53.975822+00:00"
     },
     "it_equal": {
       "name": "IT Equal-Weight (No Cash)",
       "description": "IT 섹터, 균등 가중, 현금 없음",
       "success": true,
-      "updated_at": "2026-04-26T02:15:21.238645+00:00"
+      "updated_at": "2026-04-26T05:38:05.496066+00:00"
     },
     "it_invvol_regime": {
       "name": "IT Inverse-Vol + Regime Cash",
       "description": "IT 섹터, Inverse-Vol 가중, HMM 레짐 현금 전략",
       "success": true,
-      "updated_at": "2026-04-26T02:21:51.783025+00:00"
+      "updated_at": "2026-04-26T05:44:22.554763+00:00"
     }
   },
   "failures": []

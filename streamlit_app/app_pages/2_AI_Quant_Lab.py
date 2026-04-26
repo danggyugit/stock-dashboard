@@ -2626,8 +2626,68 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                              hide_index=True, height=420)
             else:
                 st.info(tr("msg.no_features"))
+        elif st.session_state.get("_today_picks"):
+            # Ver4.4: forward-looking picks for TODAY (computed by scheduler)
+            _today_picks = st.session_state.get("_today_picks", [])
+            _today_at = st.session_state.get("_today_picks_at") or ""
+            _today_at_short = (
+                pd.Timestamp(_today_at).strftime("%Y-%m-%d")
+                if _today_at else "today"
+            )
+            st.caption(
+                f"🟢 **오늘 기준 추천** ({_today_at_short}) · "
+                f"매일 11:00 KST 자동 갱신"
+            )
+
+            # Regime + Cash banner if applicable
+            _t_regime = st.session_state.get("_today_regime")
+            _t_cash = st.session_state.get("_today_cash_pct")
+            if _t_regime and _t_cash is not None:
+                _se = {"Bull": "🟢", "Normal": "🟡", "Bear": "🔴"}.get(_t_regime, "⚪")
+                _cash = _t_cash / 100
+                st.markdown(
+                    f'<div style="font-size:0.78rem;padding:4px 0;">'
+                    f'{_se} <b>{_t_regime}</b> · '
+                    f'{tr("rh.cash_ratio")} <b>{_cash:.0%}</b> · '
+                    f'Invest <b style="color:#22C55E">{1-_cash:.0%}</b></div>',
+                    unsafe_allow_html=True,
+                )
+
+            # Render today's picks + full ranking
+            _full_today = st.session_state.get("_today_full_ranking", [])
+            if _full_today:
+                ranked_df = pd.DataFrame(_full_today).sort_values(
+                    "composite_score", ascending=False
+                ).reset_index(drop=True)
+            else:
+                ranked_df = pd.DataFrame(_today_picks)
+
+            selected_set = {p["ticker"] for p in _today_picks if "ticker" in p}
+            weight_map = {p["ticker"]: p.get("weight", 0) for p in _today_picks}
+
+            rows = []
+            for i, r in ranked_df.iterrows():
+                t = str(r["ticker"])
+                row = {
+                    "#": i + 1,
+                    "ticker": t,
+                    "Portfolio": "✓" if t in selected_set else "",
+                    "비중": (f"{weight_map[t]:.1%}"
+                             if t in weight_map else "—"),
+                }
+                for src in ("Mom_1m", "Mom_3m", "Mom_6m", "Mom_12m"):
+                    v = r.get(src) if src in ranked_df.columns else None
+                    label = FEAT_NAMES.get(src, src)
+                    row[label] = (f"{v:.1%}" if pd.notna(v) and isinstance(v, (int, float)) else "—")
+                rows.append(row)
+            st.caption(
+                f"Ranked universe: {len(rows)} tickers · "
+                f"✓ = 오늘 매수 추천 (top {len(selected_set)})"
+            )
+            st.dataframe(pd.DataFrame(rows), use_container_width=True,
+                         hide_index=True, height=420)
         elif rebal_hist:
-            # Cached preset fallback: show the last rebalance's picks
+            # Fallback: older preset without today_picks — show last rebalance's picks
             last = rebal_hist[-1]
             tdf = last.get("ticker_df", pd.DataFrame())
             if not tdf.empty:
@@ -4196,6 +4256,12 @@ def _load_preset_into_session(preset_id: str) -> str | None:
         st.session_state.vix_close  = None
         st.session_state.sector_map = {}
         st.session_state["_loaded_preset"] = data.get("name", preset_id)
+        # NEW: today's forward picks (from preset scheduler)
+        st.session_state["_today_picks"] = data.get("today_picks") or []
+        st.session_state["_today_full_ranking"] = data.get("today_full_ranking") or []
+        st.session_state["_today_picks_at"] = data.get("today_picks_at")
+        st.session_state["_today_regime"] = data.get("today_regime")
+        st.session_state["_today_cash_pct"] = data.get("today_cash_ratio_pct")
         return None
     except Exception as e:
         return f"Load failed: {e}"

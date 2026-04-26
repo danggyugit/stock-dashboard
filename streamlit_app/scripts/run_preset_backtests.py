@@ -649,6 +649,18 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
         logger.warning("Full serialization failed for %s: %s", preset_id, e)
         full_data = {}
 
+    # ── Today's forward picks (the actual recommendation for now) ──
+    # Use the model trained at the last rebalance to predict on TODAY's
+    # snapshot. Distinct from `latest_picks` (which is the last historical
+    # rebalance's holdings).
+    try:
+        today_picks_data = _predict_today(
+            results, shared, cfg, n_stocks=cfg["n_stocks"], np=np, pd=pd
+        )
+    except Exception as e:
+        logger.warning("Today-prediction failed for %s: %s", preset_id, e)
+        today_picks_data = {}
+
     return {
         "preset_id": preset_id,
         "name": preset["name"],
@@ -664,10 +676,164 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
             round(last_cash * 100, 1) if last_cash is not None else None
         ),
         "latest_picks": latest_picks,
+        # Today's forward prediction (NEW)
+        "today_picks": today_picks_data.get("picks", []),
+        "today_full_ranking": today_picks_data.get("full_ranking", []),
+        "today_picks_at": today_picks_data.get("picks_at"),
+        "today_regime": today_picks_data.get("regime"),
+        "today_cash_ratio_pct": today_picks_data.get("cash_ratio_pct"),
         # Full data for Streamlit reconstruction (~100-300KB)
         "full": full_data,
         "updated_at": datetime.now(timezone.utc).isoformat(),
     }
+
+
+def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
+                    np, pd) -> dict:
+    """Apply the last-trained model to today's snapshot for forward picks.
+
+    Returns dict with keys: picks (list), full_ranking (list), picks_at (str),
+    regime (str|None), cash_ratio_pct (float|None).
+    """
+    today = pd.Timestamp.today().normalize()
+    out: dict = {"picks_at": today.isoformat()}
+
+    model_rf = results.get("last_model_rf")
+    last_imputer = results.get("last_imputer")
+    last_avail_cols = results.get("last_avail_cols", [])
+    last_all_cols = results.get("last_all_cols", [])
+    last_win_bounds = results.get("last_win_bounds", {})
+    last_miss_src = results.get("last_miss_src", [])
+    if model_rf is None or last_imputer is None or not last_all_cols:
+        logger.warning("predict_today: missing model artifacts")
+        return out
+
+    # Build today's snapshot using the same pipeline as backtest
+    universe = list(shared["price_data"].keys())
+    snap = _lab.build_snapshot_df(
+        universe, shared["tech_map"], shared["fund_map"], today,
+        pit_map=shared["pit_map"], price_data=shared["price_data"],
+        backtest_mode=False,
+    )
+    if snap.empty:
+        logger.warning("predict_today: empty snapshot")
+        return out
+    snap = _lab.enrich_snapshot(
+        snap, today,
+        spy_close=shared["spy_close"],
+        vix_close=shared["vix_close"],
+        sector_map=shared["sector_map"],
+    )
+
+    # Same preprocessing as live AI Picks (winsorize, miss-flag, impute)
+    avail = [c for c in last_avail_cols if c in snap.columns]
+    X_pred = snap[avail].reindex(columns=last_avail_cols)
+    for col in last_avail_cols:
+        if col in last_win_bounds and col in X_pred.columns:
+            lo, hi = last_win_bounds[col]
+            X_pred[col] = X_pred[col].clip(lo, hi)
+    for mc in last_miss_src:
+        X_pred[f"{mc}_miss"] = (
+            X_pred[mc].isna().astype(int) if mc in X_pred.columns else 0
+        )
+    X_pred = X_pred.reindex(columns=last_all_cols)
+    X_imp = last_imputer.transform(X_pred)
+
+    # Predict (ensemble or single)
+    pred_rf_s = pd.Series(model_rf.predict(X_imp), index=snap.index)
+    is_ensemble = bool(cfg.get("use_ensemble", False))
+    model_xgb = results.get("last_model_xgb")
+    model_lgbm = results.get("last_model_lgbm")
+    if is_ensemble and model_xgb is not None and model_lgbm is not None:
+        pred_xgb_s = pd.Series(model_xgb.predict(X_imp), index=snap.index)
+        pred_lgbm_s = pd.Series(model_lgbm.predict(X_imp), index=snap.index)
+        rk = (pred_rf_s.rank(ascending=False) +
+              pred_xgb_s.rank(ascending=False) +
+              pred_lgbm_s.rank(ascending=False)) / 3
+        composite = -rk
+    else:
+        composite = pred_rf_s
+
+    # Mom filter
+    if cfg.get("use_mom_filter", False) and "Mom_1m" in snap.columns:
+        mom_ok = snap["Mom_1m"] > 0
+        filt = composite[composite.index.isin(snap[mom_ok].index)]
+        top = filt.nlargest(n_stocks) if len(filt) >= n_stocks else composite.nlargest(n_stocks)
+    else:
+        top = composite.nlargest(n_stocks)
+
+    # Weights
+    if cfg.get("use_inv_vol_weight", False) and "Volatility_30d" in snap.columns:
+        vols = {}
+        for t in top.index:
+            v = snap.loc[t, "Volatility_30d"] if t in snap.index else np.nan
+            vols[t] = v if (not pd.isna(v) and v > 0) else 0.30
+        inv_v = {t: 1.0 / v for t, v in vols.items()}
+        total = sum(inv_v.values())
+        weights = {t: iv / total for t, iv in inv_v.items()}
+    else:
+        w = 1.0 / max(len(top), 1)
+        weights = {t: w for t in top.index}
+
+    # Build picks list
+    def _safe(v):
+        try:
+            return None if pd.isna(v) else float(v)
+        except Exception:
+            return None
+
+    picks = []
+    for t in top.index:
+        row = {
+            "ticker": str(t),
+            "weight": float(weights.get(t, 0.0)),
+            "composite_score": _safe(composite[t]),
+        }
+        for col in ("Mom_1m", "Mom_3m", "Mom_6m", "Mom_12m", "Volatility_30d"):
+            if col in snap.columns:
+                row[col] = _safe(snap.loc[t, col])
+        picks.append(row)
+    out["picks"] = picks
+
+    # Full universe ranking
+    ranking = []
+    for t, s in composite.sort_values(ascending=False).items():
+        row = {"ticker": str(t), "composite_score": _safe(s)}
+        for col in ("Mom_1m", "Mom_3m", "Mom_6m", "Mom_12m", "Volatility_30d"):
+            if col in snap.columns:
+                row[col] = _safe(snap.loc[t, col])
+        ranking.append(row)
+    out["full_ranking"] = ranking
+
+    # Regime + cash ratio (only if cash strategy enabled)
+    cash_strat = cfg.get("cash_strategy", "none")
+    if cash_strat != "none" and shared.get("spy_close") is not None:
+        try:
+            spy_close = shared["spy_close"]
+            past_returns = spy_close.pct_change().dropna()
+            past_returns = past_returns[past_returns.index <= today]
+            if len(past_returns) > 60:
+                hmm = _lab._fit_hmm_regimes(past_returns)
+                regime_info = _lab._get_regime_at_date(hmm, spy_close, today)
+                pf_vol = _lab._calc_portfolio_vol(
+                    shared["price_data"], weights, today
+                )
+                if cash_strat == "vol_target":
+                    cash = round(max(1.0 - 0.15 / pf_vol, 0), 4)
+                elif cash_strat == "regime":
+                    cash = {0: 0.60, 1: 0.20, 2: 0.0}.get(regime_info["regime"], 0.0)
+                else:  # combined
+                    cash = _lab._calc_cash_ratio(regime_info, pf_vol)
+                out["regime"] = regime_info["label"]
+                out["cash_ratio_pct"] = round(min(cash, 0.90) * 100, 1)
+        except Exception as e:
+            logger.warning("today regime/cash calc failed: %s", e)
+
+    logger.info(
+        "  Today picks (%s): %d tickers @ %s",
+        cfg.get("name", "?"), len(picks), today.date()
+    )
+    return out
 
 
 # ════════════════════════════════════════════════════════════
