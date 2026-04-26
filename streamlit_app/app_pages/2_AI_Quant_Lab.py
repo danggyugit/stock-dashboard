@@ -2637,7 +2637,16 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                         _rdate_str = pd.Timestamp(_rdate).strftime("%Y-%m-%d")
                     except Exception:
                         _rdate_str = str(_rdate)
-                    st.caption(f"{tr('pk.as_of')}: {_rdate_str} (from last rebalance)")
+                    # 명확한 안내: 마지막 리밸런싱 기준 (오늘 기준 추천 아님)
+                    try:
+                        _days_ago = (datetime.today().date() - pd.Timestamp(_rdate).date()).days
+                        _stale_msg = f" · {_days_ago}일 전 학습 기준"
+                    except Exception:
+                        _stale_msg = ""
+                    st.caption(
+                        f"📌 마지막 리밸런싱: **{_rdate_str}**{_stale_msg} · "
+                        f"오늘 기준 추천이 필요하면 **Run Backtest** 실행"
+                    )
 
                 # Regime + Cash 배너 (cash_strategy 사용 시)
                 _cached_cash_strat = (

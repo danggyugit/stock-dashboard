@@ -139,6 +139,24 @@ footer { visibility: hidden !important; }
 .stDeployButton { display: none !important; }
 
 /* ===================================================== */
+/* Sidebar nav — always show all items, no View more/less */
+/* ===================================================== */
+[data-testid="stSidebarNav"] ul {
+    max-height: none !important;
+}
+[data-testid="stSidebarNavItems"] {
+    max-height: none !important;
+    overflow: visible !important;
+}
+[data-testid="stSidebarNavViewMoreButton"],
+[data-testid="stSidebarNavViewMoreSeparator"],
+[data-testid="stSidebarNavSeparator"] + button,
+button[kind="header"][aria-label*="more" i],
+button[kind="header"][aria-label*="less" i] {
+    display: none !important;
+}
+
+/* ===================================================== */
 /* Streamlit Community Cloud free-tier viewer badges     */
 /* "Created by @user" / "Hosted with Streamlit" / status */
 /* Class hashes rotate, so use [class*=...] selectors.   */
