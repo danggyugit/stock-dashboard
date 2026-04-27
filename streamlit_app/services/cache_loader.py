@@ -70,3 +70,12 @@ def get_cached_fundamentals() -> dict | None:
 def get_cache_meta() -> dict | None:
     """Return cache update metadata."""
     return load_cache_file("meta.json")
+
+
+def get_cached_valuation(ticker: str) -> dict | None:
+    """Return cached valuation_core + analyst consensus for one ticker.
+
+    Cache file at data/cache/valuation/{TICKER}.json with shape:
+      {"core": {...}, "consensus": {...}, "individual": [...], "updated_at": "..."}
+    """
+    return load_cache_file(f"valuation/{ticker.upper()}.json")

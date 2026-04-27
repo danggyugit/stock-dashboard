@@ -19,7 +19,21 @@ import pandas as pd
 import streamlit as st
 import yfinance as yf
 
+from services.cache_loader import get_cached_valuation
+
 logger = logging.getLogger(__name__)
+
+
+def _has_valid_data(core: dict) -> bool:
+    """True if at least price + one of EPS/PE/revenue is present."""
+    if not core:
+        return False
+    if not core.get("current_price"):
+        return False
+    return any(core.get(k) for k in (
+        "trailing_eps", "forward_eps", "trailing_pe",
+        "forward_pe", "ttm_revenue", "market_cap",
+    ))
 
 
 # ═══════════════════════════════════════════════════════════
@@ -43,7 +57,7 @@ def get_valuation_core(ticker: str) -> dict[str, Any]:
         info = t.info or {}
     except Exception as e:
         logger.warning("yfinance info failed for %s: %s", ticker, e)
-        return {}
+        info = {}
 
     core = {
         "ticker": ticker,
@@ -88,6 +102,16 @@ def get_valuation_core(ticker: str) -> dict[str, Any]:
             core["forward_revenue_estimate"] = float(core["market_cap"] / fwd_ps)
         except Exception:
             pass
+
+    # Streamlit Cloud falls back to GitHub-cached data when yfinance is blocked
+    if not _has_valid_data(core):
+        cached = get_cached_valuation(ticker)
+        if cached and cached.get("core"):
+            cached_core = cached["core"]
+            if _has_valid_data(cached_core):
+                logger.info("valuation_core: using GitHub cache for %s", ticker)
+                cached_core["_source"] = "github_cache"
+                return cached_core
 
     return core
 
@@ -189,6 +213,16 @@ def get_analyst_consensus(ticker: str) -> dict[str, Any]:
     except Exception as e:
         logger.debug("Finnhub consensus failed for %s: %s", ticker, e)
 
+    # GitHub cache fallback (Streamlit Cloud)
+    if not result.get("target_mean") and not result.get("n_analysts"):
+        cached = get_cached_valuation(ticker)
+        if cached and cached.get("consensus"):
+            cached_cons = cached["consensus"]
+            if cached_cons.get("target_mean") or cached_cons.get("n_analysts"):
+                logger.info("analyst_consensus: using GitHub cache for %s", ticker)
+                cached_cons["_source"] = "github_cache"
+                return cached_cons
+
     return result
 
 
@@ -205,15 +239,28 @@ def get_individual_analyst_targets(ticker: str, limit: int = 20) -> pd.DataFrame
 
     Returns DataFrame with columns: date, firm, target, prior_target, action, grade.
     """
+    def _from_cache() -> pd.DataFrame:
+        cached = get_cached_valuation(ticker)
+        if cached and cached.get("individual"):
+            df = pd.DataFrame(cached["individual"])
+            if not df.empty:
+                # Normalize column name (cache uses 'prior_target', expected 'prior')
+                if "prior_target" in df.columns and "prior" not in df.columns:
+                    df["prior"] = df["prior_target"]
+                df = df.sort_values("target", ascending=False).head(limit)
+                logger.info("individual_targets: using GitHub cache for %s", ticker)
+                return df
+        return pd.DataFrame()
+
     try:
         t = yf.Ticker(ticker)
         ud = t.upgrades_downgrades
     except Exception as e:
         logger.debug("upgrades_downgrades failed for %s: %s", ticker, e)
-        return pd.DataFrame()
+        return _from_cache()
 
     if ud is None or ud.empty:
-        return pd.DataFrame()
+        return _from_cache()
 
     df = ud.reset_index().copy()
     # Normalize columns
@@ -228,10 +275,10 @@ def get_individual_analyst_targets(ticker: str, limit: int = 20) -> pd.DataFrame
 
     # Keep only rows with a current target
     if "currentpricetarget" not in df.columns:
-        return pd.DataFrame()
+        return _from_cache()
     df = df[df["currentpricetarget"].notna() & (df["currentpricetarget"] > 0)]
     if df.empty:
-        return pd.DataFrame()
+        return _from_cache()
 
     # Most recent per firm
     if "firm" in df.columns and date_col:
