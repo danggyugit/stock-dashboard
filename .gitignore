@@ -33,3 +33,6 @@ frontend/dist/
 # OS
 .DS_Store
 Thumbs.db
+
+# Instagram card output PNGs (regeneratable from HTML via export_all.py)
+docs/instagram/output/

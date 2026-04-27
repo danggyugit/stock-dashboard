@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>어닝 매매 전략 — Instagram Card Series (4:5)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg-page: #0A0E1A;
+    --bg-card: #0F172A;
+    --bg-card-alt: #131F38;
+    --accent: #22C55E;
+    --accent-2: #60A5FA;
+    --gold: #EAB308;
+    --red: #EF4444;
+    --text: #F1F5F9;
+    --text-dim: #CBD5E1;
+    --border: rgba(203,213,225,0.16);
+    --border-strong: rgba(96,165,250,0.45);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    background: var(--bg-page);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont,
+                 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    padding: 32px 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 70%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(580px, 1fr));
+    gap: 36px;
+    padding: 40px 32px 80px;
+    max-width: 1900px;
+    margin: 0 auto;
+  }
+
+  .card {
+    width: 540px;
+    height: 675px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 36px 32px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent), var(--gold));
+    opacity: 0.85;
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 4px 0 0 0;
+    background:
+      radial-gradient(ellipse at top left,
+        rgba(96,165,250,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right,
+        rgba(34,197,94,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .card > * { position: relative; z-index: 1; }
+
+  .card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 22px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
+    background: rgba(96,165,250,0.16);
+    border: 1px solid rgba(96,165,250,0.40);
+    border-radius: 999px;
+    color: #93C5FD;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge.gold {
+    background: rgba(234,179,8,0.18);
+    border-color: rgba(234,179,8,0.50);
+    color: #FDE68A;
+  }
+  .badge.red {
+    background: rgba(239,68,68,0.18);
+    border-color: rgba(239,68,68,0.45);
+    color: #FCA5A5;
+  }
+  .badge.green {
+    background: rgba(34,197,94,0.18);
+    border-color: rgba(34,197,94,0.45);
+    color: #4ADE80;
+  }
+  .badge .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: currentColor;
+  }
+  .counter {
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  h2.card-title {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.22;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+  h2.card-title .hi { color: #4ADE80; }
+  h2.card-title .gold { color: #FDE68A; }
+  h2.card-title .red { color: #FCA5A5; }
+  h2.card-title .blue { color: #93C5FD; }
+
+  .sub {
+    color: var(--text-dim);
+    font-size: 16px;
+    margin-bottom: 18px;
+    font-weight: 500;
+    line-height: 1.55;
+  }
+
+  /* Cover */
+  .c1 {
+    background:
+      radial-gradient(ellipse at top,
+        rgba(234,179,8,0.22) 0%, transparent 60%),
+      linear-gradient(180deg, #0C1426 0%, #0A0E1A 100%);
+    border: 1px solid rgba(234,179,8,0.40);
+    justify-content: space-between;
+  }
+  .c1-tag {
+    font-size: 15px;
+    color: #93C5FD;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 14px;
+  }
+  .c1-title {
+    font-size: 50px;
+    font-weight: 900;
+    line-height: 1.08;
+    margin-bottom: 22px;
+    color: var(--text);
+  }
+  .c1-title .gold { color: #FDE68A; }
+  .c1-title .green { color: #4ADE80; }
+  .c1-title .red { color: #FCA5A5; }
+  .c1-sub {
+    font-size: 18px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .vs-row {
+    display: flex; gap: 14px;
+    margin-bottom: 24px;
+  }
+  .vs-box {
+    flex: 1;
+    padding: 16px;
+    border-radius: 14px;
+    text-align: center;
+  }
+  .vs-box.buy {
+    background: rgba(74,222,128,0.10);
+    border: 1.5px solid rgba(74,222,128,0.45);
+  }
+  .vs-box.sell {
+    background: rgba(252,165,165,0.10);
+    border: 1.5px solid rgba(252,165,165,0.45);
+  }
+  .vs-box .label {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .vs-box .v {
+    font-size: 28px;
+    font-weight: 900;
+  }
+  .vs-box.buy .v { color: #4ADE80; }
+  .vs-box.sell .v { color: #FCA5A5; }
+  .vs-divider {
+    align-self: center;
+    color: var(--gold);
+    font-size: 24px;
+    font-weight: 900;
+    margin: 0 -4px;
+  }
+  .c1-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 18px;
+    border-top: 1px dashed rgba(234,179,8,0.40);
+  }
+  .c1-foot .text { font-size: 16px; color: var(--text-dim); font-weight: 600; }
+  .c1-foot .arrow {
+    color: #4ADE80; font-weight: 800; font-size: 18px;
+    animation: bounce 1.6s infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateX(0); }
+    50%     { transform: translateX(8px); }
+  }
+
+  /* Volatility data card */
+  .vol-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .vol-stat {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    text-align: center;
+  }
+  .vol-stat.hi { border-color: rgba(252,165,165,0.40); background: rgba(239,68,68,0.06); }
+  .vol-stat .l {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .vol-stat .v {
+    font-size: 30px;
+    font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.1;
+  }
+  .vol-stat.hi .v { color: #FCA5A5; }
+  .vol-stat .v.green { color: #4ADE80; }
+  .vol-stat .desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 8px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  /* Visual bar */
+  .bar-compare {
+    margin-top: 14px;
+    padding: 16px;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .bar-row {
+    margin-bottom: 12px;
+  }
+  .bar-row:last-child { margin-bottom: 0; }
+  .bar-label {
+    display: flex; justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .bar-label .ll { color: var(--text); }
+  .bar-label .lv {
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .bar-bg {
+    height: 12px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .bar-f {
+    height: 100%;
+    border-radius: 6px;
+  }
+
+  /* Trap explanation */
+  .trap-block {
+    background: var(--bg-card-alt);
+    border: 1px solid rgba(252,165,165,0.30);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .trap-block.warn {
+    border-color: rgba(252,165,165,0.45);
+  }
+  .trap-block .th {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .trap-block .th .ico {
+    color: #FCA5A5;
+    font-size: 22px;
+  }
+  .trap-block .td {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .trap-block .td b { color: var(--text); font-weight: 700; }
+
+  .example-box {
+    background: rgba(15,23,42,0.85);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .example-box .el {
+    font-size: 14px;
+    color: #FCA5A5;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .example-box .et {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.55;
+    font-weight: 600;
+  }
+  .example-box .et b { color: #4ADE80; font-weight: 800; }
+  .example-box .et .red { color: #FCA5A5; font-weight: 800; }
+
+  .insight-banner {
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(90deg, rgba(234,179,8,0.16), rgba(234,179,8,0.04));
+    border: 1px solid rgba(234,179,8,0.40);
+    border-radius: 14px;
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.55;
+  }
+  .insight-banner b { color: #FDE68A; font-weight: 800; }
+
+  /* Strategy list */
+  .strat-list { display: flex; flex-direction: column; gap: 13px; }
+  .strat {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 15px 18px;
+    display: flex; gap: 16px;
+    align-items: flex-start;
+  }
+  .strat.good { border-color: rgba(74,222,128,0.40); background: rgba(74,222,128,0.06); }
+  .strat .num {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: rgba(74,222,128,0.20);
+    border: 1px solid rgba(74,222,128,0.50);
+    color: #4ADE80;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .strat .body { flex: 1; min-width: 0; }
+  .strat .stitle {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  .strat .sdesc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-weight: 500;
+  }
+  .strat .sdesc b { color: var(--text); font-weight: 700; }
+  .strat .stag {
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    align-self: flex-start;
+    margin-top: 3px;
+    background: rgba(74,222,128,0.18);
+    border: 1px solid rgba(74,222,128,0.45);
+    color: #4ADE80;
+  }
+
+  /* CTA */
+  .c6 {
+    background:
+      radial-gradient(ellipse at top right,
+        rgba(234,179,8,0.22) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom left,
+        rgba(34,197,94,0.22) 0%, transparent 55%),
+      linear-gradient(180deg, #0F172A 0%, #0B1220 100%);
+    border: 1px solid rgba(34,197,94,0.40);
+    align-items: stretch; text-align: center;
+  }
+  .logo-block { text-align: center; margin: 8px 0 12px; }
+  .logo-icon {
+    width: 70px; height: 70px;
+    border: 2px solid rgba(34,197,94,0.50);
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    background: rgba(34,197,94,0.10);
+    margin-bottom: 10px;
+  }
+  .diamond {
+    width: 26px; height: 26px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
+    transform: rotate(45deg);
+    border-radius: 4px;
+    box-shadow: 0 0 22px rgba(34,197,94,0.6);
+  }
+  .logo-name {
+    font-size: 26px; font-weight: 900;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 70%, var(--accent-2) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1.6px;
+  }
+  .logo-sub {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    font-weight: 600;
+  }
+  .feat-c {
+    background: rgba(15,23,42,0.85);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 18px;
+    display: flex; align-items: center; gap: 14px;
+    font-size: 15px;
+    color: var(--text-dim);
+    font-weight: 600;
+    margin-bottom: 9px;
+    text-align: left;
+  }
+  .feat-c .fdot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    box-shadow: 0 0 10px var(--accent);
+  }
+  .feat-c b { color: var(--text); font-weight: 800; }
+  .cta-box {
+    background: linear-gradient(135deg, rgba(34,197,94,0.16), rgba(96,165,250,0.14));
+    border: 1.5px solid rgba(34,197,94,0.45);
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: center;
+    margin-top: auto;
+  }
+  .cta-l {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .cta-u { font-size: 18px; font-weight: 900; color: #4ADE80; }
+
+  .card-label {
+    position: absolute;
+    top: -28px; left: 0;
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.10em;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .card-wrap { position: relative; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📈 어닝 시즌 매매 전략 — Instagram Cards (4:5)</h1>
+  <p>6 cards · 1080×1350 · "어닝 발표일, 매수 vs 매도?"</p>
+</header>
+
+<div class="grid">
+
+  <!-- CARD 1 — COVER -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 1 · COVER</div>
+    <div class="card c1">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>EARNINGS STRATEGY</span>
+        <span class="counter">01 / 06</span>
+      </div>
+      <div>
+        <div class="c1-tag">DAILY · TRADING BASIC</div>
+        <div class="c1-title">어닝 발표일,<br><span class="green">매수</span> 아니면 <span class="red">매도</span>?</div>
+        <div class="c1-sub">"좋은 실적 = 주가 상승" 공식,<br>데이터로 검증해봤습니다.</div>
+
+        <div class="vs-row">
+          <div class="vs-box buy">
+            <div class="label">BUY</div>
+            <div class="v">?</div>
+          </div>
+          <div class="vs-divider">VS</div>
+          <div class="vs-box sell">
+            <div class="label">SELL</div>
+            <div class="v">?</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="c1-foot">
+        <span class="text">스와이프해서 정답 보기</span>
+        <span class="arrow">→</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 — VOLATILITY DATA -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 2 · VOLATILITY</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge red"><span class="dot"></span>변동성 데이터</span>
+        <span class="counter">02 / 06</span>
+      </div>
+      <h2 class="card-title">어닝 발표일<br><span class="red">변동성 +60%</span></h2>
+
+      <div class="vol-stats">
+        <div class="vol-stat">
+          <div class="l">평소 일일 변동</div>
+          <div class="v green">±1.2%</div>
+          <div class="desc">S&amp;P 500 평균</div>
+        </div>
+        <div class="vol-stat hi">
+          <div class="l">어닝 당일</div>
+          <div class="v">±5~8%</div>
+          <div class="desc">평소 대비 5배+</div>
+        </div>
+      </div>
+
+      <div class="bar-compare">
+        <div class="bar-row">
+          <div class="bar-label">
+            <span class="ll">대형주 평균 (S&amp;P 500)</span>
+            <span class="lv">±1.2%</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-f" style="width: 12%; background: linear-gradient(90deg, #16A34A, #4ADE80);"></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">
+            <span class="ll">어닝 발표 당일</span>
+            <span class="lv">±5~8%</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-f" style="width: 65%; background: linear-gradient(90deg, #DC2626, #FCA5A5);"></div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">
+            <span class="ll">기술주 어닝 (NVDA, TSLA 등)</span>
+            <span class="lv">±10~15%</span>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-f" style="width: 95%; background: linear-gradient(90deg, #B91C1C, #EF4444);"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        ⚠️ <b>핵심</b> — 평소 1년 동안 ±1.2% 변동인데, 어닝 하루에 ±10% 가능. <b>옵션 매매자에겐 기회, 일반 투자자에겐 위험</b>.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 — TRAP #1: SELL THE NEWS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 3 · TRAP #1</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge red"><span class="dot"></span>함정 #1</span>
+        <span class="counter">03 / 06</span>
+      </div>
+      <h2 class="card-title"><span class="red">"호실적인데"</span><br>왜 주가가 떨어져?</h2>
+
+      <div class="trap-block warn">
+        <div class="th"><span class="ico">⚠️</span>Sell the News</div>
+        <div class="td">
+          좋은 실적이 발표 <b>전에 이미 가격에 반영</b>되어 있다면<br>
+          → 발표 당일에 더 오를 동력이 없음<br>
+          → "사실 확인" 후 차익실현 매도 → <b>주가 하락</b>
+        </div>
+        <div class="example-box">
+          <div class="el">실제 패턴</div>
+          <div class="et">
+            발표 전 1개월 주가 <span class="red">+15%</span> 상승<br>
+            → 어닝 EPS <b>20% 서프라이즈</b><br>
+            → 발표 직후 주가 <span class="red">-3%</span> 하락 (overshoot)
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>체크</b> — 발표 직전 1~3개월 주가가 이미 크게 올랐다면 "Sell the News" 위험 ↑. 추세 + 컨센서스 변화 같이 봐야 함.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 — TRAP #2: GUIDANCE -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 4 · TRAP #2</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge red"><span class="dot"></span>함정 #2</span>
+        <span class="counter">04 / 06</span>
+      </div>
+      <h2 class="card-title"><span class="red">실적은 통과</span><br>그런데 <span class="gold">가이던스</span>가…</h2>
+
+      <div class="trap-block warn">
+        <div class="th"><span class="ico">⚠️</span>실적 ≠ 미래 가이던스</div>
+        <div class="td">
+          이번 분기 실적 <b>좋아도</b><br>
+          다음 분기 가이던스(전망)가 <b>약하면</b> → 주가 폭락<br>
+          시장은 <b>"미래"</b>를 사기 때문
+        </div>
+        <div class="example-box">
+          <div class="el">반대 사례 — INTC Q1 2026</div>
+          <div class="et">
+            EPS <b>+2,800% 서프라이즈</b> (호실적)<br>
+            <b>+ Q2 가이던스 컨센 3배 상회</b><br>
+            → 주가 <b>+23%</b> 폭등 (둘 다 OK!)
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>꼭 체크</b> — 실적 발표 후 컨퍼런스콜에서 CFO 입에서 나오는 <b>"Q2 outlook"</b> 한 마디가 주가를 결정. 발표 직후 매매 X.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5 — STRATEGY 3 -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 5 · STRATEGY</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge green"><span class="dot"></span>데이터 기반 전략 3</span>
+        <span class="counter">05 / 06</span>
+      </div>
+      <h2 class="card-title">그럼 어떻게<br><span class="hi">매매</span>해야 할까?</h2>
+
+      <div class="strat-list">
+        <div class="strat good">
+          <div class="num">01</div>
+          <div class="body">
+            <div class="stitle">이미 보유 중 → 1주일 기다리기</div>
+            <div class="sdesc">
+              발표 당일 <b>±5~10% overreaction</b> 흔함<br>
+              <b>5거래일 후</b> 안정화된 가격이 진짜 시장 평가
+            </div>
+          </div>
+          <div class="stag">HOLD</div>
+        </div>
+
+        <div class="strat good">
+          <div class="num">02</div>
+          <div class="body">
+            <div class="stitle">신규 매수 → 발표 후 차분히</div>
+            <div class="sdesc">
+              발표 <b>직전 매수 절대 금지</b> (도박)<br>
+              발표 후 <b>1~2일 관망</b> → 가이던스 + 컨퍼런스콜 확인 후
+            </div>
+          </div>
+          <div class="stag">BUY</div>
+        </div>
+
+        <div class="strat good">
+          <div class="num">03</div>
+          <div class="body">
+            <div class="stitle">변동성 활용 → 옵션 (고급자만)</div>
+            <div class="sdesc">
+              어닝 IV(내재변동성) 폭증 → <b>옵션 매도 전략</b><br>
+              초보 → 절대 금지. 잃을 수 있는 돈만 사용
+            </div>
+          </div>
+          <div class="stag">PRO</div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        🎯 <b>한 줄 정리</b> — "어닝 발표일은 매매하는 날이 아니라 <b>관찰하는 날</b>"
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6 — CTA -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 6 · CTA</div>
+    <div class="card c6">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>AI QUANT LAB</span>
+        <span class="counter">06 / 06</span>
+      </div>
+
+      <div class="logo-block">
+        <div class="logo-icon"><div class="diamond"></div></div>
+        <div class="logo-name">AI QUANT LAB</div>
+        <div class="logo-sub">데이터 기반 미국주식 분석 플랫폼</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 9px; margin: 12px 0;">
+        <div class="feat-c">
+          <div class="fdot"></div>
+          <span><b>Calendar</b> — 어닝 일정 + 시장 영향도</span>
+        </div>
+        <div class="feat-c">
+          <div class="fdot"></div>
+          <span><b>Stock Detail</b> — 어닝 히스토리 + 가이던스 추적</span>
+        </div>
+        <div class="feat-c">
+          <div class="fdot"></div>
+          <span><b>Sentiment</b> — VIX · 섹터별 분위기</span>
+        </div>
+        <div class="feat-c">
+          <div class="fdot"></div>
+          <span><b>매일 어닝 데일리</b> 자동 브리핑</span>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <div class="cta-l">DAILY EARNINGS · ANALYSIS</div>
+        <div class="cta-u">▶ 프로필 링크 클릭</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
