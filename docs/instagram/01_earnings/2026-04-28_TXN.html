@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>TXN Q1 2026 Earnings — Instagram Card Series (4:5)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg-page: #0A0E1A;
+    --bg-card: #0F172A;
+    --bg-card-alt: #131F38;
+    --accent: #22C55E;
+    --accent-2: #60A5FA;
+    --gold: #EAB308;
+    --red: #EF4444;
+    --text: #F1F5F9;
+    --text-dim: #CBD5E1;
+    --border: rgba(203,213,225,0.16);
+    --border-strong: rgba(96,165,250,0.45);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    background: var(--bg-page);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont,
+                 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    padding: 32px 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 70%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(580px, 1fr));
+    gap: 36px;
+    padding: 40px 32px 80px;
+    max-width: 1900px;
+    margin: 0 auto;
+  }
+
+  .card {
+    width: 540px;
+    height: 675px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 36px 32px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-2), var(--accent), var(--gold));
+    opacity: 0.85;
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 4px 0 0 0;
+    background:
+      radial-gradient(ellipse at top left,
+        rgba(96,165,250,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right,
+        rgba(34,197,94,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .card > * { position: relative; z-index: 1; }
+
+  .card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 22px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
+    background: rgba(96,165,250,0.16);
+    border: 1px solid rgba(96,165,250,0.40);
+    border-radius: 999px;
+    color: #93C5FD;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge.green {
+    background: rgba(34,197,94,0.18);
+    border-color: rgba(34,197,94,0.45);
+    color: #4ADE80;
+  }
+  .badge.gold {
+    background: rgba(234,179,8,0.18);
+    border-color: rgba(234,179,8,0.50);
+    color: #FDE68A;
+  }
+  .badge .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: currentColor;
+  }
+  .counter {
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  h2.card-title {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.22;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  h2.card-title .hi { color: #4ADE80; }
+  h2.card-title .gold { color: #FDE68A; }
+  h2.card-title .blue { color: #93C5FD; }
+
+  .green { color: #4ADE80; }
+  .red { color: #FCA5A5; }
+  .gold-text { color: var(--gold); }
+  .blue { color: #93C5FD; }
+
+  /* Cover */
+  .c1 {
+    background:
+      radial-gradient(ellipse at top,
+        rgba(96,165,250,0.26) 0%, transparent 60%),
+      linear-gradient(180deg, #0C1426 0%, #0A0E1A 100%);
+    border: 1px solid var(--border-strong);
+    justify-content: space-between;
+  }
+  .c1-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .c1-ticker {
+    font-size: 156px;
+    font-weight: 900;
+    letter-spacing: -8px;
+    line-height: 0.9;
+    background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .c1-co { font-size: 21px; color: var(--text-dim); margin-top: 12px; font-weight: 600; }
+  .c1-co .nasdaq {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 3px 10px;
+    background: rgba(96,165,250,0.14);
+    border-radius: 5px;
+    font-size: 14px;
+    color: #93C5FD;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+  }
+  .c1-price {
+    font-size: 18px;
+    color: var(--text-dim);
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .c1-price b { color: var(--text); }
+  .c1-chg {
+    font-size: 100px;
+    font-weight: 900;
+    color: #4ADE80;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-top: 8px;
+    text-shadow: 0 0 50px rgba(34,197,94,0.55);
+  }
+  .c1-momentum {
+    display: flex; gap: 14px;
+    margin-top: 20px;
+  }
+  .c1-momentum .m {
+    flex: 1;
+    background: rgba(34,197,94,0.10);
+    border: 1px solid rgba(34,197,94,0.32);
+    border-radius: 12px;
+    padding: 11px 14px;
+  }
+  .c1-momentum .ml {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .c1-momentum .mv {
+    font-size: 19px;
+    font-weight: 800;
+    color: #4ADE80;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .c1-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
+  .c1-date { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .c1-pill {
+    background: rgba(34,197,94,0.18);
+    border: 1px solid rgba(34,197,94,0.50);
+    color: #4ADE80;
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-weight: 800;
+  }
+
+  /* Earnings metrics */
+  .mgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .mbox {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 20px;
+  }
+  .mbox.beat { border-color: rgba(34,197,94,0.40); background: rgba(34,197,94,0.06); }
+  .mbox.miss { border-color: rgba(239,68,68,0.40); background: rgba(239,68,68,0.06); }
+  .mbox .ml {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .mbox .me {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .mbox .me .strike { text-decoration: line-through; opacity: 0.7; color: var(--text-dim); }
+  .mbox .arrow { color: var(--text-dim); margin: 0 5px; }
+  .mbox .ma {
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1.1;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .mbox .ms {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .banner {
+    background: linear-gradient(90deg,
+      rgba(34,197,94,0.16) 0%,
+      rgba(34,197,94,0.04) 100%);
+    border: 1px solid rgba(34,197,94,0.40);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 16px;
+  }
+  .banner .pulse {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #4ADE80;
+    box-shadow: 0 0 0 0 rgba(34,197,94,0.75);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.7); }
+    70% { box-shadow: 0 0 0 12px rgba(34,197,94,0); }
+    100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+  }
+  .banner-txt { font-size: 15px; color: #4ADE80; font-weight: 800; }
+
+  /* Segment list */
+  .seg-list { display: flex; flex-direction: column; gap: 12px; }
+  .seg {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+  }
+  .seg-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .seg-name { font-size: 16px; font-weight: 800; color: var(--text); }
+  .seg-name .small { font-size: 14px; color: var(--text-dim); font-weight: 500; margin-left: 4px; }
+  .seg-rev {
+    font-size: 15px; color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+  }
+  .bar-bg {
+    height: 8px; background: rgba(255,255,255,0.06);
+    border-radius: 4px; overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .bar-f { height: 100%; border-radius: 4px; }
+  .seg-foot {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .seg-yoy {
+    font-size: 14px; font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .seg-note { font-size: 14px; color: var(--text-dim); font-weight: 600; }
+
+  /* Cycle signal */
+  .signal-list { display: flex; flex-direction: column; gap: 12px; }
+  .signal {
+    background: var(--bg-card-alt);
+    border: 1px solid rgba(74,222,128,0.30);
+    border-radius: 14px;
+    padding: 14px 18px;
+    display: flex; gap: 16px;
+    align-items: flex-start;
+  }
+  .signal .ico {
+    font-size: 26px;
+    width: 36px; flex-shrink: 0; text-align: center;
+    padding-top: 2px;
+  }
+  .signal .body { flex: 1; }
+  .signal .title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 5px;
+  }
+  .signal .desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    font-weight: 600;
+  }
+  .signal .desc b { color: #4ADE80; font-weight: 800; }
+
+  /* Comparison */
+  .vs-block {
+    margin-top: 14px;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+  }
+  .vs-row {
+    display: flex; gap: 14px;
+    margin-top: 12px;
+  }
+  .vs-side {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(15,23,42,0.85);
+    border: 1px solid var(--border);
+  }
+  .vs-side .label {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .vs-side .v {
+    font-size: 24px;
+    font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .vs-side .desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+  .vs-side.up { border-color: rgba(74,222,128,0.40); background: rgba(34,197,94,0.06); }
+  .vs-side.up .v { color: #4ADE80; }
+  .vs-side.down { border-color: rgba(252,165,165,0.30); background: rgba(239,68,68,0.04); }
+  .vs-side.down .v { color: #FCA5A5; }
+
+  .insight-banner {
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(90deg, rgba(234,179,8,0.16), rgba(234,179,8,0.04));
+    border: 1px solid rgba(234,179,8,0.40);
+    border-radius: 14px;
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.55;
+  }
+  .insight-banner b { color: #FDE68A; font-weight: 800; }
+
+  /* CTA */
+  .c6 {
+    background:
+      radial-gradient(ellipse at top right,
+        rgba(234,179,8,0.22) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom left,
+        rgba(34,197,94,0.22) 0%, transparent 55%),
+      linear-gradient(180deg, #0F172A 0%, #0B1220 100%);
+    border: 1px solid rgba(34,197,94,0.40);
+    align-items: stretch;
+    text-align: center;
+  }
+  .logo-block { text-align: center; margin: 8px 0 14px; }
+  .logo-icon {
+    width: 80px; height: 80px;
+    border: 2px solid rgba(34,197,94,0.50);
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    background: rgba(34,197,94,0.10);
+    margin-bottom: 12px;
+  }
+  .diamond {
+    width: 30px; height: 30px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
+    transform: rotate(45deg);
+    border-radius: 4px;
+    box-shadow: 0 0 26px rgba(34,197,94,0.65);
+  }
+  .logo-name {
+    font-size: 30px; font-weight: 900;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 70%, var(--accent-2) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1.8px;
+  }
+  .logo-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  .feat-c6 {
+    background: rgba(15,23,42,0.85);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 18px;
+    display: flex; align-items: center; gap: 14px;
+    font-size: 15px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .feat-c6 .fdot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    box-shadow: 0 0 10px var(--accent);
+  }
+  .feat-c6 b { color: var(--text); font-weight: 800; }
+  .cta-box {
+    background: linear-gradient(135deg, rgba(34,197,94,0.16), rgba(96,165,250,0.14));
+    border: 1.5px solid rgba(34,197,94,0.45);
+    border-radius: 16px;
+    padding: 18px 20px;
+    text-align: center;
+    margin-top: auto;
+  }
+  .cta-l {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .cta-u {
+    font-size: 19px;
+    font-weight: 900;
+    color: #4ADE80;
+  }
+
+  .card-label {
+    position: absolute;
+    top: -28px; left: 0;
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.10em;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .card-wrap { position: relative; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📈 TXN — 산업용 반도체 사이클 회복</h1>
+  <p>6 cards · 1080×1350 · Texas Instruments Q1 2026 어닝 분석</p>
+</header>
+
+<div class="grid">
+
+  <!-- CARD 1 — COVER -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 1 · COVER</div>
+    <div class="card c1">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>AI QUANT LAB</span>
+        <span class="counter">01 / 06</span>
+      </div>
+      <div class="c1-mid">
+        <div class="c1-ticker">TXN</div>
+        <div class="c1-co">
+          Texas Instruments
+          <span class="nasdaq">NASDAQ</span>
+        </div>
+        <div class="c1-price">종가 <b>$185.40</b> · 어닝일 <b>$165.20</b></div>
+        <div class="c1-chg">+19.4%</div>
+
+        <div class="c1-momentum">
+          <div class="m">
+            <div class="ml">발표 직후</div>
+            <div class="mv">+10.2%</div>
+          </div>
+          <div class="m">
+            <div class="ml">5일 누적</div>
+            <div class="mv">+19.4%</div>
+          </div>
+          <div class="m">
+            <div class="ml">YTD</div>
+            <div class="mv">+24.8%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="c1-foot">
+        <span class="c1-date">2026.04.28</span>
+        <span class="c1-pill">📈 산업용 반도체 회복</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 — EARNINGS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 2 · EARNINGS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge green"><span class="dot"></span>1Q 2026 실적</span>
+        <span class="counter">02 / 06</span>
+      </div>
+      <h2 class="card-title">EPS · 매출 · 가이던스<br><span class="hi">3박자</span> 모두 OK</h2>
+
+      <div class="mgrid">
+        <div class="mbox beat">
+          <div class="ml">📊 EPS</div>
+          <div class="me">
+            <span class="strike">예상 $1.40</span>
+            <span class="arrow">→</span>
+            실제
+          </div>
+          <div class="ma green">$1.65</div>
+          <div class="ms green">+18% 서프라이즈</div>
+        </div>
+        <div class="mbox beat">
+          <div class="ml">💰 매출</div>
+          <div class="me">
+            <span class="strike">예상 $4.10B</span>
+            <span class="arrow">→</span>
+            실제
+          </div>
+          <div class="ma green">$4.32B</div>
+          <div class="ms green">+5.4% · YoY +11%</div>
+        </div>
+        <div class="mbox beat">
+          <div class="ml">📈 영업이익률</div>
+          <div class="me">전년 동기 28.0%</div>
+          <div class="ma green">36.4%</div>
+          <div class="ms green">+8.4%p YoY</div>
+        </div>
+        <div class="mbox beat">
+          <div class="ml">🚀 Q2 가이던스</div>
+          <div class="me">컨센 $4.20B</div>
+          <div class="ma green">$4.45B</div>
+          <div class="ms green">+6% 상향</div>
+        </div>
+      </div>
+
+      <div class="banner">
+        <div class="pulse"></div>
+        <span class="banner-txt">사이클 저점 통과 시그널 — 7분기 만의 매출 YoY 성장</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 — SEGMENTS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 3 · SEGMENTS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>사업부문별 매출</span>
+        <span class="counter">03 / 06</span>
+      </div>
+      <h2 class="card-title">Analog &amp; Embedded<br><span class="hi">동시</span> 회복</h2>
+
+      <div class="seg-list">
+        <div class="seg">
+          <div class="seg-row">
+            <span class="seg-name">Analog<span class="small">아날로그</span></span>
+            <span class="seg-rev">$3.42B</span>
+          </div>
+          <div class="bar-bg"><div class="bar-f" style="width: 79%; background: linear-gradient(90deg, #16A34A, #22C55E);"></div></div>
+          <div class="seg-foot">
+            <span class="seg-yoy green">YoY +13% 🚀</span>
+            <span class="seg-note">전체 매출 79% · 회복 견인</span>
+          </div>
+        </div>
+
+        <div class="seg">
+          <div class="seg-row">
+            <span class="seg-name">Embedded Processing<span class="small">임베디드</span></span>
+            <span class="seg-rev">$680M</span>
+          </div>
+          <div class="bar-bg"><div class="bar-f" style="width: 16%; background: linear-gradient(90deg, #2563EB, #60A5FA);"></div></div>
+          <div class="seg-foot">
+            <span class="seg-yoy blue">YoY +8%</span>
+            <span class="seg-note">자동차 · 산업용 반등</span>
+          </div>
+        </div>
+
+        <div class="seg">
+          <div class="seg-row">
+            <span class="seg-name">Other<span class="small">기타</span></span>
+            <span class="seg-rev">$220M</span>
+          </div>
+          <div class="bar-bg"><div class="bar-f" style="width: 5%; background: linear-gradient(90deg, #B91C1C, #EF4444);"></div></div>
+          <div class="seg-foot">
+            <span class="seg-yoy red">YoY -3%</span>
+            <span class="seg-note">DLP · 캘큘레이터 등 비핵심</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>핵심</b> — 매출의 95%가 Analog + Embedded. 두 부문이 모두 +ve YoY는 <b>2024년 Q3 이후 첫 번째</b>.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 — CYCLE SIGNAL -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 4 · CYCLE SIGNAL</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge green"><span class="dot"></span>사이클 지표</span>
+        <span class="counter">04 / 06</span>
+      </div>
+      <h2 class="card-title">사이클 회복<br><span class="hi">4가지 시그널</span></h2>
+
+      <div class="signal-list">
+        <div class="signal">
+          <div class="ico">📦</div>
+          <div class="body">
+            <div class="title">재고일수 정상화</div>
+            <div class="desc">
+              평균 재고일수 <b>235일 → 195일</b><br>
+              과잉 재고 단계 통과
+            </div>
+          </div>
+        </div>
+        <div class="signal">
+          <div class="ico">📋</div>
+          <div class="body">
+            <div class="title">Book-to-Bill > 1.0 복귀</div>
+            <div class="desc">
+              7분기 만에 <b>주문 > 매출</b> 전환<br>
+              수주 모멘텀 재개
+            </div>
+          </div>
+        </div>
+        <div class="signal">
+          <div class="ico">🏭</div>
+          <div class="body">
+            <div class="title">산업용 고객 회복</div>
+            <div class="desc">
+              산업용 매출 비중 <b>32% → 38%</b><br>
+              팩토리 자동화 · 로봇 수요 ↑
+            </div>
+          </div>
+        </div>
+        <div class="signal">
+          <div class="ico">🚗</div>
+          <div class="body">
+            <div class="title">자동차 매출 +15% YoY</div>
+            <div class="desc">
+              EV · ADAS 칩 수요 증가<br>
+              중국 자동차 주문 정상화
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5 — AI vs INDUSTRIAL -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 5 · DIVERSIFICATION</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>대안 베팅</span>
+        <span class="counter">05 / 06</span>
+      </div>
+      <h2 class="card-title">AI 일변도에서<br><span class="gold">분산</span>으로</h2>
+
+      <div class="vs-block">
+        <div style="font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px;">
+          최근 1년 수익률
+        </div>
+        <div class="vs-row">
+          <div class="vs-side up">
+            <div class="label">🤖 AI 반도체</div>
+            <div class="v">+45%</div>
+            <div class="desc">NVDA · AMD<br>고밸류에이션 진입</div>
+          </div>
+          <div class="vs-side down">
+            <div class="label">🏭 산업용 반도체</div>
+            <div class="v">-12%</div>
+            <div class="desc">TXN · ADI · MCHP<br>사이클 저점</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vs-block" style="margin-top: 14px;">
+        <div style="font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px;">
+          향후 12개월 컨센서스 EPS 성장률
+        </div>
+        <div class="vs-row">
+          <div class="vs-side down">
+            <div class="label">AI 반도체</div>
+            <div class="v">+18%</div>
+            <div class="desc">고성장 둔화 우려</div>
+          </div>
+          <div class="vs-side up">
+            <div class="label">산업용</div>
+            <div class="v">+34%</div>
+            <div class="desc">사이클 회복 가속</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>분산 관점</b> — AI 비중 높은 포트폴리오에 <b>산업용 반도체 (TXN, ADI)</b> 추가는 사이클 다각화 효과
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6 — CTA -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 6 · BRAND / CTA</div>
+    <div class="card c6">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>AI QUANT LAB</span>
+        <span class="counter">06 / 06</span>
+      </div>
+
+      <div class="logo-block">
+        <div class="logo-icon">
+          <div class="diamond"></div>
+        </div>
+        <div class="logo-name">AI QUANT LAB</div>
+        <div class="logo-sub">데이터 기반 미국주식 분석 플랫폼</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 9px; margin: 12px 0;">
+        <div class="feat-c6">
+          <div class="fdot"></div>
+          <span><b>실적 서프라이즈</b> 실시간 모니터링</span>
+        </div>
+        <div class="feat-c6">
+          <div class="fdot"></div>
+          <span><b>사업부문별 매출</b> 자동 분해 분석</span>
+        </div>
+        <div class="feat-c6">
+          <div class="fdot"></div>
+          <span><b>섹터 사이클</b> 상태 추적</span>
+        </div>
+        <div class="feat-c6">
+          <div class="fdot"></div>
+          <span><b>매일 어닝 종목</b> 데일리 브리핑</span>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <div class="cta-l">FOLLOW · DAILY EARNINGS</div>
+        <div class="cta-u">▶ 프로필 링크 클릭</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

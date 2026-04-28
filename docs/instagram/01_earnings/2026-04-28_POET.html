@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>POET 광통신 충격 — Instagram Card Series (4:5)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg-page: #0A0E1A;
+    --bg-card: #0F172A;
+    --bg-card-alt: #131F38;
+    --accent: #22C55E;
+    --accent-2: #60A5FA;
+    --gold: #EAB308;
+    --red: #EF4444;
+    --text: #F1F5F9;
+    --text-dim: #CBD5E1;
+    --border: rgba(203,213,225,0.16);
+    --border-strong: rgba(252,165,165,0.45);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    background: var(--bg-page);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont,
+                 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    padding: 32px 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #FCA5A5 0%, var(--gold) 70%, var(--accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(580px, 1fr));
+    gap: 36px;
+    padding: 40px 32px 80px;
+    max-width: 1900px;
+    margin: 0 auto;
+  }
+
+  .card {
+    width: 540px;
+    height: 675px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 36px 32px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FCA5A5, var(--gold), var(--accent-2));
+    opacity: 0.85;
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 4px 0 0 0;
+    background:
+      radial-gradient(ellipse at top right,
+        rgba(239,68,68,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom left,
+        rgba(96,165,250,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .card > * { position: relative; z-index: 1; }
+
+  .card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 22px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
+    background: rgba(96,165,250,0.16);
+    border: 1px solid rgba(96,165,250,0.40);
+    border-radius: 999px;
+    color: #93C5FD;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge.red {
+    background: rgba(239,68,68,0.18);
+    border-color: rgba(239,68,68,0.50);
+    color: #FCA5A5;
+  }
+  .badge.gold {
+    background: rgba(234,179,8,0.18);
+    border-color: rgba(234,179,8,0.50);
+    color: #FDE68A;
+  }
+  .badge .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: currentColor;
+  }
+  .counter {
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  h2.card-title {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.22;
+    margin-bottom: 18px;
+    color: var(--text);
+  }
+  h2.card-title .hi { color: #FCA5A5; }
+  h2.card-title .gold { color: #FDE68A; }
+  h2.card-title .blue { color: #93C5FD; }
+
+  .green { color: #4ADE80; }
+  .red { color: #FCA5A5; }
+  .gold-text { color: var(--gold); }
+  .blue { color: #93C5FD; }
+
+  /* Cover — RED theme */
+  .c1 {
+    background:
+      radial-gradient(ellipse at top,
+        rgba(239,68,68,0.24) 0%, transparent 60%),
+      linear-gradient(180deg, #1A0E0E 0%, #0A0E1A 100%);
+    border: 1px solid var(--border-strong);
+    justify-content: space-between;
+  }
+  .c1-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .c1-ticker {
+    font-size: 132px;
+    font-weight: 900;
+    letter-spacing: -8px;
+    line-height: 0.9;
+    background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .c1-co { font-size: 21px; color: var(--text-dim); margin-top: 12px; font-weight: 600; }
+  .c1-co .nasdaq {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 3px 10px;
+    background: rgba(96,165,250,0.14);
+    border-radius: 5px;
+    font-size: 14px;
+    color: #93C5FD;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+  }
+  .c1-price {
+    font-size: 18px;
+    color: var(--text-dim);
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .c1-price b { color: var(--text); }
+  .c1-chg {
+    font-size: 116px;
+    font-weight: 900;
+    color: #FCA5A5;
+    letter-spacing: -3px;
+    line-height: 1;
+    margin-top: 8px;
+    text-shadow: 0 0 50px rgba(239,68,68,0.55);
+  }
+  .c1-cause {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(239,68,68,0.10);
+    border: 1px solid rgba(239,68,68,0.35);
+    border-radius: 12px;
+    font-size: 16px;
+    color: var(--text);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .c1-cause b { color: #FCA5A5; }
+  .c1-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
+  .c1-date { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .c1-pill {
+    background: rgba(239,68,68,0.18);
+    border: 1px solid rgba(239,68,68,0.50);
+    color: #FCA5A5;
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-weight: 800;
+  }
+
+  /* Event timeline */
+  .event-block {
+    background: var(--bg-card-alt);
+    border: 1px solid rgba(252,165,165,0.30);
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .event-block .et {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .event-block .et .ico {
+    color: #FCA5A5;
+    font-size: 22px;
+  }
+  .event-block .ed {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .event-block .ed b { color: var(--text); font-weight: 700; }
+
+  .timeline {
+    display: flex; flex-direction: column;
+    gap: 10px;
+    background: rgba(15,23,42,0.85);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .tl-row {
+    display: flex; gap: 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+  .tl-date {
+    color: #FCA5A5;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    flex-shrink: 0;
+    width: 78px;
+  }
+  .tl-event { color: var(--text-dim); flex: 1; }
+  .tl-event b { color: var(--text); font-weight: 700; }
+
+  /* Sector exposure */
+  .sector-list { display: flex; flex-direction: column; gap: 12px; }
+  .sec-item {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+  }
+  .sec-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .sec-name { font-size: 16px; font-weight: 800; color: var(--text); }
+  .sec-name .small { font-size: 14px; color: var(--text-dim); font-weight: 500; margin-left: 6px; }
+  .sec-chg {
+    font-size: 18px; font-weight: 900;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .sec-chg.dn { color: #FCA5A5; }
+  .sec-chg.up { color: #4ADE80; }
+  .sec-note {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  /* Risk lessons */
+  .lesson-list { display: flex; flex-direction: column; gap: 13px; }
+  .lesson {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 15px 18px;
+    display: flex; gap: 16px;
+    align-items: flex-start;
+  }
+  .lesson .num {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: rgba(252,165,165,0.18);
+    border: 1px solid rgba(252,165,165,0.45);
+    color: #FCA5A5;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .lesson .body { flex: 1; }
+  .lesson .ttl {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .lesson .desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-weight: 500;
+  }
+  .lesson .desc b { color: var(--text); font-weight: 700; }
+
+  .insight-banner {
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(90deg, rgba(234,179,8,0.16), rgba(234,179,8,0.04));
+    border: 1px solid rgba(234,179,8,0.40);
+    border-radius: 14px;
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.55;
+  }
+  .insight-banner b { color: #FDE68A; font-weight: 800; }
+
+  /* CTA */
+  .c6 {
+    background:
+      radial-gradient(ellipse at top right,
+        rgba(234,179,8,0.22) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom left,
+        rgba(34,197,94,0.22) 0%, transparent 55%),
+      linear-gradient(180deg, #0F172A 0%, #0B1220 100%);
+    border: 1px solid rgba(34,197,94,0.40);
+    align-items: stretch;
+    text-align: center;
+  }
+  .logo-block { text-align: center; margin: 8px 0 14px; }
+  .logo-icon {
+    width: 80px; height: 80px;
+    border: 2px solid rgba(34,197,94,0.50);
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    background: rgba(34,197,94,0.10);
+    margin-bottom: 12px;
+  }
+  .diamond {
+    width: 30px; height: 30px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
+    transform: rotate(45deg);
+    border-radius: 4px;
+    box-shadow: 0 0 26px rgba(34,197,94,0.65);
+  }
+  .logo-name {
+    font-size: 30px; font-weight: 900;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 70%, var(--accent-2) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1.8px;
+  }
+  .logo-sub {
+    font-size: 15px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  .feat-c6 {
+    background: rgba(15,23,42,0.85);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 18px;
+    display: flex; align-items: center; gap: 14px;
+    font-size: 15px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .feat-c6 .fdot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    box-shadow: 0 0 10px var(--accent);
+  }
+  .feat-c6 b { color: var(--text); font-weight: 800; }
+  .cta-box {
+    background: linear-gradient(135deg, rgba(34,197,94,0.16), rgba(96,165,250,0.14));
+    border: 1.5px solid rgba(34,197,94,0.45);
+    border-radius: 16px;
+    padding: 18px 20px;
+    text-align: center;
+    margin-top: auto;
+  }
+  .cta-l {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .cta-u {
+    font-size: 19px;
+    font-weight: 900;
+    color: #4ADE80;
+  }
+
+  .card-label {
+    position: absolute;
+    top: -28px; left: 0;
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.10em;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .card-wrap { position: relative; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📉 POET — 광통신 섹터 충격</h1>
+  <p>6 cards · 1080×1350 · Celestial AI 발주 취소 → POET -50%</p>
+</header>
+
+<div class="grid">
+
+  <!-- CARD 1 — COVER -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 1 · COVER</div>
+    <div class="card c1">
+      <div class="card-head">
+        <span class="badge red"><span class="dot"></span>SECTOR ALERT</span>
+        <span class="counter">01 / 06</span>
+      </div>
+      <div class="c1-mid">
+        <div class="c1-ticker">POET</div>
+        <div class="c1-co">
+          POET Technologies
+          <span class="nasdaq">NASDAQ</span>
+        </div>
+        <div class="c1-price">하루 만에 시총 <b>절반</b> 증발</div>
+        <div class="c1-chg">−50%</div>
+
+        <div class="c1-cause">
+          🚨 <b>Celestial AI</b> (Marvell 인수)<br>
+          → POET 발주 <b>전면 취소</b>
+        </div>
+      </div>
+
+      <div class="c1-foot">
+        <span class="c1-date">2026.04.28</span>
+        <span class="c1-pill">⚠️ 광통신 섹터 리스크</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 — WHAT HAPPENED -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 2 · WHAT HAPPENED</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge red"><span class="dot"></span>사건 정리</span>
+        <span class="counter">02 / 06</span>
+      </div>
+      <h2 class="card-title">M&amp;A가 만든<br><span class="hi">연쇄 충격</span></h2>
+
+      <div class="event-block">
+        <div class="et"><span class="ico">⚠️</span>핵심 사건</div>
+        <div class="ed">
+          <b>Celestial AI</b>는 광 인터커넥트(Photonic Interconnect) 스타트업<br>
+          → POET의 핵심 고객사 (매출의 <b>~40%</b> 추정)<br>
+          <b>Marvell이 Celestial AI 인수</b> 확정<br>
+          → 인수 후 첫 결정: <b>기존 POET 발주 전면 취소</b>
+        </div>
+
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-date">04/22</div>
+            <div class="tl-event">Marvell, Celestial AI 인수 발표 <b>(긍정적 시장 반응)</b></div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">04/26</div>
+            <div class="tl-event">Celestial AI, <b>POET 발주 취소</b> 통보</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">04/27</div>
+            <div class="tl-event">POET <b>−50%</b> 폭락 · 거래량 평소 30배</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">04/28</div>
+            <div class="tl-event">광통신 섹터 동반 약세 · 분석 시작</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>핵심</b> — Marvell은 자체 광통신 라인을 가지고 있어, 인수 즉시 외부 발주 정리. <b>인수 = 공급사 위험</b>의 교과서적 사례.
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 — SECTOR EXPOSURE -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 3 · SECTOR EXPOSURE</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>광통신 섹터 영향</span>
+        <span class="counter">03 / 06</span>
+      </div>
+      <h2 class="card-title">파장은 어디까지<br><span class="hi">번질까?</span></h2>
+
+      <div class="sector-list">
+        <div class="sec-item">
+          <div class="sec-row">
+            <span class="sec-name">POET <span class="small">진앙</span></span>
+            <span class="sec-chg dn">-50.2%</span>
+          </div>
+          <div class="sec-note">단일 고객 의존도 ↑ → 직격탄</div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-row">
+            <span class="sec-name">COHR <span class="small">Coherent · 광통신</span></span>
+            <span class="sec-chg dn">-7.4%</span>
+          </div>
+          <div class="sec-note">동종 섹터 sentiment 악화 영향</div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-row">
+            <span class="sec-name">LITE <span class="small">Lumentum · 광통신</span></span>
+            <span class="sec-chg dn">-5.8%</span>
+          </div>
+          <div class="sec-note">M&amp;A 리스크 재평가</div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-row">
+            <span class="sec-name">MRVL <span class="small">Marvell · 인수자</span></span>
+            <span class="sec-chg up">+2.1%</span>
+          </div>
+          <div class="sec-note">인수 시너지 평가 → 소폭 상승</div>
+        </div>
+
+        <div class="sec-item">
+          <div class="sec-row">
+            <span class="sec-name">AVGO <span class="small">Broadcom · 광통신 경쟁사</span></span>
+            <span class="sec-chg up">+1.4%</span>
+          </div>
+          <div class="sec-note">대체 공급자로 반사 이익</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 — RISK LESSONS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 4 · RISK LESSONS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>투자 시사점</span>
+        <span class="counter">04 / 06</span>
+      </div>
+      <h2 class="card-title">이번 사건이<br>주는 <span class="gold">3가지 교훈</span></h2>
+
+      <div class="lesson-list">
+        <div class="lesson">
+          <div class="num">01</div>
+          <div class="body">
+            <div class="ttl">단일 고객 의존도 = 치명적 리스크</div>
+            <div class="desc">
+              POET 매출의 <b>~40%</b>가 Celestial AI<br>
+              발주 취소 = 매출 절반 증발 = 주가 절반 증발<br>
+              <b>매출 비중 30%+ 고객</b> 있는 종목 주의
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson">
+          <div class="num">02</div>
+          <div class="body">
+            <div class="ttl">M&amp;A는 양날의 검</div>
+            <div class="desc">
+              인수자 입장에서 외부 공급사 정리는 자연스러운 수순<br>
+              <b>고객사 인수 뉴스 = 공급사에 위험</b><br>
+              과거 사례: NXP-Quantenna 인수 시 동일 패턴
+            </div>
+          </div>
+        </div>
+
+        <div class="lesson">
+          <div class="num">03</div>
+          <div class="body">
+            <div class="ttl">소형주 광통신 vs ETF 분산</div>
+            <div class="desc">
+              개별 종목: 한 번에 -50% 가능<br>
+              <b>ETF (PHO, SOXX)</b>: 수십 종목 분산 → 충격 흡수<br>
+              "고위험 추구"는 이런 위험 감수 가능 시에만
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>체크리스트</b> — 보유 종목 중 <b>매출 30%+ 의존 고객</b> 있는지, <b>그 고객이 M&amp;A 대상</b>인지 확인 필수
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5 — SCREENING TIP -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 5 · SCREENING</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>비슷한 종목 찾기</span>
+        <span class="counter">05 / 06</span>
+      </div>
+      <h2 class="card-title">내 종목도<br><span class="gold">위험할까?</span></h2>
+
+      <div class="event-block">
+        <div class="et"><span class="ico">🔍</span>10-K에서 확인할 것</div>
+        <div class="ed">
+          모든 미국 상장사의 <b>연간 보고서(10-K)</b>에는 의무적으로<br>
+          <b>"Customer Concentration"</b> 섹션이 있음<br>
+          → "10% 이상 매출 차지 고객" 이름 + 비중 공개
+        </div>
+
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-date">예시 1</div>
+            <div class="tl-event"><b>SWKS</b> (Skyworks): Apple 매출 <b>67%</b> → 갑작스런 변화 위험</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">예시 2</div>
+            <div class="tl-event"><b>QRVO</b>: Apple 매출 <b>46%</b> → 동일 위험</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-date">예시 3</div>
+            <div class="tl-event"><b>SMCI</b>: NVDA 의존 → AI 사이클 따라 변동성 ↑</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>찾는 법</b> — sec.gov 검색 → 종목명 + "10-K" → "Risk Factors" 섹션 → "Customer Concentration" 검색
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6 — CTA -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 6 · BRAND / CTA</div>
+    <div class="card c6">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>AI QUANT LAB</span>
+        <span class="counter">06 / 06</span>
+      </div>
+
+      <div class="logo-block">
+        <div class="logo-icon">
+          <div class="diamond"></div>
+        </div>
+        <div class="logo-name">AI QUANT LAB</div>
+        <div class="logo-sub">데이터 기반 미국주식 분석 플랫폼</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 9px; margin: 12px 0;">
+        <div class="feat-c6">
+          <div class="fdot"></div>
+          <span><b>섹터 리스크 모니터링</b> 자동 알림</span>
+        </div>
+        <div class="feat-c6">
+          <div class="fdot"></div>
+          <span><b>고객 의존도 분석</b> 10-K 기반</span>
+        </div>
+        <div class="feat-c6">
+          <div class="fdot"></div>
+          <span><b>M&amp;A 영향 시뮬레이션</b> 공급망 추적</span>
+        </div>
+        <div class="feat-c6">
+          <div class="fdot"></div>
+          <span><b>매일 어닝 데일리</b> 자동 브리핑</span>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <div class="cta-l">FOLLOW · DAILY MARKET</div>
+        <div class="cta-u">▶ 프로필 링크 클릭</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
