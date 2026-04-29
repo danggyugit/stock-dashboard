@@ -56,7 +56,7 @@
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 28px;
-    padding: 36px 32px;
+    padding: 32px 30px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -86,7 +86,7 @@
 
   .card-head {
     display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 22px;
+    margin-bottom: 18px;
   }
   .badge {
     display: inline-flex; align-items: center; gap: 8px;
@@ -109,11 +109,6 @@
     border-color: rgba(234,179,8,0.50);
     color: #FDE68A;
   }
-  .badge.red {
-    background: rgba(239,68,68,0.18);
-    border-color: rgba(239,68,68,0.50);
-    color: #FCA5A5;
-  }
   .badge .dot {
     width: 7px; height: 7px; border-radius: 50%;
     background: currentColor;
@@ -126,15 +121,14 @@
   }
 
   h2.card-title {
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 800;
-    line-height: 1.22;
-    margin-bottom: 18px;
+    line-height: 1.2;
+    margin-bottom: 14px;
     color: var(--text);
   }
   h2.card-title .hi { color: #4ADE80; }
   h2.card-title .gold { color: #FDE68A; }
-  h2.card-title .red { color: #FCA5A5; }
   h2.card-title .blue { color: #93C5FD; }
 
   .green { color: #4ADE80; }
@@ -146,10 +140,11 @@
   .c1 {
     background:
       radial-gradient(ellipse at top,
-        rgba(234,179,8,0.22) 0%, transparent 60%),
-      linear-gradient(180deg, #0C1426 0%, #0A0E1A 100%);
-    border: 1px solid var(--border-strong);
+        rgba(34,197,94,0.26) 0%, transparent 60%),
+      linear-gradient(180deg, #0C2616 0%, #0A0E1A 100%);
+    border: 1px solid rgba(74,222,128,0.45);
     justify-content: space-between;
+    padding: 36px 32px;
   }
   .c1-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
   .c1-ticker {
@@ -185,11 +180,11 @@
   .c1-chg {
     font-size: 100px;
     font-weight: 900;
-    color: #FCA5A5;
+    color: #4ADE80;
     letter-spacing: -3px;
     line-height: 1;
     margin-top: 8px;
-    text-shadow: 0 0 50px rgba(239,68,68,0.45);
+    text-shadow: 0 0 50px rgba(34,197,94,0.55);
   }
   .c1-momentum {
     display: flex; gap: 14px;
@@ -219,9 +214,9 @@
   .c1-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
   .c1-date { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
   .c1-pill {
-    background: rgba(234,179,8,0.18);
-    border: 1px solid rgba(234,179,8,0.50);
-    color: #FDE68A;
+    background: rgba(34,197,94,0.20);
+    border: 1px solid rgba(34,197,94,0.55);
+    color: #4ADE80;
     font-size: 14px;
     padding: 8px 18px;
     border-radius: 999px;
@@ -232,36 +227,35 @@
   .mgrid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-top: 8px;
+    gap: 12px;
+    margin-top: 6px;
   }
   .mbox {
     background: var(--bg-card-alt);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 18px 20px;
+    border-radius: 14px;
+    padding: 14px 16px;
   }
   .mbox.beat { border-color: rgba(34,197,94,0.40); background: rgba(34,197,94,0.06); }
-  .mbox.miss { border-color: rgba(239,68,68,0.40); background: rgba(239,68,68,0.06); }
   .mbox .ml {
     font-size: 14px;
     color: var(--text-dim);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 700;
   }
   .mbox .me {
     font-size: 14px;
     color: var(--text-dim);
     font-family: 'JetBrains Mono', monospace;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
     font-weight: 600;
   }
   .mbox .me .strike { text-decoration: line-through; opacity: 0.7; color: var(--text-dim); }
-  .mbox .arrow { color: var(--text-dim); margin: 0 5px; }
+  .mbox .arrow { color: var(--text-dim); margin: 0 4px; }
   .mbox .ma {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 900;
     line-height: 1.1;
     font-family: 'JetBrains Mono', monospace;
@@ -269,7 +263,7 @@
   .mbox .ms {
     font-size: 14px;
     font-weight: 700;
-    margin-top: 5px;
+    margin-top: 4px;
     font-family: 'JetBrains Mono', monospace;
   }
 
@@ -279,9 +273,9 @@
       rgba(34,197,94,0.04) 100%);
     border: 1px solid rgba(34,197,94,0.40);
     border-radius: 14px;
-    padding: 14px 18px;
+    padding: 12px 16px;
     display: flex; align-items: center; gap: 12px;
-    margin-top: 16px;
+    margin-top: 12px;
   }
   .banner .pulse {
     width: 10px; height: 10px; border-radius: 50%;
@@ -296,144 +290,157 @@
   }
   .banner-txt { font-size: 15px; color: #4ADE80; font-weight: 800; }
 
-  /* Highlight list */
-  .hl-list { display: flex; flex-direction: column; gap: 10px; }
+  /* Highlight list (Card 3) — tightened to fit */
+  .hl-list { display: flex; flex-direction: column; gap: 8px; }
   .hl-item {
     background: var(--bg-card-alt);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 13px 18px;
-    display: flex; gap: 14px;
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex; gap: 12px;
     align-items: flex-start;
   }
   .hl-item.good { border-color: rgba(74,222,128,0.32); background: rgba(34,197,94,0.06); }
   .hl-item .ico {
-    font-size: 24px;
-    width: 32px; flex-shrink: 0; text-align: center;
-    padding-top: 2px;
+    font-size: 22px;
+    width: 28px; flex-shrink: 0; text-align: center;
+    padding-top: 1px;
   }
   .hl-item .body { flex: 1; }
   .hl-item .title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .hl-item .desc {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .hl-item .desc b { color: #4ADE80; font-weight: 800; }
+
+  /* Driver list (Card 4) */
+  .driver-list { display: flex; flex-direction: column; gap: 11px; }
+  .driver {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 16px;
+    display: flex; gap: 14px;
+    align-items: flex-start;
+  }
+  .driver.good { border-color: rgba(74,222,128,0.32); background: rgba(34,197,94,0.06); }
+  .driver .num {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: rgba(74,222,128,0.18);
+    border: 1px solid rgba(74,222,128,0.50);
+    color: #4ADE80;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .driver .body { flex: 1; min-width: 0; }
+  .driver .dtitle {
     font-size: 16px;
     font-weight: 800;
     color: var(--text);
     margin-bottom: 4px;
   }
-  .hl-item .desc {
+  .driver .ddesc {
     font-size: 14px;
     color: var(--text-dim);
     line-height: 1.5;
-    font-weight: 600;
-  }
-  .hl-item .desc b { color: #4ADE80; font-weight: 800; }
-
-  /* Trap explanation */
-  .trap-block {
-    background: var(--bg-card-alt);
-    border: 1px solid rgba(252,165,165,0.30);
-    border-radius: 14px;
-    padding: 16px 18px;
-    margin-bottom: 14px;
-  }
-  .trap-block .th {
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--text);
-    margin-bottom: 8px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .trap-block .th .ico {
-    color: #FCA5A5;
-    font-size: 22px;
-  }
-  .trap-block .td {
-    font-size: 14px;
-    color: var(--text-dim);
-    line-height: 1.55;
     font-weight: 500;
-    margin-bottom: 12px;
   }
-  .trap-block .td b { color: var(--text); font-weight: 700; }
+  .driver .ddesc b { color: var(--text); font-weight: 700; }
+  .driver .ddesc .num { color: #4ADE80; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 
-  .example-box {
-    background: rgba(15,23,42,0.85);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
+  /* Outlook (Card 5) — tightened */
+  .out-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 11px;
+    margin-top: 4px;
   }
-  .example-box .el {
-    font-size: 14px;
-    color: #FCA5A5;
-    font-weight: 800;
-    margin-bottom: 5px;
-    letter-spacing: 0.05em;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .example-box .et {
-    font-size: 14px;
-    color: var(--text);
-    line-height: 1.5;
-    font-weight: 600;
-  }
-  .example-box .et b { color: #FDE68A; font-weight: 800; }
-
-  .insight-banner {
-    margin-top: 14px;
-    padding: 14px 18px;
-    background: linear-gradient(90deg, rgba(234,179,8,0.16), rgba(234,179,8,0.04));
-    border: 1px solid rgba(234,179,8,0.40);
-    border-radius: 14px;
-    font-size: 15px;
-    color: var(--text);
-    font-weight: 600;
-    line-height: 1.55;
-  }
-  .insight-banner b { color: #FDE68A; font-weight: 800; }
-
-  /* Comparison */
-  .vs-block {
-    margin-top: 14px;
+  .out-box {
     background: var(--bg-card-alt);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 18px;
+    border-radius: 14px;
+    padding: 13px 15px;
   }
-  .vs-row {
-    display: flex; gap: 14px;
-    margin-top: 12px;
-  }
-  .vs-side {
-    flex: 1;
-    padding: 14px;
-    border-radius: 12px;
-    background: rgba(15,23,42,0.85);
-    border: 1px solid var(--border);
-  }
-  .vs-side .label {
+  .out-box.good { border-color: rgba(74,222,128,0.40); background: rgba(34,197,94,0.06); }
+  .out-box .ol {
     font-size: 14px;
     color: var(--text-dim);
-    font-weight: 700;
     letter-spacing: 0.05em;
-    margin-bottom: 8px;
     text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
   }
-  .vs-side .v {
-    font-size: 28px;
+  .out-box .ov {
+    font-size: 26px;
     font-weight: 900;
     font-family: 'JetBrains Mono', monospace;
+    line-height: 1.1;
   }
-  .vs-side .desc {
+  .out-box.good .ov { color: #4ADE80; }
+  .out-box .od {
     font-size: 14px;
     color: var(--text-dim);
-    margin-top: 6px;
-    line-height: 1.5;
+    margin-top: 5px;
     font-weight: 600;
+    line-height: 1.4;
   }
-  .vs-side.up { border-color: rgba(74,222,128,0.40); background: rgba(34,197,94,0.06); }
-  .vs-side.up .v { color: #4ADE80; }
-  .vs-side.down { border-color: rgba(252,165,165,0.30); background: rgba(239,68,68,0.04); }
-  .vs-side.down .v { color: #FCA5A5; }
+  .out-box .od b { color: var(--text); font-weight: 700; }
+
+  .target-list {
+    margin-top: 12px;
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+  }
+  .target-list .tt {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .target-row {
+    display: flex; justify-content: space-between;
+    padding: 5px 0;
+    font-size: 14px;
+    font-weight: 600;
+    border-top: 1px solid rgba(203,213,225,0.06);
+  }
+  .target-row:first-of-type { border-top: 0; }
+  .target-row .firm { color: var(--text); }
+  .target-row .new {
+    color: #4ADE80;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+  }
+
+  .insight-banner {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: linear-gradient(90deg, rgba(234,179,8,0.16), rgba(234,179,8,0.04));
+    border: 1px solid rgba(234,179,8,0.40);
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .insight-banner b { color: #FDE68A; font-weight: 800; }
 
   /* CTA */
   .c6 {
@@ -446,46 +453,47 @@
     border: 1px solid rgba(34,197,94,0.40);
     align-items: stretch;
     text-align: center;
+    padding: 32px 30px;
   }
-  .logo-block { text-align: center; margin: 8px 0 14px; }
+  .logo-block { text-align: center; margin: 6px 0 12px; }
   .logo-icon {
-    width: 80px; height: 80px;
+    width: 70px; height: 70px;
     border: 2px solid rgba(34,197,94,0.50);
-    border-radius: 18px;
+    border-radius: 16px;
     display: inline-flex;
     align-items: center; justify-content: center;
     background: rgba(34,197,94,0.10);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
   .diamond {
-    width: 30px; height: 30px;
+    width: 26px; height: 26px;
     background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
     transform: rotate(45deg);
     border-radius: 4px;
-    box-shadow: 0 0 26px rgba(34,197,94,0.65);
+    box-shadow: 0 0 22px rgba(34,197,94,0.6);
   }
   .logo-name {
-    font-size: 30px; font-weight: 900;
+    font-size: 26px; font-weight: 900;
     background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 70%, var(--accent-2) 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: 1.8px;
+    letter-spacing: 1.6px;
   }
   .logo-sub {
-    font-size: 15px;
+    font-size: 14px;
     color: var(--text-dim);
-    margin-top: 6px;
+    margin-top: 4px;
     font-weight: 600;
   }
   .feat-c6 {
     background: rgba(15,23,42,0.85);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 13px 18px;
-    display: flex; align-items: center; gap: 14px;
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
     font-size: 15px;
     color: var(--text-dim);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     text-align: left;
     font-weight: 600;
   }
@@ -500,8 +508,8 @@
   .cta-box {
     background: linear-gradient(135deg, rgba(34,197,94,0.16), rgba(96,165,250,0.14));
     border: 1.5px solid rgba(34,197,94,0.45);
-    border-radius: 16px;
-    padding: 18px 20px;
+    border-radius: 14px;
+    padding: 14px 18px;
     text-align: center;
     margin-top: auto;
   }
@@ -511,11 +519,11 @@
     font-family: 'JetBrains Mono', monospace;
     letter-spacing: 0.10em;
     text-transform: uppercase;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 700;
   }
   .cta-u {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 900;
     color: #4ADE80;
   }
@@ -535,7 +543,7 @@
 <body>
 
 <header>
-  <h1>📊 STX Q3 FY2026 — Sell the News 사례</h1>
+  <h1>📈 STX Q3 FY2026 — 어닝 강력 비트로 급등</h1>
   <p>6 cards · 1080×1350 · Seagate Technology Q3 어닝 분석</p>
 </header>
 
@@ -546,7 +554,7 @@
     <div class="card-label">CARD 1 · COVER</div>
     <div class="card c1">
       <div class="card-head">
-        <span class="badge"><span class="dot"></span>AI QUANT LAB</span>
+        <span class="badge green"><span class="dot"></span>EARNINGS BEAT</span>
         <span class="counter">01 / 06</span>
       </div>
       <div class="c1-mid">
@@ -555,17 +563,17 @@
           Seagate Technology
           <span class="nasdaq">NASDAQ</span>
         </div>
-        <div class="c1-price">시간외 <b>$565.55</b> · 어닝 <b>비트</b></div>
-        <div class="c1-chg">−5.09%</div>
+        <div class="c1-price">프리마켓 <b>$678.80</b> · 어닝 <b>강력 비트</b></div>
+        <div class="c1-chg">+17.23%</div>
 
         <div class="c1-momentum">
           <div class="m">
-            <div class="ml">시간외</div>
-            <div class="mv" style="color:#FCA5A5">-2.82%</div>
+            <div class="ml">프리마켓</div>
+            <div class="mv">+17.2%</div>
           </div>
           <div class="m">
-            <div class="ml">어닝 후</div>
-            <div class="mv" style="color:#FCA5A5">-5.09%</div>
+            <div class="ml">전일 대비</div>
+            <div class="mv">+13.9%</div>
           </div>
           <div class="m">
             <div class="ml">1년</div>
@@ -575,8 +583,8 @@
       </div>
 
       <div class="c1-foot">
-        <span class="c1-date">2026.04.28</span>
-        <span class="c1-pill">⚠️ Sell the News 사례</span>
+        <span class="c1-date">2026.04.28~29</span>
+        <span class="c1-pill">🚀 AI 클라우드 수요 폭발</span>
       </div>
     </div>
   </div>
@@ -610,25 +618,25 @@
             실제
           </div>
           <div class="ma green">$3.11B</div>
-          <div class="ms green">+5.4% 상회</div>
+          <div class="ms green">YoY +44%</div>
         </div>
         <div class="mbox beat">
           <div class="ml">📈 Non-GAAP 그로스마진</div>
-          <div class="me">사상 최고 기록</div>
+          <div class="me">전년 동기 대비</div>
           <div class="ma green">47.0%</div>
-          <div class="ms green">레코드 마진</div>
+          <div class="ms green">+4.8%p 사상 최고</div>
         </div>
         <div class="mbox beat">
           <div class="ml">🚀 Q4 가이던스</div>
-          <div class="me">매출 $3.45B (mid)</div>
+          <div class="me">매출 $3.45B · EPS $5.00</div>
           <div class="ma green">+41% YoY</div>
-          <div class="ms green">EPS 가이던스 $5.00</div>
+          <div class="ms green">컨센 대비 상회</div>
         </div>
       </div>
 
       <div class="banner">
         <div class="pulse"></div>
-        <span class="banner-txt">실적 / 가이던스 / 마진 — 모두 컨센서스 상회</span>
+        <span class="banner-txt">EPS 분기 +32% QoQ · YoY +115% 폭증</span>
       </div>
     </div>
   </div>
@@ -648,34 +656,34 @@
           <div class="ico">💵</div>
           <div class="body">
             <div class="title">FCF 1B 근접</div>
-            <div class="desc">분기 Free Cash Flow <b>$953M</b><br>현금 창출력 정점</div>
+            <div class="desc">Free Cash Flow <b>$953M</b> · 현금 창출력 정점</div>
           </div>
         </div>
         <div class="hl-item good">
           <div class="ico">📉</div>
           <div class="body">
             <div class="title">부채 상환 가속</div>
-            <div class="desc">이번 분기 <b>$641M</b> 부채 상환<br>레버리지 축소 진행</div>
+            <div class="desc">분기 <b>$641M</b> 부채 상환 · 레버리지 축소</div>
           </div>
         </div>
         <div class="hl-item good">
           <div class="ico">🏆</div>
           <div class="body">
-            <div class="title">Fitch IG 등급 상향</div>
-            <div class="desc">신용등급 <b>투자등급</b>으로 격상<br>자본조달 비용 ↓</div>
+            <div class="title">Fitch 투자등급 상향</div>
+            <div class="desc"><b>IG 등급 격상</b> · 자본조달 비용 ↓</div>
           </div>
         </div>
         <div class="hl-item good">
           <div class="ico">📈</div>
           <div class="body">
             <div class="title">연간 성장 목표 상향</div>
-            <div class="desc">매출 성장 <b>20%+ 상향</b><br>nearline 2027년까지 확보</div>
+            <div class="desc">매출 성장 <b>20%+ 상향</b> · nearline 2027년까지 가시성</div>
           </div>
         </div>
         <div class="hl-item good">
           <div class="ico">💳</div>
           <div class="body">
-            <div class="title">주주 환원</div>
+            <div class="title">주주 환원 지속</div>
             <div class="desc">분기 <b>$191M</b> 배당 + 자사주 매입</div>
           </div>
         </div>
@@ -683,87 +691,98 @@
     </div>
   </div>
 
-  <!-- CARD 4 — SELL THE NEWS -->
+  <!-- CARD 4 — RALLY DRIVERS -->
   <div class="card-wrap">
-    <div class="card-label">CARD 4 · SELL THE NEWS</div>
+    <div class="card-label">CARD 4 · DRIVERS</div>
     <div class="card">
       <div class="card-head">
-        <span class="badge red"><span class="dot"></span>그런데 주가는 -5%</span>
+        <span class="badge green"><span class="dot"></span>급등 드라이버</span>
         <span class="counter">04 / 06</span>
       </div>
-      <h2 class="card-title">호실적인데<br>왜 <span class="red">하락</span>했나?</h2>
+      <h2 class="card-title">시장이 <span class="hi">+17%</span>로<br>화답한 3가지 이유</h2>
 
-      <div class="trap-block">
-        <div class="th"><span class="ico">⚠️</span>Sell the News 교과서적 사례</div>
-        <div class="td">
-          좋은 실적이 발표 <b>전에 이미 가격에 반영</b>됨<br>
-          → 더 오를 동력 부족 → 차익실현 매도<br>
-          → "사실 확인" 후 주가 하락
+      <div class="driver-list">
+        <div class="driver good">
+          <div class="num">01</div>
+          <div class="body">
+            <div class="dtitle">AI 클라우드 스토리지 수요 폭증</div>
+            <div class="ddesc">
+              하이퍼스케일러 nearline 발주 가속<br>
+              YoY 매출 <span class="num">+44%</span> 폭증 (1년 만의 최고치)
+            </div>
+          </div>
         </div>
-        <div class="example-box">
-          <div class="el">STX 주가 패턴</div>
-          <div class="et">
-            지난 1년 누적 <b>+614%</b> 폭등<br>
-            시총 <b>$129B</b> 도달 (over-extended)<br>
-            어닝 +17.8% 서프라이즈에도 <b>주가 -5%</b>
+
+        <div class="driver good">
+          <div class="num">02</div>
+          <div class="body">
+            <div class="dtitle">사상 최고 마진 달성</div>
+            <div class="ddesc">
+              Non-GAAP 그로스마진 <span class="num">47.0%</span><br>
+              전년 동기 대비 <b>+4.8%p</b> · ASP 상승 + HAMR 효과
+            </div>
+          </div>
+        </div>
+
+        <div class="driver good">
+          <div class="num">03</div>
+          <div class="body">
+            <div class="dtitle">2027년까지 매출 가시성</div>
+            <div class="ddesc">
+              연간 성장률 목표 <span class="num">10%대 → 20%+</span> 상향<br>
+              nearline 장기 계약 다수 체결 <b>(가시성 ↑)</b>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="insight-banner">
-        💡 <b>핵심</b> — 좋은 실적 ≠ 주가 상승. 발표 <b>직전 1년 주가</b>가 이미 호재 대부분 반영했는지 체크.
+        💡 <b>핵심</b> — 단순 비트가 아닌 <b>미래 가시성 + 마진 동반 상승</b>이 시장 평가를 끌어올림
       </div>
     </div>
   </div>
 
-  <!-- CARD 5 — VALUATION -->
+  <!-- CARD 5 — OUTLOOK -->
   <div class="card-wrap">
-    <div class="card-label">CARD 5 · VALUATION CHECK</div>
+    <div class="card-label">CARD 5 · OUTLOOK</div>
     <div class="card">
       <div class="card-head">
-        <span class="badge gold"><span class="dot"></span>밸류에이션 점검</span>
+        <span class="badge gold"><span class="dot"></span>Q4 가이던스 + 분석가</span>
         <span class="counter">05 / 06</span>
       </div>
-      <h2 class="card-title">앞으로도<br><span class="gold">갈 수 있나?</span></h2>
+      <h2 class="card-title">앞으로의<br><span class="gold">전망은?</span></h2>
 
-      <div class="vs-block">
-        <div style="font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px;">
-          현재 vs 내년 (가이던스 기반)
+      <div class="out-grid">
+        <div class="out-box good">
+          <div class="ol">Q4 매출 (mid)</div>
+          <div class="ov">$3.45B</div>
+          <div class="od">YoY <b style="color:#4ADE80">+41%</b> 가이던스</div>
         </div>
-        <div class="vs-row">
-          <div class="vs-side up">
-            <div class="label">Q3 매출 (실제)</div>
-            <div class="v">$3.11B</div>
-            <div class="desc">YoY 견조 성장</div>
-          </div>
-          <div class="vs-side up">
-            <div class="label">Q4 매출 (가이던스)</div>
-            <div class="v">$3.45B</div>
-            <div class="desc"><b style="color:#4ADE80">+41% YoY</b> mid</div>
-          </div>
+        <div class="out-box good">
+          <div class="ol">Q4 EPS</div>
+          <div class="ov">$5.00</div>
+          <div class="od">QoQ <b style="color:#4ADE80">+22%</b> 추가 성장</div>
         </div>
       </div>
 
-      <div class="vs-block" style="margin-top: 12px;">
-        <div style="font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px;">
-          긍정 vs 우려 — 어느 쪽?
+      <div class="target-list">
+        <div class="tt">📈 분석가 목표가 상향 (실적 후)</div>
+        <div class="target-row">
+          <span class="firm">Morgan Stanley</span>
+          <span class="new">$700</span>
         </div>
-        <div class="vs-row">
-          <div class="vs-side up">
-            <div class="label">긍정 신호</div>
-            <div class="v" style="font-size:18px">FCF · 가이던스</div>
-            <div class="desc">현금흐름 + nearline<br>2027년까지 가시성</div>
-          </div>
-          <div class="vs-side down">
-            <div class="label">우려 신호</div>
-            <div class="v" style="font-size:18px">밸류에이션</div>
-            <div class="desc">1년 +614% 누적<br>호재 priced in 상태</div>
-          </div>
+        <div class="target-row">
+          <span class="firm">Wells Fargo</span>
+          <span class="new">$725</span>
+        </div>
+        <div class="target-row">
+          <span class="firm">JPMorgan</span>
+          <span class="new">$680</span>
         </div>
       </div>
 
       <div class="insight-banner">
-        💡 <b>판단</b> — 펀더멘털은 견고. 하지만 단기 주가는 <b>밸류에이션 조정 진통</b> 가능. 신규 매수는 1~2주 관망 후.
+        💡 <b>주의</b> — 1년 누적 <b>+614%</b> 누적된 상태. 펀더멘털 강력하나 단기 변동성 ↑ 가능
       </div>
     </div>
   </div>
@@ -785,7 +804,7 @@
         <div class="logo-sub">데이터 기반 미국주식 분석 플랫폼</div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 9px; margin: 12px 0;">
+      <div style="display: flex; flex-direction: column; gap: 8px; margin: 10px 0;">
         <div class="feat-c6">
           <div class="fdot"></div>
           <span><b>Stock Detail</b> — 애널리스트 목표가 + 사업부문 매출</span>
