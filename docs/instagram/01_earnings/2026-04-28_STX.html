@@ -147,10 +147,25 @@
     padding: 36px 32px;
   }
   .c1-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .c1-ticker-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .c1-logo {
+    width: 96px;
+    height: 96px;
+    border-radius: 20px;
+    background: #FFFFFF;
+    padding: 10px;
+    object-fit: contain;
+    flex-shrink: 0;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  }
   .c1-ticker {
-    font-size: 156px;
+    font-size: 132px;
     font-weight: 900;
-    letter-spacing: -8px;
+    letter-spacing: -7px;
     line-height: 0.9;
     background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%);
     -webkit-background-clip: text;
@@ -562,7 +577,13 @@
         <span class="counter">01 / 06</span>
       </div>
       <div class="c1-mid">
-        <div class="c1-ticker">STX</div>
+        <div class="c1-ticker-row">
+          <img class="c1-logo"
+               src="https://eodhd.com/img/logos/US/STX.png"
+               alt="Seagate Technology logo"
+               onerror="this.style.display='none'">
+          <div class="c1-ticker">STX</div>
+        </div>
         <div class="c1-co">
           Seagate Technology
           <span class="nasdaq">NASDAQ</span>
