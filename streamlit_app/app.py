@@ -43,26 +43,13 @@ PAGES = {
         st.Page("app_pages/10_Watchlist.py", title="Watchlist", icon=":material/star:"),
         st.Page("app_pages/2_AI_Quant_Lab.py", title="AI Quant Lab", icon=":material/science:"),
         st.Page("app_pages/12_Factor_Lab.py", title="Factor Lab", icon=":material/functions:"),
+        st.Page("app_pages/13_Stock_Lab.py", title="Stock Lab", icon=":material/open_in_new:"),
     ],
     "Research": [
         st.Page("app_pages/11_Macro.py", title="Macro", icon=":material/trending_up:"),
     ],
 }
 pg = st.navigation(PAGES, position="sidebar")
-
-# --- Sidebar: External link ---
-with st.sidebar:
-    st.markdown(
-        "<div style='margin:10px 4px 4px 4px;font-size:11px;font-weight:700;"
-        "letter-spacing:0.08em;text-transform:uppercase;color:#64748B;'>"
-        "Tools</div>",
-        unsafe_allow_html=True,
-    )
-    st.link_button(
-        "📊 Stock Analysis",
-        "https://aiquantlab-stockreport.netlify.app/",
-        use_container_width=True,
-    )
 
 # --- Sidebar: Status (BOTTOM) ---
 render_sidebar_info()
