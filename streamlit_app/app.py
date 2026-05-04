@@ -50,6 +50,20 @@ PAGES = {
 }
 pg = st.navigation(PAGES, position="sidebar")
 
+# --- Sidebar: External link ---
+with st.sidebar:
+    st.markdown(
+        "<div style='margin:10px 4px 4px 4px;font-size:11px;font-weight:700;"
+        "letter-spacing:0.08em;text-transform:uppercase;color:#64748B;'>"
+        "Tools</div>",
+        unsafe_allow_html=True,
+    )
+    st.link_button(
+        "📊 Stock Analysis",
+        "https://aiquantlab-stockreport.netlify.app/",
+        use_container_width=True,
+    )
+
 # --- Sidebar: Status (BOTTOM) ---
 render_sidebar_info()
 
