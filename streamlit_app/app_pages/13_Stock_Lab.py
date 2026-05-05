@@ -5,7 +5,7 @@ from components.ui import inject_css
 
 inject_css()
 
-TARGET_URL = "https://aiquantlab-stockreport.netlify.app/"
+TARGET_URL = "https://aiquantlab-stocklab.netlify.app/"
 
 st.markdown(f"""
 <div style="display:flex;flex-direction:column;align-items:center;
