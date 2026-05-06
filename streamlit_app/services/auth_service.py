@@ -229,8 +229,28 @@ def require_auth() -> dict:
         if row and int(row[0]) == -1:
             st.title("🚫 접근 거절됨")
             st.error("관리자가 이 계정의 접근 요청을 거절했습니다.")
-            if st.button("Logout", key="logout_rejected"):
-                st.logout()
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🔄 다시 접근 요청하기", type="primary", key="re_request"):
+                    try:
+                        rc = get_connection()
+                        rc.execute("UPDATE users SET is_approved = 0 WHERE email = ?", (user["email"],))
+                        rc.commit()
+                    except Exception:
+                        pass
+                    approve_url = _make_approve_url(user["email"])
+                    reject_url  = _make_approve_url(user["email"]).replace("/approve-user?", "/reject-user?")
+                    msg = (
+                        f"🔄 <b>AI Quant Lab 재접근 요청 (Streamlit)</b>\n\n"
+                        f"👤 이름: {user.get('name') or '(없음)'}\n"
+                        f"📧 이메일: {user['email']}\n\n"
+                        f"<a href=\"{approve_url}\">✅ 승인하기</a>  |  <a href=\"{reject_url}\">❌ 거절하기</a>"
+                    )
+                    _send_telegram(msg)
+                    st.success("재요청이 전송되었습니다. 승인 후 새로고침하세요.")
+            with col2:
+                if st.button("Logout", key="logout_rejected"):
+                    st.logout()
             st.stop()
     except Exception:
         pass
