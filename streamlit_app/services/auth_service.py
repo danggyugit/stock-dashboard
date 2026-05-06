@@ -4,7 +4,10 @@ Streamlit 1.42+ provides st.login() / st.logout() / st.user.
 This module wraps user storage in SQLite and provides helpers.
 """
 
+import hashlib
+import hmac as hmac_lib
 import logging
+import urllib.parse
 from datetime import datetime
 
 import streamlit as st
@@ -13,7 +16,14 @@ from database import get_connection
 
 logger = logging.getLogger(__name__)
 
-_OWNER_EMAIL = "sksk28y@gmail.com"
+_OWNER_EMAIL    = "sksk28y@gmail.com"
+_APPROVE_SECRET = "aiquantlab-approve-2026"
+_APPROVE_BASE   = "https://aiquantlab-stocklab.netlify.app/.netlify/functions/approve-user"
+
+
+def _make_approve_url(email: str) -> str:
+    token = hmac_lib.new(_APPROVE_SECRET.encode(), email.lower().encode(), hashlib.sha256).hexdigest()
+    return f"{_APPROVE_BASE}?email={urllib.parse.quote(email.lower())}&token={token}"
 
 
 def is_approved(email: str) -> bool:
@@ -177,18 +187,21 @@ def require_auth() -> dict:
         st.stop()
 
     if not is_approved(user["email"]):
-        import urllib.parse
-        st.title("⏳ Access Pending Approval")
-        st.markdown(
-            f"**{user['email']}** 계정이 등록되었지만 아직 승인되지 않았습니다."
-        )
-        st.info("Your account has been registered but is awaiting admin approval.")
-
-        subject = urllib.parse.quote("AI Quant Lab 접근 요청")
+        approve_url = _make_approve_url(user["email"])
+        subject = urllib.parse.quote(f"AI Quant Lab 접근 요청 — {user['email']}")
         body = urllib.parse.quote(
-            f"안녕하세요,\n\n{user['email']} 계정으로 AI Quant Lab 접근 권한을 요청합니다.\n\n승인 부탁드립니다."
+            f"다음 사용자의 접근 요청입니다.\n\n"
+            f"이메일: {user['email']}\n"
+            f"이름: {user.get('name', '')}\n\n"
+            f"아래 링크를 클릭하면 자동으로 승인됩니다 (Streamlit + 리포트 앱 동시 적용):\n\n"
+            f"{approve_url}\n\n"
+            f"승인 후 사용자에게 새로고침하라고 안내해주세요."
         )
         mailto = f"mailto:{_OWNER_EMAIL}?subject={subject}&body={body}"
+
+        st.title("⏳ Access Pending Approval")
+        st.markdown(f"**{user['email']}** 계정이 등록되었지만 아직 승인되지 않았습니다.")
+        st.info("Your account has been registered but is awaiting admin approval.")
         st.link_button("📧 관리자에게 접근 요청", mailto, type="primary")
 
         if st.button("Logout", key="logout_pending"):
