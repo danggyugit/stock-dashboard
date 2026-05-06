@@ -183,12 +183,12 @@ def get_or_create_user() -> dict | None:
     # Notify admin via Telegram for non-owner new users
     if not auto_approved:
         approve_url = _make_approve_url(email)
+        reject_url  = _make_approve_url(email).replace("/approve-user?", "/reject-user?")
         msg = (
             f"🔔 <b>AI Quant Lab 접근 요청 (Streamlit)</b>\n\n"
             f"👤 이름: {name or '(없음)'}\n"
             f"📧 이메일: {email}\n\n"
-            f"아래 링크를 클릭하면 즉시 승인됩니다:\n"
-            f"<a href=\"{approve_url}\">✅ 승인하기</a>"
+            f"<a href=\"{approve_url}\">✅ 승인하기</a>  |  <a href=\"{reject_url}\">❌ 거절하기</a>"
         )
         _send_telegram(msg)
 
@@ -221,6 +221,19 @@ def require_auth() -> dict:
         if st.button("Logout"):
             st.logout()
         st.stop()
+
+    # Check if explicitly rejected (is_approved = -1)
+    try:
+        conn = get_connection()
+        row = conn.execute("SELECT is_approved FROM users WHERE email = ?", (user["email"],)).fetchone()
+        if row and int(row[0]) == -1:
+            st.title("🚫 접근 거절됨")
+            st.error("관리자가 이 계정의 접근 요청을 거절했습니다.")
+            if st.button("Logout", key="logout_rejected"):
+                st.logout()
+            st.stop()
+    except Exception:
+        pass
 
     if not is_approved(user["email"]):
         approve_url = _make_approve_url(user["email"])
