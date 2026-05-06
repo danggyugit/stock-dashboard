@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 _OWNER_EMAIL    = "sksk28y@gmail.com"
 _APPROVE_SECRET = "aiquantlab-approve-2026"
-_APPROVE_BASE   = "https://aiquantlab-stocklab.netlify.app/.netlify/functions/approve-user"
+_APPROVE_BASE   = "https://aiquantlab-stocklab.pages.dev/approve-user"
 
 
 def _make_approve_url(email: str) -> str:
