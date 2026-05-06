@@ -257,7 +257,17 @@ def require_auth() -> dict:
             if st.button("✅ 승인 받았어요 (확인)", type="primary", key="check_approval"):
                 st.rerun()
         with col2:
-            st.link_button("📧 관리자에게 접근 요청", mailto)
+            if st.button("📧 관리자에게 접근 요청", key="notify_admin"):
+                approve_url = _make_approve_url(user["email"])
+                reject_url  = _make_approve_url(user["email"]).replace("/approve-user?", "/reject-user?")
+                msg = (
+                    f"🔔 <b>AI Quant Lab 접근 요청 (Streamlit)</b>\n\n"
+                    f"👤 이름: {user.get('name') or '(없음)'}\n"
+                    f"📧 이메일: {user['email']}\n\n"
+                    f"<a href=\"{approve_url}\">✅ 승인하기</a>  |  <a href=\"{reject_url}\">❌ 거절하기</a>"
+                )
+                _send_telegram(msg)
+                st.success("관리자에게 요청을 전송했습니다.")
 
         if st.button("Logout", key="logout_pending"):
             st.logout()
