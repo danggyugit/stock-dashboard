@@ -13,6 +13,17 @@ from database import get_connection
 
 logger = logging.getLogger(__name__)
 
+_OWNER_EMAIL = "sksk28y@gmail.com"
+
+
+def is_approved(email: str) -> bool:
+    """Check if the given email is in the approved users list."""
+    try:
+        approved = st.secrets.get("approved_emails", [_OWNER_EMAIL])
+    except Exception:
+        approved = [_OWNER_EMAIL]
+    return email.lower() in [e.lower() for e in approved]
+
 
 def is_logged_in() -> bool:
     """Check if user is logged in via Streamlit OIDC."""
@@ -111,7 +122,7 @@ def get_or_create_user() -> dict | None:
 
 
 def require_auth() -> dict:
-    """Page guard: stop rendering if not logged in, otherwise return user dict.
+    """Page guard: stop rendering if not logged in or not approved.
 
     Usage at top of every protected page:
         user = require_auth()
@@ -130,6 +141,18 @@ def require_auth() -> dict:
         if st.button("Logout"):
             st.logout()
         st.stop()
+
+    if not is_approved(user["email"]):
+        st.title("⏳ Access Pending Approval")
+        st.markdown(
+            f"**{user['email']}** 계정이 등록되었지만 아직 승인되지 않았습니다.\n\n"
+            "관리자에게 접근 권한을 요청해 주세요."
+        )
+        st.info("Your account has been registered but is awaiting admin approval.")
+        if st.button("Logout", key="logout_pending"):
+            st.logout()
+        st.stop()
+
     return user
 
 

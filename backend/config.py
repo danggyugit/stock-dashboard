@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str = ""
     JWT_SECRET: str = "stockdash-jwt-secret-change-in-production"
     JWT_EXPIRE_HOURS: int = 168  # 7 days
+    # Comma-separated list of approved email addresses; empty = allow all
+    APPROVED_EMAILS: str = "sksk28y@gmail.com"
+
+    @property
+    def approved_emails_list(self) -> list[str]:
+        return [e.strip().lower() for e in self.APPROVED_EMAILS.split(",") if e.strip()]
 
     # Server
     HOST: str = "0.0.0.0"

@@ -123,6 +123,14 @@ def google_login(request: GoogleAuthRequest) -> dict:
     name = idinfo.get("name", "")
     avatar_url = idinfo.get("picture", "")
 
+    # Approved-users-only gate
+    approved = settings.approved_emails_list
+    if approved and email.lower() not in approved:
+        raise HTTPException(
+            status_code=403,
+            detail="Access not yet approved. Please contact the administrator to request access.",
+        )
+
     conn = get_connection()
 
     # Find or create user
