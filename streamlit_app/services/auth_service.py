@@ -8,6 +8,8 @@ import hashlib
 import hmac as hmac_lib
 import logging
 import urllib.parse
+import urllib.request
+import json
 from datetime import datetime
 
 import streamlit as st
@@ -24,6 +26,27 @@ _APPROVE_BASE   = "https://aiquantlab-stocklab.netlify.app/.netlify/functions/ap
 def _make_approve_url(email: str) -> str:
     token = hmac_lib.new(_APPROVE_SECRET.encode(), email.lower().encode(), hashlib.sha256).hexdigest()
     return f"{_APPROVE_BASE}?email={urllib.parse.quote(email.lower())}&token={token}"
+
+
+def _send_telegram(text: str) -> None:
+    try:
+        tg_token = st.secrets.get("telegram", {}).get("bot_token", "")
+        tg_chat_id = str(st.secrets.get("telegram", {}).get("chat_id", ""))
+    except Exception:
+        return
+    if not tg_token or not tg_chat_id:
+        return
+    try:
+        data = json.dumps({"chat_id": tg_chat_id, "text": text, "parse_mode": "HTML"}).encode("utf-8")
+        req = urllib.request.Request(
+            f"https://api.telegram.org/bot{tg_token}/sendMessage",
+            data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        urllib.request.urlopen(req, timeout=5)
+    except Exception:
+        pass
 
 
 def is_approved(email: str) -> bool:
@@ -156,6 +179,19 @@ def get_or_create_user() -> dict | None:
     conn.commit()
     new_id = cur.lastrowid
     logger.info("Created new user: id=%d email=%s", new_id, email)
+
+    # Notify admin via Telegram for non-owner new users
+    if not auto_approved:
+        approve_url = _make_approve_url(email)
+        msg = (
+            f"🔔 <b>AI Quant Lab 접근 요청 (Streamlit)</b>\n\n"
+            f"👤 이름: {name or '(없음)'}\n"
+            f"📧 이메일: {email}\n\n"
+            f"아래 링크를 클릭하면 즉시 승인됩니다:\n"
+            f"<a href=\"{approve_url}\">✅ 승인하기</a>"
+        )
+        _send_telegram(msg)
+
     return {
         "id": new_id,
         "google_sub": google_sub,
@@ -202,7 +238,13 @@ def require_auth() -> dict:
         st.title("⏳ Access Pending Approval")
         st.markdown(f"**{user['email']}** 계정이 등록되었지만 아직 승인되지 않았습니다.")
         st.info("Your account has been registered but is awaiting admin approval.")
-        st.link_button("📧 관리자에게 접근 요청", mailto, type="primary")
+
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("✅ 승인 받았어요 (확인)", type="primary", key="check_approval"):
+                st.rerun()
+        with col2:
+            st.link_button("📧 관리자에게 접근 요청", mailto)
 
         if st.button("Logout", key="logout_pending"):
             st.logout()
