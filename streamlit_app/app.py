@@ -8,7 +8,7 @@ import streamlit as st
 
 from database import init_db
 from components.ui import inject_css, render_sidebar_info
-from services.auth_service import render_user_sidebar
+from services.auth_service import render_user_sidebar, is_logged_in, get_or_create_user, _OWNER_EMAIL
 
 st.set_page_config(
     page_title="Stock Dashboard",
@@ -49,6 +49,14 @@ PAGES = {
         st.Page("app_pages/11_Macro.py", title="Macro", icon=":material/trending_up:"),
     ],
 }
+
+# Admin page — only visible to owner
+if is_logged_in():
+    _cur = get_or_create_user()
+    if _cur and _cur.get("email", "").lower() == _OWNER_EMAIL.lower():
+        PAGES["Admin"] = [
+            st.Page("app_pages/99_Admin.py", title="Admin", icon=":material/admin_panel_settings:"),
+        ]
 pg = st.navigation(PAGES, position="sidebar")
 
 # --- Sidebar: Status (BOTTOM) ---

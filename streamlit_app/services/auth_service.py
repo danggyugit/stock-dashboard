@@ -17,12 +17,45 @@ _OWNER_EMAIL = "sksk28y@gmail.com"
 
 
 def is_approved(email: str) -> bool:
-    """Check if the given email is in the approved users list."""
+    """Check approval via DB. Owner is always approved."""
+    if email.lower() == _OWNER_EMAIL.lower():
+        return True
     try:
-        approved = st.secrets.get("approved_emails", [_OWNER_EMAIL])
+        conn = get_connection()
+        row = conn.execute(
+            "SELECT is_approved FROM users WHERE email = ?", (email,)
+        ).fetchone()
+        return bool(row[0]) if row else False
     except Exception:
-        approved = [_OWNER_EMAIL]
-    return email.lower() in [e.lower() for e in approved]
+        return False
+
+
+def approve_user(user_id: int) -> None:
+    conn = get_connection()
+    conn.execute("UPDATE users SET is_approved = 1 WHERE id = ?", (user_id,))
+    conn.commit()
+
+
+def revoke_user(user_id: int) -> None:
+    conn = get_connection()
+    conn.execute("UPDATE users SET is_approved = 0 WHERE id = ?", (user_id,))
+    conn.commit()
+
+
+def get_all_users() -> list[dict]:
+    """Return all registered users for admin management."""
+    try:
+        conn = get_connection()
+        rows = conn.execute(
+            "SELECT id, email, name, is_approved, created_at, last_login FROM users ORDER BY created_at DESC"
+        ).fetchall()
+        return [
+            {"id": r[0], "email": r[1], "name": r[2],
+             "is_approved": bool(r[3]), "created_at": r[4], "last_login": r[5]}
+            for r in rows
+        ]
+    except Exception:
+        return []
 
 
 def is_logged_in() -> bool:
@@ -103,11 +136,12 @@ def get_or_create_user() -> dict | None:
             "picture": picture,
         }
 
-    # Create new user
+    # Create new user (owner is auto-approved)
+    auto_approved = 1 if email.lower() == _OWNER_EMAIL.lower() else 0
     cur = conn.execute(
-        """INSERT INTO users (google_sub, email, name, picture, last_login)
-           VALUES (?, ?, ?, ?, ?)""",
-        (google_sub, email, name, picture, now),
+        """INSERT INTO users (google_sub, email, name, picture, last_login, is_approved)
+           VALUES (?, ?, ?, ?, ?, ?)""",
+        (google_sub, email, name, picture, now, auto_approved),
     )
     conn.commit()
     new_id = cur.lastrowid
@@ -143,12 +177,20 @@ def require_auth() -> dict:
         st.stop()
 
     if not is_approved(user["email"]):
+        import urllib.parse
         st.title("⏳ Access Pending Approval")
         st.markdown(
-            f"**{user['email']}** 계정이 등록되었지만 아직 승인되지 않았습니다.\n\n"
-            "관리자에게 접근 권한을 요청해 주세요."
+            f"**{user['email']}** 계정이 등록되었지만 아직 승인되지 않았습니다."
         )
         st.info("Your account has been registered but is awaiting admin approval.")
+
+        subject = urllib.parse.quote("AI Quant Lab 접근 요청")
+        body = urllib.parse.quote(
+            f"안녕하세요,\n\n{user['email']} 계정으로 AI Quant Lab 접근 권한을 요청합니다.\n\n승인 부탁드립니다."
+        )
+        mailto = f"mailto:{_OWNER_EMAIL}?subject={subject}&body={body}"
+        st.link_button("📧 관리자에게 접근 요청", mailto, type="primary")
+
         if st.button("Logout", key="logout_pending"):
             st.logout()
         st.stop()

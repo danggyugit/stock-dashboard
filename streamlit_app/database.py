@@ -112,7 +112,8 @@ _SCHEMA_STATEMENTS = [
         name        TEXT,
         picture     TEXT,
         created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        last_login  TIMESTAMP
+        last_login  TIMESTAMP,
+        is_approved INTEGER DEFAULT 0
     )""",
     """CREATE TABLE IF NOT EXISTS stocks (
         ticker       TEXT PRIMARY KEY,
@@ -284,6 +285,19 @@ def init_db() -> None:
                 logger.info("Added user_id column to %s", table)
             except Exception as e:
                 logger.warning("init_db: ALTER %s failed: %s", table, e)
+
+    # Add is_approved to users if missing
+    try:
+        conn.execute("SELECT is_approved FROM users LIMIT 0")
+    except Exception:
+        try:
+            conn.execute("ALTER TABLE users ADD COLUMN is_approved INTEGER DEFAULT 0")
+            conn.execute(
+                "UPDATE users SET is_approved = 1 WHERE email = 'sksk28y@gmail.com'"
+            )
+            logger.info("Added is_approved column to users")
+        except Exception as e:
+            logger.warning("init_db: ALTER users.is_approved failed: %s", e)
 
     try:
         conn.commit()
