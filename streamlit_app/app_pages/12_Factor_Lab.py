@@ -112,7 +112,7 @@ with tab_single:
     st.subheader("백테스트 설정")
 
     _today = date.today()
-    _default_start = _today - timedelta(days=5 * 365)
+    _default_start = date(2023, 1, 1)
 
     with st.form("single_form", clear_on_submit=False):
         col_a, col_b = st.columns([3, 2])
@@ -337,7 +337,7 @@ with tab_compare:
     st.caption("최대 5개 전략을 같은 조건으로 동시 백테스트. 첫 실행은 가격 캐시 워밍으로 시간 소요.")
 
     _today = date.today()
-    _default_start = _today - timedelta(days=5 * 365)
+    _default_start = date(2023, 1, 1)
 
     with st.form("cmp_form", clear_on_submit=False):
         selected = st.multiselect(
