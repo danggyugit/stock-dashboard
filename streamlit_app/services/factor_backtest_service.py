@@ -80,6 +80,8 @@ class BacktestResult:
     benchmark_metrics: dict            # {"SPY": {...}, "QQQ": {...}}
     universe_size: int
     warnings: list[str] = field(default_factory=list)
+    final_picks: list[str] = field(default_factory=list)   # picks at last rebal date
+    final_picks_date: date | None = None
 
 
 # ── Universe metadata ─────────────────────────────────────────────
@@ -399,6 +401,67 @@ def run_backtest(
         if progress_callback:
             progress_callback(i + 1, len(rebal_dates) - 1, f"리밸런싱: {rd.date()}")
 
+    # 8-b) Compute picks at the LAST rebalance date (= near end_date)
+    # The main loop covers rebal_dates[:-1]; rebal_dates[-1] is the terminal
+    # date used only as next_rd. We score it here to surface "current picks".
+    final_picks: list[str] = []
+    final_picks_date: date | None = None
+    if rebal_dates:
+        last_rd = rebal_dates[-1]
+        try:
+            members_last = reconstruct_sp500_at(last_rd, current_members, changes)
+            cands_last = {
+                t for t in members_last
+                if t in valid_tickers and _passes_filter(t, current_meta, cfg)
+            }
+            if len(cands_last) < cfg.n_stocks * 2:
+                extras = {
+                    t for t in (historical_universe - members_last)
+                    if t in valid_tickers and _passes_filter(t, current_meta, cfg)
+                }
+                cands_last |= extras
+            if cands_last:
+                cand_list_last = sorted(cands_last)
+                metrics_last = compute_returns_and_vol(prices[cand_list_last], last_rd)
+                if not metrics_last.empty:
+                    if needs_fundamentals and not pit_df.empty:
+                        fund_rows_last: list[dict] = []
+                        for t in cand_list_last:
+                            if t not in prices.columns:
+                                continue
+                            col = prices[t]
+                            px_s = col[col.index <= last_rd].dropna()
+                            if px_s.empty:
+                                continue
+                            f = pit_factors_at(pit_df, t, last_rd, float(px_s.iloc[-1]))
+                            if not f:
+                                continue
+                            f["ticker"] = t
+                            fund_rows_last.append(f)
+                        fund_wide_last = (
+                            pd.DataFrame(fund_rows_last).set_index("ticker")
+                            if fund_rows_last else pd.DataFrame()
+                        )
+                    else:
+                        fund_wide_last = pd.DataFrame()
+
+                    merged_last = metrics_last
+                    if not fund_wide_last.empty:
+                        merged_last = merged_last.join(fund_wide_last, how="outer")
+                    missing_last = [c for c in strategy.requires if c not in merged_last.columns]
+                    if not missing_last:
+                        merged_last = merged_last.dropna(subset=strategy.requires)
+                        if len(merged_last) >= cfg.n_stocks:
+                            scores_last = strategy.rank_fn(merged_last)
+                            merged_last = (
+                                merged_last.assign(_score=scores_last)
+                                .sort_values("_score", ascending=False)
+                            )
+                            final_picks = merged_last.head(cfg.n_stocks).index.tolist()
+                            final_picks_date = last_rd.date()
+        except Exception as e:
+            logger.warning("Could not compute final picks at %s: %s", last_rd.date(), e)
+
     # 9) Equity curve + metrics
     if not equity_history:
         raise ValueError("Backtest produced no rebalances.")
@@ -430,6 +493,8 @@ def run_backtest(
         benchmark_metrics=bench_metrics,
         universe_size=len(universe_tickers),
         warnings=warnings,
+        final_picks=final_picks,
+        final_picks_date=final_picks_date,
     )
 
 

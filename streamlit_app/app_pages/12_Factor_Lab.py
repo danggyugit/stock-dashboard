@@ -288,11 +288,45 @@ with tab_single:
                 ])
                 st.dataframe(rhs_df, width="stretch", hide_index=True)
 
-        # Current portfolio (last rebalance)
+        # Last rebalance picks (existing)
         if result.rebalance_history:
             last = result.rebalance_history[-1]
             st.caption(f"최근 리밸런싱 ({last['date'].strftime('%Y-%m-%d')}) 선정 종목:")
             st.code(" • ".join(last["picks"]))
+
+        # ── 종료일 기준 선정 종목 ──────────────────────────────────────
+        if result.final_picks and result.final_picks_date:
+            st.divider()
+            fp_date_str = result.final_picks_date.strftime("%Y-%m-%d")
+            st.markdown(
+                f"""
+                <div style="
+                    background: linear-gradient(135deg,
+                        rgba(34,197,94,0.12) 0%, rgba(59,130,246,0.10) 100%);
+                    border: 1px solid rgba(34,197,94,0.35);
+                    border-radius: 14px; padding: 18px 22px; margin-top: 4px;">
+                  <div style="font-size:0.78rem; font-weight:700; color:#4ADE80;
+                               letter-spacing:0.08em; text-transform:uppercase;
+                               margin-bottom:6px;">
+                    📌 백테스트 종료일 기준 선정 종목
+                  </div>
+                  <div style="font-size:0.85rem; color:#94A3B8; margin-bottom:14px;">
+                    {fp_date_str} · {result.strategy.name} · 상위 {len(result.final_picks)}종목
+                  </div>
+                  <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                    {"".join(
+                        f'<span style="background:rgba(34,197,94,0.15);'
+                        f'border:1px solid rgba(34,197,94,0.40);'
+                        f'border-radius:8px; padding:5px 14px;'
+                        f'font-size:0.92rem; font-weight:700; color:#4ADE80;'
+                        f'font-family:monospace;">{t}</span>'
+                        for t in result.final_picks
+                    )}
+                  </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
 
 # ═══════════════════════════════════════════════════════════
@@ -455,6 +489,34 @@ with tab_compare:
                 })
         cmp_df = pd.DataFrame(rows)
         st.dataframe(cmp_df, width="stretch", hide_index=True)
+
+        # Final picks per strategy
+        any_final = any(r.final_picks for r in cmp_results)
+        if any_final:
+            st.divider()
+            st.markdown("#### 📌 백테스트 종료일 기준 선정 종목 (전략별)")
+            for r in cmp_results:
+                if not r.final_picks:
+                    continue
+                fp_date_str = r.final_picks_date.strftime("%Y-%m-%d") if r.final_picks_date else ""
+                tickers_html = "".join(
+                    f'<span style="background:rgba(96,165,250,0.15);'
+                    f'border:1px solid rgba(96,165,250,0.35);'
+                    f'border-radius:6px; padding:3px 10px;'
+                    f'font-size:0.88rem; font-weight:700; color:#60A5FA;'
+                    f'font-family:monospace; margin:2px;">{t}</span>'
+                    for t in r.final_picks
+                )
+                st.markdown(
+                    f'<div style="margin-bottom:10px;">'
+                    f'<span style="font-size:0.82rem;font-weight:700;color:#CBD5E1;">'
+                    f'{r.strategy.name}</span>'
+                    f'<span style="font-size:0.75rem;color:#64748B;margin-left:8px;">'
+                    f'{fp_date_str}</span>'
+                    f'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">'
+                    f'{tickers_html}</div></div>',
+                    unsafe_allow_html=True,
+                )
 
 
 # ═══════════════════════════════════════════════════════════
