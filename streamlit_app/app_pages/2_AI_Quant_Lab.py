@@ -306,9 +306,15 @@ def get_sp1500_info() -> tuple:
         try:
             resp = requests.get(url, headers=headers, timeout=15)
             tables = pd.read_html(StringIO(resp.text))
-            # Wikipedia 표 구조: 첫 번째 표에 Symbol / GICS Sector / Security 컬럼
-            raw = tables[0]
-            # 컬럼명이 다를 수 있으므로 유연하게 매핑
+            # tables[0]이 인포박스일 수 있으므로 Symbol/Ticker 컬럼이 있는 표를 탐색
+            raw = None
+            for tbl in tables[:6]:
+                cols_lower = [str(c).lower() for c in tbl.columns]
+                if any("symbol" in c or "ticker" in c for c in cols_lower):
+                    raw = tbl
+                    break
+            if raw is None:
+                raise ValueError(f"ticker column not found in any table")
             col_map = {}
             for c in raw.columns:
                 lc = str(c).lower()
@@ -321,6 +327,8 @@ def get_sp1500_info() -> tuple:
             raw = raw.rename(columns=col_map)
             needed = [c for c in ["ticker", "name", "sector"] if c in raw.columns]
             raw = raw[needed].copy()
+            if "ticker" not in raw.columns:
+                raise ValueError(f"ticker column not found after mapping")
             raw["ticker"] = raw["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
             raw["cap_tier"] = cap_tier
             frames.append(raw)

@@ -55,7 +55,14 @@ def fetch_sp1500_list() -> pd.DataFrame:
         try:
             resp = requests.get(url, headers=headers, timeout=30)
             tables = pd.read_html(io.StringIO(resp.text))
-            raw = tables[0]
+            raw = None
+            for tbl in tables[:6]:
+                cols_lower = [str(c).lower() for c in tbl.columns]
+                if any("symbol" in c or "ticker" in c for c in cols_lower):
+                    raw = tbl
+                    break
+            if raw is None:
+                raise ValueError("ticker column not found in any table")
             # Wikipedia table column names vary; map flexibly
             col_map: dict[str, str] = {}
             for c in raw.columns:
@@ -71,6 +78,8 @@ def fetch_sp1500_list() -> pd.DataFrame:
             raw = raw.rename(columns=col_map)
             needed = [c for c in ["ticker", "name", "sector", "industry"] if c in raw.columns]
             df = raw[needed].copy()
+            if "ticker" not in df.columns:
+                raise ValueError("ticker column not found after mapping")
             df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
             df["cap_tier"] = cap_tier
             # Fill missing columns with empty
