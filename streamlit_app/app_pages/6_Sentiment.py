@@ -573,7 +573,7 @@ if not _rot_df.empty:
         }.get(val, "")
 
     st.dataframe(
-        _rot_summary.style.applymap(_color_quadrant, subset=["Quadrant"]),
+        _rot_summary.style.map(_color_quadrant, subset=["Quadrant"]),
         use_container_width=True, hide_index=True,
     )
     st.caption("Bubble size ∝ |1-month return| · Cached 6h · Source: Yahoo Finance ETF prices")

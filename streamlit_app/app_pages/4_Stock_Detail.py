@@ -951,7 +951,7 @@ if not _insider_df.empty:
         )
 
     st.dataframe(
-        _disp_insider.style.applymap(_style_type, subset=["Type"]),
+        _disp_insider.style.map(_style_type, subset=["Type"]),
         use_container_width=True, hide_index=True,
     )
     st.caption("Source: SEC EDGAR Form 4 filings · Cached 4h · Not investment advice")
