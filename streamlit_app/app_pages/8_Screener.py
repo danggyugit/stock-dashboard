@@ -376,7 +376,10 @@ fmt_map = {
 }
 for col, fn in fmt_map.items():
     if col in display_df.columns:
-        display_df[col] = display_df[col].apply(fn)
+        try:
+            display_df[col] = display_df[col].apply(fn)
+        except (TypeError, ValueError):
+            pass
 
 st.dataframe(display_df, use_container_width=True, hide_index=True)
 
