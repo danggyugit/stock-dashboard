@@ -475,7 +475,7 @@ def run_backtest(
             "n_picks": len(picks),
             "picks": picks,
             "period_return_pct": round(period_ret * 100, 2),
-            "turnover_pct": round(turnover * 100, 1),
+            "turnover_pct": round(len(new_picks_set) / cfg.n_stocks * 100, 1),
             "portfolio_equity": round(equity, 4),
         })
         prev_holdings = holdings_now
