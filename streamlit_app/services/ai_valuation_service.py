@@ -51,6 +51,11 @@ def is_available() -> bool:
     return _get_client() is not None
 
 
+def get_gemini_client():
+    """Return a configured Gemini client, or None if not available."""
+    return _get_client()
+
+
 def _build_prompt(ticker: str, core: dict, consensus: dict, bands: dict) -> str:
     """Build a grounded prompt using the numeric inputs from valuation_service."""
     cur_price = core.get("current_price")
