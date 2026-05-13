@@ -28,15 +28,18 @@ Design notes:
 
 from __future__ import annotations
 
+import io
 import logging
+import urllib.request
 from dataclasses import dataclass, field
 from datetime import date, timedelta
 from typing import Callable
 
 import numpy as np
 import pandas as pd
+import streamlit as st
 
-from services.cache_loader import get_cached_stocks
+from services.cache_loader import get_cached_fundamentals, get_cached_stocks
 from services.factor_strategies import Strategy, get_strategy
 from services.historical_data_service import (
     get_sp500_change_history, load_pit_fundamentals, pit_factors_at,
@@ -48,7 +51,7 @@ from services.price_history_service import (
 
 logger = logging.getLogger(__name__)
 
-BENCHMARK_TICKERS = ["SPY", "QQQ"]
+BENCHMARK_TICKERS = ["SPY", "QQQ", "RSP"]
 PIT_FUND_MAX_YEARS = 4   # yfinance annual statements typically go back ~4 years
 PIT_FUND_WARN_YEARS = 4
 
@@ -88,17 +91,20 @@ class BacktestResult:
 
 
 def _load_current_metadata() -> dict[str, dict]:
-    """Map ticker → {name, sector, cap_tier} for currently-listed S&P stocks."""
+    """Map ticker → {name, sector, cap_tier, shares_outstanding} for S&P stocks."""
     stocks = get_cached_stocks() or []
+    fund_tickers: dict = (get_cached_fundamentals() or {}).get("tickers", {})
     out: dict[str, dict] = {}
     for s in stocks:
         t = s.get("ticker")
         if not t:
             continue
+        fund = fund_tickers.get(t, {})
         out[t] = {
             "name": s.get("name", t),
             "sector": s.get("sector"),
             "cap_tier": s.get("cap_tier"),
+            "shares_outstanding": fund.get("shares_outstanding"),
         }
     return out
 
@@ -114,6 +120,64 @@ def _passes_filter(ticker: str, meta: dict[str, dict], cfg: BacktestConfig) -> b
         if cfg.cap_tier and m.get("cap_tier") != cfg.cap_tier:
             return False
     return True
+
+
+def _proxy_mktcap(
+    ticker: str, meta: dict[str, dict], prices: pd.DataFrame, as_of: pd.Timestamp,
+) -> float | None:
+    """Estimate market cap at as_of using current shares × historical price."""
+    m = meta.get(ticker)
+    if m is None:
+        return None
+    shares = m.get("shares_outstanding")
+    if not shares or shares <= 0:
+        return None
+    if ticker not in prices.columns:
+        return None
+    hist = prices[ticker].loc[:as_of].dropna()
+    if hist.empty:
+        return None
+    return shares * float(hist.iloc[-1])
+
+
+def _tiered_tc_rate(ticker: str, meta: dict[str, dict], base_tc_pct: float) -> float:
+    """Return per-position TC rate based on cap_tier (fraction of portfolio weight)."""
+    cap = (meta.get(ticker) or {}).get("cap_tier", "Mid")
+    if cap == "Large":
+        multiplier = 0.5
+    elif cap == "Small":
+        multiplier = 2.0
+    else:
+        multiplier = 1.0
+    return base_tc_pct * multiplier / 100
+
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def _fetch_fred_tbill() -> pd.Series:
+    """Fetch 3-month T-bill rate history from FRED (no API key required)."""
+    url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3"
+    try:
+        with urllib.request.urlopen(url, timeout=10) as resp:
+            content = resp.read().decode("utf-8")
+        df = pd.read_csv(io.StringIO(content), index_col=0, parse_dates=True)
+        df.columns = ["rate"]
+        df["rate"] = pd.to_numeric(df["rate"], errors="coerce")
+        return df["rate"].dropna() / 100
+    except Exception as e:
+        logger.warning("FRED T-bill fetch failed: %s", e)
+        return pd.Series(dtype=float)
+
+
+def _get_rf_rate(start: date, end: date) -> float:
+    """Return annualized average 3-month T-bill rate over the backtest period."""
+    series = _fetch_fred_tbill()
+    if series.empty:
+        return 0.04
+    mask = (series.index >= pd.Timestamp(start)) & (series.index <= pd.Timestamp(end))
+    subset = series[mask]
+    if subset.empty:
+        return float(series.iloc[-1])
+    return float(subset.mean())
 
 
 def _build_historical_universe(
@@ -140,10 +204,26 @@ def _build_historical_universe(
 
 
 def _rebalance_dates(prices_index: pd.DatetimeIndex, months: int) -> list[pd.Timestamp]:
+    """Generate calendar-aligned rebalance dates (last trading day of each N-month period)."""
     if len(prices_index) == 0:
         return []
-    dates = list(prices_index)
-    return dates[::months]
+    start = prices_index.min()
+    end = prices_index.max()
+    cal_checkpoints = pd.date_range(
+        start=start,
+        end=end + pd.Timedelta(days=31),
+        freq=pd.offsets.MonthEnd(months),
+    )
+    sorted_idx = prices_index.sort_values()
+    result: list[pd.Timestamp] = []
+    for cd in cal_checkpoints:
+        avail = sorted_idx[sorted_idx <= cd]
+        if avail.empty:
+            continue
+        td = avail[-1]
+        if not result or td > result[-1]:
+            result.append(td)
+    return result
 
 
 # ── Metrics ───────────────────────────────────────────────────────
@@ -291,16 +371,16 @@ def run_backtest(
             t for t in members_at_rd
             if t in valid_tickers and _passes_filter(t, current_meta, cfg)
         }
-        if len(candidates) < cfg.n_stocks * 2:
-            # Pad with historical tickers not in current members but still valid
-            extras = {
-                t for t in (historical_universe - members_at_rd)
-                if t in valid_tickers and _passes_filter(t, current_meta, cfg)
-            }
-            candidates |= extras
         if not candidates:
             logger.warning("No candidates on %s", rd.date())
             continue
+
+        # Proxy market-cap filter: shares_outstanding × price_at_rd
+        if cfg.min_market_cap > 0:
+            candidates = {
+                t for t in candidates
+                if (_proxy_mktcap(t, current_meta, prices, rd) or cfg.min_market_cap) >= cfg.min_market_cap
+            }
 
         cand_list = sorted(candidates)
 
@@ -363,14 +443,16 @@ def run_backtest(
                 rets = (px_next[common] / px_rd[common] - 1).fillna(0)
                 period_ret = float(rets.mean())
 
-        # Transaction cost
+        # Transaction cost (tiered by cap_tier: Large 0.5×, Mid 1×, Small 2×)
         holdings_now = set(picks)
-        if i == 0:
-            turnover = 1.0
+        new_picks_set = holdings_now if i == 0 else (holdings_now - prev_holdings)
+        if new_picks_set:
+            tc = sum(
+                (1.0 / cfg.n_stocks) * _tiered_tc_rate(t, current_meta, cfg.tc_pct)
+                for t in new_picks_set
+            )
         else:
-            new_count = len(holdings_now - prev_holdings)
-            turnover = new_count / cfg.n_stocks
-        tc = turnover * (cfg.tc_pct / 100)
+            tc = 0.0
         equity *= (1 + period_ret) * (1 - tc)
 
         # Benchmarks (SPY, QQQ)
@@ -414,13 +496,12 @@ def run_backtest(
                 t for t in members_last
                 if t in valid_tickers and _passes_filter(t, current_meta, cfg)
             }
-            if len(cands_last) < cfg.n_stocks * 2:
-                extras = {
-                    t for t in (historical_universe - members_last)
-                    if t in valid_tickers and _passes_filter(t, current_meta, cfg)
-                }
-                cands_last |= extras
             if cands_last:
+                if cfg.min_market_cap > 0:
+                    cands_last = {
+                        t for t in cands_last
+                        if (_proxy_mktcap(t, current_meta, prices, last_rd) or cfg.min_market_cap) >= cfg.min_market_cap
+                    }
                 cand_list_last = sorted(cands_last)
                 metrics_last = compute_returns_and_vol(prices[cand_list_last], last_rd)
                 if not metrics_last.empty:
@@ -474,9 +555,10 @@ def run_backtest(
     curve.loc[first_date] = first_row
     curve = curve.sort_index()
 
-    metrics = _calc_metrics(curve["portfolio"])
+    rf_rate = _get_rf_rate(start_dt, end_dt)
+    metrics = _calc_metrics(curve["portfolio"], rf=rf_rate)
     bench_metrics = {
-        b: _calc_metrics(curve[b]) for b in BENCHMARK_TICKERS if b in curve.columns
+        b: _calc_metrics(curve[b], rf=rf_rate) for b in BENCHMARK_TICKERS if b in curve.columns
     }
 
     # Surface context info

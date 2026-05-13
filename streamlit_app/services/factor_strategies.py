@@ -63,10 +63,9 @@ def _score_mean_reversion_1m(df: pd.DataFrame) -> pd.Series:
 
 
 # ── Fundamentals-based scoring helpers ─────────────────────────────────
-# These use the current fundamentals snapshot so the *same* stocks score
-# high across all rebalance dates — meaning the backtest is a "what if
-# today's leaders had been held for 5 years" simulation, not a true PIT
-# backtest. Honest caveat shown in the UI.
+# PIT 연간 재무제표(90일 리포팅 래그)를 사용하므로 리밸런싱 기준일의
+# 실제 공개 데이터만 반영됩니다. 단, yfinance 연간 데이터 특성상
+# 최근 약 4년 이전 구간은 일부 종목 데이터 누락이 발생할 수 있음.
 
 
 def _score_low_per(df: pd.DataFrame) -> pd.Series:
@@ -118,8 +117,8 @@ STRATEGIES: dict[str, Strategy] = {
         short_description="지난 12개월 수익률 상위 종목",
         long_description=(
             "최근 12개월 동안 가장 많이 오른 종목을 보유하는 전략입니다. "
-            "학계에서 가장 널리 검증된 모멘텀 효과(Jegadeesh & Titman, 1993)를 "
-            "기반으로 합니다. '강한 추세는 이어진다'는 가정."
+            "단기 평균회귀(t-1월)를 포함한 원시 12개월 수익률 기준. "
+            "최근 1개월을 제외하는 Jegadeesh-Titman 방식은 '3-12개월 모멘텀' 전략을 사용하세요."
         ),
         category="price",
         has_lookahead=False,
@@ -198,12 +197,12 @@ STRATEGIES: dict[str, Strategy] = {
     ),
     "magic_formula": Strategy(
         key="magic_formula",
-        name="Magic Formula",
-        short_description="저PER × 고ROE (Greenblatt)",
+        name="Magic Formula (변형)",
+        short_description="저PER × 고ROE — Greenblatt 아이디어 변형",
         long_description=(
-            "Joel Greenblatt의 'Little Book That Beats the Market'에서 제안된 "
-            "단순한 두 지표 조합 — 싸고 수익성 좋은 기업. "
-            "각 지표별 랭크를 합산해 최종 순위 결정."
+            "Joel Greenblatt 'Little Book That Beats the Market' 아이디어 기반 변형 구현. "
+            "원서는 EBIT/EV + ROIC 조합이나, yfinance 데이터 신뢰성을 위해 P/E + ROE로 대체. "
+            "신호 방향은 동일하나 레버리지 높은 종목에서 원서와 차이 발생 가능."
         ),
         category="fundamentals",
         has_lookahead=False,
