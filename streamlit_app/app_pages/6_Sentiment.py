@@ -493,15 +493,6 @@ if not _rot_df.empty:
 
     fig_rot = go.Figure()
 
-    # Quadrant background shading
-    for (x0, x1), (y0, y1), label, color in [
-        (0, None, 0, None,   "Leading",   "rgba(34,197,94,0.06)"),
-        (None, 0, 0, None,   "Improving", "rgba(59,130,246,0.06)"),
-        (0, None, None, 0,   "Weakening", "rgba(245,158,11,0.06)"),
-        (None, 0, None, 0,   "Lagging",   "rgba(239,68,68,0.06)"),
-    ]:
-        pass  # plotly shapes added below
-
     _x_max = max(abs(_rot_df["RS_Ratio"].max()), abs(_rot_df["RS_Ratio"].min())) * 1.4 + 0.5
     _y_max = max(abs(_rot_df["RS_Momentum"].max()), abs(_rot_df["RS_Momentum"].min())) * 1.4 + 0.5
 
