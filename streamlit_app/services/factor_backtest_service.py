@@ -424,14 +424,17 @@ def run_backtest(
             continue
         merged = merged.dropna(subset=strategy.requires)
 
-        if merged.empty or len(merged) < cfg.n_stocks:
-            logger.debug("Too few candidates on %s (%d)", rd.date(), len(merged))
+        if merged.empty:
+            logger.debug("No candidates on %s", rd.date())
             continue
+        if len(merged) < cfg.n_stocks:
+            logger.debug("Fewer candidates than target on %s (%d/%d)", rd.date(), len(merged), cfg.n_stocks)
 
         # Score & select
         scores = strategy.rank_fn(merged)
         merged = merged.assign(_score=scores).sort_values("_score", ascending=False)
         picks = merged.head(cfg.n_stocks).index.tolist()
+        n_actual = len(picks)
 
         # Period return (equal-weight)
         period_ret = 0.0
@@ -446,9 +449,9 @@ def run_backtest(
         # Transaction cost (tiered by cap_tier: Large 0.5×, Mid 1×, Small 2×)
         holdings_now = set(picks)
         new_picks_set = holdings_now if i == 0 else (holdings_now - prev_holdings)
-        if new_picks_set:
+        if new_picks_set and n_actual > 0:
             tc = sum(
-                (1.0 / cfg.n_stocks) * _tiered_tc_rate(t, current_meta, cfg.tc_pct)
+                (1.0 / n_actual) * _tiered_tc_rate(t, current_meta, cfg.tc_pct)
                 for t in new_picks_set
             )
         else:
@@ -532,7 +535,7 @@ def run_backtest(
                     missing_last = [c for c in strategy.requires if c not in merged_last.columns]
                     if not missing_last:
                         merged_last = merged_last.dropna(subset=strategy.requires)
-                        if len(merged_last) >= cfg.n_stocks:
+                        if not merged_last.empty:
                             scores_last = strategy.rank_fn(merged_last)
                             merged_last = (
                                 merged_last.assign(_score=scores_last)
