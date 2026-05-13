@@ -21,6 +21,9 @@ from services.ai_valuation_service import (
 from services.auth_service import render_user_sidebar
 from services.i18n import t as tr
 from components.ui import inject_css, page_header, stock_logo_url, render_sidebar_info
+import yfinance as yf
+from services.insider_service import get_insider_trades
+from core.llm_provider import LLMProvider
 
 
 def _calc_rsi(closes: list[float], period: int = 14) -> list[float | None]:
@@ -847,6 +850,170 @@ if articles:
             st.markdown(f"{badge} {hl} — _{source}_")
 else:
     st.caption(tr("dash.no_news"))
+
+# --- Earnings Surprise History ---
+st.markdown("---")
+st.subheader("📊 Earnings Surprise History")
+
+
+@st.cache_data(ttl=3600 * 4, show_spinner=False)
+def _get_earnings_history(tkr: str) -> pd.DataFrame:
+    try:
+        t = yf.Ticker(tkr)
+        df = t.earnings_dates
+        if df is None or df.empty:
+            return pd.DataFrame()
+        df = df.dropna(subset=["EPS Estimate", "Reported EPS"]).head(10)
+        df = df.sort_index(ascending=True).reset_index()
+        df["Date"] = df["Earnings Date"].dt.strftime("%Y-%m-%d")
+        df["Beat"] = df["Reported EPS"] >= df["EPS Estimate"]
+        df["Surprise"] = (df["Reported EPS"] - df["EPS Estimate"]).round(3)
+        df["Surprise %"] = ((df["Surprise"] / df["EPS Estimate"].abs()) * 100).round(1)
+        return df[["Date", "EPS Estimate", "Reported EPS", "Surprise", "Surprise %", "Beat"]]
+    except Exception:
+        return pd.DataFrame()
+
+
+_earn_df = _get_earnings_history(selected)
+if not _earn_df.empty:
+    # Bar chart: Reported vs Estimate
+    fig_earn = go.Figure()
+    fig_earn.add_trace(go.Bar(
+        x=_earn_df["Date"], y=_earn_df["EPS Estimate"],
+        name="Estimate", marker_color="rgba(100,116,139,0.7)",
+    ))
+    fig_earn.add_trace(go.Bar(
+        x=_earn_df["Date"], y=_earn_df["Reported EPS"],
+        name="Reported",
+        marker_color=[("#22C55E" if b else "#EF4444") for b in _earn_df["Beat"]],
+    ))
+    fig_earn.update_layout(
+        barmode="group", height=300,
+        margin=dict(l=0, r=0, t=10, b=0),
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        legend=dict(orientation="h", y=1.05),
+        yaxis=dict(gridcolor="rgba(100,116,139,0.2)", title="EPS ($)"),
+        xaxis=dict(gridcolor="rgba(100,116,139,0.1)"),
+    )
+    st.plotly_chart(fig_earn, use_container_width=True)
+
+    # Summary metrics
+    beats = _earn_df["Beat"].sum()
+    total = len(_earn_df)
+    avg_surp = _earn_df["Surprise %"].mean()
+    _sc1, _sc2, _sc3 = st.columns(3)
+    _sc1.metric("Beat Rate", f"{beats}/{total} ({beats/total*100:.0f}%)")
+    _sc2.metric("Avg EPS Surprise", f"{avg_surp:+.1f}%")
+    _last_surp = _earn_df.iloc[-1]["Surprise %"]
+    _sc3.metric("Last Quarter Surprise", f"{_last_surp:+.1f}%")
+else:
+    st.caption("No earnings history available from yfinance.")
+
+# --- Insider Trading ---
+st.markdown("---")
+st.subheader("🏛️ Insider Trading (SEC Form 4 · Last 180 Days)")
+
+with st.spinner("Fetching insider trades from SEC EDGAR…"):
+    _insider_df = get_insider_trades(selected, days=180)
+
+if not _insider_df.empty:
+    # Summary: buy vs sell value
+    _buys = _insider_df[_insider_df["Type"] == "Buy"]["Value ($)"].sum() or 0
+    _sells = _insider_df[_insider_df["Type"] == "Sell"]["Value ($)"].sum() or 0
+    _ic1, _ic2, _ic3 = st.columns(3)
+    _ic1.metric("Buy Value", f"${_buys:,.0f}" if _buys else "—",
+                delta="Bullish signal" if _buys > _sells else None)
+    _ic2.metric("Sell Value", f"${_sells:,.0f}" if _sells else "—",
+                delta="Bearish signal" if _sells > _buys * 2 else None,
+                delta_color="inverse")
+    _ic3.metric("Transactions", len(_insider_df))
+
+    # Color-coded table
+    def _style_type(val: str) -> str:
+        if val == "Buy":
+            return "color: #22C55E; font-weight: 700"
+        if val == "Sell":
+            return "color: #EF4444; font-weight: 700"
+        return "color: #94A3B8"
+
+    _disp_insider = _insider_df.copy()
+    if "Value ($)" in _disp_insider.columns:
+        _disp_insider["Value ($)"] = _disp_insider["Value ($)"].apply(
+            lambda x: f"${x:,.0f}" if pd.notna(x) and x else "—"
+        )
+    if "Shares" in _disp_insider.columns:
+        _disp_insider["Shares"] = _disp_insider["Shares"].apply(
+            lambda x: f"{x:,.0f}" if pd.notna(x) and x else "—"
+        )
+    if "Price" in _disp_insider.columns:
+        _disp_insider["Price"] = _disp_insider["Price"].apply(
+            lambda x: f"${x:,.2f}" if pd.notna(x) and x else "—"
+        )
+
+    st.dataframe(
+        _disp_insider.style.applymap(_style_type, subset=["Type"]),
+        use_container_width=True, hide_index=True,
+    )
+    st.caption("Source: SEC EDGAR Form 4 filings · Cached 4h · Not investment advice")
+else:
+    st.caption(f"No insider transactions found for {selected} in the last 180 days.")
+
+# --- AI Earnings Summary ---
+st.markdown("---")
+st.subheader("🤖 AI Earnings Summary")
+st.caption("Uses Claude AI to summarize recent earnings performance and outlook. Manual trigger only.")
+
+if st.button("Generate AI Earnings Summary", key="ai_earnings_btn", type="primary"):
+    with st.spinner("Analyzing earnings data with Claude AI…"):
+        _llm = LLMProvider()
+        if _llm._client is None:
+            st.warning("ANTHROPIC_API_KEY not configured in .streamlit/secrets.toml")
+        else:
+            _earn_context = {}
+            if not _earn_df.empty:
+                _earn_context["earnings_history"] = _earn_df.to_dict(orient="records")
+            _earn_context["ticker"] = selected
+            _earn_context["name"] = info.get("name", selected)
+            _earn_context["sector"] = info.get("sector", "")
+            _earn_context["current_price"] = info.get("price")
+            _earn_context["market_cap"] = info.get("market_cap")
+            _earn_context["pe_ratio"] = info.get("pe_ratio")
+            _earn_context["forward_eps"] = _val_core.get("forward_eps") if _val_core else None
+            _earn_context["revenue_growth_yoy"] = _val_core.get("revenue_growth_yoy") if _val_core else None
+            _earn_context["gross_margin"] = _val_core.get("gross_margin") if _val_core else None
+            _earn_context["analyst_target_mean"] = _consensus.get("target_mean") if _consensus else None
+
+            _prompt = f"""You are a concise financial analyst. Analyze the following earnings data for {selected} ({_earn_context.get('name', '')}) and provide a structured earnings summary.
+
+Data:
+{str(_earn_context)}
+
+Provide a structured summary with these sections:
+1. **Earnings Quality** (2-3 sentences): Beat/miss trend, EPS trajectory, consistency
+2. **Key Strengths** (2-3 bullet points): What the numbers show going well
+3. **Key Concerns** (2-3 bullet points): Risks or weaknesses in the numbers
+4. **Analyst Consensus** (1-2 sentences): How does the current price compare to analyst targets
+5. **Bottom Line** (1 sentence): Overall earnings quality verdict
+
+Keep it factual and under 300 words. Use markdown formatting."""
+
+            try:
+                import anthropic as _ant
+                _msg = _llm._client.messages.create(
+                    model="claude-haiku-4-5-20251001",
+                    max_tokens=1024,
+                    messages=[{"role": "user", "content": _prompt}],
+                )
+                _ai_summary = _msg.content[0].text.strip()
+                st.markdown(
+                    f'<div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.3);'
+                    f'border-radius:10px;padding:16px 20px;margin:10px 0;">'
+                    f'{_ai_summary}</div>',
+                    unsafe_allow_html=True,
+                )
+                st.caption("Generated by Claude Haiku 4.5 · Not investment advice")
+            except Exception as _e:
+                st.error(f"AI generation failed: {_e}")
 
 # --- Company Description (expander, end) ---
 if info.get("description"):

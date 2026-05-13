@@ -11,6 +11,7 @@ from services.market_service import (
 from services.auth_service import render_user_sidebar
 from services.i18n import t as tr
 from components.ui import inject_css, page_header, render_sidebar_info
+from services.rs_service import get_rs_ratings
 
 page_header("page.screener.title", "page.screener.subtitle")
 
@@ -303,11 +304,31 @@ if vol_filter != "Any" and "avg_volume" in filtered.columns:
     vol_map = {"Over 100K": 1e5, "Over 500K": 5e5, "Over 1M": 1e6, "Over 5M": 5e6}
     filtered = filtered[filtered["avg_volume"].notna() & (filtered["avg_volume"] >= vol_map.get(vol_filter, 0))]
 
+# --- RS Rating (optional, loaded on demand) ---
+if "rs_load" not in st.session_state:
+    st.session_state["rs_load"] = False
+
+rs_col1, rs_col2 = st.columns([1, 4])
+with rs_col1:
+    if st.button("📈 Load RS Ratings", help="Compute IBD-style Relative Strength ratings (1-99). Downloads 1 year of price data — may take 10-30 seconds."):
+        st.session_state["rs_load"] = True
+
+if st.session_state["rs_load"] and not filtered.empty:
+    _rs_tickers = tuple(filtered["ticker"].tolist())
+    with st.spinner(f"Computing RS ratings for {len(_rs_tickers)} stocks…"):
+        _rs_series = get_rs_ratings(_rs_tickers)
+    if not _rs_series.empty:
+        filtered = filtered.copy()
+        filtered["rs_rating"] = filtered["ticker"].map(_rs_series)
+        st.caption(f"RS ratings loaded for {_rs_series.notna().sum()} stocks (1=weakest, 99=strongest)")
+
 # --- Sort ---
 sort_options = {"Market Cap": "market_cap", "Ticker": "ticker", "Name": "name"}
 if has_fundamentals:
     sort_options.update({"P/E": "pe_ratio", "Dividend Yield": "dividend_yield",
                          "Beta": "beta", "ROE": "roe", "EPS": "eps"})
+if "rs_rating" in filtered.columns:
+    sort_options["RS Rating"] = "rs_rating"
 available_sorts = {k: v for k, v in sort_options.items() if v in filtered.columns}
 
 sc1, sc2 = st.columns([2, 1])
@@ -331,12 +352,15 @@ st.caption(tr("scr.found", n=len(filtered)))
 base_cols = ["ticker", "name", "sector"]
 fund_cols = ["current_price", "market_cap", "pe_ratio", "pb_ratio", "dividend_yield",
              "eps", "roe", "beta", "debt_to_equity", "avg_volume"]
+if "rs_rating" in filtered.columns:
+    fund_cols = ["rs_rating"] + fund_cols
 display_cols = base_cols + [c for c in fund_cols if c in filtered.columns]
 
 display_df = filtered[display_cols].copy()
 
 # Format display values
 fmt_map = {
+    "rs_rating": lambda x: f"{int(x)}" if pd.notna(x) else "",
     "current_price": lambda x: f"${x:,.2f}" if pd.notna(x) else "",
     "market_cap": lambda x: f"${x / 1e9:.1f}B" if pd.notna(x) and x >= 1e9
                   else f"${x / 1e6:.0f}M" if pd.notna(x) else "",

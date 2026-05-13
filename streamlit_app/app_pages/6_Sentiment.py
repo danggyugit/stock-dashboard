@@ -387,3 +387,204 @@ with ai_tab:
                 st.warning(tr("sent.analyze_unavailable"))
         else:
             st.warning(tr("sent.no_headlines"))
+
+st.markdown("---")
+
+# ═══════════════════════════════════════════════════════════
+# Sector Rotation Map (RRG-style scatter)
+# ═══════════════════════════════════════════════════════════
+st.subheader("🔄 Sector Rotation Map")
+st.caption(
+    "X-axis: 12-week relative strength vs S&P 500 · "
+    "Y-axis: 4-week momentum (rate of change) · "
+    "Leading → Weakening → Lagging → Improving"
+)
+
+_SECTOR_ETFS = {
+    "XLK":  "Technology",
+    "XLF":  "Financials",
+    "XLE":  "Energy",
+    "XLV":  "Healthcare",
+    "XLI":  "Industrials",
+    "XLP":  "Cons. Staples",
+    "XLY":  "Cons. Discret.",
+    "XLB":  "Materials",
+    "XLU":  "Utilities",
+    "XLRE": "Real Estate",
+    "XLC":  "Comm. Services",
+}
+
+
+@st.cache_data(ttl=3600 * 6, show_spinner=False)
+def _get_sector_rotation() -> pd.DataFrame:
+    import yfinance as yf
+    import numpy as np
+
+    symbols = list(_SECTOR_ETFS.keys()) + ["SPY"]
+    try:
+        prices = yf.download(
+            symbols, period="6mo", auto_adjust=True, progress=False, timeout=30
+        )["Close"]
+    except Exception:
+        return pd.DataFrame()
+
+    if prices.empty or "SPY" not in prices.columns:
+        return pd.DataFrame()
+
+    spy = prices["SPY"]
+    rows = []
+    for etf, name in _SECTOR_ETFS.items():
+        if etf not in prices.columns:
+            continue
+        s = prices[etf].dropna()
+        spy_clean = spy.dropna()
+        min_len = min(len(s), len(spy_clean))
+        if min_len < 30:
+            continue
+        s = s.iloc[-min_len:]
+        spy_clean = spy_clean.iloc[-min_len:]
+
+        # RS line = ETF / SPY
+        rs_line = s / spy_clean
+
+        # 12-week RS ratio (relative to its own mean)
+        n12 = min(63, len(rs_line))
+        rs_ratio = (rs_line.iloc[-1] / rs_line.iloc[-n12:].mean() - 1) * 100
+
+        # 4-week momentum = current RS ratio vs 4-week-ago RS ratio
+        n4 = min(20, len(rs_line))
+        rs_4w_ago = (rs_line.iloc[-(n4+1)] / rs_line.iloc[-n12:-(n4+1)].mean() - 1) * 100 if len(rs_line) > n4 + n12 else rs_ratio
+        rs_momentum = rs_ratio - rs_4w_ago
+
+        # 1-month return
+        ret_1m = (s.iloc[-1] / s.iloc[-21] - 1) * 100 if len(s) >= 21 else np.nan
+
+        rows.append({
+            "ETF": etf,
+            "Sector": name,
+            "RS_Ratio": round(rs_ratio, 2),
+            "RS_Momentum": round(rs_momentum, 2),
+            "Return_1M": round(ret_1m, 2) if not np.isnan(ret_1m) else 0,
+        })
+
+    return pd.DataFrame(rows)
+
+
+_rot_df = _get_sector_rotation()
+
+if not _rot_df.empty:
+    def _quadrant(row: pd.Series) -> str:
+        if row["RS_Ratio"] >= 0 and row["RS_Momentum"] >= 0:
+            return "Leading"
+        if row["RS_Ratio"] >= 0 and row["RS_Momentum"] < 0:
+            return "Weakening"
+        if row["RS_Ratio"] < 0 and row["RS_Momentum"] < 0:
+            return "Lagging"
+        return "Improving"
+
+    _rot_df["Quadrant"] = _rot_df.apply(_quadrant, axis=1)
+
+    _color_map = {
+        "Leading":   "#22C55E",
+        "Weakening": "#F59E0B",
+        "Lagging":   "#EF4444",
+        "Improving": "#3B82F6",
+    }
+
+    fig_rot = go.Figure()
+
+    # Quadrant background shading
+    for (x0, x1), (y0, y1), label, color in [
+        (0, None, 0, None,   "Leading",   "rgba(34,197,94,0.06)"),
+        (None, 0, 0, None,   "Improving", "rgba(59,130,246,0.06)"),
+        (0, None, None, 0,   "Weakening", "rgba(245,158,11,0.06)"),
+        (None, 0, None, 0,   "Lagging",   "rgba(239,68,68,0.06)"),
+    ]:
+        pass  # plotly shapes added below
+
+    _x_max = max(abs(_rot_df["RS_Ratio"].max()), abs(_rot_df["RS_Ratio"].min())) * 1.4 + 0.5
+    _y_max = max(abs(_rot_df["RS_Momentum"].max()), abs(_rot_df["RS_Momentum"].min())) * 1.4 + 0.5
+
+    fig_rot.add_shape(type="rect", x0=0, x1=_x_max, y0=0, y1=_y_max,
+                      fillcolor="rgba(34,197,94,0.06)", line_width=0)
+    fig_rot.add_shape(type="rect", x0=-_x_max, x1=0, y0=0, y1=_y_max,
+                      fillcolor="rgba(59,130,246,0.06)", line_width=0)
+    fig_rot.add_shape(type="rect", x0=0, x1=_x_max, y0=-_y_max, y1=0,
+                      fillcolor="rgba(245,158,11,0.06)", line_width=0)
+    fig_rot.add_shape(type="rect", x0=-_x_max, x1=0, y0=-_y_max, y1=0,
+                      fillcolor="rgba(239,68,68,0.06)", line_width=0)
+
+    # Quadrant labels
+    for txt, xp, yp in [
+        ("Leading ↗", _x_max * 0.7, _y_max * 0.85),
+        ("Weakening ↘", _x_max * 0.7, -_y_max * 0.85),
+        ("Lagging ↙", -_x_max * 0.7, -_y_max * 0.85),
+        ("Improving ↖", -_x_max * 0.7, _y_max * 0.85),
+    ]:
+        fig_rot.add_annotation(x=xp, y=yp, text=txt, showarrow=False,
+                               font=dict(size=11, color="#475569"), opacity=0.7)
+
+    # Sector bubbles (size = |1M return|)
+    for _, row in _rot_df.iterrows():
+        marker_size = max(18, min(50, abs(row["Return_1M"]) * 4 + 18))
+        color = _color_map[row["Quadrant"]]
+        fig_rot.add_trace(go.Scatter(
+            x=[row["RS_Ratio"]], y=[row["RS_Momentum"]],
+            mode="markers+text",
+            text=[row["ETF"]],
+            textposition="top center",
+            textfont=dict(size=10, color="#F1F5F9"),
+            marker=dict(size=marker_size, color=color, opacity=0.85,
+                        line=dict(color="#F1F5F9", width=1)),
+            name=row["Quadrant"],
+            hovertemplate=(
+                f"<b>{row['ETF']} — {row['Sector']}</b><br>"
+                f"RS Ratio: {row['RS_Ratio']:+.2f}%<br>"
+                f"Momentum: {row['RS_Momentum']:+.2f}%<br>"
+                f"1M Return: {row['Return_1M']:+.2f}%<br>"
+                f"<b>{row['Quadrant']}</b><extra></extra>"
+            ),
+            showlegend=False,
+        ))
+
+    fig_rot.add_vline(x=0, line_color="#475569", line_width=1)
+    fig_rot.add_hline(y=0, line_color="#475569", line_width=1)
+
+    fig_rot.update_layout(
+        height=520,
+        margin=dict(l=20, r=20, t=20, b=40),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        xaxis=dict(
+            title="RS Ratio (12W relative strength vs S&P 500, %)",
+            gridcolor="rgba(100,116,139,0.15)", zeroline=False,
+            ticksuffix="%",
+        ),
+        yaxis=dict(
+            title="RS Momentum (4W change in RS Ratio, %)",
+            gridcolor="rgba(100,116,139,0.15)", zeroline=False,
+            ticksuffix="%",
+        ),
+    )
+    st.plotly_chart(fig_rot, use_container_width=True)
+
+    # Summary table
+    _rot_summary = _rot_df[["ETF", "Sector", "Quadrant", "RS_Ratio", "RS_Momentum", "Return_1M"]].copy()
+    _rot_summary = _rot_summary.sort_values("RS_Ratio", ascending=False).reset_index(drop=True)
+    _rot_summary.columns = ["ETF", "Sector", "Quadrant", "RS Ratio (%)", "Momentum (%)", "1M Return (%)"]
+
+    def _color_quadrant(val: str) -> str:
+        return {
+            "Leading":   "color: #22C55E; font-weight: 700",
+            "Weakening": "color: #F59E0B; font-weight: 700",
+            "Lagging":   "color: #EF4444; font-weight: 700",
+            "Improving": "color: #3B82F6; font-weight: 700",
+        }.get(val, "")
+
+    st.dataframe(
+        _rot_summary.style.applymap(_color_quadrant, subset=["Quadrant"]),
+        use_container_width=True, hide_index=True,
+    )
+    st.caption("Bubble size ∝ |1-month return| · Cached 6h · Source: Yahoo Finance ETF prices")
+else:
+    st.caption("Sector rotation data unavailable.")
