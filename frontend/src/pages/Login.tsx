@@ -25,23 +25,23 @@ const Login = () => {
             <>
               <div className="flex flex-col items-center gap-3 text-center">
                 <Clock className="h-10 w-10 text-yellow-500" />
-                <p className="font-semibold">Access Pending Approval</p>
+                <p className="font-semibold">접근 승인 대기 중</p>
                 <p className="text-sm text-muted-foreground">
-                  Your Google account has been registered but is awaiting admin
-                  approval. Please contact the administrator to request access.
+                  구글 계정이 등록되었지만 아직 관리자 승인이 필요합니다.
+                  관리자에게 접근 권한을 요청해 주세요.
                 </p>
               </div>
               <button
                 className="text-xs text-muted-foreground underline"
                 onClick={() => setPendingApproval(false)}
               >
-                Try a different account
+                다른 계정으로 시도
               </button>
             </>
           ) : (
             <>
               <p className="text-sm text-muted-foreground text-center">
-                Sign in to manage your portfolios
+                구글 계정으로 로그인하세요
               </p>
 
               {error && (
@@ -51,12 +51,12 @@ const Login = () => {
               )}
 
               {loading ? (
-                <p className="text-sm text-muted-foreground animate-pulse">Signing in...</p>
+                <p className="text-sm text-muted-foreground animate-pulse">로그인 중...</p>
               ) : (
                 <GoogleLogin
                   onSuccess={async (response) => {
                     if (!response.credential) {
-                      setError("No credential received from Google");
+                      setError("Google에서 인증 정보를 받지 못했습니다.");
                       return;
                     }
                     setLoading(true);
@@ -65,32 +65,23 @@ const Login = () => {
                       await login(response.credential);
                       navigate("/");
                     } catch (err: unknown) {
-                      const status = (err as { response?: { status?: number } })?.response?.status;
-                      const msg =
-                        (err as { response?: { data?: { detail?: string } } })
-                          ?.response?.data?.detail ||
-                        (err as Error).message ||
-                        "Login failed";
+                      const status = (err as { status?: number }).status;
                       if (status === 403) {
                         setPendingApproval(true);
                       } else {
-                        setError(msg);
+                        setError((err as Error).message || "로그인에 실패했습니다.");
                       }
                       setLoading(false);
                     }
                   }}
                   onError={() => {
-                    setError("Google sign-in failed. Please try again.");
+                    setError("Google 로그인에 실패했습니다. 다시 시도해 주세요.");
                   }}
                   size="large"
                   width="300"
                   text="signin_with"
                 />
               )}
-
-              <p className="text-xs text-muted-foreground">
-                Market data and sentiment are available without login.
-              </p>
             </>
           )}
         </CardContent>

@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>AI Quant Lab 4월 실전 성적표 + 5월 픽 — Instagram Card Series</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg-page:  #0A0E1A;
+    --bg-card:  #0F172A;
+    --bg-alt:   #131F38;
+    --accent:   #22C55E;
+    --blue:     #60A5FA;
+    --gold:     #EAB308;
+    --red:      #EF4444;
+    --purple:   #A78BFA;
+    --text:     #F1F5F9;
+    --dim:      #CBD5E1;
+    --border:   rgba(203,213,225,0.14);
+    --border-s: rgba(96,165,250,0.40);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body {
+    background: var(--bg-page);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont,
+                 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page-header {
+    padding: 32px 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .page-header h1 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--accent) 60%, var(--gold) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(580px, 1fr));
+    gap: 40px;
+    padding: 0 32px 80px;
+    max-width: 1900px;
+    margin: 0 auto;
+  }
+
+  /* ── BASE CARD ── */
+  .card {
+    width: 540px; height: 675px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 36px 32px;
+    position: relative;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  .card::before {
+    content:'';
+    position: absolute; top:0; left:0; right:0; height:4px;
+    background: linear-gradient(90deg, var(--blue), var(--accent), var(--gold));
+    opacity: 0.85;
+  }
+  .card::after {
+    content:'';
+    position: absolute; inset: 4px 0 0 0;
+    background:
+      radial-gradient(ellipse at top left,    rgba(96,165,250,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom right, rgba(34,197,94,0.07) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .card > * { position: relative; z-index: 1; }
+
+  .card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge.blue  { background: rgba(96,165,250,0.16); border: 1px solid rgba(96,165,250,0.38); color: #93C5FD; }
+  .badge.green { background: rgba(34,197,94,0.16);  border: 1px solid rgba(34,197,94,0.38);  color: #4ADE80; }
+  .badge.gold  { background: rgba(234,179,8,0.16);  border: 1px solid rgba(234,179,8,0.42);  color: #FDE68A; }
+  .badge.purple{ background: rgba(167,139,250,0.16); border: 1px solid rgba(167,139,250,0.38); color: #C4B5FD; }
+  .badge .dot { width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .counter { color:var(--dim); font-size:13px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+
+  h2.card-title { font-size:30px; font-weight:800; line-height:1.2; margin-bottom:14px; }
+  h2.card-title .hi   { color: #4ADE80; }
+  h2.card-title .gold { color: #FDE68A; }
+  h2.card-title .blue { color: #93C5FD; }
+  .sub { color:var(--dim); font-size:15px; font-weight:500; line-height:1.6; margin-bottom:18px; }
+
+  /* ──── CARD 1 — COVER ──── */
+  .c1 {
+    background:
+      radial-gradient(ellipse at top, rgba(34,197,94,0.20) 0%, transparent 55%),
+      linear-gradient(180deg, #0B1624 0%, #0A0E1A 100%);
+    border: 1px solid rgba(34,197,94,0.35);
+    justify-content: space-between;
+  }
+  .c1-top { display:flex; flex-direction:column; gap:4px; }
+  .c1-tag { font-size:14px; color:#93C5FD; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; }
+  .c1-title { font-size:34px; font-weight:900; line-height:1.15; }
+  .c1-title .g { color:#4ADE80; }
+  .c1-mid {
+    text-align: center;
+    padding: 14px 0;
+  }
+  .c1-label { font-size:15px; color:var(--dim); font-weight:600; margin-bottom:4px; }
+  .c1-big { font-size:84px; font-weight:900; color:#4ADE80; line-height:1; letter-spacing:-2px; }
+  .c1-sub { font-size:18px; color:var(--dim); font-weight:600; margin-top:8px; }
+  .c1-sub strong { color:#F1F5F9; }
+  .c1-bench {
+    display: flex; justify-content: center; gap:28px;
+    margin-top: 16px;
+  }
+  .c1-bench-item { text-align: center; }
+  .c1-bench-item .bl { font-size:13px; color:var(--dim); font-weight:600; }
+  .c1-bench-item .bv { font-size:20px; font-weight:800; color:#FDE68A; }
+  .c1-bottom {
+    background: rgba(34,197,94,0.10);
+    border: 1px solid rgba(34,197,94,0.30);
+    border-radius: 14px;
+    padding: 14px 18px;
+    font-size: 14px; color:var(--dim); font-weight:500; line-height:1.6;
+    text-align: center;
+  }
+  .c1-bottom strong { color:var(--text); }
+
+  /* ──── CARD 2 — SETUP ──── */
+  .setup-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; flex: 1;
+  }
+  .setup-item {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .setup-item.wide { grid-column: span 2; }
+  .setup-item .si-label { font-size:12px; color:#93C5FD; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; }
+  .setup-item .si-value { font-size:22px; font-weight:800; color:var(--text); line-height:1.15; }
+  .setup-item .si-value.sm { font-size:17px; }
+  .setup-item .si-desc { font-size:13px; color:var(--dim); font-weight:500; line-height:1.5; }
+  .setup-item.highlight { border-color: rgba(96,165,250,0.40); background: rgba(96,165,250,0.08); }
+
+  /* ──── CARD 3 — PICKS ──── */
+  .picks-table { flex: 1; display:flex; flex-direction:column; gap:8px; }
+  .pick-row {
+    display: grid;
+    grid-template-columns: 24px 90px 1fr 70px 70px;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .pick-row.picked {
+    border-color: rgba(34,197,94,0.40);
+    background: rgba(34,197,94,0.06);
+  }
+  .pick-rank { font-size:13px; color:var(--dim); font-weight:700; text-align:center; }
+  .pick-ticker { font-size:17px; font-weight:800; color:var(--text); }
+  .pick-score-wrap { display:flex; flex-direction:column; gap:3px; }
+  .pick-score-label { font-size:11px; color:var(--dim); font-weight:600; }
+  .pick-score-bar { height:6px; background:rgba(96,165,250,0.18); border-radius:999px; overflow:hidden; }
+  .pick-score-fill { height:100%; background:linear-gradient(90deg,#60A5FA,#4ADE80); border-radius:999px; }
+  .pick-score-val { font-size:13px; font-weight:700; color:#93C5FD; }
+  .pick-weight { font-size:16px; font-weight:800; color:#FDE68A; text-align:right; }
+  .pick-o {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:24px; height:24px;
+    background:#4ADE80; border-radius:6px;
+    font-size:13px; font-weight:800; color:#0A0E1A;
+  }
+  .picks-header {
+    display: grid;
+    grid-template-columns: 24px 90px 1fr 70px 70px;
+    gap: 8px;
+    padding: 0 14px;
+    margin-bottom: 2px;
+  }
+  .picks-header span { font-size:11px; color:var(--dim); font-weight:700; letter-spacing:0.05em; text-transform:uppercase; }
+
+  /* ──── CARD 4 — RETURNS BAR CHART ──── */
+  .ret-chart { flex:1; display:flex; flex-direction:column; justify-content:space-around; }
+  .ret-row { display:flex; align-items:center; gap:10px; }
+  .ret-ticker { width:52px; font-size:15px; font-weight:800; flex-shrink:0; }
+  .ret-bar-wrap { flex:1; height:36px; background:rgba(255,255,255,0.05); border-radius:8px; overflow:hidden; position:relative; }
+  .ret-bar-fill { height:100%; border-radius:8px; display:flex; align-items:center; padding-left:12px; transition: width 0s; }
+  .ret-bar-fill.up   { background: linear-gradient(90deg, rgba(34,197,94,0.7), rgba(34,197,94,0.45)); }
+  .ret-val { width:68px; font-size:17px; font-weight:800; text-align:right; flex-shrink:0; }
+  .ret-val.up { color:#4ADE80; }
+  .ret-entry { font-size:12px; color:var(--dim); font-weight:600; }
+
+  /* ──── CARD 5 — PORTFOLIO vs BENCHMARK ──── */
+  .bench-compare {
+    flex: 1;
+    display: flex; flex-direction:column; gap:0;
+  }
+  .bench-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .bench-row:last-child { border-bottom: none; }
+  .bench-label { width:110px; flex-shrink:0; }
+  .bench-label .bl-name { font-size:15px; font-weight:800; }
+  .bench-label .bl-sub { font-size:12px; color:var(--dim); font-weight:500; }
+  .bench-bar-wrap { flex:1; height:42px; background:rgba(255,255,255,0.05); border-radius:10px; overflow:hidden; }
+  .bench-bar-fill { height:100%; border-radius:10px; display:flex; align-items:center; padding-left:12px; }
+  .bench-bar-fill.portfolio { background: linear-gradient(90deg, rgba(34,197,94,0.80), rgba(34,197,94,0.50)); }
+  .bench-bar-fill.qqq { background: linear-gradient(90deg, rgba(96,165,250,0.65), rgba(96,165,250,0.35)); }
+  .bench-bar-fill.spy { background: linear-gradient(90deg, rgba(234,179,8,0.55), rgba(234,179,8,0.25)); }
+  .bench-pct { width:72px; font-size:20px; font-weight:800; text-align:right; flex-shrink:0; }
+  .bench-pct.g { color:#4ADE80; }
+  .bench-pct.b { color:#93C5FD; }
+  .bench-pct.y { color:#FDE68A; }
+  .alpha-box {
+    background: rgba(34,197,94,0.10);
+    border: 1px solid rgba(34,197,94,0.32);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .alpha-box .al { font-size:13px; color:var(--dim); font-weight:700; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:4px; }
+  .alpha-box .av { font-size:40px; font-weight:900; color:#4ADE80; line-height:1; }
+  .alpha-box .as { font-size:14px; color:var(--dim); font-weight:600; margin-top:4px; }
+
+  /* ──── CARD 6 — CONTEXT ──── */
+  .timeline { flex:1; display:flex; flex-direction:column; gap:0; position:relative; }
+  .timeline::before {
+    content:'';
+    position:absolute; left:20px; top:0; bottom:0; width:2px;
+    background: linear-gradient(180deg, rgba(96,165,250,0.5), rgba(34,197,94,0.5));
+  }
+  .tl-item { display:flex; gap:18px; padding: 10px 0; position:relative; }
+  .tl-dot {
+    width:12px; height:12px; border-radius:50%; flex-shrink:0;
+    margin-top: 5px; position:relative; z-index:1;
+    margin-left: 15px;
+  }
+  .tl-dot.red    { background:#EF4444; box-shadow:0 0 8px rgba(239,68,68,0.6); }
+  .tl-dot.green  { background:#22C55E; box-shadow:0 0 8px rgba(34,197,94,0.6); }
+  .tl-dot.blue   { background:#60A5FA; box-shadow:0 0 8px rgba(96,165,250,0.6); }
+  .tl-dot.gold   { background:#EAB308; box-shadow:0 0 8px rgba(234,179,8,0.6); }
+  .tl-content { flex:1; }
+  .tl-date { font-size:13px; color:var(--dim); font-weight:700; margin-bottom:3px; }
+  .tl-text { font-size:15px; font-weight:700; line-height:1.4; }
+  .tl-text .up   { color:#4ADE80; }
+  .tl-text .dn   { color:#FCA5A5; }
+  .tl-text .bl   { color:#93C5FD; }
+  .tl-sub { font-size:13px; color:var(--dim); font-weight:500; margin-top:3px; line-height:1.4; }
+  .note-box {
+    background: rgba(167,139,250,0.08);
+    border: 1px solid rgba(167,139,250,0.30);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 14px; color:#C4B5FD; font-weight:600; line-height:1.55;
+    margin-top: 8px;
+  }
+
+  /* ──── CARD 7 — CTA ──── */
+  .c7 {
+    background:
+      radial-gradient(ellipse at top, rgba(96,165,250,0.18) 0%, transparent 55%),
+      linear-gradient(180deg, #0C1426 0%, #0A0E1A 100%);
+    border: 1px solid rgba(96,165,250,0.32);
+    justify-content: space-between;
+  }
+  .cta-score {
+    background: var(--bg-alt);
+    border: 1px solid var(--border-s);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .cta-score .cs-label { font-size:14px; color:var(--dim); font-weight:600; }
+  .cta-score .cs-val { font-size:36px; font-weight:900; color:#4ADE80; }
+  .cta-score .cs-sub { font-size:13px; color:var(--dim); font-weight:500; margin-top:3px; }
+  .cta-menus { display:flex; flex-direction:column; gap:10px; }
+  .cta-menu-item {
+    display:flex; align-items:center; gap:12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 16px;
+  }
+  .cta-menu-item .cm-icon { font-size:20px; flex-shrink:0; }
+  .cta-menu-item .cm-text { flex:1; }
+  .cta-menu-item .cm-name { font-size:15px; font-weight:700; }
+  .cta-menu-item .cm-desc { font-size:13px; color:var(--dim); font-weight:500; }
+  .cta-menu-item .cm-arrow { color:var(--dim); font-size:16px; }
+  .cta-bottom {
+    text-align: center;
+    padding: 14px;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.28);
+    border-radius: 14px;
+    font-size: 14px; color:var(--dim); font-weight:500; line-height:1.6;
+  }
+  .cta-bottom strong { color:var(--text); }
+
+  .divider {
+    height:1px; background: var(--border); margin: 14px 0;
+  }
+  .section-hdr {
+    font-size:11px; font-weight:700; color:#93C5FD;
+    letter-spacing:0.09em; text-transform:uppercase;
+    margin-bottom:10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>AI Quant Lab — 4월 실전 성적표 + 5월 픽 · Instagram Cards (540×675)</h1>
+  <p style="color:#64748B;font-size:14px;margin-top:6px;">2026.04~05 · Large Cap IT · 5 Picks · 9 cards</p>
+</div>
+
+<div class="grid">
+
+  <!-- ══════════════════════════════════
+       CARD 1 — COVER
+  ══════════════════════════════════ -->
+  <div class="card c1">
+    <div class="c1-top">
+      <div class="c1-tag">🤖 AI Quant Lab · 실전 검증</div>
+      <div class="c1-title">
+        4월 AI 픽<br><span class="g">실제 수익률</span><br>공개합니다
+      </div>
+    </div>
+
+    <div class="c1-mid">
+      <div class="c1-label">포트폴리오 수익률 (2026.04)</div>
+      <div class="c1-big">+38.1%</div>
+      <div class="c1-sub">S&P 500 대비 <strong>+28.2%</strong> 초과수익</div>
+      <div class="c1-bench">
+        <div class="c1-bench-item">
+          <div class="bl">S&P 500</div>
+          <div class="bv">+9.9%</div>
+        </div>
+        <div class="c1-bench-item">
+          <div class="bl">NASDAQ</div>
+          <div class="bv">+14.8%</div>
+        </div>
+        <div class="c1-bench-item">
+          <div class="bl">AI Portfolio</div>
+          <div class="bv" style="color:#4ADE80;">+38.1%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="c1-bottom">
+      백테스트 <strong>2023.01~2026.03</strong> 학습 → <strong>2026.04.01</strong> 매수<br>
+      4월 30일 기준 실제 수익률 집계
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       CARD 2 — 백테스트 설정
+  ══════════════════════════════════ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge blue"><span class="dot"></span>Backtest Setup</span>
+      <span class="counter">02 / 07</span>
+    </div>
+    <h2 class="card-title">어떻게<br><span class="blue">종목을</span> 골랐나?</h2>
+    <div class="setup-grid">
+      <div class="setup-item highlight wide">
+        <div class="si-label">학습 기간 (Training Period)</div>
+        <div class="si-value">2023.01.01 ~ 2026.03.31</div>
+        <div class="si-desc">3년 3개월 · 847 거래일 데이터</div>
+      </div>
+      <div class="setup-item">
+        <div class="si-label">분석 유니버스</div>
+        <div class="si-value">76종목</div>
+        <div class="si-desc">Large Cap<br>IT 섹터</div>
+      </div>
+      <div class="setup-item">
+        <div class="si-label">Rolling Window</div>
+        <div class="si-value">12개월</div>
+        <div class="si-desc">매 리밸런싱마다<br>재학습</div>
+      </div>
+      <div class="setup-item">
+        <div class="si-label">리밸런싱</div>
+        <div class="si-value">매월 1회</div>
+        <div class="si-desc">T+1 익일 시가<br>체결 기준</div>
+      </div>
+      <div class="setup-item">
+        <div class="si-label">선정 종목 수</div>
+        <div class="si-value">5종목</div>
+        <div class="si-desc">역변동성 비중<br>(Risk Parity)</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-size:13px;color:var(--dim);font-weight:500;line-height:1.6;">
+      📌 Random Forest 모델 · 거래비용 0.3% 반영 · Survivorship Bias 보정 적용
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       CARD 3 — 4월 1일 AI 선정 종목
+  ══════════════════════════════════ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge green"><span class="dot"></span>AI Picks</span>
+      <span class="counter">03 / 07</span>
+    </div>
+    <h2 class="card-title">4월 1일<br><span class="hi">AI 선정</span> 5종목</h2>
+    <div class="sub" style="margin-bottom:12px;">2026.03.31 데이터 기준 · AI 스코어 상위 5</div>
+
+    <div class="picks-header">
+      <span></span>
+      <span>종목</span>
+      <span>AI Score</span>
+      <span style="text-align:right;">비중</span>
+      <span></span>
+    </div>
+
+    <div class="picks-table">
+      <!-- SNDK -->
+      <div class="pick-row picked">
+        <div class="pick-rank">1</div>
+        <div class="pick-ticker">SNDK</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:100%"></div></div>
+          <div class="pick-score-val">0.203</div>
+        </div>
+        <div class="pick-weight">19.0%</div>
+        <div class="pick-o">✓</div>
+      </div>
+      <!-- WDC -->
+      <div class="pick-row picked">
+        <div class="pick-rank">2</div>
+        <div class="pick-ticker">WDC</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:93%"></div></div>
+          <div class="pick-score-val">0.189</div>
+        </div>
+        <div class="pick-weight">22.6%</div>
+        <div class="pick-o">✓</div>
+      </div>
+      <!-- LITE -->
+      <div class="pick-row picked">
+        <div class="pick-rank">3</div>
+        <div class="pick-ticker">LITE</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:89%"></div></div>
+          <div class="pick-score-val">0.180</div>
+        </div>
+        <div class="pick-weight">14.5%</div>
+        <div class="pick-o">✓</div>
+      </div>
+      <!-- CIEN -->
+      <div class="pick-row picked">
+        <div class="pick-rank">4</div>
+        <div class="pick-ticker">CIEN</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:86%"></div></div>
+          <div class="pick-score-val">0.175</div>
+        </div>
+        <div class="pick-weight">19.2%</div>
+        <div class="pick-o">✓</div>
+      </div>
+      <!-- TER -->
+      <div class="pick-row picked">
+        <div class="pick-rank">5</div>
+        <div class="pick-ticker">TER</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:84%"></div></div>
+          <div class="pick-score-val">0.171</div>
+        </div>
+        <div class="pick-weight">24.6%</div>
+        <div class="pick-o">✓</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;font-size:13px;color:var(--dim);font-weight:500;">
+      ℹ️ 비중 = 역변동성 가중 (변동성 낮을수록 비중 ↑)
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       CARD 4 — 종목별 수익률
+  ══════════════════════════════════ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge green"><span class="dot"></span>Returns</span>
+      <span class="counter">04 / 07</span>
+    </div>
+    <h2 class="card-title">종목별<br>실제 수익률</h2>
+    <div class="sub" style="margin-bottom:8px;">2026.04.01 시가 → 2026.04.30 종가</div>
+
+    <div class="ret-chart">
+      <!-- SNDK +68.1% -->
+      <div class="ret-row">
+        <div class="ret-ticker" style="color:#4ADE80;">SNDK</div>
+        <div class="ret-bar-wrap">
+          <div class="ret-bar-fill up" style="width:100%;">
+            <span class="ret-entry">$652 → $1,097</span>
+          </div>
+        </div>
+        <div class="ret-val up">+68.1%</div>
+      </div>
+      <!-- WDC +54.9% -->
+      <div class="ret-row">
+        <div class="ret-ticker" style="color:#4ADE80;">WDC</div>
+        <div class="ret-bar-wrap">
+          <div class="ret-bar-fill up" style="width:80.6%;">
+            <span class="ret-entry">$281 → $435</span>
+          </div>
+        </div>
+        <div class="ret-val up">+54.9%</div>
+      </div>
+      <!-- CIEN +31.3% -->
+      <div class="ret-row">
+        <div class="ret-ticker" style="color:#4ADE80;">CIEN</div>
+        <div class="ret-bar-wrap">
+          <div class="ret-bar-fill up" style="width:46.0%;">
+            <span class="ret-entry">$402 → $528</span>
+          </div>
+        </div>
+        <div class="ret-val up">+31.3%</div>
+      </div>
+      <!-- LITE +22.8% -->
+      <div class="ret-row">
+        <div class="ret-ticker" style="color:#4ADE80;">LITE</div>
+        <div class="ret-bar-wrap">
+          <div class="ret-bar-fill up" style="width:33.5%;">
+            <span class="ret-entry">$735 → $902</span>
+          </div>
+        </div>
+        <div class="ret-val up">+22.8%</div>
+      </div>
+      <!-- TER +13.7% -->
+      <div class="ret-row">
+        <div class="ret-ticker" style="color:#4ADE80;">TER</div>
+        <div class="ret-bar-wrap">
+          <div class="ret-bar-fill up" style="width:20.1%;">
+            <span class="ret-entry">$302 → $343</span>
+          </div>
+        </div>
+        <div class="ret-val up">+13.7%</div>
+      </div>
+    </div>
+
+    <div style="
+      background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.28);
+      border-radius:12px;padding:12px 16px;margin-top:14px;
+      display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:14px;color:var(--dim);font-weight:600;">5종목 전체 플러스</span>
+      <span style="font-size:18px;font-weight:800;color:#4ADE80;">전종목 수익 ✓</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       CARD 5 — 포트폴리오 vs 벤치마크
+  ══════════════════════════════════ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge green"><span class="dot"></span>Portfolio</span>
+      <span class="counter">05 / 07</span>
+    </div>
+    <h2 class="card-title">시장을<br><span class="hi">크게 앞섰다</span></h2>
+
+    <div class="bench-compare">
+      <!-- Portfolio -->
+      <div class="bench-row">
+        <div class="bench-label">
+          <div class="bl-name" style="color:#4ADE80;">AI Portfolio</div>
+          <div class="bl-sub">역변동성 5종목</div>
+        </div>
+        <div class="bench-bar-wrap">
+          <div class="bench-bar-fill portfolio" style="width:84.7%;"></div>
+        </div>
+        <div class="bench-pct g">+38.1%</div>
+      </div>
+      <!-- NASDAQ -->
+      <div class="bench-row">
+        <div class="bench-label">
+          <div class="bl-name" style="color:#93C5FD;">NASDAQ</div>
+          <div class="bl-sub">QQQ ETF</div>
+        </div>
+        <div class="bench-bar-wrap">
+          <div class="bench-bar-fill qqq" style="width:32.9%;"></div>
+        </div>
+        <div class="bench-pct b">+14.8%</div>
+      </div>
+      <!-- S&P 500 -->
+      <div class="bench-row">
+        <div class="bench-label">
+          <div class="bl-name" style="color:#FDE68A;">S&P 500</div>
+          <div class="bl-sub">SPY ETF</div>
+        </div>
+        <div class="bench-bar-wrap">
+          <div class="bench-bar-fill spy" style="width:22.0%;"></div>
+        </div>
+        <div class="bench-pct y">+9.9%</div>
+      </div>
+    </div>
+
+    <div class="alpha-box">
+      <div class="al">Alpha (vs S&P 500)</div>
+      <div class="av">+28.2%p</div>
+      <div class="as">NASDAQ 대비 +23.3%p 초과수익</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       CARD 6 — 4월 시장 컨텍스트
+  ══════════════════════════════════ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge gold"><span class="dot"></span>Context</span>
+      <span class="counter">06 / 07</span>
+    </div>
+    <h2 class="card-title">폭풍 같은<br><span class="gold">4월</span>이었다</h2>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot red"></div>
+        <div class="tl-content">
+          <div class="tl-date">4월 2일 (수)</div>
+          <div class="tl-text"><span class="dn">Liberation Day</span> — 상호관세 발표</div>
+          <div class="tl-sub">시장 전반 급락 · 반도체·스토리지 직격</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot green"></div>
+        <div class="tl-content">
+          <div class="tl-date">4월 9일 (수)</div>
+          <div class="tl-text"><span class="up">90일 관세 유예</span> 발표 → 급반등</div>
+          <div class="tl-sub">SNDK $780 → $851 (+9.1%)</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot blue"></div>
+        <div class="tl-content">
+          <div class="tl-date">4월 7일 · 4월 13일</div>
+          <div class="tl-text">삼성 NAND 가격 <span class="up">+70%↑</span> 전망 + <span class="bl">SNDK Nasdaq-100 편입</span></div>
+          <div class="tl-sub">4/10 장마감 후 Nasdaq-100 편입 공식 발표 (4/20 효력)<br>패시브 펀드 강제 매수 · $851 → $952 (+12%)</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot gold"></div>
+        <div class="tl-content">
+          <div class="tl-date">4월 30일 (목)</div>
+          <div class="tl-text">SNDK <span class="up">$1,097</span> · WDC <span class="up">$435</span></div>
+          <div class="tl-sub">월간 포트폴리오 +38.1% 마감</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      ⚠️ 4월은 관세 충격 + 반등이라는 특수한 환경이었습니다.<br>
+      매월 이런 수익률이 보장되지는 않습니다.
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       CARD 7 — 5월 AI 픽
+  ══════════════════════════════════ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge blue"><span class="dot"></span>May 2026 Picks</span>
+      <span class="counter">07 / 09</span>
+    </div>
+    <h2 class="card-title">5월 1일<br><span class="blue">AI 선정</span> 5종목</h2>
+    <div class="sub" style="margin-bottom:10px;">2026.04.30 데이터 기준 · AI 스코어 상위 5</div>
+
+    <!-- 변경 배너 -->
+    <div style="
+      display:flex; align-items:center; gap:10px;
+      background:rgba(234,179,8,0.10); border:1px solid rgba(234,179,8,0.32);
+      border-radius:12px; padding:10px 14px; margin-bottom:12px;">
+      <span style="font-size:18px;">🔄</span>
+      <div style="flex:1; font-size:14px; font-weight:700; color:#FDE68A;">
+        종목 교체 — <span style="color:#FCA5A5; text-decoration:line-through;">TER</span>
+        <span style="color:var(--dim);"> → </span>
+        <span style="color:#4ADE80;">MU (Micron) 신규 진입</span>
+      </div>
+    </div>
+
+    <div class="picks-header">
+      <span></span>
+      <span>종목</span>
+      <span>AI Score</span>
+      <span style="text-align:right;">비중</span>
+      <span></span>
+    </div>
+
+    <div class="picks-table">
+      <div class="pick-row picked">
+        <div class="pick-rank">1</div>
+        <div class="pick-ticker">SNDK</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:100%"></div></div>
+          <div class="pick-score-val">0.203</div>
+        </div>
+        <div class="pick-weight">19.0%</div>
+        <div class="pick-o">✓</div>
+      </div>
+      <div class="pick-row picked">
+        <div class="pick-rank">2</div>
+        <div class="pick-ticker">WDC</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:93%"></div></div>
+          <div class="pick-score-val">0.189</div>
+        </div>
+        <div class="pick-weight">22.6%</div>
+        <div class="pick-o">✓</div>
+      </div>
+      <div class="pick-row picked">
+        <div class="pick-rank">3</div>
+        <div class="pick-ticker">LITE</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:89%"></div></div>
+          <div class="pick-score-val">0.180</div>
+        </div>
+        <div class="pick-weight">14.6%</div>
+        <div class="pick-o">✓</div>
+      </div>
+      <div class="pick-row picked">
+        <div class="pick-rank">4</div>
+        <div class="pick-ticker">CIEN</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:86%"></div></div>
+          <div class="pick-score-val">0.175</div>
+        </div>
+        <div class="pick-weight">19.3%</div>
+        <div class="pick-o">✓</div>
+      </div>
+      <!-- MU — NEW -->
+      <div class="pick-row picked" style="border-color:rgba(234,179,8,0.45); background:rgba(234,179,8,0.07);">
+        <div class="pick-rank" style="color:#FDE68A;">5</div>
+        <div class="pick-ticker" style="color:#FDE68A;">MU</div>
+        <div class="pick-score-wrap">
+          <div class="pick-score-bar"><div class="pick-score-fill" style="width:85.7%"></div></div>
+          <div class="pick-score-val">0.174</div>
+        </div>
+        <div class="pick-weight" style="color:#FDE68A;">24.6%</div>
+        <div class="pick-o" style="background:#EAB308; width:36px; font-size:10px; letter-spacing:0.04em;">NEW</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       CARD 8 — 왜 MU인가?
+  ══════════════════════════════════ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge gold"><span class="dot"></span>New Entry</span>
+      <span class="counter">08 / 09</span>
+    </div>
+    <h2 class="card-title">왜 <span class="gold">MU</span>가<br>선택됐나?</h2>
+    <div class="sub" style="margin-bottom:14px;">Micron Technology · AI Score 0.174 · TER 대비 비교</div>
+
+    <!-- MU vs TER 비교표 -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; flex:1;">
+
+      <div style="background:rgba(234,179,8,0.08); border:1px solid rgba(234,179,8,0.35); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:13px; font-weight:800; color:#FDE68A; letter-spacing:0.06em;">✅ MU (신규)</div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">AI Score</div>
+          <div style="font-size:22px; font-weight:800; color:#4ADE80;">0.174</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">P/E 비율</div>
+          <div style="font-size:22px; font-weight:800; color:#4ADE80;">15.1<span style="font-size:13px; font-weight:600; color:var(--dim);"> 저평가</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">ROE</div>
+          <div style="font-size:22px; font-weight:800; color:#4ADE80;">33.3%</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">RSI(14)</div>
+          <div style="font-size:22px; font-weight:800; color:#93C5FD;">31.7 <span style="font-size:13px; color:var(--dim); font-weight:600;">과매도</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">EV/EBITDA</div>
+          <div style="font-size:22px; font-weight:800; color:#4ADE80;">9.7</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(100,116,139,0.08); border:1px solid rgba(100,116,139,0.28); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:10px; opacity:0.75;">
+        <div style="font-size:13px; font-weight:800; color:#94A3B8; letter-spacing:0.06em;">❌ TER (제외)</div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">AI Score</div>
+          <div style="font-size:22px; font-weight:800; color:#94A3B8;">0.171</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">P/E 비율</div>
+          <div style="font-size:22px; font-weight:800; color:#FCA5A5;">77.9<span style="font-size:13px; font-weight:600; color:var(--dim);"> 고평가</span></div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">ROE</div>
+          <div style="font-size:22px; font-weight:800; color:#94A3B8;">19.8%</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">RSI(14)</div>
+          <div style="font-size:22px; font-weight:800; color:#94A3B8;">41.9</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:4px;">EV/EBITDA</div>
+          <div style="font-size:22px; font-weight:800; color:#FCA5A5;">54.7</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="
+      background:rgba(96,165,250,0.08); border:1px solid rgba(96,165,250,0.28);
+      border-radius:12px; padding:12px 16px; margin-top:12px;
+      font-size:13px; color:#93C5FD; font-weight:600; line-height:1.6;">
+      💡 MU는 AI 메모리 수요 수혜주 · RSI 과매도 구간 → 평균 회귀 기대<br>
+      밸류에이션은 TER 대비 압도적으로 저렴
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       CARD 9 — CTA
+  ══════════════════════════════════ -->
+  <div class="card c7">
+    <div class="card-head">
+      <span class="badge blue"><span class="dot"></span>AI Quant Lab</span>
+      <span class="counter">09 / 09</span>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;gap:14px;">
+      <h2 class="card-title" style="font-size:26px;">직접<br><span class="blue">AI 추천</span> 받아보세요</h2>
+
+      <div class="cta-score">
+        <div>
+          <div class="cs-label">이번 달 포트폴리오</div>
+          <div class="cs-val">+38.1%</div>
+          <div class="cs-sub">4월 실제 수익률</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:13px;color:var(--dim);font-weight:600;">vs S&P 500</div>
+          <div style="font-size:28px;font-weight:900;color:#4ADE80;">+28.2%p</div>
+          <div style="font-size:13px;color:var(--dim);font-weight:600;">초과수익</div>
+        </div>
+      </div>
+
+      <div class="cta-menus">
+        <div class="cta-menu-item">
+          <div class="cm-icon">🤖</div>
+          <div class="cm-text">
+            <div class="cm-name">AI Quant Lab</div>
+            <div class="cm-desc">나만의 백테스트 · 섹터/기간 자유 설정</div>
+          </div>
+          <div class="cm-arrow">›</div>
+        </div>
+        <div class="cta-menu-item">
+          <div class="cm-icon">📊</div>
+          <div class="cm-text">
+            <div class="cm-name">Stock Detail</div>
+            <div class="cm-desc">SNDK · WDC · CIEN 상세 분석</div>
+          </div>
+          <div class="cm-arrow">›</div>
+        </div>
+        <div class="cta-menu-item">
+          <div class="cm-icon">📈</div>
+          <div class="cm-text">
+            <div class="cm-name">Compare</div>
+            <div class="cm-desc">5종목 성과 나란히 비교</div>
+          </div>
+          <div class="cm-arrow">›</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bottom">
+      매월 실제 결과를 공개합니다<br>
+      <strong>좋은 결과든 나쁜 결과든 — 있는 그대로</strong>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

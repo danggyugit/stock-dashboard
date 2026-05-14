@@ -1,0 +1,2026 @@
+[2026-04-27 13:00:21.32] === Starting fundamentals refresh === 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[2026-04-27 13:00:26.42] Running fetch_cache.py --fundamentals-only --merge 
+2026-04-27 13:00:34,773 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-27 13:00:35,497 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-27 13:00:36,112 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-27 13:00:36,712 [INFO]   Small Cap: 603 tickers
+2026-04-27 13:00:36,716 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-04-27 13:00:36,717 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-04-27 13:00:36,717 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-04-27 13:00:36,718 [INFO] Using curl_cffi Chrome session.
+2026-04-27 13:01:10,359 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-04-27 13:01:40,616 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-04-27 13:02:11,128 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-04-27 13:02:40,812 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-04-27 13:03:11,518 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-04-27 13:03:41,817 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-04-27 13:04:12,450 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-04-27 13:04:43,079 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-04-27 13:05:13,770 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-04-27 13:05:44,129 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-04-27 13:06:14,810 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-04-27 13:06:45,396 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-04-27 13:07:15,806 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-04-27 13:07:46,365 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-04-27 13:08:16,639 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-04-27 13:08:46,644 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-04-27 13:09:16,679 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-04-27 13:09:46,829 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-04-27 13:10:17,234 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-04-27 13:10:47,210 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-04-27 13:11:17,330 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-04-27 13:11:47,496 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-04-27 13:12:17,578 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-04-27 13:12:48,864 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-04-27 13:13:20,896 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-04-27 13:13:53,161 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-04-27 13:14:25,306 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-04-27 13:14:57,267 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-04-27 13:15:29,589 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-04-27 13:16:02,879 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-04-27 13:16:35,037 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-04-27 13:17:07,143 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-04-27 13:17:39,672 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-04-27 13:18:12,450 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-04-27 13:18:45,800 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-04-27 13:19:19,072 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-04-27 13:19:51,678 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-04-27 13:20:23,801 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-04-27 13:20:56,746 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-04-27 13:21:29,289 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-04-27 13:22:02,337 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-04-27 13:22:33,663 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-04-27 13:23:05,612 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-04-27 13:23:37,539 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-04-27 13:24:09,735 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-04-27 13:24:40,801 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-04-27 13:25:13,036 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-04-27 13:25:43,842 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-04-27 13:26:15,493 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-04-27 13:26:46,411 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-04-27 13:27:16,533 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-04-27 13:27:47,233 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-04-27 13:28:19,479 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-04-27 13:28:53,082 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-04-27 13:29:24,962 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-04-27 13:29:57,195 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-04-27 13:30:31,247 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-04-27 13:31:05,279 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-04-27 13:31:42,763 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-04-27 13:32:18,500 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-04-27 13:32:26,573 [INFO] Pass 1 done: 1506/1506 tickers
+2026-04-27 13:32:26,574 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-04-27 13:32:26,644 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1508 total (1506 updated, 0 added)
+2026-04-27 13:32:26,670 [INFO] Wrote fundamentals.json (507.7 KB)
+2026-04-27 13:32:26,723 [INFO] Wrote meta.json (0.1 KB)
+2026-04-27 13:32:26,723 [INFO] Cache update complete in 1912.0s
+[2026-04-27 13:32:27.39] git add fundamentals.json + meta.json 
+[2026-04-27 13:32:27.53] Committing changes 
+[main 329f8fa] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   f5cd619..329f8fa  main -> main
+[2026-04-27 13:32:27.53] === Pushed successfully === 
+[2026-04-28 13:00:04.48] === Starting fundamentals refresh === 
+error: Pulling is not possible because you have unmerged files.
+hint: Fix them up in the work tree, and then use 'git add/rm <file>'
+hint: as appropriate to mark resolution and make a commit.
+fatal: Exiting because of an unresolved conflict.
+[2026-04-28 13:00:11.74] Running fetch_cache.py --fundamentals-only --merge 
+2026-04-28 13:00:32,827 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-28 13:00:34,139 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-28 13:00:34,653 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-28 13:00:35,238 [INFO]   Small Cap: 603 tickers
+2026-04-28 13:00:35,244 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-04-28 13:00:35,245 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-04-28 13:00:35,245 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-04-28 13:00:35,245 [INFO] Using curl_cffi Chrome session.
+2026-04-28 13:01:10,066 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-04-28 13:01:40,470 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-04-28 13:02:10,565 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-04-28 13:02:41,056 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-04-28 13:03:11,179 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-04-28 13:03:41,825 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-04-28 13:04:12,142 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-04-28 13:04:42,603 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-04-28 13:05:13,114 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-04-28 13:05:43,029 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-04-28 13:06:13,335 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-04-28 13:06:43,711 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-04-28 13:07:13,925 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-04-28 13:07:44,376 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-04-28 13:08:14,836 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-04-28 13:08:45,518 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-04-28 13:09:17,476 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-04-28 13:09:48,658 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-04-28 13:10:19,220 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-04-28 13:10:49,583 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-04-28 13:11:20,168 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-04-28 13:11:51,204 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-04-28 13:12:21,411 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-04-28 13:12:52,086 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-04-28 13:13:22,441 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-04-28 13:13:52,776 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-04-28 13:14:23,373 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-04-28 13:14:54,100 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-04-28 13:15:24,537 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-04-28 13:15:54,625 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-04-28 13:16:24,860 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-04-28 13:16:55,169 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-04-28 13:17:25,858 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-04-28 13:17:56,313 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-04-28 13:18:28,946 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-04-28 13:18:59,683 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-04-28 13:19:29,482 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-04-28 13:19:59,544 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-04-28 13:20:33,760 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-04-28 13:21:05,196 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-04-28 13:21:36,208 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-04-28 13:22:06,857 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-04-28 13:22:37,335 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-04-28 13:23:08,214 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-04-28 13:23:38,692 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-04-28 13:24:08,902 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-04-28 13:24:39,139 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-04-28 13:25:09,273 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-04-28 13:25:39,543 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-04-28 13:26:09,465 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-04-28 13:26:40,257 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-04-28 13:27:11,694 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-04-28 13:27:41,728 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-04-28 13:28:12,003 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-04-28 13:28:42,575 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-04-28 13:29:12,886 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-04-28 13:29:47,717 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-04-28 13:30:17,914 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-04-28 13:30:47,916 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-04-28 13:31:18,446 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-04-28 13:31:25,725 [INFO] Pass 1 done: 1506/1506 tickers
+2026-04-28 13:31:25,725 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-04-28 13:31:25,763 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1508 total (1506 updated, 0 added)
+2026-04-28 13:31:25,784 [INFO] Wrote fundamentals.json (507.6 KB)
+2026-04-28 13:31:25,786 [INFO] Wrote meta.json (0.1 KB)
+2026-04-28 13:31:25,787 [INFO] Cache update complete in 1853.0s
+[2026-04-28 13:31:26.45] git add fundamentals.json + meta.json 
+[2026-04-28 13:31:26.76] Committing changes 
+error: Committing is not possible because you have unmerged files.
+hint: Fix them up in the work tree, and then use 'git add/rm <file>'
+hint: as appropriate to mark resolution and make a commit.
+fatal: Exiting because of an unresolved conflict.
+U	streamlit_app/data/cache/backtests/_metadata.json
+U	streamlit_app/data/cache/backtests/it_equal.json
+U	streamlit_app/data/cache/backtests/it_invvol.json
+U	streamlit_app/data/cache/backtests/it_invvol_regime.json
+Everything up-to-date
+[2026-04-28 13:31:26.76] === Pushed successfully === 
+[2026-04-29 13:00:02.02] === Starting fundamentals refresh === 
+From https://github.com/danggyugit/stock-dashboard
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[2026-04-29 13:00:08.25] Running fetch_cache.py --fundamentals-only --merge 
+2026-04-29 13:00:14,136 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-29 13:00:15,067 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-29 13:00:15,673 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-29 13:00:16,175 [INFO]   Small Cap: 603 tickers
+2026-04-29 13:00:16,180 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-04-29 13:00:16,181 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-04-29 13:00:16,181 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-04-29 13:00:16,181 [INFO] Using curl_cffi Chrome session.
+2026-04-29 13:00:50,930 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-04-29 13:01:24,562 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-04-29 13:01:56,714 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-04-29 13:02:30,004 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-04-29 13:03:03,509 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-04-29 13:03:36,434 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-04-29 13:04:09,152 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-04-29 13:04:42,311 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-04-29 13:05:14,262 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-04-29 13:05:46,610 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-04-29 13:06:18,399 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-04-29 13:06:50,617 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-04-29 13:07:22,642 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-04-29 13:07:54,528 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-04-29 13:08:27,047 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-04-29 13:08:59,160 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-04-29 13:09:30,966 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-04-29 13:10:02,441 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-04-29 13:10:34,070 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-04-29 13:11:05,639 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-04-29 13:11:37,717 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-04-29 13:12:09,998 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-04-29 13:12:41,735 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-04-29 13:13:13,386 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-04-29 13:13:45,282 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-04-29 13:14:17,189 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-04-29 13:14:48,287 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-04-29 13:15:20,698 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-04-29 13:15:52,047 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-04-29 13:16:23,804 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-04-29 13:16:56,136 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-04-29 13:17:28,809 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-04-29 13:18:01,952 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-04-29 13:18:35,104 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-04-29 13:19:07,786 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-04-29 13:19:41,405 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-04-29 13:20:14,585 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-04-29 13:20:46,867 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-04-29 13:21:19,723 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-04-29 13:21:53,028 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-04-29 13:22:26,047 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-04-29 13:22:59,090 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-04-29 13:23:31,636 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-04-29 13:24:05,168 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-04-29 13:24:37,927 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-04-29 13:25:09,945 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-04-29 13:25:44,442 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-04-29 13:26:30,187 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-04-29 13:27:03,401 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-04-29 13:27:35,465 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-04-29 13:28:08,308 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-04-29 13:28:41,413 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-04-29 13:29:14,518 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-04-29 13:29:50,941 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-04-29 13:30:23,344 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-04-29 13:30:55,110 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-04-29 13:31:27,363 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-04-29 13:32:00,567 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-04-29 13:32:33,914 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-04-29 13:33:07,088 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-04-29 13:33:15,231 [INFO] Pass 1 done: 1506/1506 tickers
+2026-04-29 13:33:15,236 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-04-29 13:33:15,325 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1508 total (1506 updated, 0 added)
+2026-04-29 13:33:15,361 [INFO] Wrote fundamentals.json (507.7 KB)
+2026-04-29 13:33:15,384 [INFO] Wrote meta.json (0.1 KB)
+2026-04-29 13:33:15,384 [INFO] Cache update complete in 1981.2s
+[2026-04-29 13:33:16.45] git add fundamentals.json + meta.json 
+[2026-04-29 13:33:16.80] Committing changes 
+[main 741ff4a] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   995026a..741ff4a  main -> main
+[2026-04-29 13:33:16.81] === Pushed successfully === 
+[2026-04-30 13:00:08.39] === Starting fundamentals refresh === 
+From https://github.com/danggyugit/stock-dashboard
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[2026-04-30 13:00:23.71] Running fetch_cache.py --fundamentals-only --merge 
+2026-04-30 13:00:36,081 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-30 13:00:37,213 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-30 13:00:37,744 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-04-30 13:00:38,426 [INFO]   Small Cap: 603 tickers
+2026-04-30 13:00:38,440 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-04-30 13:00:38,441 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-04-30 13:00:38,441 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-04-30 13:00:38,442 [INFO] Using curl_cffi Chrome session.
+2026-04-30 13:01:14,445 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-04-30 13:01:45,674 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-04-30 13:02:17,606 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-04-30 13:02:48,974 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-04-30 13:03:20,159 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-04-30 13:03:51,828 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-04-30 13:04:23,107 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-04-30 13:04:55,256 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-04-30 13:05:26,056 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-04-30 13:05:57,397 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-04-30 13:06:28,091 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-04-30 13:06:58,996 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-04-30 13:07:29,477 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-04-30 13:08:00,953 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-04-30 13:08:33,402 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-04-30 13:09:05,508 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-04-30 13:09:38,544 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-04-30 13:10:11,723 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-04-30 13:10:45,062 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-04-30 13:11:19,039 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-04-30 13:11:53,573 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-04-30 13:12:28,886 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-04-30 13:13:02,743 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-04-30 13:13:36,866 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-04-30 13:14:09,269 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-04-30 13:14:42,117 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-04-30 13:15:14,936 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-04-30 13:15:48,512 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-04-30 13:16:21,884 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-04-30 13:16:56,961 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-04-30 13:17:29,983 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-04-30 13:18:03,569 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-04-30 13:18:35,912 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-04-30 13:19:09,471 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-04-30 13:19:42,145 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-04-30 13:20:13,911 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-04-30 13:20:47,162 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-04-30 13:21:20,849 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-04-30 13:21:53,651 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-04-30 13:22:26,808 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-04-30 13:23:00,735 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-04-30 13:23:34,002 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-04-30 13:24:08,878 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-04-30 13:24:43,838 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-04-30 13:25:18,480 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-04-30 13:25:52,701 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-04-30 13:26:28,506 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-04-30 13:27:02,383 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-04-30 13:27:36,462 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-04-30 13:28:10,800 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-04-30 13:28:45,560 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-04-30 13:29:20,186 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-04-30 13:29:54,689 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-04-30 13:30:30,131 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-04-30 13:31:05,223 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-04-30 13:31:38,822 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-04-30 13:32:13,321 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-04-30 13:32:48,554 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-04-30 13:33:23,041 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-04-30 13:33:55,347 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-04-30 13:34:03,054 [INFO] Pass 1 done: 1506/1506 tickers
+2026-04-30 13:34:03,054 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-04-30 13:34:03,067 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1508 total (1506 updated, 0 added)
+2026-04-30 13:34:03,079 [INFO] Wrote fundamentals.json (507.7 KB)
+2026-04-30 13:34:03,080 [INFO] Wrote meta.json (0.1 KB)
+2026-04-30 13:34:03,080 [INFO] Cache update complete in 2007.0s
+[2026-04-30 13:34:03.36] git add fundamentals.json + meta.json 
+[2026-04-30 13:34:03.92] Committing changes 
+[main 7cd24ba] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   cb0601e..7cd24ba  main -> main
+[2026-04-30 13:34:03.92] === Pushed successfully === 
+[2026-05-01 13:00:19.81] === Starting fundamentals refresh === 
+From https://github.com/danggyugit/stock-dashboard
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[2026-05-01 13:00:32.07] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-01 13:00:38,523 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-01 13:00:39,326 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-01 13:00:39,837 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-01 13:00:40,442 [INFO]   Small Cap: 603 tickers
+2026-05-01 13:00:40,449 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-01 13:00:40,450 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-01 13:00:40,450 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-01 13:00:40,450 [INFO] Using curl_cffi Chrome session.
+2026-05-01 13:01:14,213 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-01 13:01:44,203 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-01 13:02:14,666 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-01 13:02:45,676 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-01 13:03:16,492 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-01 13:03:47,055 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-01 13:04:17,778 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-01 13:04:48,503 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-01 13:05:19,454 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-01 13:05:49,412 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-01 13:06:20,085 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-01 13:06:50,852 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-01 13:07:22,226 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-01 13:07:52,689 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-01 13:08:22,823 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-01 13:08:52,843 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-01 13:09:22,808 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-01 13:09:53,165 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-01 13:10:23,732 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-01 13:10:54,131 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-01 13:11:24,237 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-01 13:11:54,375 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-01 13:12:25,386 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-01 13:12:55,443 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-01 13:13:25,655 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-01 13:13:55,763 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-01 13:14:26,709 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-01 13:14:57,373 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-01 13:15:28,724 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-01 13:15:59,723 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-01 13:16:29,807 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-01 13:17:00,855 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-01 13:17:32,094 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-01 13:18:03,490 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-01 13:18:34,475 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-01 13:19:06,259 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-01 13:19:36,985 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-01 13:20:08,492 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-01 13:20:39,683 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-01 13:21:09,960 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-01 13:21:40,548 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-01 13:22:11,035 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-01 13:22:41,538 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-01 13:23:11,949 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-01 13:23:42,280 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-01 13:24:13,217 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-01 13:24:42,997 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-01 13:25:13,758 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-01 13:25:44,351 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-01 13:26:15,205 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-01 13:26:45,320 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-01 13:27:15,999 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-01 13:27:46,743 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-01 13:28:16,284 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-01 13:28:46,433 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-01 13:29:17,062 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-01 13:29:48,187 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-01 13:30:18,304 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-01 13:30:48,226 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-01 13:31:17,791 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-01 13:31:25,073 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-01 13:31:25,074 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-01 13:31:25,119 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1508 total (1506 updated, 0 added)
+2026-05-01 13:31:25,145 [INFO] Wrote fundamentals.json (507.6 KB)
+2026-05-01 13:31:25,152 [INFO] Wrote meta.json (0.1 KB)
+2026-05-01 13:31:25,152 [INFO] Cache update complete in 1846.6s
+[2026-05-01 13:31:25.56] git add fundamentals.json + meta.json 
+[2026-05-01 13:31:25.84] Committing changes 
+[main f4a38ce] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   ef0f7e0..f4a38ce  main -> main
+[2026-05-01 13:31:25.84] === Pushed successfully === 
+[2026-05-02 13:00:01.92] === Starting fundamentals refresh === 
+From https://github.com/danggyugit/stock-dashboard
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[2026-05-02 13:00:07.58] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-02 13:00:11,985 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-02 13:00:12,549 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-02 13:00:13,038 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-02 13:00:13,602 [INFO]   Small Cap: 603 tickers
+2026-05-02 13:00:13,653 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-02 13:00:13,653 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-02 13:00:13,653 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-02 13:00:13,654 [INFO] Using curl_cffi Chrome session.
+2026-05-02 13:00:46,403 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-02 13:01:16,063 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-02 13:01:45,906 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-02 13:02:15,917 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-02 13:02:45,786 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-02 13:03:15,515 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-02 13:03:46,148 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-02 13:04:16,331 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-02 13:04:46,624 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-02 13:05:16,648 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-02 13:05:46,284 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-02 13:06:16,161 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-02 13:06:45,903 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-02 13:07:15,687 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-02 13:07:45,814 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-02 13:08:15,387 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-02 13:08:45,190 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-02 13:09:14,729 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-02 13:09:44,701 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-02 13:10:14,509 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-02 13:10:44,421 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-02 13:11:14,572 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-02 13:11:44,593 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-02 13:12:14,582 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-02 13:12:45,016 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-02 13:13:15,016 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-02 13:13:44,906 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-02 13:14:14,741 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-02 13:14:44,907 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-02 13:15:14,917 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-02 13:15:44,653 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-02 13:16:14,933 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-02 13:16:44,944 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-02 13:17:15,111 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-02 13:17:44,914 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-02 13:18:14,743 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-02 13:18:44,407 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-02 13:19:14,688 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-02 13:19:44,591 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-02 13:20:14,364 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-02 13:20:44,375 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-02 13:21:14,373 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-02 13:21:44,250 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-02 13:22:13,911 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-02 13:22:43,734 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-02 13:23:13,389 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-02 13:23:43,223 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-02 13:24:13,137 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-02 13:24:42,915 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-02 13:25:12,845 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-02 13:25:42,535 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-02 13:26:12,266 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-02 13:26:42,297 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-02 13:27:12,246 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-02 13:27:42,142 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-02 13:28:12,015 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-02 13:28:41,686 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-02 13:29:12,016 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-02 13:29:41,600 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-02 13:30:11,763 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-02 13:30:19,293 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-02 13:30:19,293 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-02 13:30:19,385 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1508 total (1506 updated, 0 added)
+2026-05-02 13:30:19,457 [INFO] Wrote fundamentals.json (507.6 KB)
+2026-05-02 13:30:19,484 [INFO] Wrote meta.json (0.1 KB)
+2026-05-02 13:30:19,484 [INFO] Cache update complete in 1807.5s
+[2026-05-02 13:30:20.22] git add fundamentals.json + meta.json 
+[2026-05-02 13:30:20.54] Committing changes 
+[main 9c7e98a] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   cc29724..9c7e98a  main -> main
+[2026-05-02 13:30:20.54] === Pushed successfully === 
+[2026-05-03 13:00:02.00] === Starting fundamentals refresh === 
+From https://github.com/danggyugit/stock-dashboard
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[2026-05-03 13:00:04.66] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-03 13:00:07,813 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-03 13:00:08,374 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-03 13:00:08,855 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-03 13:00:09,339 [INFO]   Small Cap: 603 tickers
+2026-05-03 13:00:09,341 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-03 13:00:09,342 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-03 13:00:09,342 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-03 13:00:09,342 [INFO] Using curl_cffi Chrome session.
+2026-05-03 13:00:41,628 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-03 13:01:11,659 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-03 13:01:41,217 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-03 13:02:11,241 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-03 13:02:40,760 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-03 13:03:10,476 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-03 13:03:40,564 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-03 13:04:12,165 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-03 13:04:42,597 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-03 13:05:12,459 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-03 13:05:42,639 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-03 13:06:12,577 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-03 13:06:42,555 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-03 13:07:12,338 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-03 13:07:42,048 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-03 13:08:11,833 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-03 13:08:41,569 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-03 13:09:11,314 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-03 13:09:40,994 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-03 13:10:10,757 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-03 13:10:40,391 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-03 13:11:10,476 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-03 13:11:40,293 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-03 13:12:09,767 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-03 13:12:39,608 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-03 13:13:09,758 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-03 13:13:39,760 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-03 13:14:09,571 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-03 13:14:39,431 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-03 13:15:09,390 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-03 13:15:38,970 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-03 13:16:08,564 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-03 13:16:38,334 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-03 13:17:08,331 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-03 13:17:38,401 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-03 13:18:08,079 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-03 13:18:38,277 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-03 13:19:07,889 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-03 13:19:37,585 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-03 13:20:07,042 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-03 13:20:36,841 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-03 13:21:06,569 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-03 13:21:36,163 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-03 13:22:05,904 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-03 13:22:36,028 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-03 13:23:05,731 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-03 13:23:35,417 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-03 13:24:05,408 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-03 13:24:35,228 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-03 13:25:05,221 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-03 13:25:34,943 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-03 13:26:04,442 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-03 13:26:34,200 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-03 13:27:03,761 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-03 13:27:33,345 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-03 13:28:02,877 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-03 13:28:32,527 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-03 13:29:01,966 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-03 13:29:31,475 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-03 13:30:01,288 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-03 13:30:08,419 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-03 13:30:08,420 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-03 13:30:08,459 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1508 total (1506 updated, 0 added)
+2026-05-03 13:30:08,485 [INFO] Wrote fundamentals.json (507.7 KB)
+2026-05-03 13:30:08,503 [INFO] Wrote meta.json (0.1 KB)
+2026-05-03 13:30:08,503 [INFO] Cache update complete in 1800.7s
+[2026-05-03 13:30:09.27] git add fundamentals.json + meta.json 
+[2026-05-03 13:30:09.52] Committing changes 
+[main 3381c21] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   eac9759..3381c21  main -> main
+[2026-05-03 13:30:09.52] === Pushed successfully === 
+[2026-05-04 13:00:12.93] === Starting fundamentals refresh === 
+From https://github.com/danggyugit/stock-dashboard
+ * branch            main       -> FETCH_HEAD
+error: invalid path 'streamlit_app/data/cache/valuation/CON.json'
+error: could not detach HEAD
+[2026-05-04 13:00:39.46] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-04 13:00:46,794 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-04 13:00:47,881 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-04 13:00:48,487 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-04 13:00:49,081 [INFO]   Small Cap: 603 tickers
+2026-05-04 13:00:49,097 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-04 13:00:49,098 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-04 13:00:49,099 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-04 13:00:49,099 [INFO] Using curl_cffi Chrome session.
+2026-05-04 13:01:24,979 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-04 13:01:56,801 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-04 13:02:30,340 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-04 13:03:03,146 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-04 13:03:36,647 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-04 13:04:10,141 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-04 13:04:43,503 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-04 13:05:15,613 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-04 13:05:48,786 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-04 13:06:21,470 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-04 13:06:54,048 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-04 13:07:26,757 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-04 13:07:59,035 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-04 13:08:33,631 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-04 13:09:05,253 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-04 13:09:36,343 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-04 13:10:09,407 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-04 13:10:40,915 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-04 13:11:13,660 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-04 13:11:45,877 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-04 13:12:19,373 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-04 13:12:53,269 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-04 13:13:26,644 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-04 13:14:00,230 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-04 13:14:34,198 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-04 13:15:06,072 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-04 13:15:38,846 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-04 13:16:12,306 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-04 13:16:46,610 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-04 13:17:20,863 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-04 13:17:55,717 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-04 13:18:30,466 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-04 13:19:04,898 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-04 13:19:39,404 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-04 13:20:13,985 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-04 13:20:48,699 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-04 13:21:22,765 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-04 13:21:54,571 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-04 13:22:27,119 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-04 13:22:59,385 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-04 13:23:31,897 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-04 13:24:04,372 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-04 13:24:36,125 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-04 13:25:07,938 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-04 13:25:39,407 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-04 13:26:10,791 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-04 13:26:41,345 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-04 13:27:12,464 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-04 13:27:43,422 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-04 13:28:14,338 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-04 13:28:44,267 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-04 13:29:15,187 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-04 13:29:45,535 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-04 13:30:15,770 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-04 13:30:46,651 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-04 13:31:17,134 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-04 13:31:47,418 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-04 13:32:17,607 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-04 13:32:48,865 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-04 13:33:19,909 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-04 13:33:27,339 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-04 13:33:27,339 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-04 13:33:27,353 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1508 total (1506 updated, 0 added)
+2026-05-04 13:33:27,370 [INFO] Wrote fundamentals.json (507.7 KB)
+2026-05-04 13:33:27,371 [INFO] Wrote meta.json (0.1 KB)
+2026-05-04 13:33:27,371 [INFO] Cache update complete in 1960.6s
+[2026-05-04 13:33:27.59] git add fundamentals.json + meta.json 
+[2026-05-04 13:33:27.75] Committing changes 
+[main 76299ed] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+ ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/danggyugit/stock-dashboard.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[2026-05-04 13:33:27.75] Initial push failed ??pull rebase + retry 
+From https://github.com/danggyugit/stock-dashboard
+ * branch            main       -> FETCH_HEAD
+error: invalid path 'streamlit_app/data/cache/valuation/CON.json'
+error: could not detach HEAD
+To https://github.com/danggyugit/stock-dashboard.git
+ ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/danggyugit/stock-dashboard.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[2026-05-04 13:33:27.75] ERROR: git push failed after retry 
+[2026-05-05 13:00:02.07] === Starting fundamentals refresh === 
+From https://github.com/danggyugit/stock-dashboard
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+[2026-05-05 13:00:05.05] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-05 13:00:10,072 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-05 13:00:10,761 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-05 13:00:11,344 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-05 13:00:11,908 [INFO]   Small Cap: 603 tickers
+2026-05-05 13:00:11,940 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-05 13:00:11,941 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-05 13:00:11,941 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-05 13:00:11,941 [INFO] Using curl_cffi Chrome session.
+2026-05-05 13:00:45,007 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-05 13:01:15,560 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-05 13:01:45,773 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-05 13:02:15,719 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-05 13:02:45,958 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-05 13:03:16,792 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-05 13:03:46,773 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-05 13:04:17,009 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-05 13:04:47,839 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-05 13:05:18,115 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-05 13:05:48,263 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-05 13:06:24,676 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-05 13:06:55,167 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-05 13:07:25,560 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-05 13:07:55,813 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-05 13:08:26,572 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-05 13:08:56,812 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-05 13:09:27,073 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-05 13:09:56,906 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-05 13:10:27,021 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-05 13:10:57,239 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-05 13:11:27,706 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-05 13:11:58,406 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-05 13:12:28,253 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-05 13:12:58,996 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-05 13:13:28,981 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-05 13:13:59,961 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-05 13:14:31,532 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-05 13:15:02,094 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-05 13:15:33,620 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-05 13:16:04,593 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-05 13:16:35,658 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-05 13:17:05,915 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-05 13:17:36,214 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-05 13:18:07,011 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-05 13:18:37,974 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-05 13:19:08,287 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-05 13:19:38,540 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-05 13:20:08,481 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-05 13:20:38,718 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-05 13:21:08,506 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-05 13:21:38,693 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-05 13:22:08,796 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-05 13:22:38,717 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-05 13:23:08,508 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-05 13:23:39,202 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-05 13:24:09,324 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-05 13:24:39,464 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-05 13:25:09,855 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-05 13:25:40,252 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-05 13:26:10,425 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-05 13:26:40,247 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-05 13:27:10,944 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-05 13:27:40,905 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-05 13:28:11,113 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-05 13:28:41,223 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-05 13:29:11,352 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-05 13:29:41,994 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-05 13:30:12,276 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-05 13:30:43,037 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-05 13:30:50,177 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-05 13:30:50,177 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-05 13:30:50,603 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1508 total (1506 updated, 0 added)
+2026-05-05 13:30:50,629 [INFO] Wrote fundamentals.json (507.6 KB)
+2026-05-05 13:30:50,755 [INFO] Wrote meta.json (0.1 KB)
+2026-05-05 13:30:50,755 [INFO] Cache update complete in 1840.7s
+[2026-05-05 13:31:00.47] git add fundamentals.json + meta.json 
+[2026-05-05 13:31:18.78] Committing changes 
+[main fd17267] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   9d5e8f0..fd17267  main -> main
+[2026-05-05 13:31:18.78] === Pushed successfully === 
+[2026-05-06 13:00:02.31] === Starting fundamentals refresh === 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[2026-05-06 13:00:03.53] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-06 13:00:07,691 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-06 13:00:08,475 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-06 13:00:09,144 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-06 13:00:09,613 [INFO]   Small Cap: 603 tickers
+2026-05-06 13:00:09,618 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-06 13:00:09,618 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-06 13:00:09,619 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-06 13:00:09,619 [INFO] Using curl_cffi Chrome session.
+2026-05-06 13:00:43,318 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-06 13:01:22,493 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-06 13:01:57,272 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-06 13:02:29,725 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-06 13:03:02,941 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-06 13:03:34,862 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-06 13:04:08,511 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-06 13:04:41,228 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-06 13:05:13,310 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-06 13:05:46,674 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-06 13:06:19,088 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-06 13:06:50,437 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-06 13:07:27,533 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-06 13:07:59,548 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-06 13:08:31,388 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-06 13:09:02,492 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-06 13:09:34,637 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-06 13:10:07,785 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-06 13:10:39,847 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-06 13:11:12,109 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-06 13:11:44,536 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-06 13:12:17,710 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-06 13:12:50,078 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-06 13:13:22,296 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-06 13:13:53,917 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-06 13:14:26,665 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-06 13:14:58,758 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-06 13:15:31,647 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-06 13:16:03,884 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-06 13:16:36,018 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-06 13:17:09,637 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-06 13:17:43,093 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-06 13:18:17,831 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-06 13:18:51,782 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-06 13:19:25,019 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-06 13:19:57,159 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-06 13:20:29,505 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-06 13:21:01,030 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-06 13:21:33,822 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-06 13:22:05,322 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-06 13:22:36,759 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-06 13:23:08,618 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-06 13:23:40,240 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-06 13:24:12,649 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-06 13:24:44,501 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-06 13:25:16,818 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-06 13:25:48,278 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-06 13:26:18,687 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-06 13:26:50,171 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-06 13:27:21,957 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-06 13:27:52,659 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-06 13:28:24,494 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-06 13:28:55,713 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-06 13:29:27,388 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-06 13:29:57,993 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-06 13:30:29,182 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-06 13:31:00,433 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-06 13:31:30,887 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-06 13:32:02,274 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-06 13:32:34,398 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-06 13:32:42,078 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-06 13:32:42,078 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-06 13:32:42,178 [INFO] Incremental merge: 1508 existing + 1506 new ¡æ 1509 total (1505 updated, 1 added)
+2026-05-06 13:32:42,222 [INFO] Wrote fundamentals.json (508.0 KB)
+2026-05-06 13:32:42,278 [INFO] Wrote meta.json (0.1 KB)
+2026-05-06 13:32:42,278 [INFO] Cache update complete in 1954.6s
+[2026-05-06 13:32:43.15] git add fundamentals.json + meta.json 
+[2026-05-06 13:32:43.45] Committing changes 
+[main fe165cf] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   c905ca3..fe165cf  main -> main
+[2026-05-06 13:32:43.45] === Pushed successfully === 
+[2026-05-07 13:00:02.18] === Starting fundamentals refresh === 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[2026-05-07 13:00:03.53] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-07 13:00:09,402 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-07 13:00:10,091 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-07 13:00:10,601 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-07 13:00:11,177 [INFO]   Small Cap: 603 tickers
+2026-05-07 13:00:11,181 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-07 13:00:11,182 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-07 13:00:11,182 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-07 13:00:11,182 [INFO] Using curl_cffi Chrome session.
+2026-05-07 13:00:46,297 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-07 13:01:22,044 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-07 13:01:55,107 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-07 13:02:29,522 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-07 13:03:02,840 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-07 13:03:37,558 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-07 13:04:11,056 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-07 13:04:43,173 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-07 13:05:16,393 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-07 13:05:49,813 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-07 13:06:23,905 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-07 13:06:56,380 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-07 13:07:29,180 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-07 13:08:02,029 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-07 13:08:34,228 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-07 13:09:07,481 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-07 13:09:39,632 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-07 13:10:11,151 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-07 13:10:43,485 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-07 13:11:15,168 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-07 13:11:47,962 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-07 13:12:20,461 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-07 13:12:52,302 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-07 13:13:23,710 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-07 13:13:55,959 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-07 13:14:27,597 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-07 13:14:58,858 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-07 13:15:31,240 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-07 13:16:03,871 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-07 13:16:35,402 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-07 13:17:07,417 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-07 13:17:38,514 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-07 13:18:09,650 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-07 13:18:41,128 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-07 13:19:12,775 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-07 13:19:44,590 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-07 13:20:17,105 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-07 13:20:48,673 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-07 13:21:19,278 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-07 13:21:50,890 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-07 13:22:22,275 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-07 13:22:52,829 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-07 13:23:23,009 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-07 13:23:54,040 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-07 13:24:25,054 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-07 13:24:55,445 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-07 13:25:26,292 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-07 13:25:56,914 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-07 13:26:27,238 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-07 13:26:58,348 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-07 13:27:30,540 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-07 13:28:00,725 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-07 13:28:31,344 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-07 13:29:01,601 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-07 13:29:31,895 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-07 13:30:02,217 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-07 13:30:33,268 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-07 13:31:03,242 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-07 13:31:33,274 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-07 13:32:03,635 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-07 13:32:10,796 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-07 13:32:10,796 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-07 13:32:10,855 [INFO] Incremental merge: 1509 existing + 1506 new ¡æ 1510 total (1505 updated, 1 added)
+2026-05-07 13:32:10,878 [INFO] Wrote fundamentals.json (508.3 KB)
+2026-05-07 13:32:10,885 [INFO] Wrote meta.json (0.1 KB)
+2026-05-07 13:32:10,885 [INFO] Cache update complete in 1921.5s
+[2026-05-07 13:32:11.32] git add fundamentals.json + meta.json 
+[2026-05-07 13:32:11.58] Committing changes 
+[main 37952c4] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   fb01e17..37952c4  main -> main
+[2026-05-07 13:32:11.58] === Pushed successfully === 
+[2026-05-08 13:00:58.60] === Starting fundamentals refresh === 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[2026-05-08 13:01:31.38] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-08 13:01:45,700 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-08 13:01:46,275 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-08 13:01:46,887 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-08 13:01:47,579 [INFO]   Small Cap: 603 tickers
+2026-05-08 13:01:47,582 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-08 13:01:47,583 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-08 13:01:47,583 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-08 13:01:47,583 [INFO] Using curl_cffi Chrome session.
+2026-05-08 13:02:21,370 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-08 13:02:51,823 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-08 13:03:22,510 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-08 13:03:52,864 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-08 13:04:23,421 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-08 13:04:54,077 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-08 13:05:24,519 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-08 13:05:54,502 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-08 13:06:24,963 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-08 13:06:55,527 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-08 13:07:26,747 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-08 13:07:58,490 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-08 13:08:29,699 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-08 13:09:03,780 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-08 13:09:35,903 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-08 13:10:08,449 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-08 13:10:41,260 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-08 13:11:12,942 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-08 13:11:45,266 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-08 13:12:15,932 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-08 13:12:46,493 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-08 13:13:18,694 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-08 13:13:49,778 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-08 13:14:21,618 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-08 13:14:52,520 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-08 13:15:23,214 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-08 13:15:54,088 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-08 13:16:25,360 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-08 13:16:56,767 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-08 13:17:28,113 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-08 13:18:00,278 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-08 13:18:33,358 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-08 13:19:04,233 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-08 13:19:35,522 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-08 13:20:07,808 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-08 13:20:39,525 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-08 13:21:12,590 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-08 13:21:44,156 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-08 13:22:16,463 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-08 13:22:47,899 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-08 13:23:19,433 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-08 13:23:51,101 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-08 13:24:23,819 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-08 13:24:56,156 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-08 13:25:30,035 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-08 13:26:02,710 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-08 13:26:35,900 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-08 13:27:08,218 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-08 13:27:40,357 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-08 13:28:12,724 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-08 13:28:45,505 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-08 13:29:19,103 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-08 13:29:52,310 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-08 13:30:25,203 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-08 13:30:57,259 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-08 13:31:29,861 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-08 13:32:02,310 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-08 13:32:34,304 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-08 13:33:06,846 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-08 13:33:40,002 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-08 13:33:47,988 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-08 13:33:47,988 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-08 13:33:48,002 [INFO] Incremental merge: 1510 existing + 1506 new ¡æ 1510 total (1506 updated, 0 added)
+2026-05-08 13:33:48,013 [INFO] Wrote fundamentals.json (508.3 KB)
+2026-05-08 13:33:48,014 [INFO] Wrote meta.json (0.1 KB)
+2026-05-08 13:33:48,014 [INFO] Cache update complete in 1922.3s
+[2026-05-08 13:33:48.22] git add fundamentals.json + meta.json 
+[2026-05-08 13:33:48.50] Committing changes 
+[main a1c5236] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   c528b9d..a1c5236  main -> main
+[2026-05-08 13:33:48.50] === Pushed successfully === 
+[2026-05-09 13:00:43.22] === Starting fundamentals refresh === 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[2026-05-09 13:01:12.81] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-09 13:01:42,311 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-09 13:01:43,041 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-09 13:01:43,560 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-09 13:01:44,180 [INFO]   Small Cap: 603 tickers
+2026-05-09 13:01:44,191 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-09 13:01:44,192 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-09 13:01:44,192 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-09 13:01:44,192 [INFO] Using curl_cffi Chrome session.
+2026-05-09 13:02:16,862 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-09 13:02:46,269 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-09 13:03:15,507 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-09 13:03:44,992 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-09 13:04:14,456 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-09 13:04:44,279 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-09 13:05:13,677 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-09 13:05:43,530 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-09 13:06:12,807 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-09 13:06:42,224 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-09 13:07:11,871 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-09 13:07:41,396 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-09 13:08:11,123 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-09 13:08:40,780 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-09 13:09:10,436 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-09 13:09:40,074 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-09 13:10:09,794 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-09 13:10:39,275 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-09 13:11:08,602 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-09 13:11:38,701 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-09 13:12:08,493 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-09 13:12:37,799 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-09 13:13:07,125 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-09 13:13:36,561 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-09 13:14:06,083 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-09 13:14:35,386 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-09 13:15:04,905 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-09 13:15:34,574 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-09 13:16:04,049 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-09 13:16:33,380 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-09 13:17:02,749 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-09 13:17:31,965 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-09 13:18:01,303 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-09 13:18:31,194 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-09 13:19:00,586 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-09 13:19:30,173 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-09 13:19:59,999 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-09 13:20:29,297 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-09 13:20:59,386 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-09 13:21:30,185 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-09 13:21:59,695 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-09 13:22:29,250 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-09 13:22:58,520 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-09 13:23:27,622 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-09 13:23:57,064 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-09 13:24:26,537 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-09 13:24:56,352 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-09 13:25:25,775 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-09 13:25:55,141 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-09 13:26:24,717 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-09 13:26:54,283 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-09 13:27:23,654 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-09 13:27:53,075 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-09 13:28:23,031 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-09 13:28:52,287 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-09 13:29:21,597 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-09 13:29:51,036 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-09 13:30:20,889 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-09 13:30:50,460 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-09 13:31:19,978 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-09 13:31:27,401 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-09 13:31:27,401 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-09 13:31:27,506 [INFO] Incremental merge: 1510 existing + 1506 new ¡æ 1510 total (1506 updated, 0 added)
+2026-05-09 13:31:27,525 [INFO] Wrote fundamentals.json (508.3 KB)
+2026-05-09 13:31:27,540 [INFO] Wrote meta.json (0.1 KB)
+2026-05-09 13:31:27,540 [INFO] Cache update complete in 1785.2s
+[2026-05-09 13:31:28.36] git add fundamentals.json + meta.json 
+[2026-05-09 13:31:28.70] Committing changes 
+[main bb9a575] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   69e4d1f..bb9a575  main -> main
+[2026-05-09 13:31:28.71] === Pushed successfully === 
+[2026-05-10 13:00:22.99] === Starting fundamentals refresh === 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[2026-05-10 13:00:44.10] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-10 13:01:08,589 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-10 13:01:09,180 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-10 13:01:09,800 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-10 13:01:10,398 [INFO]   Small Cap: 603 tickers
+2026-05-10 13:01:10,407 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-10 13:01:10,407 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-10 13:01:10,408 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-10 13:01:10,408 [INFO] Using curl_cffi Chrome session.
+2026-05-10 13:01:44,617 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-10 13:02:14,540 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-10 13:02:44,654 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-10 13:03:14,631 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-10 13:03:44,812 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-10 13:04:15,175 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-10 13:04:44,983 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-10 13:05:14,715 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-10 13:05:44,368 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-10 13:06:14,323 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-10 13:06:44,366 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-10 13:07:14,700 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-10 13:07:44,828 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-10 13:08:14,818 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-10 13:08:44,750 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-10 13:09:14,698 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-10 13:09:44,637 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-10 13:10:14,764 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-10 13:10:44,515 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-10 13:11:14,526 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-10 13:11:44,706 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-10 13:12:14,921 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-10 13:12:44,947 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-10 13:13:15,117 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-10 13:13:45,093 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-10 13:14:15,197 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-10 13:14:45,458 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-10 13:15:15,427 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-10 13:15:45,257 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-10 13:16:15,184 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-10 13:16:45,155 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-10 13:17:15,402 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-10 13:17:45,527 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-10 13:18:15,460 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-10 13:18:45,426 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-10 13:19:15,382 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-10 13:19:45,077 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-10 13:20:14,839 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-10 13:20:44,745 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-10 13:21:14,822 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-10 13:21:44,996 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-10 13:22:15,564 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-10 13:22:45,577 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-10 13:23:15,449 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-10 13:23:45,801 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-10 13:24:15,896 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-10 13:24:45,810 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-10 13:25:15,934 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-10 13:25:45,874 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-10 13:26:15,669 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-10 13:26:45,717 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-10 13:27:15,905 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-10 13:27:46,014 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-10 13:28:16,141 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-10 13:28:46,101 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-10 13:29:16,104 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-10 13:29:46,338 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-10 13:30:16,812 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-10 13:30:46,871 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-10 13:31:17,008 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-10 13:31:24,354 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-10 13:31:24,354 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-10 13:31:24,386 [INFO] Incremental merge: 1510 existing + 1506 new ¡æ 1510 total (1506 updated, 0 added)
+2026-05-10 13:31:24,405 [INFO] Wrote fundamentals.json (508.4 KB)
+2026-05-10 13:31:24,420 [INFO] Wrote meta.json (0.1 KB)
+2026-05-10 13:31:24,420 [INFO] Cache update complete in 1815.8s
+[2026-05-10 13:31:25.00] git add fundamentals.json + meta.json 
+[2026-05-10 13:31:25.37] Committing changes 
+[main 29ca0f2] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   43cca1e..29ca0f2  main -> main
+[2026-05-10 13:31:25.38] === Pushed successfully === 
+[2026-05-11 13:00:12.75] === Starting fundamentals refresh === 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[2026-05-11 13:00:35.64] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-11 13:01:02,744 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-11 13:01:03,991 [INFO]   Large Cap: 503 tickers
+2026-05-11 13:01:04,771 [WARNING] Failed to fetch Mid Cap: 'ticker'
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:74: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-11 13:01:05,380 [INFO]   Small Cap: 603 tickers
+2026-05-11 13:01:05,392 [INFO] Fetched 1106 unique S&P 1500 stocks.
+2026-05-11 13:01:05,393 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-11 13:01:05,393 [INFO] Fetching fundamentals for 1106 tickers (mcap desc, sequential)...
+2026-05-11 13:01:05,394 [INFO] Using curl_cffi Chrome session.
+2026-05-11 13:01:40,297 [INFO]   Pass 1 progress: 25/1106 (got 25)
+2026-05-11 13:02:16,684 [INFO]   Pass 1 progress: 50/1106 (got 50)
+2026-05-11 13:02:49,265 [INFO]   Pass 1 progress: 75/1106 (got 75)
+2026-05-11 13:03:20,698 [INFO]   Pass 1 progress: 100/1106 (got 100)
+2026-05-11 13:03:52,019 [INFO]   Pass 1 progress: 125/1106 (got 125)
+2026-05-11 13:04:23,850 [INFO]   Pass 1 progress: 150/1106 (got 150)
+2026-05-11 13:04:54,416 [INFO]   Pass 1 progress: 175/1106 (got 175)
+2026-05-11 13:05:25,021 [INFO]   Pass 1 progress: 200/1106 (got 200)
+2026-05-11 13:05:55,087 [INFO]   Pass 1 progress: 225/1106 (got 225)
+2026-05-11 13:06:25,716 [INFO]   Pass 1 progress: 250/1106 (got 250)
+2026-05-11 13:06:56,345 [INFO]   Pass 1 progress: 275/1106 (got 275)
+2026-05-11 13:07:27,025 [INFO]   Pass 1 progress: 300/1106 (got 300)
+2026-05-11 13:07:57,777 [INFO]   Pass 1 progress: 325/1106 (got 325)
+2026-05-11 13:08:27,894 [INFO]   Pass 1 progress: 350/1106 (got 350)
+2026-05-11 13:08:57,863 [INFO]   Pass 1 progress: 375/1106 (got 375)
+2026-05-11 13:09:27,769 [INFO]   Pass 1 progress: 400/1106 (got 400)
+2026-05-11 13:09:58,565 [INFO]   Pass 1 progress: 425/1106 (got 425)
+2026-05-11 13:10:28,273 [INFO]   Pass 1 progress: 450/1106 (got 450)
+2026-05-11 13:10:58,440 [INFO]   Pass 1 progress: 475/1106 (got 475)
+2026-05-11 13:11:28,635 [INFO]   Pass 1 progress: 500/1106 (got 500)
+2026-05-11 13:11:59,078 [INFO]   Pass 1 progress: 525/1106 (got 525)
+2026-05-11 13:12:29,451 [INFO]   Pass 1 progress: 550/1106 (got 550)
+2026-05-11 13:12:59,639 [INFO]   Pass 1 progress: 575/1106 (got 575)
+2026-05-11 13:13:30,191 [INFO]   Pass 1 progress: 600/1106 (got 600)
+2026-05-11 13:14:00,311 [INFO]   Pass 1 progress: 625/1106 (got 625)
+2026-05-11 13:14:30,625 [INFO]   Pass 1 progress: 650/1106 (got 650)
+2026-05-11 13:15:00,714 [INFO]   Pass 1 progress: 675/1106 (got 675)
+2026-05-11 13:15:30,498 [INFO]   Pass 1 progress: 700/1106 (got 700)
+2026-05-11 13:16:00,339 [INFO]   Pass 1 progress: 725/1106 (got 725)
+2026-05-11 13:16:30,363 [INFO]   Pass 1 progress: 750/1106 (got 750)
+2026-05-11 13:17:00,295 [INFO]   Pass 1 progress: 775/1106 (got 775)
+2026-05-11 13:17:30,143 [INFO]   Pass 1 progress: 800/1106 (got 800)
+2026-05-11 13:18:00,556 [INFO]   Pass 1 progress: 825/1106 (got 825)
+2026-05-11 13:18:30,821 [INFO]   Pass 1 progress: 850/1106 (got 850)
+2026-05-11 13:19:01,377 [INFO]   Pass 1 progress: 875/1106 (got 875)
+2026-05-11 13:19:32,030 [INFO]   Pass 1 progress: 900/1106 (got 900)
+2026-05-11 13:20:01,919 [INFO]   Pass 1 progress: 925/1106 (got 925)
+2026-05-11 13:20:31,583 [INFO]   Pass 1 progress: 950/1106 (got 950)
+2026-05-11 13:21:02,683 [INFO]   Pass 1 progress: 975/1106 (got 975)
+2026-05-11 13:21:32,835 [INFO]   Pass 1 progress: 1000/1106 (got 1000)
+2026-05-11 13:22:02,653 [INFO]   Pass 1 progress: 1025/1106 (got 1025)
+2026-05-11 13:22:32,702 [INFO]   Pass 1 progress: 1050/1106 (got 1050)
+2026-05-11 13:23:03,559 [INFO]   Pass 1 progress: 1075/1106 (got 1075)
+2026-05-11 13:23:33,438 [INFO]   Pass 1 progress: 1100/1106 (got 1100)
+2026-05-11 13:23:40,765 [INFO] Pass 1 done: 1106/1106 tickers
+2026-05-11 13:23:40,765 [INFO] Got fundamentals for 1106/1106 tickers.
+2026-05-11 13:23:40,779 [INFO] Incremental merge: 1510 existing + 1106 new ¡æ 1510 total (1106 updated, 0 added)
+2026-05-11 13:23:40,788 [INFO] Wrote fundamentals.json (508.4 KB)
+2026-05-11 13:23:40,790 [INFO] Wrote meta.json (0.1 KB)
+2026-05-11 13:23:40,790 [INFO] Cache update complete in 1358.0s
+[2026-05-11 13:23:41.04] git add fundamentals.json + meta.json 
+[2026-05-11 13:23:41.40] Committing changes 
+[main 087a2c5] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+ ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/danggyugit/stock-dashboard.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[2026-05-11 13:23:41.40] Initial push failed ??pull rebase + retry 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+To https://github.com/danggyugit/stock-dashboard.git
+ ! [rejected]        main -> main (non-fast-forward)
+error: failed to push some refs to 'https://github.com/danggyugit/stock-dashboard.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. If you want to integrate the remote changes,
+hint: use 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+[2026-05-11 13:23:41.40] ERROR: git push failed after retry 
+[2026-05-12 13:00:01.49] === Starting fundamentals refresh === 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[2026-05-12 13:00:02.43] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-12 13:00:06,146 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:83: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-12 13:00:06,798 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:83: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-12 13:00:07,308 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:83: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-12 13:00:07,885 [INFO]   Small Cap: 603 tickers
+2026-05-12 13:00:07,887 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-12 13:00:07,888 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-12 13:00:07,888 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-12 13:00:07,888 [INFO] Using curl_cffi Chrome session.
+2026-05-12 13:00:41,471 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-12 13:01:12,948 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-12 13:01:43,987 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-12 13:02:15,450 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-12 13:02:46,535 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-12 13:03:17,131 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-12 13:03:47,866 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-12 13:04:19,032 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-12 13:04:49,870 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-12 13:05:21,777 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-12 13:05:53,568 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-12 13:06:24,880 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-12 13:06:55,515 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-12 13:07:26,527 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-12 13:07:57,332 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-12 13:08:28,205 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-12 13:08:58,732 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-12 13:09:29,308 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-12 13:10:00,183 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-12 13:10:31,677 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-12 13:11:03,523 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-12 13:11:34,362 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-12 13:12:05,818 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-12 13:12:39,918 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-12 13:13:12,463 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-12 13:13:43,534 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-12 13:14:14,267 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-12 13:14:44,922 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-12 13:15:15,101 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-12 13:15:46,098 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-12 13:16:16,517 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-12 13:16:47,470 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-12 13:17:18,353 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-12 13:17:48,777 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-12 13:18:19,955 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-12 13:18:50,645 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-12 13:19:21,140 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-12 13:20:04,047 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-12 13:20:44,076 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-12 13:21:16,006 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-12 13:21:46,675 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-12 13:22:17,013 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-12 13:22:47,493 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-12 13:23:18,072 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-12 13:23:51,831 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-12 13:24:22,386 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-12 13:24:52,768 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-12 13:25:23,077 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-12 13:25:53,632 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-12 13:26:24,649 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-12 13:26:55,625 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-12 13:27:26,562 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-12 13:27:57,412 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-12 13:28:27,985 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-12 13:28:58,708 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-12 13:29:29,493 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-12 13:30:00,016 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-12 13:30:30,804 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-12 13:31:01,018 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-12 13:31:31,942 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-12 13:31:39,264 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-12 13:31:39,265 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-12 13:31:46,182 [INFO] Incremental merge: 1510 existing + 1506 new ¡æ 1510 total (1506 updated, 0 added)
+2026-05-12 13:31:48,956 [INFO] Wrote fundamentals.json (508.4 KB)
+2026-05-12 13:31:49,624 [INFO] Wrote meta.json (0.1 KB)
+2026-05-12 13:31:49,624 [INFO] Cache update complete in 1903.5s
+[2026-05-12 13:33:54.81] git add fundamentals.json + meta.json 
+[2026-05-12 13:34:20.98] Committing changes 
+[main 110a0d5] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   c1ad558..110a0d5  main -> main
+[2026-05-12 13:34:20.98] === Pushed successfully === 
+[2026-05-13 13:00:01.31] === Starting fundamentals refresh === 
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[2026-05-13 13:00:02.38] Running fetch_cache.py --fundamentals-only --merge 
+2026-05-13 13:00:06,321 [INFO] Fetching S&P 1500 list (Large + Mid + Small Cap)...
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:83: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-13 13:00:06,961 [INFO]   Large Cap: 503 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:83: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-13 13:00:07,552 [INFO]   Mid Cap: 400 tickers
+c:\Users\sk15y\claude\stock_dashboard\streamlit_app\scripts\fetch_cache.py:83: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["ticker"] = df["ticker"].astype(str).str.replace(".", "-", regex=False).str.strip()
+2026-05-13 13:00:08,012 [INFO]   Small Cap: 603 tickers
+2026-05-13 13:00:08,014 [INFO] Fetched 1506 unique S&P 1500 stocks.
+2026-05-13 13:00:08,015 [INFO] --fundamentals-only: skipping heatmap/prices
+2026-05-13 13:00:08,015 [INFO] Fetching fundamentals for 1506 tickers (mcap desc, sequential)...
+2026-05-13 13:00:08,015 [INFO] Using curl_cffi Chrome session.
+2026-05-13 13:00:41,446 [INFO]   Pass 1 progress: 25/1506 (got 25)
+2026-05-13 13:01:13,151 [INFO]   Pass 1 progress: 50/1506 (got 50)
+2026-05-13 13:01:43,685 [INFO]   Pass 1 progress: 75/1506 (got 75)
+2026-05-13 13:02:14,007 [INFO]   Pass 1 progress: 100/1506 (got 100)
+2026-05-13 13:02:44,499 [INFO]   Pass 1 progress: 125/1506 (got 125)
+2026-05-13 13:03:14,728 [INFO]   Pass 1 progress: 150/1506 (got 150)
+2026-05-13 13:03:44,968 [INFO]   Pass 1 progress: 175/1506 (got 175)
+2026-05-13 13:04:15,325 [INFO]   Pass 1 progress: 200/1506 (got 200)
+2026-05-13 13:04:44,859 [INFO]   Pass 1 progress: 225/1506 (got 225)
+2026-05-13 13:05:15,016 [INFO]   Pass 1 progress: 250/1506 (got 250)
+2026-05-13 13:05:45,107 [INFO]   Pass 1 progress: 275/1506 (got 275)
+2026-05-13 13:06:15,512 [INFO]   Pass 1 progress: 300/1506 (got 300)
+2026-05-13 13:06:45,687 [INFO]   Pass 1 progress: 325/1506 (got 325)
+2026-05-13 13:07:16,377 [INFO]   Pass 1 progress: 350/1506 (got 350)
+2026-05-13 13:07:47,571 [INFO]   Pass 1 progress: 375/1506 (got 375)
+2026-05-13 13:08:18,935 [INFO]   Pass 1 progress: 400/1506 (got 400)
+2026-05-13 13:08:49,353 [INFO]   Pass 1 progress: 425/1506 (got 425)
+2026-05-13 13:09:21,967 [INFO]   Pass 1 progress: 450/1506 (got 450)
+2026-05-13 13:09:52,941 [INFO]   Pass 1 progress: 475/1506 (got 475)
+2026-05-13 13:10:24,355 [INFO]   Pass 1 progress: 500/1506 (got 500)
+2026-05-13 13:10:55,380 [INFO]   Pass 1 progress: 525/1506 (got 525)
+2026-05-13 13:11:26,103 [INFO]   Pass 1 progress: 550/1506 (got 550)
+2026-05-13 13:11:57,587 [INFO]   Pass 1 progress: 575/1506 (got 575)
+2026-05-13 13:12:28,719 [INFO]   Pass 1 progress: 600/1506 (got 600)
+2026-05-13 13:12:59,230 [INFO]   Pass 1 progress: 625/1506 (got 625)
+2026-05-13 13:13:30,648 [INFO]   Pass 1 progress: 650/1506 (got 650)
+2026-05-13 13:14:01,300 [INFO]   Pass 1 progress: 675/1506 (got 675)
+2026-05-13 13:14:50,862 [INFO]   Pass 1 progress: 700/1506 (got 700)
+2026-05-13 13:15:23,496 [INFO]   Pass 1 progress: 725/1506 (got 725)
+2026-05-13 13:15:56,529 [INFO]   Pass 1 progress: 750/1506 (got 750)
+2026-05-13 13:16:27,148 [INFO]   Pass 1 progress: 775/1506 (got 775)
+2026-05-13 13:16:57,977 [INFO]   Pass 1 progress: 800/1506 (got 800)
+2026-05-13 13:17:29,380 [INFO]   Pass 1 progress: 825/1506 (got 825)
+2026-05-13 13:18:00,300 [INFO]   Pass 1 progress: 850/1506 (got 850)
+2026-05-13 13:18:31,648 [INFO]   Pass 1 progress: 875/1506 (got 875)
+2026-05-13 13:19:02,420 [INFO]   Pass 1 progress: 900/1506 (got 900)
+2026-05-13 13:19:32,968 [INFO]   Pass 1 progress: 925/1506 (got 925)
+2026-05-13 13:20:03,463 [INFO]   Pass 1 progress: 950/1506 (got 950)
+2026-05-13 13:20:33,547 [INFO]   Pass 1 progress: 975/1506 (got 975)
+2026-05-13 13:21:03,745 [INFO]   Pass 1 progress: 1000/1506 (got 1000)
+2026-05-13 13:21:33,785 [INFO]   Pass 1 progress: 1025/1506 (got 1025)
+2026-05-13 13:22:04,067 [INFO]   Pass 1 progress: 1050/1506 (got 1050)
+2026-05-13 13:22:34,190 [INFO]   Pass 1 progress: 1075/1506 (got 1075)
+2026-05-13 13:23:03,787 [INFO]   Pass 1 progress: 1100/1506 (got 1100)
+2026-05-13 13:23:34,487 [INFO]   Pass 1 progress: 1125/1506 (got 1125)
+2026-05-13 13:24:05,453 [INFO]   Pass 1 progress: 1150/1506 (got 1150)
+2026-05-13 13:24:35,717 [INFO]   Pass 1 progress: 1175/1506 (got 1175)
+2026-05-13 13:25:06,319 [INFO]   Pass 1 progress: 1200/1506 (got 1200)
+2026-05-13 13:25:36,277 [INFO]   Pass 1 progress: 1225/1506 (got 1225)
+2026-05-13 13:26:07,236 [INFO]   Pass 1 progress: 1250/1506 (got 1250)
+2026-05-13 13:26:37,513 [INFO]   Pass 1 progress: 1275/1506 (got 1275)
+2026-05-13 13:27:08,110 [INFO]   Pass 1 progress: 1300/1506 (got 1300)
+2026-05-13 13:27:38,051 [INFO]   Pass 1 progress: 1325/1506 (got 1325)
+2026-05-13 13:28:08,775 [INFO]   Pass 1 progress: 1350/1506 (got 1350)
+2026-05-13 13:28:39,083 [INFO]   Pass 1 progress: 1375/1506 (got 1375)
+2026-05-13 13:29:09,485 [INFO]   Pass 1 progress: 1400/1506 (got 1400)
+2026-05-13 13:29:40,189 [INFO]   Pass 1 progress: 1425/1506 (got 1425)
+2026-05-13 13:30:10,183 [INFO]   Pass 1 progress: 1450/1506 (got 1450)
+2026-05-13 13:30:42,038 [INFO]   Pass 1 progress: 1475/1506 (got 1475)
+2026-05-13 13:31:12,399 [INFO]   Pass 1 progress: 1500/1506 (got 1500)
+2026-05-13 13:31:19,521 [INFO] Pass 1 done: 1506/1506 tickers
+2026-05-13 13:31:19,521 [INFO] Got fundamentals for 1506/1506 tickers.
+2026-05-13 13:31:19,535 [INFO] Incremental merge: 1510 existing + 1506 new ¡æ 1510 total (1506 updated, 0 added)
+2026-05-13 13:31:19,545 [INFO] Wrote fundamentals.json (508.5 KB)
+2026-05-13 13:31:19,546 [INFO] Wrote meta.json (0.1 KB)
+2026-05-13 13:31:19,546 [INFO] Cache update complete in 1873.2s
+[2026-05-13 13:31:19.71] git add fundamentals.json + meta.json 
+[2026-05-13 13:31:19.87] Committing changes 
+[main 9fba9de5] chore: refresh fundamentals cache (local scheduler)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/danggyugit/stock-dashboard.git
+   21588913..9fba9de5  main -> main
+[2026-05-13 13:31:19.87] === Pushed successfully === 

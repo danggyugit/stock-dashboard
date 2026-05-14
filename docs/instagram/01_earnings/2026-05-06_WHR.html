@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>WHR Q1 2026 Earnings — Instagram Card Series (4:5)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg-page: #0A0E1A;
+    --bg-card: #0F172A;
+    --bg-card-alt: #131F38;
+    --accent: #0EA5E9;
+    --accent-2: #22D3EE;
+    --gold: #EAB308;
+    --text: #F1F5F9;
+    --text-dim: #CBD5E1;
+    --border: rgba(203,213,225,0.16);
+    --border-strong: rgba(14,165,233,0.45);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: var(--bg-page); color: var(--text); font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif; -webkit-font-smoothing: antialiased; }
+  header { padding: 32px 24px 20px; text-align: center; border-bottom: 1px solid var(--border); }
+  header h1 { font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #F87171 0%, #FB923C 60%, var(--gold) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+  header p { color: var(--text-dim); font-size: 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(580px, 1fr)); gap: 36px; padding: 40px 32px 80px; max-width: 1900px; margin: 0 auto; }
+  .card { width: 540px; height: 675px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 28px; padding: 32px 30px; position: relative; display: flex; flex-direction: column; overflow: hidden; margin: 0 auto; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #EF4444, #F97316, var(--gold)); opacity: 0.85; }
+  .card::after { content: ''; position: absolute; inset: 4px 0 0 0; background: radial-gradient(ellipse at top left, rgba(239,68,68,0.08) 0%, transparent 60%), radial-gradient(ellipse at bottom right, rgba(249,115,22,0.05) 0%, transparent 60%); pointer-events: none; }
+  .card > * { position: relative; z-index: 1; }
+  .card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .badge { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; background: rgba(14,165,233,0.16); border: 1px solid rgba(14,165,233,0.40); border-radius: 999px; color: #7DD3FC; font-size: 14px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+  .badge.green { background: rgba(34,197,94,0.18); border-color: rgba(34,197,94,0.45); color: #4ADE80; }
+  .badge.gold  { background: rgba(234,179,8,0.18);  border-color: rgba(234,179,8,0.50);  color: #FDE68A; }
+  .badge.red   { background: rgba(239,68,68,0.18);  border-color: rgba(239,68,68,0.45);  color: #FCA5A5; }
+  .badge.blue  { background: rgba(14,165,233,0.18); border-color: rgba(14,165,233,0.45); color: #7DD3FC; }
+  .badge .dot  { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .counter { color: var(--text-dim); font-size: 14px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  h2.card-title { font-size: 30px; font-weight: 800; line-height: 1.2; margin-bottom: 14px; color: var(--text); }
+  h2.card-title .hi   { color: #4ADE80; }
+  h2.card-title .gold { color: #FDE68A; }
+  h2.card-title .blue { color: #7DD3FC; }
+  h2.card-title .red  { color: #FCA5A5; }
+  .green { color: #4ADE80; } .red { color: #FCA5A5; } .gold-text { color: var(--gold); } .blue { color: #7DD3FC; }
+  .c1 { background: radial-gradient(ellipse at top, rgba(239,68,68,0.20) 0%, transparent 60%), linear-gradient(180deg, #160708 0%, #0A0E1A 100%); border: 1px solid rgba(239,68,68,0.40); justify-content: space-between; padding: 36px 32px; }
+  .c1-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .c1-logo { height: 56px; width: auto; background: #FFFFFF; padding: 12px 18px; border-radius: 14px; align-self: flex-start; margin-bottom: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); object-fit: contain; }
+  .c1-ticker { font-size: 156px; font-weight: 900; letter-spacing: -8px; line-height: 0.9; background: linear-gradient(135deg, #FFFFFF 0%, #FCA5A5 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .c1-co { font-size: 21px; color: var(--text-dim); margin-top: 12px; font-weight: 600; }
+  .c1-co .nasdaq { display: inline-block; margin-left: 10px; padding: 3px 10px; background: rgba(239,68,68,0.14); border-radius: 5px; font-size: 14px; color: #FCA5A5; font-weight: 700; letter-spacing: 0.10em; }
+  .c1-price { font-size: 18px; color: var(--text-dim); margin-top: 18px; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .c1-price b { color: var(--text); }
+  .c1-chg-red { font-size: 100px; font-weight: 900; color: #FCA5A5; letter-spacing: -3px; line-height: 1; margin-top: 8px; text-shadow: 0 0 50px rgba(239,68,68,0.55); }
+  .c1-momentum { display: flex; gap: 14px; margin-top: 20px; }
+  .c1-momentum .m { flex: 1; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.28); border-radius: 12px; padding: 11px 14px; }
+  .c1-momentum .ml { font-size: 14px; color: var(--text-dim); letter-spacing: 0.10em; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
+  .c1-momentum .mv { font-size: 19px; font-weight: 800; color: #FCA5A5; font-family: 'JetBrains Mono', monospace; }
+  .c1-momentum .m.blue-tone { background: rgba(14,165,233,0.08); border-color: rgba(14,165,233,0.28); }
+  .c1-momentum .m.blue-tone .mv { color: #7DD3FC; }
+  .c1-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
+  .c1-date { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .c1-pill-red { background: rgba(239,68,68,0.20); border: 1px solid rgba(239,68,68,0.55); color: #FCA5A5; font-size: 14px; padding: 8px 18px; border-radius: 999px; font-weight: 800; }
+  .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+  .mbox { background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; }
+  .mbox.beat { border-color: rgba(34,197,94,0.40);  background: rgba(34,197,94,0.06); }
+  .mbox.miss { border-color: rgba(239,68,68,0.40);  background: rgba(239,68,68,0.06); }
+  .mbox.blue { border-color: rgba(14,165,233,0.40); background: rgba(14,165,233,0.07); }
+  .mbox .ml { font-size: 14px; color: var(--text-dim); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+  .mbox .me { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; font-weight: 600; }
+  .mbox .ma { font-size: 26px; font-weight: 900; line-height: 1.1; font-family: 'JetBrains Mono', monospace; }
+  .mbox .ms { font-size: 14px; font-weight: 700; margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+  .mbox.beat .ma { color: #4ADE80; } .mbox.beat .ms { color: #4ADE80; }
+  .mbox.miss .ma { color: #FCA5A5; } .mbox.miss .ms { color: #FCA5A5; }
+  .mbox.blue .ma { color: #7DD3FC; } .mbox.blue .ms { color: #7DD3FC; }
+  .banner-warn { background: linear-gradient(90deg, rgba(239,68,68,0.16) 0%, rgba(239,68,68,0.04) 100%); border: 1px solid rgba(239,68,68,0.40); border-radius: 14px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+  .banner-warn .pulse-r { width: 10px; height: 10px; border-radius: 50%; background: #FCA5A5; animation: pulse-r 2s infinite; }
+  @keyframes pulse-r { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); } 70% { box-shadow: 0 0 0 12px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
+  .banner-warn-txt { font-size: 15px; color: #FCA5A5; font-weight: 800; }
+  .hl-list { display: flex; flex-direction: column; gap: 8px; }
+  .hl-item { background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; display: flex; gap: 12px; align-items: flex-start; }
+  .hl-item.good { border-color: rgba(74,222,128,0.32); background: rgba(34,197,94,0.06); }
+  .hl-item.blue { border-color: rgba(14,165,233,0.32); background: rgba(14,165,233,0.06); }
+  .hl-item.warn { border-color: rgba(239,68,68,0.32); background: rgba(239,68,68,0.06); }
+  .hl-item .ico  { font-size: 22px; width: 28px; flex-shrink: 0; text-align: center; padding-top: 1px; }
+  .hl-item .body { flex: 1; }
+  .hl-item .title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+  .hl-item .desc  { font-size: 14px; color: var(--text-dim); line-height: 1.4; font-weight: 600; }
+  .hl-item .desc b { color: #4ADE80; font-weight: 800; }
+  .hl-item.blue .desc b { color: #7DD3FC; }
+  .hl-item.warn .desc b { color: #FCA5A5; }
+  .driver-list { display: flex; flex-direction: column; gap: 8px; }
+  .driver { background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; display: flex; gap: 12px; align-items: flex-start; }
+  .driver.warn { border-color: rgba(239,68,68,0.32); background: rgba(239,68,68,0.06); }
+  .driver.good { border-color: rgba(74,222,128,0.32); background: rgba(34,197,94,0.06); }
+  .driver .num { width: 28px; height: 28px; border-radius: 7px; background: rgba(239,68,68,0.18); border: 1px solid rgba(239,68,68,0.50); color: #FCA5A5; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .driver.good .num { background: rgba(74,222,128,0.18); border-color: rgba(74,222,128,0.50); color: #4ADE80; }
+  .driver .body   { flex: 1; min-width: 0; }
+  .driver .dtitle { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+  .driver .ddesc  { font-size: 14px; color: var(--text-dim); line-height: 1.4; font-weight: 500; }
+  .driver .ddesc b  { color: var(--text); font-weight: 700; }
+  .driver .ddesc .hl-r { color: #FCA5A5; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .driver .ddesc .hl { color: #4ADE80; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .out-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 4px; }
+  .out-box { background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 14px; padding: 13px 15px; }
+  .out-box.good { border-color: rgba(74,222,128,0.40); background: rgba(34,197,94,0.06); }
+  .out-box.blue { border-color: rgba(14,165,233,0.40); background: rgba(14,165,233,0.07); }
+  .out-box.warn { border-color: rgba(239,68,68,0.40); background: rgba(239,68,68,0.06); }
+  .out-box .ol { font-size: 14px; color: var(--text-dim); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 5px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .out-box .ov { font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1.1; }
+  .out-box.good .ov { color: #4ADE80; } .out-box.blue .ov { color: #7DD3FC; } .out-box.warn .ov { color: #FCA5A5; }
+  .out-box .od { font-size: 14px; color: var(--text-dim); margin-top: 5px; font-weight: 600; line-height: 1.4; }
+  .out-box .od b { color: var(--text); font-weight: 700; }
+  .val-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 4px; }
+  .val-side { background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 14px; padding: 13px 15px; }
+  .val-side.bull { border-color: rgba(74,222,128,0.40);  background: rgba(34,197,94,0.06); }
+  .val-side.bear { border-color: rgba(252,165,165,0.32); background: rgba(239,68,68,0.06); }
+  .val-head { font-size: 14px; font-weight: 800; margin-bottom: 8px; letter-spacing: 0.04em; font-family: 'JetBrains Mono', monospace; }
+  .val-side.bull .val-head { color: #4ADE80; } .val-side.bear .val-head { color: #FCA5A5; }
+  .val-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 14px; border-top: 1px solid rgba(203,213,225,0.06); }
+  .val-row:first-of-type { border-top: 0; padding-top: 2px; }
+  .val-l { color: var(--text-dim); font-weight: 600; }
+  .val-v { color: var(--text); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .val-v.green { color: #4ADE80; } .val-v.red { color: #FCA5A5; }
+  .chart-wrap { margin-top: 22px; position: relative; }
+  .chart-grid { display: grid; grid-template-columns: 110px 1fr; gap: 8px; }
+  .chart-firms { display: flex; flex-direction: column; gap: 3px; }
+  .chart-firms .firm { height: 19px; display: flex; align-items: center; justify-content: flex-end; font-size: 14px; color: var(--text-dim); font-weight: 600; white-space: nowrap; overflow: hidden; }
+  .chart-bars { position: relative; display: flex; flex-direction: column; gap: 3px; }
+  .bar-row { height: 19px; background: rgba(15,23,42,0.5); border: 1px solid rgba(203,213,225,0.06); border-radius: 3px; position: relative; }
+  .bar-fill { position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(90deg, rgba(14,165,233,0.55), rgba(14,165,233,0.82)); border-radius: 3px; border: 1px solid rgba(14,165,233,0.90); }
+  .bar-label { position: absolute; top: 50%; transform: translateY(-50%); font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 800; color: var(--text); white-space: nowrap; padding-left: 5px; z-index: 2; }
+  .current-line { position: absolute; top: -22px; bottom: -2px; width: 2px; background: var(--gold); box-shadow: 0 0 6px rgba(234,179,8,0.7); z-index: 5; pointer-events: none; }
+  .current-line-label { position: absolute; top: 0; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; padding: 2px 8px; font-size: 14px; font-weight: 800; white-space: nowrap; font-family: 'JetBrains Mono', monospace; border-radius: 4px; }
+  .chart-axis { display: grid; grid-template-columns: 110px 1fr; gap: 8px; margin-top: 6px; }
+  .chart-axis-labels { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .insight-banner { margin-top: 12px; padding: 12px 16px; background: linear-gradient(90deg, rgba(234,179,8,0.16), rgba(234,179,8,0.04)); border: 1px solid rgba(234,179,8,0.40); border-radius: 12px; font-size: 14px; color: var(--text); font-weight: 600; line-height: 1.5; }
+  .insight-banner b { color: #FDE68A; font-weight: 800; }
+  .c8 { background: radial-gradient(ellipse at top right, rgba(234,179,8,0.20) 0%, transparent 55%), radial-gradient(ellipse at bottom left, rgba(14,165,233,0.22) 0%, transparent 55%), linear-gradient(180deg, #0F172A 0%, #0B1220 100%); border: 1px solid rgba(14,165,233,0.40); align-items: stretch; text-align: center; padding: 32px 30px; }
+  .logo-block { text-align: center; margin: 6px 0 12px; }
+  .logo-icon { width: 70px; height: 70px; border: 2px solid rgba(14,165,233,0.50); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; background: rgba(14,165,233,0.10); margin-bottom: 10px; }
+  .diamond { width: 26px; height: 26px; background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%); transform: rotate(45deg); border-radius: 4px; box-shadow: 0 0 22px rgba(14,165,233,0.6); }
+  .logo-name { font-size: 26px; font-weight: 900; background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 70%, var(--accent-2) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 1.6px; }
+  .logo-sub { font-size: 14px; color: var(--text-dim); margin-top: 4px; font-weight: 600; }
+  .feat-c8 { background: rgba(15,23,42,0.85); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text-dim); margin-bottom: 8px; text-align: left; font-weight: 600; }
+  .feat-c8 .fdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; box-shadow: 0 0 10px var(--accent); }
+  .feat-c8 b { color: var(--text); font-weight: 800; }
+  .cta-box { background: linear-gradient(135deg, rgba(14,165,233,0.16), rgba(34,211,238,0.14)); border: 1.5px solid rgba(14,165,233,0.45); border-radius: 14px; padding: 14px 18px; text-align: center; margin-top: auto; }
+  .cta-l { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.10em; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+  .cta-u { font-size: 18px; font-weight: 900; color: #7DD3FC; }
+  .card-label { position: absolute; top: -28px; left: 0; font-size: 14px; color: var(--text-dim); letter-spacing: 0.10em; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .card-wrap { position: relative; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🏠 WHR Q1 2026 — EPS -$0.56 대형 미스 · 소비자 수요 붕괴 · 주가 -19.5%</h1>
+  <p>8 cards · 540×675 · Whirlpool Q1 CY2026 어닝 분석 · 2026-05-06 발표</p>
+</header>
+
+<div class="grid">
+
+  <!-- CARD 1 — COVER -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 1 · COVER</div>
+    <div class="card c1">
+      <div class="card-head">
+        <span class="badge red"><span class="dot"></span>EARNINGS MISS</span>
+        <span class="counter">01 / 08</span>
+      </div>
+      <div class="c1-mid">
+        <img class="c1-logo" src="../_shared/logos/WHR.svg" alt="Whirlpool logo" onerror="this.style.display='none'">
+        <div class="c1-ticker">WHR</div>
+        <div class="c1-co">Whirlpool Corporation <span class="nasdaq">NYSE</span></div>
+        <div class="c1-price">Q1 2026 · <b>소비자 수요 붕괴 · 관세 비용 직격</b></div>
+        <div class="c1-chg-red">-19.5%</div>
+        <div class="c1-momentum">
+          <div class="m">
+            <div class="ml">진행 EPS 미스</div>
+            <div class="mv">-$1.03</div>
+          </div>
+          <div class="m">
+            <div class="ml">매출 YoY</div>
+            <div class="mv">-9.6%</div>
+          </div>
+          <div class="m blue-tone">
+            <div class="ml">FY26 EPS가이던스</div>
+            <div class="mv">$3.25</div>
+          </div>
+        </div>
+      </div>
+      <div class="c1-foot">
+        <span class="c1-date">2026.05.06</span>
+        <span class="c1-pill-red">📉 2월말 북미 수요 급감 · 어닝 쇼크</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 — EARNINGS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 2 · EARNINGS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge red"><span class="dot"></span>Q1 2026 실적</span>
+        <span class="counter">02 / 08</span>
+      </div>
+      <h2 class="card-title">소비자 수요 붕괴<br>EPS <span class="red">-$0.56</span> 어닝 쇼크</h2>
+      <div class="mgrid">
+        <div class="mbox miss">
+          <div class="ml">💰 매출 Revenue</div>
+          <div class="me">컨센 $3.42B</div>
+          <div class="ma">$3.27B</div>
+          <div class="ms">YoY -9.6% · 미스 -4.4%</div>
+        </div>
+        <div class="mbox miss">
+          <div class="ml">📊 진행 EPS</div>
+          <div class="me">컨센 $0.47</div>
+          <div class="ma">-$0.56</div>
+          <div class="ms">전년 $1.70 → -$0.56 급락</div>
+        </div>
+        <div class="mbox miss">
+          <div class="ml">📉 진행 EBIT마진</div>
+          <div class="me">전년 5.9%</div>
+          <div class="ma">1.3%</div>
+          <div class="ms">YoY -460bps 급락</div>
+        </div>
+        <div class="mbox miss">
+          <div class="ml">💸 FCF</div>
+          <div class="me">전년 -$793M</div>
+          <div class="ma">-$895M</div>
+          <div class="ms">현금 소진 악화</div>
+        </div>
+      </div>
+      <div class="banner-warn">
+        <div class="pulse-r"></div>
+        <span class="banner-warn-txt">매출·EPS·마진·FCF 4가지 전부 미스 · 북미 수요 2월말 급격 붕괴</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 — HIGHLIGHTS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 3 · HIGHLIGHTS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge red"><span class="dot"></span>핵심 포인트</span>
+        <span class="counter">03 / 08</span>
+      </div>
+      <h2 class="card-title">왜 이렇게<br><span class="red">크게 빠졌나?</span></h2>
+      <div class="hl-list">
+        <div class="hl-item warn">
+          <div class="ico">📉</div>
+          <div class="body">
+            <div class="title">북미 수요 2월말 급격 붕괴</div>
+            <div class="desc">관세 불확실성 충격 · 소비자 심리 지수 급락 · <b>경영진 "예상 못한 갑작스러운 하락"</b></div>
+          </div>
+        </div>
+        <div class="hl-item warn">
+          <div class="ico">⚠️</div>
+          <div class="body">
+            <div class="title">진행 EPS -$0.56 — 컨센 +$0.47 대비 대형 미스</div>
+            <div class="desc">전년 동기 $1.70에서 <b>-$2.26 YoY 급락</b> · 미스 폭 $1.03</div>
+          </div>
+        </div>
+        <div class="hl-item good">
+          <div class="ico">💹</div>
+          <div class="body">
+            <div class="title">역사상 최대 규모 가격 인상 단행</div>
+            <div class="desc">관세·비용 압박 대응 · <b>하반기 마진 회복 기대</b> · Section 232 관세 수혜 구조</div>
+          </div>
+        </div>
+        <div class="hl-item good">
+          <div class="ico">🌎</div>
+          <div class="body">
+            <div class="title">소형가전(SDA) Global +13.4% YoY 유일한 성장</div>
+            <div class="desc">EBIT마진 21% · 남미·유럽 수요 견고 · <b>지역·제품 다각화 가치 증명</b></div>
+          </div>
+        </div>
+        <div class="hl-item blue">
+          <div class="ico">🇺🇸</div>
+          <div class="body">
+            <div class="title">Section 232 관세 → 미국 제조 구조적 수혜</div>
+            <div class="desc">미국 내 제조 기반 보유 → 수입 경쟁사 대비 <b>장기 경쟁우위 가능</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 — DRIVERS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 4 · DRIVERS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge red"><span class="dot"></span>하락 원인 분석</span>
+        <span class="counter">04 / 08</span>
+      </div>
+      <h2 class="card-title">주가 <span class="red">-19.5%</span><br>3가지 충격</h2>
+      <div class="driver-list">
+        <div class="driver warn">
+          <div class="num">01</div>
+          <div class="body">
+            <div class="dtitle">북미 수요 급격 붕괴</div>
+            <div class="ddesc">북미 매출 <span class="hl-r">-7.5% YoY</span> · 2월말 소비자 심리 급락 · 관세 불확실성 확대로 소비 심리 동반 악화</div>
+          </div>
+        </div>
+        <div class="driver warn">
+          <div class="num">02</div>
+          <div class="body">
+            <div class="dtitle">관세 비용 인상 — 마진 직격</div>
+            <div class="ddesc">원자재·부품 관세로 EBIT마진 <span class="hl-r">5.9% → 1.3%</span> 급락 · 가격 전가 지연으로 Q1 비용 선반영 압박</div>
+          </div>
+        </div>
+        <div class="driver good">
+          <div class="num">03</div>
+          <div class="body">
+            <div class="dtitle">역대 최대 가격 인상 + Section 232 수혜</div>
+            <div class="ddesc">가격 인상 효과 <span class="hl">Q2~H2 반영</span> 예정 · 미국 제조 기반으로 수입경쟁사 대비 유리 · 회복 경로 가시화 중</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <div style="font-size:14px;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">세그먼트 EBIT 마진 비교</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="width:100px;color:var(--text-dim);font-weight:600;">북미 MDA</span><div style="flex:1;height:18px;background:rgba(239,68,68,0.15);border-radius:4px;position:relative;"><div style="width:1.5%;height:100%;background:#EF4444;border-radius:4px;"></div><span style="position:absolute;right:4px;top:50%;transform:translateY(-50%);color:#FCA5A5;font-weight:800;font-family:monospace;">0.3%</span></div></div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="width:100px;color:var(--text-dim);font-weight:600;">남미 MDA</span><div style="flex:1;height:18px;background:rgba(34,197,94,0.10);border-radius:4px;position:relative;"><div style="width:29%;height:100%;background:#22C55E;border-radius:4px;"></div><span style="position:absolute;right:4px;top:50%;transform:translateY(-50%);color:#4ADE80;font-weight:800;font-family:monospace;">6.0%</span></div></div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="width:100px;color:var(--text-dim);font-weight:600;">SDA 글로벌</span><div style="flex:1;height:18px;background:rgba(34,197,94,0.10);border-radius:4px;position:relative;"><div style="width:100%;height:100%;background:linear-gradient(90deg,#16A34A,#22C55E);border-radius:4px;"></div><span style="position:absolute;right:4px;top:50%;transform:translateY(-50%);color:#fff;font-weight:800;font-family:monospace;">21.0%</span></div></div>
+        </div>
+      </div>
+      <div class="insight-banner" style="margin-top:12px;">
+        💡 <b>핵심</b> — 북미 쇼크가 전체를 끌어내렸다 · SDA 21% 마진은 숨겨진 강점 · 가격 인상 효과는 Q2~H2에 반영 예정
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5 — OUTLOOK -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 5 · OUTLOOK</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge blue"><span class="dot"></span>FY2026 가이던스 하향</span>
+        <span class="counter">05 / 08</span>
+      </div>
+      <h2 class="card-title">연간 전망 하향<br><span class="blue">하반기 회복 기대</span></h2>
+      <div class="out-grid">
+        <div class="out-box warn">
+          <div class="ol">FY2026 연간 매출</div>
+          <div class="ov">~$15.0B</div>
+          <div class="od">기존 $15.45B → <b style="color:#FCA5A5">하향 -2.9%</b></div>
+        </div>
+        <div class="out-box blue">
+          <div class="ol">FY2026 진행 EPS</div>
+          <div class="ov">$3.25</div>
+          <div class="od">범위 <b style="color:#7DD3FC">$3.00~$3.50</b></div>
+        </div>
+        <div class="out-box blue">
+          <div class="ol">FY2026 EBIT 마진</div>
+          <div class="ov">~4.0%</div>
+          <div class="od">Q1 1.3% → <b style="color:#7DD3FC">H2 회복 전제</b></div>
+        </div>
+        <div class="out-box good">
+          <div class="ol">FY2026 FCF</div>
+          <div class="ov">&gt;$300M</div>
+          <div class="od">영업CF ~$700M · <b style="color:#4ADE80">연간 플러스 목표</b></div>
+        </div>
+      </div>
+      <div class="insight-banner">
+        💡 <b>주목</b> — 가격 인상 효과 + Section 232 수혜로 H2 마진 회복 기대 · 단기 충격 vs 구조적 회복 여부가 핵심 관전 포인트
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6 — VALUATION -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 6 · VALUATION</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>VALUATION CHECK</span>
+        <span class="counter">06 / 08</span>
+      </div>
+      <h2 class="card-title">-19.5% 폭락<br><span class="gold">저점 매수 기회인가?</span></h2>
+      <div class="val-grid">
+        <div class="val-side bull">
+          <div class="val-head">🟢 강세 근거</div>
+          <div class="val-row"><span class="val-l">Section 232</span><span class="val-v green">관세 수혜</span></div>
+          <div class="val-row"><span class="val-l">가격 인상</span><span class="val-v green">역대 최대</span></div>
+          <div class="val-row"><span class="val-l">SDA 마진</span><span class="val-v green">21% 견고</span></div>
+          <div class="val-row"><span class="val-l">FCF 목표</span><span class="val-v green">>$300M</span></div>
+          <div class="val-row"><span class="val-l">목표가 최저</span><span class="val-v green">$50 vs $44</span></div>
+        </div>
+        <div class="val-side bear">
+          <div class="val-head">🔴 리스크 근거</div>
+          <div class="val-row"><span class="val-l">EPS 미스</span><span class="val-v red">-$1.03 쇼크</span></div>
+          <div class="val-row"><span class="val-l">매출 역성장</span><span class="val-v red">-9.6% YoY</span></div>
+          <div class="val-row"><span class="val-l">FCF</span><span class="val-v red">-$895M 악화</span></div>
+          <div class="val-row"><span class="val-l">소비심리</span><span class="val-v red">회복 불투명</span></div>
+          <div class="val-row"><span class="val-l">애널리스트</span><span class="val-v red">전원 Neutral↓</span></div>
+        </div>
+      </div>
+      <div class="insight-banner">
+        💡 <b>핵심</b> — 단기 충격은 분명하나 Section 232 수혜·가격 인상 효과는 <b>H2 마진 회복의 실탄</b> · 소비 심리 회복 타이밍이 핵심 변수
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 7 — ANALYST TARGETS -->
+  <!--
+    Stock close May 6, 2026: ~$44 (after -19.5%)
+    Axis max: $70
+    Current line: 44/70 = 62.9%
+  -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 7 · ANALYST TARGETS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>ANALYST TARGETS</span>
+        <span class="counter">07 / 08</span>
+      </div>
+      <h2 class="card-title" style="font-size:24px;">월가 6개사 목표가<br><span class="gold">현재 $44 — 전원 목표가 상회</span></h2>
+      <div class="chart-wrap">
+        <div class="chart-grid">
+          <div class="chart-firms">
+            <div class="firm">Citigroup</div>
+            <div class="firm">JP Morgan</div>
+            <div class="firm">Mizuho</div>
+            <div class="firm">Stifel</div>
+            <div class="firm">RBC Capital</div>
+            <div class="firm">B of A</div>
+          </div>
+          <div class="chart-bars">
+            <!-- current line: 44/70 = 62.9% -->
+            <div class="current-line" style="left:62.9%;"><span class="current-line-label">현재 $44</span></div>
+            <!-- Citi $60/70 = 85.7% -->
+            <div class="bar-row"><div class="bar-fill" style="width:85.7%;"></div><div class="bar-label" style="left:85.7%;">$60</div></div>
+            <!-- JPMorgan $59/70 = 84.3% -->
+            <div class="bar-row"><div class="bar-fill" style="width:84.3%;"></div><div class="bar-label" style="left:84.3%;">$59</div></div>
+            <!-- Mizuho $55/70 = 78.6% -->
+            <div class="bar-row"><div class="bar-fill" style="width:78.6%;"></div><div class="bar-label" style="left:78.6%;">$55</div></div>
+            <!-- Stifel $55/70 = 78.6% (cut from $68) -->
+            <div class="bar-row"><div class="bar-fill" style="width:78.6%;"></div><div class="bar-label" style="left:78.6%;">$55</div></div>
+            <!-- RBC $51/70 = 72.9% -->
+            <div class="bar-row"><div class="bar-fill" style="width:72.9%;"></div><div class="bar-label" style="left:72.9%;">$51</div></div>
+            <!-- B of A $50/70 = 71.4% -->
+            <div class="bar-row"><div class="bar-fill" style="width:71.4%;"></div><div class="bar-label" style="left:71.4%;">$50</div></div>
+          </div>
+        </div>
+        <div class="chart-axis">
+          <div></div>
+          <div class="chart-axis-labels"><span>$0</span><span>$18</span><span>$35</span><span>$53</span><span>$70</span></div>
+        </div>
+      </div>
+      <div class="insight-banner">
+        💡 전원 <b>Neutral / Underperform</b> 스탠스 · 목표가 일제히 하향 · B of A $50 · Citi $60 최고 · <b>현재 $44 대비 업사이드 14~36%</b>이나 투자의견은 신중
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 8 — CTA -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 8 · BRAND / CTA</div>
+    <div class="card c8">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>AI QUANT LAB</span>
+        <span class="counter">08 / 08</span>
+      </div>
+      <div class="logo-block">
+        <div class="logo-icon"><div class="diamond"></div></div>
+        <div class="logo-name">AI QUANT LAB</div>
+        <div class="logo-sub">데이터 기반 미국주식 분석 플랫폼</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:10px 0;">
+        <div class="feat-c8"><div class="fdot"></div><span><b>Stock Detail</b> — WHR 세그먼트별 마진·매출 분기 추적</span></div>
+        <div class="feat-c8"><div class="fdot"></div><span><b>Macro</b> — 소비자 신뢰지수·CPI·금리 실시간 모니터링</span></div>
+        <div class="feat-c8"><div class="fdot"></div><span><b>Compare</b> — WHR vs MHK vs LG 가전 기업 비교</span></div>
+        <div class="feat-c8"><div class="fdot"></div><span><b>AI Quant Lab</b> — AI 추천 종목 매월 5개 자동 선정</span></div>
+      </div>
+      <div class="cta-box">
+        <div class="cta-l">DAILY MARKET · ANALYSIS</div>
+        <div class="cta-u">▶ 프로필 링크 클릭</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

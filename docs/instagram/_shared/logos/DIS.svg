@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 78">
+  <!-- Mickey Mouse silhouette (left ear, right ear, head) -->
+  <circle cx="21" cy="23" r="20" fill="#000000"/>
+  <circle cx="79" cy="23" r="20" fill="#000000"/>
+  <ellipse cx="50" cy="56" rx="31" ry="25" fill="#000000"/>
+</svg>

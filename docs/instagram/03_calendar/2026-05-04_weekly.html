@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>이번 주 어닝 위크 2026.05.04~07 — Instagram Cards</title>
+<style>
+  :root {
+    --bg:     #0A0E1A;
+    --card:   #0F172A;
+    --alt:    #131F38;
+    --blue:   #60A5FA;
+    --green:  #22C55E;
+    --gold:   #EAB308;
+    --purple: #A78BFA;
+    --orange: #F97316;
+    --pink:   #F472B6;
+    --red:    #EF4444;
+    --text:   #F1F5F9;
+    --dim:    #CBD5E1;
+    --border: rgba(203,213,225,0.13);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { background:var(--bg); color:var(--text);
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans KR',sans-serif;
+    -webkit-font-smoothing:antialiased; }
+  .page-header { padding:28px 24px 16px; text-align:center; border-bottom:1px solid var(--border); margin-bottom:36px; }
+  .page-header h1 { font-size:20px; font-weight:800;
+    background:linear-gradient(135deg,var(--blue),var(--purple),var(--gold));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(580px,1fr));
+    gap:40px; padding:0 32px 80px; max-width:1900px; margin:0 auto; }
+
+  /* BASE CARD */
+  .card { width:540px; height:675px; background:var(--card); border:1px solid var(--border);
+    border-radius:28px; padding:34px 30px; position:relative; display:flex;
+    flex-direction:column; overflow:hidden; margin:0 auto; }
+  .card::before { content:''; position:absolute; top:0; left:0; right:0; height:4px;
+    background:linear-gradient(90deg,var(--blue),var(--purple),var(--gold)); opacity:.85; }
+  .card::after { content:''; position:absolute; inset:4px 0 0 0;
+    background: radial-gradient(ellipse at top left,rgba(96,165,250,.08) 0%,transparent 55%),
+                radial-gradient(ellipse at bottom right,rgba(167,139,250,.06) 0%,transparent 55%);
+    pointer-events:none; }
+  .card > * { position:relative; z-index:1; }
+
+  .card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+  .badge { display:inline-flex; align-items:center; gap:6px; padding:5px 12px;
+    border-radius:999px; font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  .badge.blue   { background:rgba(96,165,250,.15);  border:1px solid rgba(96,165,250,.38);  color:#93C5FD; }
+  .badge.purple { background:rgba(167,139,250,.15); border:1px solid rgba(167,139,250,.38); color:#C4B5FD; }
+  .badge.gold   { background:rgba(234,179,8,.15);   border:1px solid rgba(234,179,8,.42);   color:#FDE68A; }
+  .badge.green  { background:rgba(34,197,94,.15);   border:1px solid rgba(34,197,94,.38);   color:#4ADE80; }
+  .badge .dot   { width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .counter { color:var(--dim); font-size:13px; font-weight:700; font-family:'JetBrains Mono',monospace; }
+  h2.ct { font-size:30px; font-weight:900; line-height:1.2; margin-bottom:12px; }
+  .sub { color:var(--dim); font-size:14px; font-weight:500; line-height:1.6; margin-bottom:16px; }
+  .divider { height:1px; background:var(--border); margin:14px 0; }
+
+  /* ── CARD 1 COVER ── */
+  .c1 { background: radial-gradient(ellipse at top,rgba(96,165,250,.18) 0%,transparent 55%),
+        linear-gradient(180deg,#0C1426 0%,#0A0E1A 100%);
+        border:1px solid rgba(96,165,250,.30); justify-content:space-between; }
+  .c1-tag { font-size:13px; color:#93C5FD; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+  .c1-title { font-size:38px; font-weight:900; line-height:1.15; margin:10px 0; }
+  .c1-title .hi { color:#93C5FD; }
+  .c1-sub { font-size:16px; color:var(--dim); font-weight:600; }
+  .c1-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .c1-stat { background:rgba(255,255,255,.05); border:1px solid var(--border);
+    border-radius:14px; padding:14px 12px; text-align:center; }
+  .c1-stat .sl { font-size:11px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px; }
+  .c1-stat .sv { font-size:26px; font-weight:900; }
+  .c1-tickers { display:flex; flex-wrap:wrap; gap:7px; }
+  .c1-chip { padding:5px 11px; border-radius:8px; font-size:13px; font-weight:800; }
+  .c1-chip.ai  { background:rgba(96,165,250,.18); color:#93C5FD; border:1px solid rgba(96,165,250,.35); }
+  .c1-chip.cs  { background:rgba(234,179,8,.15);  color:#FDE68A; border:1px solid rgba(234,179,8,.35); }
+  .c1-chip.hc  { background:rgba(34,197,94,.15);  color:#4ADE80; border:1px solid rgba(34,197,94,.32); }
+  .c1-chip.pl  { background:rgba(167,139,250,.15);color:#C4B5FD; border:1px solid rgba(167,139,250,.32); }
+  .c1-chip.cr  { background:rgba(249,115,22,.15); color:#FCA5A5; border:1px solid rgba(249,115,22,.32); }
+
+  /* ── CARD 2 SCHEDULE ── */
+  .sched { flex:1; display:flex; flex-direction:column; gap:6px; }
+  .day-row { background:var(--alt); border:1px solid var(--border); border-radius:14px;
+    overflow:hidden; }
+  .day-hdr { display:flex; align-items:center; gap:10px; padding:9px 14px;
+    border-bottom:1px solid var(--border); }
+  .day-label { font-size:14px; font-weight:800; }
+  .day-date  { font-size:12px; color:var(--dim); font-weight:600; }
+  .day-count { margin-left:auto; font-size:11px; color:var(--dim); font-weight:700;
+    background:rgba(255,255,255,.08); padding:2px 8px; border-radius:999px; }
+  .day-body { display:grid; grid-template-columns:1fr 1fr; }
+  .timing-col { padding:9px 12px; }
+  .timing-col:first-child { border-right:1px solid var(--border); }
+  .timing-label { font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase;
+    margin-bottom:6px; }
+  .timing-label.pre  { color:#FDE68A; }
+  .timing-label.post { color:#93C5FD; }
+  .ticker-list { display:flex; flex-wrap:wrap; gap:5px; }
+  .t-chip { padding:3px 9px; border-radius:6px; font-size:12px; font-weight:800; }
+  .t-chip.ai   { background:rgba(96,165,250,.20); color:#93C5FD; }
+  .t-chip.cs   { background:rgba(234,179,8,.18);  color:#FDE68A; }
+  .t-chip.hc   { background:rgba(34,197,94,.18);  color:#4ADE80; }
+  .t-chip.pl   { background:rgba(167,139,250,.18);color:#C4B5FD; }
+  .t-chip.cr   { background:rgba(249,115,22,.18); color:#FDBA74; }
+  .t-chip.none { color:var(--dim); font-size:12px; font-weight:500; background:none; padding:3px 2px; }
+  .legend { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .leg-item { display:flex; align-items:center; gap:4px; font-size:11px; color:var(--dim); font-weight:600; }
+  .leg-dot  { width:7px; height:7px; border-radius:50%; }
+
+  /* ── CARD 3 AI SECTOR ── */
+  .ai-cards { flex:1; display:flex; flex-direction:column; gap:7px; }
+  .ai-item { background:var(--alt); border:1px solid var(--border); border-radius:14px; padding:10px 14px; }
+  .ai-item.highlight { border-color:rgba(96,165,250,.40); background:rgba(96,165,250,.07); }
+  .ai-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
+  .ai-ticker { font-size:19px; font-weight:900; }
+  .ai-name   { font-size:11px; color:var(--dim); font-weight:600; margin-top:2px; }
+  .ai-date   { font-size:11px; color:var(--dim); font-weight:700; text-align:right; }
+  .ai-timing { font-size:10px; font-weight:700; padding:2px 7px; border-radius:999px; margin-top:3px; }
+  .ai-timing.pre  { background:rgba(234,179,8,.18);  color:#FDE68A; }
+  .ai-timing.post { background:rgba(96,165,250,.18); color:#93C5FD; }
+  .ai-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:6px; }
+  .ai-metric { text-align:center; }
+  .ai-metric .ml { font-size:10px; color:var(--dim); font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+  .ai-metric .mv { font-size:14px; font-weight:800; }
+  .ai-metric .mg { font-size:12px; font-weight:700; color:#4ADE80; }
+  .ai-watch { font-size:12px; color:var(--dim); font-weight:600; line-height:1.45;
+    background:rgba(255,255,255,.04); border-radius:8px; padding:5px 9px; }
+  .ai-watch strong { color:var(--text); }
+
+  /* ── CARD 4 OTHER SECTORS ── */
+  .other-grid { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+  .other-item { background:var(--alt); border:1px solid var(--border); border-radius:14px;
+    padding:13px 14px; display:flex; flex-direction:column; gap:6px; }
+  .oi-top { display:flex; justify-content:space-between; align-items:center; }
+  .oi-ticker { font-size:18px; font-weight:900; }
+  .oi-timing { font-size:10px; font-weight:700; padding:2px 6px; border-radius:999px; }
+  .oi-timing.pre  { background:rgba(234,179,8,.18);  color:#FDE68A; }
+  .oi-timing.post { background:rgba(96,165,250,.18); color:#93C5FD; }
+  .oi-name  { font-size:11px; color:var(--dim); font-weight:600; }
+  .oi-date  { font-size:11px; color:var(--dim); font-weight:700; }
+  .oi-eps   { display:flex; justify-content:space-between; align-items:baseline; }
+  .oi-eps .el { font-size:10px; color:var(--dim); font-weight:700; text-transform:uppercase; }
+  .oi-eps .ev { font-size:16px; font-weight:800; }
+  .oi-watch { font-size:11px; color:var(--dim); font-weight:600; line-height:1.45; }
+  .oi-watch strong { color:var(--text); }
+  .oi-item.wide { grid-column:span 2; background:rgba(96,165,250,.06); border-color:rgba(96,165,250,.30); }
+
+  /* ── CARD 5 CTA ── */
+  .c5 { background: radial-gradient(ellipse at top,rgba(167,139,250,.16) 0%,transparent 55%),
+        linear-gradient(180deg,#0C1426 0%,#0A0E1A 100%);
+        border:1px solid rgba(167,139,250,.28); justify-content:space-between; }
+  .watch-list { display:flex; flex-direction:column; gap:8px; }
+  .watch-item { display:flex; gap:12px; align-items:flex-start;
+    background:rgba(255,255,255,.04); border:1px solid var(--border);
+    border-radius:12px; padding:11px 14px; }
+  .watch-num { font-size:18px; font-weight:900; color:#C4B5FD; flex-shrink:0; width:24px; }
+  .watch-text .wt { font-size:14px; font-weight:700; margin-bottom:2px; }
+  .watch-text .wd { font-size:12px; color:var(--dim); font-weight:500; line-height:1.45; }
+  .cta-bot { background:rgba(96,165,250,.08); border:1px solid rgba(96,165,250,.28);
+    border-radius:14px; padding:14px 18px; text-align:center;
+    font-size:14px; color:var(--dim); font-weight:500; line-height:1.6; }
+  .cta-bot strong { color:var(--text); }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>이번 주 어닝 위크 2026.05.04~07 — Instagram Cards (540×675)</h1>
+  <p style="color:#64748B;font-size:13px;margin-top:5px;">11개 기업 · 4일 연속 · 5 cards</p>
+</div>
+
+<div class="grid">
+
+  <!-- ══ CARD 1 — COVER ══ -->
+  <div class="card c1">
+    <div>
+      <div class="c1-tag">📅 2026 Earnings Week</div>
+      <div class="c1-title">이번 주<br><span class="hi">어닝 위크</span></div>
+      <div class="c1-sub">2026년 5월 4일 ~ 7일 · 주요 기업 실적 발표</div>
+    </div>
+
+    <div class="c1-stats">
+      <div class="c1-stat">
+        <div class="sl">발표 기업</div>
+        <div class="sv" style="color:#93C5FD;">11</div>
+      </div>
+      <div class="c1-stat">
+        <div class="sl">연속 일정</div>
+        <div class="sv" style="color:#C4B5FD;">4일</div>
+      </div>
+      <div class="c1-stat">
+        <div class="sl">핵심 섹터</div>
+        <div class="sv" style="color:#FDE68A;">AI·소비</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:11px;color:var(--dim);font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:9px;">주목 종목 (섹터별)</div>
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:10px;color:#93C5FD;font-weight:700;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0;width:68px;">AI·반도체</span>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            <span class="c1-chip ai">AMD</span>
+            <span class="c1-chip ai">ARM</span>
+            <span class="c1-chip ai">PLTR</span>
+            <span class="c1-chip ai">APP</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:10px;color:#FDE68A;font-weight:700;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0;width:68px;">소비재</span>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            <span class="c1-chip cs">DIS</span>
+            <span class="c1-chip cs">MCD</span>
+            <span class="c1-chip cs">UBER</span>
+            <span class="c1-chip cs">ABNB</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:10px;color:#4ADE80;font-weight:700;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0;width:68px;">헬스케어</span>
+          <div style="display:flex;gap:5px;">
+            <span class="c1-chip hc">NVO</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:10px;color:#C4B5FD;font-weight:700;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0;width:68px;">이커머스</span>
+          <div style="display:flex;gap:5px;">
+            <span class="c1-chip pl">SHOP</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:10px;color:#FDBA74;font-weight:700;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0;width:68px;">크립토</span>
+          <div style="display:flex;gap:5px;">
+            <span class="c1-chip cr">COIN</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.25);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--dim);font-weight:500;line-height:1.6;">
+      🔑 핵심 테마: <strong style="color:var(--text);">AI 수익화 증명</strong>(AMD·ARM) · <strong style="color:var(--text);">소비 심리</strong>(DIS·MCD·UBER) · <strong style="color:var(--text);">GLP-1 경쟁</strong>(NVO)
+    </div>
+  </div>
+
+  <!-- ══ CARD 2 — SCHEDULE ══ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge purple"><span class="dot"></span>Weekly Schedule</span>
+      <span class="counter">02 / 05</span>
+    </div>
+    <h2 class="ct" style="font-size:26px;">날짜별<br>발표 일정</h2>
+
+    <div class="sched">
+      <!-- 월 5/4 -->
+      <div class="day-row">
+        <div class="day-hdr">
+          <span class="day-label" style="color:#93C5FD;">월</span>
+          <span class="day-date">5월 4일</span>
+          <span class="day-count">1개</span>
+        </div>
+        <div class="day-body">
+          <div class="timing-col">
+            <div class="timing-label pre">장 전</div>
+            <div class="ticker-list"><span class="t-chip none">—</span></div>
+          </div>
+          <div class="timing-col">
+            <div class="timing-label post">장 후</div>
+            <div class="ticker-list">
+              <span class="t-chip ai">PLTR</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 화 5/5 -->
+      <div class="day-row">
+        <div class="day-hdr">
+          <span class="day-label" style="color:#C4B5FD;">화</span>
+          <span class="day-date">5월 5일</span>
+          <span class="day-count">2개</span>
+        </div>
+        <div class="day-body">
+          <div class="timing-col">
+            <div class="timing-label pre">장 전</div>
+            <div class="ticker-list">
+              <span class="t-chip pl">SHOP</span>
+            </div>
+          </div>
+          <div class="timing-col">
+            <div class="timing-label post">장 후</div>
+            <div class="ticker-list">
+              <span class="t-chip ai">AMD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 수 5/6 -->
+      <div class="day-row">
+        <div class="day-hdr">
+          <span class="day-label" style="color:#FDE68A;">수</span>
+          <span class="day-date">5월 6일</span>
+          <span class="day-count">4개</span>
+        </div>
+        <div class="day-body">
+          <div class="timing-col">
+            <div class="timing-label pre">장 전</div>
+            <div class="ticker-list">
+              <span class="t-chip cs">DIS</span>
+              <span class="t-chip hc">NVO</span>
+            </div>
+          </div>
+          <div class="timing-col">
+            <div class="timing-label post">장 후</div>
+            <div class="ticker-list">
+              <span class="t-chip ai">ARM</span>
+              <span class="t-chip pl">APP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 목 5/7 -->
+      <div class="day-row">
+        <div class="day-hdr">
+          <span class="day-label" style="color:#4ADE80;">목</span>
+          <span class="day-date">5월 7일</span>
+          <span class="day-count">4개</span>
+        </div>
+        <div class="day-body">
+          <div class="timing-col">
+            <div class="timing-label pre">장 전</div>
+            <div class="ticker-list">
+              <span class="t-chip cs">MCD</span>
+              <span class="t-chip cs">UBER</span>
+            </div>
+          </div>
+          <div class="timing-col">
+            <div class="timing-label post">장 후</div>
+            <div class="ticker-list">
+              <span class="t-chip cs">ABNB</span>
+              <span class="t-chip cr">COIN</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#60A5FA;"></div>AI/반도체</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#EAB308;"></div>소비재</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#22C55E;"></div>헬스케어</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#A78BFA;"></div>플랫폼</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#F97316;"></div>크립토</div>
+    </div>
+  </div>
+
+  <!-- ══ CARD 3 — AI/반도체 ══ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge blue"><span class="dot"></span>AI · 반도체</span>
+      <span class="counter">03 / 05</span>
+    </div>
+    <h2 class="ct" style="font-size:26px;">AI 섹터<br><span style="color:#93C5FD;">3대장</span> 실적 주목</h2>
+
+    <div class="ai-cards">
+      <!-- AMD -->
+      <div class="ai-item highlight">
+        <div class="ai-top">
+          <div>
+            <div class="ai-ticker" style="color:#93C5FD;">AMD</div>
+            <div class="ai-name">Advanced Micro Devices</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="ai-date">5월 5일 (화)</div>
+            <div class="ai-timing post">장 후</div>
+          </div>
+        </div>
+        <div class="ai-metrics">
+          <div class="ai-metric">
+            <div class="ml">EPS 예상</div>
+            <div class="mv">$1.29</div>
+            <div class="mg">+33% YoY</div>
+          </div>
+          <div class="ai-metric">
+            <div class="ml">매출 예상</div>
+            <div class="mv">$9.87B</div>
+            <div class="mg">+33% YoY</div>
+          </div>
+          <div class="ai-metric">
+            <div class="ml">목표주가</div>
+            <div class="mv">$292</div>
+            <div class="mg">컨센서스</div>
+          </div>
+        </div>
+        <div class="ai-watch">👀 <strong>데이터센터 GPU(MI350) 매출</strong> + 총이익률 방향성이 주가 반응 결정</div>
+      </div>
+      <!-- ARM -->
+      <div class="ai-item">
+        <div class="ai-top">
+          <div>
+            <div class="ai-ticker" style="color:#C4B5FD;">ARM</div>
+            <div class="ai-name">Arm Holdings · YTD +84%</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="ai-date">5월 6일 (수)</div>
+            <div class="ai-timing post">장 후</div>
+          </div>
+        </div>
+        <div class="ai-metrics">
+          <div class="ai-metric">
+            <div class="ml">EPS 예상</div>
+            <div class="mv">$0.58</div>
+            <div class="mg">+5.5% YoY</div>
+          </div>
+          <div class="ai-metric">
+            <div class="ml">매출 예상</div>
+            <div class="mv">$1.47B</div>
+            <div class="mg">+18% YoY</div>
+          </div>
+          <div class="ai-metric">
+            <div class="ml">로열티</div>
+            <div class="mv">AI 서버</div>
+            <div class="mg">확대 주목</div>
+          </div>
+        </div>
+        <div class="ai-watch">👀 AI 서버용 CPU 로열티 비중 변화 · 고평가 논란 속 가이던스가 핵심</div>
+      </div>
+      <!-- PLTR -->
+      <div class="ai-item">
+        <div class="ai-top">
+          <div>
+            <div class="ai-ticker" style="color:#4ADE80;">PLTR</div>
+            <div class="ai-name">Palantir Technologies</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="ai-date">5월 4일 (월)</div>
+            <div class="ai-timing post">장 후</div>
+          </div>
+        </div>
+        <div class="ai-metrics">
+          <div class="ai-metric">
+            <div class="ml">EPS 예상</div>
+            <div class="mv">$0.28</div>
+            <div class="mg">+115% YoY</div>
+          </div>
+          <div class="ai-metric">
+            <div class="ml">매출 예상</div>
+            <div class="mv">$1.54B</div>
+            <div class="mg">+74% YoY</div>
+          </div>
+          <div class="ai-metric">
+            <div class="ml">비트 확률</div>
+            <div class="mv">96%</div>
+            <div class="mg">옵션 ±10.5%</div>
+          </div>
+        </div>
+        <div class="ai-watch">👀 상업용 AIP 고객 확장 속도 · 정부 계약 잔고 유지 여부</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CARD 4 — 소비/기타 ══ -->
+  <div class="card">
+    <div class="card-head">
+      <span class="badge gold"><span class="dot"></span>소비 · 헬스케어</span>
+      <span class="counter">04 / 05</span>
+    </div>
+    <h2 class="ct" style="font-size:26px;">소비 심리<br><span style="color:#FDE68A;">가늠자</span> 주목</h2>
+
+    <div class="other-grid">
+      <!-- DIS -->
+      <div class="other-item">
+        <div class="oi-top">
+          <div class="oi-ticker" style="color:#FDE68A;">DIS</div>
+          <div class="oi-timing pre">장 전</div>
+        </div>
+        <div class="oi-name">Walt Disney · 5/6(수)</div>
+        <div class="oi-eps">
+          <span class="el">EPS 예상</span>
+          <span class="ev">$1.49</span>
+        </div>
+        <div class="oi-watch">👀 <strong>Disney+</strong> 스트리밍 흑자 지속 · 테마파크 방문객 지출</div>
+      </div>
+      <!-- NVO -->
+      <div class="other-item" style="border-color:rgba(34,197,94,.30);background:rgba(34,197,94,.05);">
+        <div class="oi-top">
+          <div class="oi-ticker" style="color:#4ADE80;">NVO</div>
+          <div class="oi-timing pre">장 전</div>
+        </div>
+        <div class="oi-name">Novo Nordisk · 5/6(수)</div>
+        <div class="oi-eps">
+          <span class="el">이슈</span>
+          <span class="ev" style="font-size:13px;color:#4ADE80;">GLP-1</span>
+        </div>
+        <div class="oi-watch">👀 <strong>Ozempic·Wegovy</strong> 미국 처방 추세 · 경구용 세마글루타이드 출시</div>
+      </div>
+      <!-- MCD -->
+      <div class="other-item">
+        <div class="oi-top">
+          <div class="oi-ticker" style="color:#FDE68A;">MCD</div>
+          <div class="oi-timing pre">장 전</div>
+        </div>
+        <div class="oi-name">McDonald's · 5/7(목)</div>
+        <div class="oi-eps">
+          <span class="el">EPS 예상</span>
+          <span class="ev">$2.75</span>
+        </div>
+        <div class="oi-watch">👀 <strong>동일 매장 매출</strong>(SSS) — 소비 위축 바로미터</div>
+      </div>
+      <!-- UBER -->
+      <div class="other-item">
+        <div class="oi-top">
+          <div class="oi-ticker" style="color:#FDE68A;">UBER</div>
+          <div class="oi-timing pre">장 전</div>
+        </div>
+        <div class="oi-name">Uber · 5/7(목)</div>
+        <div class="oi-eps">
+          <span class="el">Gross Booking</span>
+          <span class="ev" style="font-size:13px;">$52.9B</span>
+        </div>
+        <div class="oi-watch">👀 <strong>로보택시</strong> 통합 전략 업데이트 · EBITDA $2.4B</div>
+      </div>
+      <!-- ABNB + COIN wide -->
+      <div class="other-item" style="grid-column:span 2; flex-direction:row; align-items:center; gap:16px;">
+        <div style="flex:1; border-right:1px solid var(--border); padding-right:14px;">
+          <div class="oi-top" style="margin-bottom:4px;">
+            <div class="oi-ticker" style="color:#FDE68A; font-size:16px;">ABNB</div>
+            <div class="oi-timing post">장 후</div>
+          </div>
+          <div class="oi-name">Airbnb · 5/7(목)</div>
+          <div style="font-size:13px;font-weight:800;color:#FDE68A;margin-top:4px;">EPS $0.30 · 매출 $2.61B</div>
+          <div class="oi-watch" style="margin-top:4px;">글로벌 여행 수요 지속 여부</div>
+        </div>
+        <div style="flex:1;">
+          <div class="oi-top" style="margin-bottom:4px;">
+            <div class="oi-ticker" style="color:#FDBA74; font-size:16px;">COIN</div>
+            <div class="oi-timing post">장 후</div>
+          </div>
+          <div class="oi-name">Coinbase · 5/7(목)</div>
+          <div style="font-size:13px;font-weight:800;color:#FDBA74;margin-top:4px;">EPS $0.33~$0.57 · 매출 $1.56B</div>
+          <div class="oi-watch" style="margin-top:4px;">BTC 랠리 → 거래량 수익 전환 여부</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CARD 5 — CTA ══ -->
+  <div class="card c5">
+    <div class="card-head">
+      <span class="badge purple"><span class="dot"></span>Key Watch</span>
+      <span class="counter">05 / 05</span>
+    </div>
+    <h2 class="ct" style="font-size:26px;">이번 주<br><span style="color:#C4B5FD;">핵심 관전 포인트</span></h2>
+
+    <div class="watch-list">
+      <div class="watch-item">
+        <div class="watch-num">1</div>
+        <div class="watch-text">
+          <div class="wt">AMD 총이익률 — 숫자보다 방향성</div>
+          <div class="wd">매출 비트해도 마진 압박 신호 나오면 주가 하락 가능. MS·META 패턴 반복 주의</div>
+        </div>
+      </div>
+      <div class="watch-item">
+        <div class="watch-num">2</div>
+        <div class="watch-text">
+          <div class="wt">AI 설비투자 가이던스가 핵심 변수</div>
+          <div class="wd">ARM·PLTR은 AI 인프라 수요 수혜주. 구글·아마존 어닝 이후 수요 확인 → 기대감 선반영 여부 확인</div>
+        </div>
+      </div>
+      <div class="watch-item">
+        <div class="watch-num">3</div>
+        <div class="watch-text">
+          <div class="wt">소비 심리 — DIS·MCD·UBER 삼각 검증</div>
+          <div class="wd">관세 불확실성 속 미국 소비자 지출이 버티고 있는지 세 기업이 동시에 보여줌</div>
+        </div>
+      </div>
+      <div class="watch-item">
+        <div class="watch-num">4</div>
+        <div class="watch-text">
+          <div class="wt">"비트해도 내린다" 가능성 열어두기</div>
+          <div class="wd">이미 주가에 기대가 반영된 종목은 컨센서스 충족만으로 실망 매물 나올 수 있음</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-bot">
+      실적 발표 후 AI Quant Lab으로<br>
+      <strong>종목 스코어 변화 직접 확인해보세요</strong>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>AMAT Q2 FY2026 Earnings Preview — Instagram Card Series (4:5)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg-page: #0A0E1A;
+    --bg-card: #0F172A;
+    --bg-card-alt: #131F38;
+    --accent: #569BBE;
+    --accent-2: #60A5FA;
+    --gold: #EAB308;
+    --red: #EF4444;
+    --text: #F1F5F9;
+    --text-dim: #CBD5E1;
+    --border: rgba(203,213,225,0.16);
+    --border-strong: rgba(86,155,190,0.45);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    background: var(--bg-page);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont,
+                 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    padding: 32px 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #569BBE 0%, #60A5FA 60%, #EAB308 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(580px, 1fr));
+    gap: 36px;
+    padding: 40px 32px 80px;
+    max-width: 1900px;
+    margin: 0 auto;
+  }
+
+  .card {
+    width: 540px;
+    height: 675px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 32px 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #569BBE, #60A5FA, #EAB308);
+    opacity: 0.85;
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 4px 0 0 0;
+    background:
+      radial-gradient(ellipse at top left,
+        rgba(86,155,190,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right,
+        rgba(96,165,250,0.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .card > * { position: relative; z-index: 1; }
+
+  .card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
+    background: rgba(86,155,190,0.16);
+    border: 1px solid rgba(86,155,190,0.40);
+    border-radius: 999px;
+    color: #93C5FD;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge.blue {
+    background: rgba(96,165,250,0.16);
+    border-color: rgba(96,165,250,0.40);
+    color: #93C5FD;
+  }
+  .badge.gold {
+    background: rgba(234,179,8,0.18);
+    border-color: rgba(234,179,8,0.50);
+    color: #FDE68A;
+  }
+  .badge.green {
+    background: rgba(34,197,94,0.18);
+    border-color: rgba(34,197,94,0.45);
+    color: #4ADE80;
+  }
+  .badge .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: currentColor;
+  }
+  .counter {
+    color: var(--text-dim);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  h2.card-title {
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 14px;
+    color: var(--text);
+  }
+  h2.card-title .hi  { color: #93C5FD; }
+  h2.card-title .gold { color: #FDE68A; }
+  h2.card-title .blue { color: #7DD3FC; }
+
+  .blue  { color: #93C5FD; }
+  .green { color: #4ADE80; }
+  .red   { color: #FCA5A5; }
+  .gold-text { color: var(--gold); }
+
+  /* ── Cover ── */
+  .c1 {
+    background:
+      radial-gradient(ellipse at top,
+        rgba(86,155,190,0.22) 0%, transparent 60%),
+      linear-gradient(180deg, #0A1520 0%, #0A0E1A 100%);
+    border: 1px solid rgba(86,155,190,0.45);
+    justify-content: space-between;
+    padding: 36px 32px;
+  }
+  .c1-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .c1-logo {
+    height: 56px;
+    width: auto;
+    background: #FFFFFF;
+    padding: 12px 18px;
+    border-radius: 14px;
+    align-self: flex-start;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    object-fit: contain;
+  }
+  .c1-ticker {
+    font-size: 130px;
+    font-weight: 900;
+    letter-spacing: -6px;
+    line-height: 0.9;
+    background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .c1-co { font-size: 20px; color: var(--text-dim); margin-top: 12px; font-weight: 600; }
+  .c1-co .nasdaq {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 3px 10px;
+    background: rgba(86,155,190,0.14);
+    border-radius: 5px;
+    font-size: 14px;
+    color: #93C5FD;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+  }
+  .c1-price {
+    font-size: 18px;
+    color: var(--text-dim);
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .c1-price b { color: var(--text); }
+  .c1-chg {
+    font-size: 72px;
+    font-weight: 900;
+    color: #FDE68A;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-top: 8px;
+    text-shadow: 0 0 40px rgba(234,179,8,0.45);
+  }
+  .c1-chg-label {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .c1-momentum {
+    display: flex; gap: 14px;
+    margin-top: 20px;
+  }
+  .c1-momentum .m {
+    flex: 1;
+    background: rgba(86,155,190,0.10);
+    border: 1px solid rgba(86,155,190,0.32);
+    border-radius: 12px;
+    padding: 11px 14px;
+  }
+  .c1-momentum .ml {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .c1-momentum .mv {
+    font-size: 18px;
+    font-weight: 800;
+    color: #7DD3FC;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .c1-momentum .m.gold-tone { background: rgba(234,179,8,0.10); border-color: rgba(234,179,8,0.32); }
+  .c1-momentum .m.gold-tone .mv { color: #FDE68A; }
+  .c1-momentum .m.green-tone { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.32); }
+  .c1-momentum .m.green-tone .mv { color: #4ADE80; }
+  .c1-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
+  .c1-date { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .c1-pill {
+    background: rgba(86,155,190,0.20);
+    border: 1px solid rgba(86,155,190,0.55);
+    color: #7DD3FC;
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-weight: 800;
+  }
+
+  /* ── Earnings metrics ── */
+  .mgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .mbox {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .mbox.beat { border-color: rgba(86,155,190,0.40); background: rgba(86,155,190,0.06); }
+  .mbox .ml {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .mbox .me {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .mbox .ma {
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.1;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .mbox .ms {
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .banner {
+    background: linear-gradient(90deg,
+      rgba(86,155,190,0.16) 0%,
+      rgba(86,155,190,0.04) 100%);
+    border: 1px solid rgba(86,155,190,0.40);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 12px;
+  }
+  .banner .pulse {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #7DD3FC;
+    box-shadow: 0 0 0 0 rgba(86,155,190,0.75);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(86,155,190,0.7); }
+    70%  { box-shadow: 0 0 0 12px rgba(86,155,190,0); }
+    100% { box-shadow: 0 0 0 0 rgba(86,155,190,0); }
+  }
+  .banner-txt { font-size: 15px; color: #7DD3FC; font-weight: 800; }
+
+  /* ── Highlight list (Card 3) ── */
+  .hl-list { display: flex; flex-direction: column; gap: 8px; }
+  .hl-item {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex; gap: 12px;
+    align-items: flex-start;
+  }
+  .hl-item.good { border-color: rgba(86,155,190,0.38); background: rgba(86,155,190,0.06); }
+  .hl-item.warn { border-color: rgba(234,179,8,0.38); background: rgba(234,179,8,0.05); }
+  .hl-item .ico { font-size: 22px; width: 28px; flex-shrink: 0; text-align: center; padding-top: 1px; }
+  .hl-item .body { flex: 1; }
+  .hl-item .title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+  .hl-item .desc { font-size: 14px; color: var(--text-dim); line-height: 1.4; font-weight: 600; }
+  .hl-item.good .desc b { color: #7DD3FC; font-weight: 800; }
+  .hl-item.warn .desc b { color: #FDE68A; font-weight: 800; }
+
+  /* ── Driver list (Card 4) ── */
+  .driver-list { display: flex; flex-direction: column; gap: 8px; }
+  .driver {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex; gap: 12px;
+    align-items: flex-start;
+  }
+  .driver.good { border-color: rgba(86,155,190,0.38); background: rgba(86,155,190,0.06); }
+  .driver.risk { border-color: rgba(239,68,68,0.30); background: rgba(239,68,68,0.05); }
+  .driver .num {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    background: rgba(86,155,190,0.18);
+    border: 1px solid rgba(86,155,190,0.50);
+    color: #7DD3FC;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .driver.risk .num { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.50); color: #FCA5A5; }
+  .driver .body { flex: 1; min-width: 0; }
+  .driver .dtitle { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+  .driver .ddesc { font-size: 14px; color: var(--text-dim); line-height: 1.4; font-weight: 500; }
+  .driver .ddesc b { color: var(--text); font-weight: 700; }
+  .driver .ddesc .hl { color: #7DD3FC; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .driver .ddesc .warn { color: #FCA5A5; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Outlook (Card 5) ── */
+  .out-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 11px;
+    margin-top: 4px;
+  }
+  .out-box {
+    background: var(--bg-card-alt);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 15px;
+  }
+  .out-box.good { border-color: rgba(86,155,190,0.40); background: rgba(86,155,190,0.06); }
+  .out-box.warn { border-color: rgba(234,179,8,0.40); background: rgba(234,179,8,0.05); }
+  .out-box .ol {
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .out-box .ov { font-size: 26px; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1.1; }
+  .out-box.good .ov { color: #7DD3FC; }
+  .out-box.warn .ov { color: #FDE68A; }
+  .out-box .od { font-size: 14px; color: var(--text-dim); margin-top: 5px; font-weight: 600; line-height: 1.4; }
+  .out-box .od b { color: var(--text); font-weight: 700; }
+
+  /* ── Valuation (Card 6) ── */
+  .val-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 4px; }
+  .val-side { background: var(--bg-card-alt); border: 1px solid var(--border); border-radius: 14px; padding: 13px 15px; }
+  .val-side.bull { border-color: rgba(86,155,190,0.40); background: rgba(86,155,190,0.06); }
+  .val-side.bear { border-color: rgba(252,165,165,0.32); background: rgba(239,68,68,0.06); }
+  .val-head { font-size: 14px; font-weight: 800; margin-bottom: 8px; letter-spacing: 0.04em; font-family: 'JetBrains Mono', monospace; }
+  .val-side.bull .val-head { color: #7DD3FC; }
+  .val-side.bear .val-head { color: #FCA5A5; }
+  .val-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 14px; border-top: 1px solid rgba(203,213,225,0.06); }
+  .val-row:first-of-type { border-top: 0; padding-top: 2px; }
+  .val-l { color: var(--text-dim); font-weight: 600; }
+  .val-v { color: var(--text); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .val-v.blue  { color: #7DD3FC; }
+  .val-v.green { color: #4ADE80; }
+  .val-v.red   { color: #FCA5A5; }
+
+  /* ── Analyst Targets bar chart (Card 7) ── */
+  .chart-wrap { margin-top: 24px; position: relative; }
+  .chart-grid { display: grid; grid-template-columns: 110px 1fr; gap: 8px; }
+  .chart-firms { display: flex; flex-direction: column; gap: 3px; }
+  .chart-firms .firm { height: 19px; display: flex; align-items: center; justify-content: flex-end; font-size: 14px; color: var(--text-dim); font-weight: 600; white-space: nowrap; overflow: hidden; }
+  .chart-bars { position: relative; display: flex; flex-direction: column; gap: 3px; }
+  .bar-row { height: 19px; background: rgba(15,23,42,0.5); border: 1px solid rgba(203,213,225,0.06); border-radius: 3px; position: relative; }
+  .bar-fill { position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(90deg, rgba(86,155,190,0.55), rgba(86,155,190,0.78)); border-radius: 3px; border: 1px solid rgba(86,155,190,0.85); }
+  .bar-label { position: absolute; top: 50%; transform: translateY(-50%); font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 800; color: var(--text); white-space: nowrap; padding-left: 5px; z-index: 2; }
+  .current-line { position: absolute; top: -22px; bottom: -2px; width: 2px; background: var(--gold); box-shadow: 0 0 6px rgba(234,179,8,0.7); z-index: 5; pointer-events: none; }
+  .current-line-label { position: absolute; top: 0px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; padding: 2px 8px; font-size: 14px; font-weight: 800; white-space: nowrap; font-family: 'JetBrains Mono', monospace; border-radius: 4px; }
+  .chart-axis { display: grid; grid-template-columns: 110px 1fr; gap: 8px; margin-top: 6px; }
+  .chart-axis-labels { display: flex; justify-content: space-between; font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+
+  .insight-banner {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: linear-gradient(90deg, rgba(234,179,8,0.16), rgba(234,179,8,0.04));
+    border: 1px solid rgba(234,179,8,0.40);
+    border-radius: 12px;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .insight-banner b { color: #FDE68A; font-weight: 800; }
+
+  /* ── CTA (Card 8) ── */
+  .c8 {
+    background:
+      radial-gradient(ellipse at top right,
+        rgba(234,179,8,0.22) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom left,
+        rgba(86,155,190,0.22) 0%, transparent 55%),
+      linear-gradient(180deg, #0F172A 0%, #0B1220 100%);
+    border: 1px solid rgba(86,155,190,0.40);
+    align-items: stretch;
+    text-align: center;
+    padding: 32px 30px;
+  }
+  .logo-block { text-align: center; margin: 6px 0 12px; }
+  .logo-icon {
+    width: 70px; height: 70px;
+    border: 2px solid rgba(86,155,190,0.50);
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    background: rgba(86,155,190,0.10);
+    margin-bottom: 10px;
+  }
+  .diamond {
+    width: 26px; height: 26px;
+    background: linear-gradient(135deg, var(--gold) 0%, #569BBE 100%);
+    transform: rotate(45deg);
+    border-radius: 4px;
+    box-shadow: 0 0 22px rgba(86,155,190,0.6);
+  }
+  .logo-name {
+    font-size: 26px; font-weight: 900;
+    background: linear-gradient(135deg, var(--gold) 0%, #569BBE 70%, #60A5FA 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1.6px;
+  }
+  .logo-sub { font-size: 14px; color: var(--text-dim); margin-top: 4px; font-weight: 600; }
+  .feat-c8 {
+    background: rgba(15,23,42,0.85);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 15px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .feat-c8 .fdot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #569BBE;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px #569BBE;
+  }
+  .feat-c8 b { color: var(--text); font-weight: 800; }
+  .cta-box {
+    background: linear-gradient(135deg, rgba(86,155,190,0.16), rgba(96,165,250,0.14));
+    border: 1.5px solid rgba(86,155,190,0.45);
+    border-radius: 14px;
+    padding: 14px 18px;
+    text-align: center;
+    margin-top: auto;
+  }
+  .cta-l {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .cta-u { font-size: 18px; font-weight: 900; color: #7DD3FC; }
+
+  .card-label {
+    position: absolute;
+    top: -28px; left: 0;
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 0.10em;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+  }
+  .card-wrap { position: relative; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📊 AMAT Q2 FY2026 어닝 프리뷰 — HBM 50% 점유율, 中 규제 공백, 4분기 연속 비트</h1>
+  <p>8 cards · 1080×1350 · Applied Materials Q2 FY26 Earnings Preview (5/14 발표)</p>
+</header>
+
+<div class="grid">
+
+  <!-- CARD 1 — COVER -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 1 · COVER</div>
+    <div class="card c1">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>EARNINGS PREVIEW</span>
+        <span class="counter">01 / 08</span>
+      </div>
+      <div class="c1-mid">
+        <img class="c1-logo"
+             src="../_shared/logos/AMAT.svg"
+             alt="Applied Materials logo"
+             onerror="this.style.display='none'">
+        <div class="c1-ticker">AMAT</div>
+        <div class="c1-co">
+          Applied Materials Inc.
+          <span class="nasdaq">NASDAQ</span>
+        </div>
+        <div class="c1-price">현재가 <b>$423.54</b> · 5월 14일 장 후 발표 (5/12 종가)</div>
+        <div class="c1-chg">±8.7%</div>
+        <div class="c1-chg-label">OPTIONS IMPLIED MOVE</div>
+
+        <div class="c1-momentum">
+          <div class="m">
+            <div class="ml">EPS 예상</div>
+            <div class="mv">$2.66</div>
+          </div>
+          <div class="m">
+            <div class="ml">Revenue</div>
+            <div class="mv">$7.65B</div>
+          </div>
+          <div class="m green-tone">
+            <div class="ml">비트 연속</div>
+            <div class="mv">4분기</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="c1-foot">
+        <span class="c1-date">2026.05.14</span>
+        <span class="c1-pill">🔬 AI 반도체 장비 선두</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 — EARNINGS ESTIMATES -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 2 · EARNINGS ESTIMATES</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge blue"><span class="dot"></span>Q2 FY26 컨센서스</span>
+        <span class="counter">02 / 08</span>
+      </div>
+      <h2 class="card-title">이번 어닝<br><span class="hi">무엇을 기대</span>하나?</h2>
+
+      <div class="mgrid">
+        <div class="mbox beat">
+          <div class="ml">📊 Non-GAAP EPS</div>
+          <div class="me">컨센서스 추정치</div>
+          <div class="ma blue">$2.66</div>
+          <div class="ms blue">vs. Q1 실적 $2.38</div>
+        </div>
+        <div class="mbox beat">
+          <div class="ml">💰 매출</div>
+          <div class="me">+8.4% YoY 예상</div>
+          <div class="ma blue">$7.65B</div>
+          <div class="ms blue">사 가이던스 = 컨센</div>
+        </div>
+        <div class="mbox beat">
+          <div class="ml">🔬 반도체 시스템</div>
+          <div class="me">AI·HBM·선단 로직</div>
+          <div class="ma blue">$5.8B</div>
+          <div class="ms blue">전체 매출의 ~76%</div>
+        </div>
+        <div class="mbox">
+          <div class="ml">🛠️ AGS 서비스</div>
+          <div class="me">Applied Global Services</div>
+          <div class="ma blue">$1.6B</div>
+          <div class="ms blue">안정적 마진 기여</div>
+        </div>
+      </div>
+
+      <div class="banner">
+        <div class="pulse"></div>
+        <span class="banner-txt">4분기 연속 어닝 비트 · Q1 EPS $2.38 vs 예상 $2.21 (+7.7%)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 — KEY WATCH POINTS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 3 · KEY WATCH</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>핵심 관전 포인트</span>
+        <span class="counter">03 / 08</span>
+      </div>
+      <h2 class="card-title">이번 실적<br><span class="gold">5가지</span> 주목</h2>
+
+      <div class="hl-list">
+        <div class="hl-item good">
+          <div class="ico">🧲</div>
+          <div class="body">
+            <div class="title">HBM 패키징 점유율 >50% 유지 여부</div>
+            <div class="desc">AI 가속기 핵심 부품 · 점유율 <b>50%+</b> 기록 유지 확인</div>
+          </div>
+        </div>
+        <div class="hl-item good">
+          <div class="ico">📈</div>
+          <div class="body">
+            <div class="title">Q3 FY26 가이던스 vs 컨센서스</div>
+            <div class="desc">컨센 <b>$7.8B</b> 대비 상회 여부 · 가이던스가 주가 반응 결정</div>
+          </div>
+        </div>
+        <div class="hl-item warn">
+          <div class="ico">🇨🇳</div>
+          <div class="body">
+            <div class="title">중국 수출규제 실제 매출 영향</div>
+            <div class="desc">FY26 공백 <b>$600M</b> (회사 공식 가이던스) · 실제 Q2 반영 규모 확인</div>
+          </div>
+        </div>
+        <div class="hl-item good">
+          <div class="ico">⚡</div>
+          <div class="body">
+            <div class="title">캘린더 2026 장비 시장 +20% 가시성</div>
+            <div class="desc">CEO 가이던스 <b>+20%+</b> 성장 재확인 여부</div>
+          </div>
+        </div>
+        <div class="hl-item warn">
+          <div class="ico">🔩</div>
+          <div class="body">
+            <div class="title">ICAPS 섹터 회복 신호</div>
+            <div class="desc">IoT·자동차·전력 장비 <b>YoY 플랫</b> → 하반기 반등 언급 주시</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 — BUSINESS BREAKDOWN -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 4 · BUSINESS BREAKDOWN</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge blue"><span class="dot"></span>사업부 분석</span>
+        <span class="counter">04 / 08</span>
+      </div>
+      <h2 class="card-title">성장 엔진 vs<br><span class="gold">리스크 요인</span></h2>
+
+      <div class="driver-list">
+        <div class="driver good">
+          <div class="num">01</div>
+          <div class="body">
+            <div class="dtitle">반도체 시스템 — AI·HBM·선단 로직</div>
+            <div class="ddesc">
+              예상 <span class="hl">$5.8B</span> · HBM 패키징 점유율 50%+ · 3D 어드밴스드 패키징 레코드 분기 지속
+            </div>
+          </div>
+        </div>
+
+        <div class="driver good">
+          <div class="num">02</div>
+          <div class="body">
+            <div class="dtitle">AGS 서비스 — 마진 안전판</div>
+            <div class="ddesc">
+              예상 <span class="hl">$1.6B</span> · 장비 설치 기반(Installed Base) 확대로 안정적 수익 구조 유지
+            </div>
+          </div>
+        </div>
+
+        <div class="driver risk">
+          <div class="num" style="background:rgba(239,68,68,0.18);border-color:rgba(239,68,68,0.50);color:#FCA5A5;">03</div>
+          <div class="body">
+            <div class="dtitle">중국 리스크 — 27% 비중, 규제 공백</div>
+            <div class="ddesc">
+              중국 매출 전체의 <span class="warn">~25~28%</span> · YoY <span class="warn">-7%</span> 하락 · FY26 <span class="warn">$600M</span> 손실 (회사 공식)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>핵심</b> — HBM·AI 수요로 반도체 시스템이 중국 공백을 상쇄. <b>가이던스가 공백 메꿀 증거</b>를 제시하는지가 관건
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5 — OUTLOOK -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 5 · OUTLOOK</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>전망 & 가이던스</span>
+        <span class="counter">05 / 08</span>
+      </div>
+      <h2 class="card-title">앞으로의<br><span class="gold">성장 경로는?</span></h2>
+
+      <div class="out-grid">
+        <div class="out-box good">
+          <div class="ol">Cal. 2026 장비 성장</div>
+          <div class="ov">+20%+</div>
+          <div class="od">CEO 가이던스 · <b>AI 인프라 투자</b>로 수요 강세</div>
+        </div>
+        <div class="out-box good">
+          <div class="ol">HBM 수요 모멘텀</div>
+          <div class="ov">가속</div>
+          <div class="od">AI 가속기 <b>스케일업</b> → HBM 수요도 동반 상승</div>
+        </div>
+        <div class="out-box warn">
+          <div class="ol">중국 FY26 공백</div>
+          <div class="ov">-$600M</div>
+          <div class="od">FY26 회사 공식 가이던스 · 허가 지연 지속</div>
+        </div>
+        <div class="out-box good">
+          <div class="ol">ICAPS 하반기</div>
+          <div class="ov">회복 기대</div>
+          <div class="od">자동차·전력 섹터 <b>H2 2026</b> 회복 전망</div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>주목</b> — Q3 FY26 가이던스 컨센($7.8B) 대비 상회 시 주가 +8%+ 가능. 가이던스 미달은 -8.7% 리스크
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6 — VALUATION -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 6 · VALUATION</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>VALUATION CHECK</span>
+        <span class="counter">06 / 08</span>
+      </div>
+      <h2 class="card-title">$424 지금<br><span class="gold">싼가, 비싼가?</span></h2>
+
+      <div class="val-grid">
+        <div class="val-side bull">
+          <div class="val-head">🔵 강세 근거</div>
+          <div class="val-row">
+            <span class="val-l">HBM 점유율</span>
+            <span class="val-v blue">50%+</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">EPS YoY</span>
+            <span class="val-v blue">+12%</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">장비 시장 성장</span>
+            <span class="val-v blue">+20%+</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">Street High</span>
+            <span class="val-v blue">$550</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">Buy 비율</span>
+            <span class="val-v green">29/36 (81%)</span>
+          </div>
+        </div>
+        <div class="val-side bear">
+          <div class="val-head">🔴 약세 근거</div>
+          <div class="val-row">
+            <span class="val-l">中 수출 공백</span>
+            <span class="val-v red">-$600M</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">中 매출 비중</span>
+            <span class="val-v red">27%</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">ICAPS 부진</span>
+            <span class="val-v red">YoY 플랫</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">옵션 변동폭</span>
+            <span class="val-v">±8.7%</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">Forward P/E</span>
+            <span class="val-v red">~24배</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>핵심</b> — HBM·AI 수요가 중국 공백을 초과하면 강세. <b>가이던스 상향</b>이 멀티플 재평가 촉매
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 7 — ANALYST TARGETS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 7 · ANALYST TARGETS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>ANALYST TARGETS</span>
+        <span class="counter">07 / 08</span>
+      </div>
+      <h2 class="card-title" style="font-size: 24px;">월가 10개사 목표가<br><span class="gold">현재 $424 vs 컨센서스</span></h2>
+
+      <div class="chart-wrap">
+        <div class="chart-grid">
+          <div class="chart-firms">
+            <div class="firm">Cantor Fitzgerald</div>
+            <div class="firm">HSBC</div>
+            <div class="firm">Susquehanna</div>
+            <div class="firm">B. Riley</div>
+            <div class="firm">UBS</div>
+            <div class="firm">Morgan Stanley</div>
+            <div class="firm">TD Cowen</div>
+            <div class="firm">Needham</div>
+            <div class="firm">Wells Fargo</div>
+            <div class="firm">Goldman Sachs</div>
+          </div>
+          <div class="chart-bars">
+            <!-- current price $423.54 → (423.54-300)/300 = 41.2% -->
+            <div class="current-line" style="left: 41.2%;">
+              <span class="current-line-label">현재 $424</span>
+            </div>
+            <!-- $550 Cantor → (550-300)/300 = 83.3% -->
+            <div class="bar-row"><div class="bar-fill" style="width:83.3%;"></div><div class="bar-label" style="left:83.3%;">$550</div></div>
+            <!-- $517 HSBC → 72.3% -->
+            <div class="bar-row"><div class="bar-fill" style="width:72.3%;"></div><div class="bar-label" style="left:72.3%;">$517</div></div>
+            <!-- $500 Susquehanna → 66.7% -->
+            <div class="bar-row"><div class="bar-fill" style="width:66.7%;"></div><div class="bar-label" style="left:66.7%;">$500</div></div>
+            <!-- $485 B. Riley → 61.7% -->
+            <div class="bar-row"><div class="bar-fill" style="width:61.7%;"></div><div class="bar-label" style="left:61.7%;">$485</div></div>
+            <!-- $480 UBS → 60.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:60.0%;"></div><div class="bar-label" style="left:60.0%;">$480</div></div>
+            <!-- $454 Morgan Stanley → 51.3% -->
+            <div class="bar-row"><div class="bar-fill" style="width:51.3%;"></div><div class="bar-label" style="left:51.3%;">$454</div></div>
+            <!-- $450 TD Cowen → 50.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:50.0%;"></div><div class="bar-label" style="left:50.0%;">$450</div></div>
+            <!-- $440 Needham → 46.7% -->
+            <div class="bar-row"><div class="bar-fill" style="width:46.7%;"></div><div class="bar-label" style="left:46.7%;">$440</div></div>
+            <!-- $435 Wells Fargo → 45.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:45.0%;"></div><div class="bar-label" style="left:45.0%;">$435</div></div>
+            <!-- $390 Goldman Sachs → 30.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:30.0%;"></div><div class="bar-label" style="left:30.0%;">$390</div></div>
+          </div>
+        </div>
+        <div class="chart-axis">
+          <div></div>
+          <div class="chart-axis-labels">
+            <span>$300</span>
+            <span>$375</span>
+            <span>$450</span>
+            <span>$525</span>
+            <span>$600</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>10개사 전원 현재가 상회</b> · 평균 목표 ~$470(+11%) · Cantor $550(+30%) Street High
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 8 — CTA -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 8 · BRAND / CTA</div>
+    <div class="card c8">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>AI QUANT LAB</span>
+        <span class="counter">08 / 08</span>
+      </div>
+
+      <div class="logo-block">
+        <div class="logo-icon">
+          <div class="diamond"></div>
+        </div>
+        <div class="logo-name">AI QUANT LAB</div>
+        <div class="logo-sub">데이터 기반 미국주식 분석 플랫폼</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px; margin: 10px 0;">
+        <div class="feat-c8">
+          <div class="fdot"></div>
+          <span><b>Stock Detail</b> — 애널리스트 목표가 + 사업부문 매출</span>
+        </div>
+        <div class="feat-c8">
+          <div class="fdot"></div>
+          <span><b>Semicon Track</b> — AMAT·ASML·LRCX 장비주 비교</span>
+        </div>
+        <div class="feat-c8">
+          <div class="fdot"></div>
+          <span><b>Sentiment</b> — 어닝 후 뉴스 톤 변화 추적</span>
+        </div>
+        <div class="feat-c8">
+          <div class="fdot"></div>
+          <span><b>AI Quant Lab</b> — 매월 AI 추천 종목 5개</span>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <div class="cta-l">DAILY MARKET · ANALYSIS</div>
+        <div class="cta-u">▶ 프로필 링크 클릭</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

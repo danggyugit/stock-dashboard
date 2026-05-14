@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>AMD Q1 2026 Earnings — Instagram Card Series (4:5)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  :root {
+    --bg-page: #0A0E1A;
+    --bg-card: #0F172A;
+    --bg-card-alt: #131F38;
+    --accent: #EF4444;
+    --accent-2: #F97316;
+    --gold: #EAB308;
+    --red: #EF4444;
+    --text: #F1F5F9;
+    --text-dim: #CBD5E1;
+    --border: rgba(203,213,225,0.16);
+    --border-strong: rgba(239,68,68,0.45);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    background: var(--bg-page);
+    color: var(--text);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont,
+                 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    padding: 32px 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 60%, var(--gold) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(580px, 1fr));
+    gap: 36px;
+    padding: 40px 32px 80px;
+    max-width: 1900px;
+    margin: 0 auto;
+  }
+
+  .card {
+    width: 540px; height: 675px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 32px 30px;
+    position: relative;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--gold));
+    opacity: 0.85;
+  }
+  .card::after {
+    content: '';
+    position: absolute; inset: 4px 0 0 0;
+    background:
+      radial-gradient(ellipse at top left, rgba(239,68,68,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(249,115,22,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .card > * { position: relative; z-index: 1; }
+
+  .card-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px;
+    background: rgba(239,68,68,0.16);
+    border: 1px solid rgba(239,68,68,0.40);
+    border-radius: 999px;
+    color: #FCA5A5;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .badge.green { background: rgba(34,197,94,0.18); border-color: rgba(34,197,94,0.45); color: #4ADE80; }
+  .badge.gold  { background: rgba(234,179,8,0.18);  border-color: rgba(234,179,8,0.50);  color: #FDE68A; }
+  .badge.blue  { background: rgba(96,165,250,0.16); border-color: rgba(96,165,250,0.40); color: #93C5FD; }
+  .badge .dot  { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .counter {
+    color: var(--text-dim); font-size: 14px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  h2.card-title {
+    font-size: 30px; font-weight: 800; line-height: 1.2;
+    margin-bottom: 14px; color: var(--text);
+  }
+  h2.card-title .hi     { color: #4ADE80; }
+  h2.card-title .gold   { color: #FDE68A; }
+  h2.card-title .blue   { color: #93C5FD; }
+  h2.card-title .red    { color: #FCA5A5; }
+
+  .green    { color: #4ADE80; }
+  .red      { color: #FCA5A5; }
+  .gold-text { color: var(--gold); }
+  .blue     { color: #93C5FD; }
+
+  /* Cover */
+  .c1 {
+    background:
+      radial-gradient(ellipse at top, rgba(239,68,68,0.28) 0%, transparent 60%),
+      linear-gradient(180deg, #1A0808 0%, #0A0E1A 100%);
+    border: 1px solid rgba(239,68,68,0.50);
+    justify-content: space-between;
+    padding: 36px 32px;
+  }
+  .c1-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .c1-logo {
+    height: 56px; width: auto;
+    background: #FFFFFF;
+    padding: 12px 18px;
+    border-radius: 14px;
+    align-self: flex-start;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    object-fit: contain;
+  }
+  .c1-ticker {
+    font-size: 156px; font-weight: 900; letter-spacing: -8px; line-height: 0.9;
+    background: linear-gradient(135deg, #FFFFFF 0%, #FCA5A5 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .c1-co { font-size: 21px; color: var(--text-dim); margin-top: 12px; font-weight: 600; }
+  .c1-co .nasdaq {
+    display: inline-block; margin-left: 10px;
+    padding: 3px 10px;
+    background: rgba(239,68,68,0.14);
+    border-radius: 5px; font-size: 14px;
+    color: #FCA5A5; font-weight: 700; letter-spacing: 0.10em;
+  }
+  .c1-price {
+    font-size: 18px; color: var(--text-dim); margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  }
+  .c1-price b { color: var(--text); }
+  .c1-chg {
+    font-size: 100px; font-weight: 900; color: #4ADE80;
+    letter-spacing: -3px; line-height: 1; margin-top: 8px;
+    text-shadow: 0 0 50px rgba(34,197,94,0.55);
+  }
+  .c1-momentum { display: flex; gap: 14px; margin-top: 20px; }
+  .c1-momentum .m {
+    flex: 1;
+    background: rgba(239,68,68,0.10);
+    border: 1px solid rgba(239,68,68,0.32);
+    border-radius: 12px; padding: 11px 14px;
+  }
+  .c1-momentum .ml {
+    font-size: 14px; color: var(--text-dim);
+    letter-spacing: 0.10em; text-transform: uppercase;
+    margin-bottom: 4px; font-weight: 700;
+  }
+  .c1-momentum .mv {
+    font-size: 19px; font-weight: 800; color: #FCA5A5;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .c1-momentum .m.green-tone { background: rgba(34,197,94,0.10); border-color: rgba(34,197,94,0.32); }
+  .c1-momentum .m.green-tone .mv { color: #4ADE80; }
+  .c1-momentum .m.gold-tone  { background: rgba(234,179,8,0.10);  border-color: rgba(234,179,8,0.32); }
+  .c1-momentum .m.gold-tone  .mv { color: #FDE68A; }
+  .c1-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
+  .c1-date { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+  .c1-pill {
+    background: rgba(34,197,94,0.20);
+    border: 1px solid rgba(34,197,94,0.55);
+    color: #4ADE80; font-size: 14px; padding: 8px 18px;
+    border-radius: 999px; font-weight: 800;
+  }
+
+  /* Earnings metrics */
+  .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+  .mbox {
+    background: var(--bg-card-alt); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .mbox.beat   { border-color: rgba(34,197,94,0.40);  background: rgba(34,197,94,0.06); }
+  .mbox.red-a  { border-color: rgba(239,68,68,0.40);  background: rgba(239,68,68,0.07); }
+  .mbox .ml { font-size: 14px; color: var(--text-dim); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; font-weight: 700; }
+  .mbox .me { font-size: 14px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; margin-bottom: 4px; font-weight: 600; }
+  .mbox .ma { font-size: 26px; font-weight: 900; line-height: 1.1; font-family: 'JetBrains Mono', monospace; }
+  .mbox .ms { font-size: 14px; font-weight: 700; margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+  .mbox.red-a .ma { color: #FCA5A5; }
+  .mbox.red-a .ms { color: #FCA5A5; }
+
+  .banner {
+    background: linear-gradient(90deg, rgba(34,197,94,0.16) 0%, rgba(34,197,94,0.04) 100%);
+    border: 1px solid rgba(34,197,94,0.40);
+    border-radius: 14px; padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px; margin-top: 12px;
+  }
+  .banner .pulse {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #4ADE80;
+    box-shadow: 0 0 0 0 rgba(34,197,94,0.75);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(34,197,94,0.7); }
+    70%  { box-shadow: 0 0 0 12px rgba(34,197,94,0); }
+    100% { box-shadow: 0 0 0 0   rgba(34,197,94,0); }
+  }
+  .banner-txt { font-size: 15px; color: #4ADE80; font-weight: 800; }
+
+  /* Highlight list (Card 3) */
+  .hl-list { display: flex; flex-direction: column; gap: 8px; }
+  .hl-item {
+    background: var(--bg-card-alt); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 14px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .hl-item.good  { border-color: rgba(74,222,128,0.32); background: rgba(34,197,94,0.06); }
+  .hl-item.red-a { border-color: rgba(239,68,68,0.32);  background: rgba(239,68,68,0.06); }
+  .hl-item .ico  { font-size: 22px; width: 28px; flex-shrink: 0; text-align: center; padding-top: 1px; }
+  .hl-item .body { flex: 1; }
+  .hl-item .title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+  .hl-item .desc  { font-size: 14px; color: var(--text-dim); line-height: 1.4; font-weight: 600; }
+  .hl-item .desc b { color: #4ADE80; font-weight: 800; }
+  .hl-item.red-a .desc b { color: #FCA5A5; }
+
+  /* Driver list (Card 4) */
+  .driver-list { display: flex; flex-direction: column; gap: 8px; }
+  .driver {
+    background: var(--bg-card-alt); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 14px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .driver.good { border-color: rgba(74,222,128,0.32); background: rgba(34,197,94,0.06); }
+  .driver .num {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: rgba(239,68,68,0.18); border: 1px solid rgba(239,68,68,0.50);
+    color: #FCA5A5; font-family: 'JetBrains Mono', monospace;
+    font-weight: 800; font-size: 14px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .driver.good .num { background: rgba(74,222,128,0.18); border-color: rgba(74,222,128,0.50); color: #4ADE80; }
+  .driver .body   { flex: 1; min-width: 0; }
+  .driver .dtitle { font-size: 16px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+  .driver .ddesc  { font-size: 14px; color: var(--text-dim); line-height: 1.4; font-weight: 500; }
+  .driver .ddesc b  { color: var(--text); font-weight: 700; }
+  .driver .ddesc .hl { color: #4ADE80; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+
+  /* Outlook / Guidance (Card 5) */
+  .out-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 4px; }
+  .out-box {
+    background: var(--bg-card-alt); border: 1px solid var(--border);
+    border-radius: 14px; padding: 13px 15px;
+  }
+  .out-box.good  { border-color: rgba(74,222,128,0.40);  background: rgba(34,197,94,0.06); }
+  .out-box.red-a { border-color: rgba(239,68,68,0.40);   background: rgba(239,68,68,0.07); }
+  .out-box .ol {
+    font-size: 14px; color: var(--text-dim); letter-spacing: 0.05em;
+    text-transform: uppercase; margin-bottom: 5px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .out-box .ov {
+    font-size: 26px; font-weight: 900;
+    font-family: 'JetBrains Mono', monospace; line-height: 1.1;
+  }
+  .out-box.good   .ov { color: #4ADE80; }
+  .out-box.red-a  .ov { color: #FCA5A5; }
+  .out-box .od { font-size: 14px; color: var(--text-dim); margin-top: 5px; font-weight: 600; line-height: 1.4; }
+  .out-box .od b { color: var(--text); font-weight: 700; }
+
+  /* Valuation — bull vs bear (Card 6) */
+  .val-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 4px; }
+  .val-side {
+    background: var(--bg-card-alt); border: 1px solid var(--border);
+    border-radius: 14px; padding: 13px 15px;
+  }
+  .val-side.bull { border-color: rgba(74,222,128,0.40);  background: rgba(34,197,94,0.06); }
+  .val-side.bear { border-color: rgba(252,165,165,0.32); background: rgba(239,68,68,0.06); }
+  .val-head { font-size: 14px; font-weight: 800; margin-bottom: 8px; letter-spacing: 0.04em; font-family: 'JetBrains Mono', monospace; }
+  .val-side.bull .val-head { color: #4ADE80; }
+  .val-side.bear .val-head { color: #FCA5A5; }
+  .val-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 0; font-size: 14px;
+    border-top: 1px solid rgba(203,213,225,0.06);
+  }
+  .val-row:first-of-type { border-top: 0; padding-top: 2px; }
+  .val-l { color: var(--text-dim); font-weight: 600; }
+  .val-v { color: var(--text); font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .val-v.green { color: #4ADE80; }
+  .val-v.red   { color: #FCA5A5; }
+
+  /* Analyst Targets bar chart (Card 7) */
+  .chart-wrap { margin-top: 22px; position: relative; }
+  .chart-grid { display: grid; grid-template-columns: 110px 1fr; gap: 8px; }
+  .chart-firms { display: flex; flex-direction: column; gap: 3px; }
+  .chart-firms .firm {
+    height: 19px;
+    display: flex; align-items: center; justify-content: flex-end;
+    font-size: 14px; color: var(--text-dim); font-weight: 600;
+    white-space: nowrap; overflow: hidden;
+  }
+  .chart-bars { position: relative; display: flex; flex-direction: column; gap: 3px; }
+  .bar-row {
+    height: 19px;
+    background: rgba(15,23,42,0.5);
+    border: 1px solid rgba(203,213,225,0.06);
+    border-radius: 3px; position: relative;
+  }
+  .bar-fill {
+    position: absolute; top: 0; left: 0; height: 100%;
+    background: linear-gradient(90deg, rgba(239,68,68,0.55), rgba(239,68,68,0.82));
+    border-radius: 3px;
+    border: 1px solid rgba(239,68,68,0.90);
+  }
+  .bar-label {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 800; color: var(--text);
+    white-space: nowrap; padding-left: 5px; z-index: 2;
+  }
+  .current-line {
+    position: absolute; top: -22px; bottom: -2px; width: 2px;
+    background: var(--gold); box-shadow: 0 0 6px rgba(234,179,8,0.7);
+    z-index: 5; pointer-events: none;
+  }
+  .current-line-label {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: #000;
+    padding: 2px 8px; font-size: 14px; font-weight: 800;
+    white-space: nowrap; font-family: 'JetBrains Mono', monospace;
+    border-radius: 4px;
+  }
+  .chart-axis { display: grid; grid-template-columns: 110px 1fr; gap: 8px; margin-top: 6px; }
+  .chart-axis-labels {
+    display: flex; justify-content: space-between;
+    font-size: 14px; color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  }
+
+  .insight-banner {
+    margin-top: 12px; padding: 12px 16px;
+    background: linear-gradient(90deg, rgba(234,179,8,0.16), rgba(234,179,8,0.04));
+    border: 1px solid rgba(234,179,8,0.40);
+    border-radius: 12px; font-size: 14px; color: var(--text);
+    font-weight: 600; line-height: 1.5;
+  }
+  .insight-banner b { color: #FDE68A; font-weight: 800; }
+
+  /* CTA (Card 8) */
+  .c8 {
+    background:
+      radial-gradient(ellipse at top right, rgba(234,179,8,0.20) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom left, rgba(239,68,68,0.22) 0%, transparent 55%),
+      linear-gradient(180deg, #0F172A 0%, #0B1220 100%);
+    border: 1px solid rgba(239,68,68,0.40);
+    align-items: stretch; text-align: center; padding: 32px 30px;
+  }
+  .logo-block { text-align: center; margin: 6px 0 12px; }
+  .logo-icon {
+    width: 70px; height: 70px;
+    border: 2px solid rgba(239,68,68,0.50);
+    border-radius: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(239,68,68,0.10); margin-bottom: 10px;
+  }
+  .diamond {
+    width: 26px; height: 26px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 100%);
+    transform: rotate(45deg); border-radius: 4px;
+    box-shadow: 0 0 22px rgba(239,68,68,0.6);
+  }
+  .logo-name {
+    font-size: 26px; font-weight: 900;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--accent) 70%, var(--accent-2) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; letter-spacing: 1.6px;
+  }
+  .logo-sub { font-size: 14px; color: var(--text-dim); margin-top: 4px; font-weight: 600; }
+  .feat-c8 {
+    background: rgba(15,23,42,0.85); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 15px; color: var(--text-dim); margin-bottom: 8px;
+    text-align: left; font-weight: 600;
+  }
+  .feat-c8 .fdot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); flex-shrink: 0; box-shadow: 0 0 10px var(--accent);
+  }
+  .feat-c8 b { color: var(--text); font-weight: 800; }
+  .cta-box {
+    background: linear-gradient(135deg, rgba(239,68,68,0.16), rgba(249,115,22,0.14));
+    border: 1.5px solid rgba(239,68,68,0.45);
+    border-radius: 14px; padding: 14px 18px; text-align: center; margin-top: auto;
+  }
+  .cta-l {
+    font-size: 14px; color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.10em;
+    text-transform: uppercase; margin-bottom: 6px; font-weight: 700;
+  }
+  .cta-u { font-size: 18px; font-weight: 900; color: #FCA5A5; }
+
+  .card-label {
+    position: absolute; top: -28px; left: 0;
+    font-size: 14px; color: var(--text-dim);
+    letter-spacing: 0.10em; font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  }
+  .card-wrap { position: relative; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📊 AMD Q1 2026 — 매출 $10.3B · Data Center +57% · ATH $379 달성</h1>
+  <p>8 cards · 1080×1350 · AMD Q1 2026 어닝 분석 · 2026-05-05 발표</p>
+</header>
+
+<div class="grid">
+
+  <!-- CARD 1 — COVER -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 1 · COVER</div>
+    <div class="card c1">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>EARNINGS BEAT</span>
+        <span class="counter">01 / 08</span>
+      </div>
+      <div class="c1-mid">
+        <img class="c1-logo"
+             src="../_shared/logos/AMD.svg"
+             alt="AMD logo"
+             onerror="this.style.display='none'">
+        <div class="c1-ticker">AMD</div>
+        <div class="c1-co">
+          Advanced Micro Devices
+          <span class="nasdaq">NASDAQ</span>
+        </div>
+        <div class="c1-price">애프터마켓 · <b>ATH $384.95 달성</b></div>
+        <div class="c1-chg">+8.4%</div>
+
+        <div class="c1-momentum">
+          <div class="m green-tone">
+            <div class="ml">매출 YoY</div>
+            <div class="mv">+38%</div>
+          </div>
+          <div class="m green-tone">
+            <div class="ml">Data Center</div>
+            <div class="mv">+57%</div>
+          </div>
+          <div class="m gold-tone">
+            <div class="ml">EPS 비트</div>
+            <div class="mv">+6.2%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="c1-foot">
+        <span class="c1-date">2026.05.05</span>
+        <span class="c1-pill">🏆 ATH $384 달성</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2 — EARNINGS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 2 · EARNINGS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge green"><span class="dot"></span>Q1 2026 실적</span>
+        <span class="counter">02 / 08</span>
+      </div>
+      <h2 class="card-title">EPS · 매출 · 가이던스<br><span class="hi">전부 컨센 상회</span></h2>
+
+      <div class="mgrid">
+        <div class="mbox beat">
+          <div class="ml">💰 매출 Revenue</div>
+          <div class="me">컨센 $9.84B</div>
+          <div class="ma green">$10.3B</div>
+          <div class="ms green">+$460M 비트</div>
+        </div>
+        <div class="mbox beat">
+          <div class="ml">📊 Non-GAAP EPS</div>
+          <div class="me">컨센 $1.29</div>
+          <div class="ma green">$1.37</div>
+          <div class="ms green">+6.2% 초과</div>
+        </div>
+        <div class="mbox red-a">
+          <div class="ml">💎 GAAP 매출총이익률</div>
+          <div class="me">전년 동기 개선</div>
+          <div class="ma" style="color:#FCA5A5;">53%</div>
+          <div class="ms" style="color:#FCA5A5;">Non-GAAP 55%</div>
+        </div>
+        <div class="mbox beat">
+          <div class="ml">🚀 매출 성장률 YoY</div>
+          <div class="me">EPS YoY +43%</div>
+          <div class="ma green">+38%</div>
+          <div class="ms green">분기 매출 최고치</div>
+        </div>
+      </div>
+
+      <div class="banner">
+        <div class="pulse"></div>
+        <span class="banner-txt">매출·EPS·가이던스 3관왕 서프라이즈 · AH ATH $384 달성</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3 — HIGHLIGHTS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 3 · HIGHLIGHTS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>핵심 하이라이트</span>
+        <span class="counter">03 / 08</span>
+      </div>
+      <h2 class="card-title">실적 너머<br><span class="gold">5가지</span> 강세 지표</h2>
+
+      <div class="hl-list">
+        <div class="hl-item red-a">
+          <div class="ico">🏆</div>
+          <div class="body">
+            <div class="title">ATH $384.95 AH 달성</div>
+            <div class="desc">어닝 직후 사상 최고가 갱신 · <b>시간외 +8%</b> 급등</div>
+          </div>
+        </div>
+        <div class="hl-item good">
+          <div class="ico">🖥️</div>
+          <div class="body">
+            <div class="title">Data Center $5.8B +57% YoY</div>
+            <div class="desc">MI300X AI 가속기 + EPYC CPU 쌍끌이 · <b>분기 사상 최대</b></div>
+          </div>
+        </div>
+        <div class="hl-item good">
+          <div class="ico">📈</div>
+          <div class="body">
+            <div class="title">Q2 가이던스 $11.2B</div>
+            <div class="desc">컨센서스 $10.5B 대비 <b>+$700M 상회</b> · 성장 가속 전망</div>
+          </div>
+        </div>
+        <div class="hl-item good">
+          <div class="ico">💻</div>
+          <div class="body">
+            <div class="title">Client $2.9B +26% YoY</div>
+            <div class="desc">Ryzen 9000 시리즈 점유율 상승 · <b>PC 수요 회복 수혜</b></div>
+          </div>
+        </div>
+        <div class="hl-item good">
+          <div class="ico">🎯</div>
+          <div class="body">
+            <div class="title">Q2 Non-GAAP GM 56% 전망</div>
+            <div class="desc">Q1 55% → Q2 56% → <b>마진 개선 지속</b> 구조 확인</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4 — SEGMENTS -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 4 · SEGMENTS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge blue"><span class="dot"></span>세그먼트 분석</span>
+        <span class="counter">04 / 08</span>
+      </div>
+      <h2 class="card-title">총 매출 <span class="red">$10.3B</span><br>4개 부문 전부 성장</h2>
+
+      <div class="driver-list">
+        <div class="driver good">
+          <div class="num">01</div>
+          <div class="body">
+            <div class="dtitle">Data Center — AI GPU + EPYC CPU</div>
+            <div class="ddesc">$5.8B · YoY <span class="hl">+57%</span> · MI300X AI 가속기 수요 폭발</div>
+          </div>
+        </div>
+        <div class="driver good">
+          <div class="num">02</div>
+          <div class="body">
+            <div class="dtitle">Client — Ryzen 점유율 확대</div>
+            <div class="ddesc">$2.9B · YoY <span class="hl">+26%</span> · Ryzen 9000 노트북·데스크탑 수요</div>
+          </div>
+        </div>
+        <div class="driver">
+          <div class="num">03</div>
+          <div class="body">
+            <div class="dtitle">Gaming + Embedded 합산</div>
+            <div class="ddesc">Gaming $720M (+11%) · Embedded $873M (+6%) · 점진적 회복세</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <div style="font-size:14px;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;">세그먼트 매출 비중</div>
+        <div style="display:flex;border-radius:10px;overflow:hidden;height:36px;">
+          <div style="width:56%;background:linear-gradient(90deg,#EF4444,#F97316);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;">
+            DC 56% ($5.8B)
+          </div>
+          <div style="width:28%;background:rgba(96,165,250,0.45);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#93C5FD;">
+            Client 28%
+          </div>
+          <div style="width:16%;background:rgba(100,116,139,0.4);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--text-dim);">
+            기타 16%
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner" style="margin-top:14px;">
+        💡 <b>핵심</b> — Data Center가 전체 매출의 56% 주도 · MI300X AI 가속기·EPYC CPU 쌍끌이 성장 지속
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5 — OUTLOOK -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 5 · OUTLOOK</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge green"><span class="dot"></span>가이던스 대폭 상향</span>
+        <span class="counter">05 / 08</span>
+      </div>
+      <h2 class="card-title">컨센서스를<br><span class="hi">크게 뛰어넘는 전망</span></h2>
+
+      <div class="out-grid">
+        <div class="out-box good">
+          <div class="ol">Q2 2026 가이던스</div>
+          <div class="ov">$11.2B</div>
+          <div class="od">컨센 $10.5B 대비 <b style="color:#4ADE80">+$700M</b></div>
+        </div>
+        <div class="out-box good">
+          <div class="ol">Q2 YoY 성장률</div>
+          <div class="ov">+46%</div>
+          <div class="od">Q1 +38% → Q2 <b style="color:#4ADE80">+46%</b> 가속</div>
+        </div>
+        <div class="out-box red-a">
+          <div class="ol">Q2 Non-GAAP GM</div>
+          <div class="ov">56%</div>
+          <div class="od">Q1 55% 대비 <b style="color:#FCA5A5">+1%p 개선</b></div>
+        </div>
+        <div class="out-box good">
+          <div class="ol">QoQ 분기 성장</div>
+          <div class="ov">+9%</div>
+          <div class="od">$10.3B → <b style="color:#4ADE80">$11.2B</b> 분기 성장</div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>주목</b> — Q2 가이던스 $11.2B · 컨센 대비 +$700M 상회 · 연간 성장 가속화 확인
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6 — VALUATION -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 6 · VALUATION</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>VALUATION CHECK</span>
+        <span class="counter">06 / 08</span>
+      </div>
+      <h2 class="card-title">지금 가격<br><span class="gold">싼 걸까, 비쌀까?</span></h2>
+
+      <div class="val-grid">
+        <div class="val-side bull">
+          <div class="val-head">🟢 강세 근거</div>
+          <div class="val-row">
+            <span class="val-l">Data Center</span>
+            <span class="val-v green">+57% YoY</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">EPS YoY 성장</span>
+            <span class="val-v green">+43%</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">Q2 가이던스</span>
+            <span class="val-v green">$11.2B↑</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">NVDA 대안주</span>
+            <span class="val-v green">AI 2위</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">마진 확대</span>
+            <span class="val-v green">55→56%</span>
+          </div>
+        </div>
+        <div class="val-side bear">
+          <div class="val-head">🔴 리스크 근거</div>
+          <div class="val-row">
+            <span class="val-l">현재가 vs 컨센</span>
+            <span class="val-v red">상회 중</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">Forward P/E</span>
+            <span class="val-v red">40배+</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">게이밍 성장</span>
+            <span class="val-v red">둔화 중</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">NVDA 점유 격차</span>
+            <span class="val-v red">유지</span>
+          </div>
+          <div class="val-row">
+            <span class="val-l">차익실현</span>
+            <span class="val-v red">-5% 조정</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 <b>핵심</b> — Data Center +57% 구조적 성장 입증. 그러나 현재가가 컨센서스 목표가 상회 · AI 랠리 지속 여부가 관건
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 7 — ANALYST TARGETS -->
+  <!--
+    Source: Wall Street Horizon, Benzinga, MarketBeat (May 2026)
+    Stock close before earnings (2026-05-05): ~$355
+    Current line positioned at $355/$500 = 71.0%
+    5/12 analysts have targets above current price
+  -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 7 · ANALYST TARGETS</div>
+    <div class="card">
+      <div class="card-head">
+        <span class="badge"><span class="dot"></span>ANALYST TARGETS</span>
+        <span class="counter">07 / 08</span>
+      </div>
+      <h2 class="card-title" style="font-size:24px;">월가 12개사 목표가<br><span class="gold">현재 $355 vs 컨센서스</span></h2>
+
+      <div class="chart-wrap">
+        <div class="chart-grid">
+          <div class="chart-firms">
+            <div class="firm">UBS</div>
+            <div class="firm">Wedbush</div>
+            <div class="firm">Susquehanna</div>
+            <div class="firm">DA Davidson</div>
+            <div class="firm">Morgan Stanley</div>
+            <div class="firm">Wells Fargo</div>
+            <div class="firm">HSBC</div>
+            <div class="firm">RBC</div>
+            <div class="firm">Stifel</div>
+            <div class="firm">BofA</div>
+            <div class="firm">Northland</div>
+            <div class="firm">Citi</div>
+          </div>
+          <div class="chart-bars">
+            <!-- current price line: $355 / $500 = 71.0% -->
+            <div class="current-line" style="left: 71.0%;">
+              <span class="current-line-label">현재 $355</span>
+            </div>
+            <!-- UBS $455 / 500 = 91.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:91.0%;"></div><div class="bar-label" style="left:91.0%;">$455</div></div>
+            <!-- Wedbush $400 / 500 = 80.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:80.0%;"></div><div class="bar-label" style="left:80.0%;">$400</div></div>
+            <!-- Susquehanna $375 / 500 = 75.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:75.0%;"></div><div class="bar-label" style="left:75.0%;">$375</div></div>
+            <!-- DA Davidson $375 / 500 = 75.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:75.0%;"></div><div class="bar-label" style="left:75.0%;">$375</div></div>
+            <!-- Morgan Stanley $360 / 500 = 72.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:72.0%;"></div><div class="bar-label" style="left:72.0%;">$360</div></div>
+            <!-- Wells Fargo $345 / 500 = 69.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:69.0%;"></div><div class="bar-label" style="left:69.0%;">$345</div></div>
+            <!-- HSBC $340 / 500 = 68.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:68.0%;"></div><div class="bar-label" style="left:68.0%;">$340</div></div>
+            <!-- RBC $325 / 500 = 65.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:65.0%;"></div><div class="bar-label" style="left:65.0%;">$325</div></div>
+            <!-- Stifel $320 / 500 = 64.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:64.0%;"></div><div class="bar-label" style="left:64.0%;">$320</div></div>
+            <!-- BofA $310 / 500 = 62.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:62.0%;"></div><div class="bar-label" style="left:62.0%;">$310</div></div>
+            <!-- Northland $260 / 500 = 52.0% -->
+            <div class="bar-row"><div class="bar-fill" style="width:52.0%;"></div><div class="bar-label" style="left:52.0%;">$260</div></div>
+            <!-- Citi $248 / 500 = 49.6% -->
+            <div class="bar-row"><div class="bar-fill" style="width:49.6%;"></div><div class="bar-label" style="left:49.6%;">$248</div></div>
+          </div>
+        </div>
+        <div class="chart-axis">
+          <div></div>
+          <div class="chart-axis-labels">
+            <span>$0</span>
+            <span>$125</span>
+            <span>$250</span>
+            <span>$375</span>
+            <span>$500</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        💡 12개사 중 <b>5개사만 현재가 상회</b> · 주가가 컨센서스 이미 초과 · UBS $455 Street high · Citi $248 최저
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 8 — CTA -->
+  <div class="card-wrap">
+    <div class="card-label">CARD 8 · BRAND / CTA</div>
+    <div class="card c8">
+      <div class="card-head">
+        <span class="badge gold"><span class="dot"></span>AI QUANT LAB</span>
+        <span class="counter">08 / 08</span>
+      </div>
+
+      <div class="logo-block">
+        <div class="logo-icon">
+          <div class="diamond"></div>
+        </div>
+        <div class="logo-name">AI QUANT LAB</div>
+        <div class="logo-sub">데이터 기반 미국주식 분석 플랫폼</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin:10px 0;">
+        <div class="feat-c8">
+          <div class="fdot"></div>
+          <span><b>Stock Detail</b> — AMD Data Center 매출 · 분기별 AI GPU 성장 추적</span>
+        </div>
+        <div class="feat-c8">
+          <div class="fdot"></div>
+          <span><b>Compare</b> — AMD vs NVDA vs INTC AI 반도체 경쟁 비교</span>
+        </div>
+        <div class="feat-c8">
+          <div class="fdot"></div>
+          <span><b>Sentiment</b> — 어닝 후 뉴스 톤 변화 추적</span>
+        </div>
+        <div class="feat-c8">
+          <div class="fdot"></div>
+          <span><b>AI Quant Lab</b> — 매월 AI 추천 종목 5개</span>
+        </div>
+      </div>
+
+      <div class="cta-box">
+        <div class="cta-l">DAILY MARKET · ANALYSIS</div>
+        <div class="cta-u">▶ 프로필 링크 클릭</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

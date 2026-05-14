@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import Dashboard from "@/pages/Dashboard";
 import Market from "@/pages/Market";
@@ -13,8 +13,12 @@ import Tax from "@/pages/Tax";
 import Sentiment from "@/pages/Sentiment";
 import AIReport from "@/pages/AIReport";
 import Login from "@/pages/Login";
-import EconomicCalendar from "@/pages/EconomicCalendar";
 import useAuthStore from "@/stores/authStore";
+
+const ProtectedLayout = () => {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  return isAuthenticated ? <Layout /> : <Navigate to="/login" replace />;
+};
 
 const App = () => {
   const restore = useAuthStore((s) => s.restore);
@@ -26,7 +30,7 @@ const App = () => {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route element={<Layout />}>
+      <Route element={<ProtectedLayout />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/market" element={<Market />} />
         <Route path="/screener" element={<Screener />} />
@@ -36,7 +40,6 @@ const App = () => {
         <Route path="/portfolio/trades" element={<Trades />} />
         <Route path="/portfolio/dividends" element={<Dividends />} />
         <Route path="/portfolio/tax" element={<Tax />} />
-        <Route path="/calendar" element={<EconomicCalendar />} />
         <Route path="/sentiment" element={<Sentiment />} />
         <Route path="/sentiment/report" element={<AIReport />} />
       </Route>

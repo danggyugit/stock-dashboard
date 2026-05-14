@@ -47,6 +47,41 @@
 - 외부 API 응답은 DuckDB에 캐싱 후 캐시에서 읽기
 - Claude API 호출은 사용자 수동 트리거 시에만 (자동 호출 금지, 비용 관리)
 
+## 인스타그램 카드 제작 규칙
+
+### 데이터 원칙
+- 임의 날조 금지: 자기 앱(AI Quant Lab) 기능을 없는 기능으로 소개하는 것은 절대 금지
+- 어닝/주가/애널리스트 목표가 등 시장 데이터는 웹 검색으로 확인 후 사용 OK
+- 확인되지 않은 숫자는 카드에 넣지 말고 반드시 웹 검색 후 실제 데이터 기입
+
+### 카드 구성 표준 (8장 고정)
+새 어닝 카드를 만들기 전에 기존 카드(`docs/instagram/01_earnings/*.html`)를 **반드시 먼저 읽고** 디자인·구성 방향을 맞출 것.
+
+| Card | 제목 | 주요 컴포넌트 |
+|------|------|-------------|
+| 1 | Cover | c1-mid 구조 (logo → ticker → c1-chg 주가변동 → c1-momentum 3박스) |
+| 2 | Earnings | mgrid 2×2 (매출·EPS·마진·성장률) + banner |
+| 3 | Highlights | hl-list 5항목 (hl-item.good) |
+| 4 | Drivers / Mixed | driver-list 3항목 + insight-banner |
+| 5 | Outlook | out-grid 2×2 (가이던스 수치) + insight-banner |
+| 6 | Valuation | val-grid bull/bear (각 5행) + insight-banner |
+| 7 | **Analyst Targets** | 바차트 (회사명 + 목표가) + current-line + insight-banner |
+| 8 | CTA | AI QUANT LAB 브랜드 (diamond logo + feat-c8 × 4 + cta-box) |
+
+### 로고 규칙
+- 로고 파일 위치: `docs/instagram/_shared/logos/{TICKER}.svg`
+- **반드시 최신 공식 로고 사용**: 새 종목 카드 제작 시 웹 검색(Wikimedia Commons, Brandfetch 등)으로 공식 SVG path 확인 후 저장
+- **SVG는 path 기반으로 작성** (text 요소 금지): 폰트 환경에 무관하게 정확히 렌더링되어야 함
+- fill 색상: 회사 공식 브랜드 컬러 사용 (로고 배경은 흰색 박스이므로 브랜드 컬러 또는 짙은 색)
+- 기존 로고 목록: PLTR(자체 path), AMD(#E8211A 레드), AMZN, WDC, SNDK, GOOGL, STX
+
+### 디자인 기준
+- CSS 변수: `--text-dim:#CBD5E1`, `--border:rgba(203,213,225,0.16)`, `--bg-card:#0F172A`, `--bg-card-alt:#131F38`
+- badge font-size: 14px / counter: JetBrains Mono, `01 / 08` 형식
+- card-title: 30px (Card 7은 24px으로 축소해 차트 공간 확보)
+- mbox .ml/.me/.ms: 14px / card-label: `position:absolute; top:-28px; left:0`
+- 종목 고유 accent 색상은 유지하되, 구조·폰트·간격은 기존 카드와 동일하게 맞출 것
+
 ## 테스트
 - Backend: `pytest` — `backend/tests/`
 - Frontend: `vitest` — `frontend/src/**/*.test.ts(x)`
