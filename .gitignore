@@ -36,3 +36,6 @@ Thumbs.db
 
 # Instagram card output PNGs (regeneratable from HTML via export_all.py)
 docs/instagram/output/
+
+# Local scheduler logs (not needed in repo)
+streamlit_app/scripts/*.log
