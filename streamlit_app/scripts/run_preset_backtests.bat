@@ -1,16 +1,7 @@
 @echo off
 REM ====================================================================
 REM  Daily preset backtests runner.
-REM
-REM  Runs 3 IT-sector backtests (Inv-Vol / Equal / Inv-Vol+Regime)
-REM  and saves results to data/cache/backtests/{preset}.json.
-REM
-REM  Schedule via Windows Task Scheduler:
-REM    Daily at 11:00 KST
-REM
-REM  Setup:
-REM    Run as Administrator:
-REM    powershell -File scripts\register_scheduler_preset_backtests.ps1
+REM  Schedule: Daily 11:00 KST via Windows Task Scheduler
 REM ====================================================================
 
 setlocal enabledelayedexpansion
@@ -42,10 +33,8 @@ if errorlevel 1 (
     echo [%date% %time%] Committing changes >> "%LOG%"
     git commit -m "chore: refresh preset backtests (local scheduler)" >> "%LOG%" 2>&1
 
-    REM ── Push with up to 3 merge-and-retry attempts.
-    REM    Use "ours" merge strategy to bypass CON.json Windows issue
-    REM    (remote cache-update commits include valuation/CON.json which
-    REM     Windows cannot checkout).
+    REM Push with up to 3 merge-and-retry attempts.
+    REM Use "ours" merge strategy to bypass CON.json Windows issue.
     set "PUSH_OK=0"
     for /L %%i in (1,1,3) do (
         if "!PUSH_OK!"=="0" (
