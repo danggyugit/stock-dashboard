@@ -35,6 +35,7 @@ PAGES = {
     "Analysis": [
         st.Page("app_pages/4_Stock_Detail.py", title="Stock Detail", icon=":material/show_chart:"),
         st.Page("app_pages/8_Screener.py", title="Screener", icon=":material/filter_alt:"),
+        st.Page("app_pages/14_RS_Screener.py", title="RS Screener", icon=":material/leaderboard:"),
         st.Page("app_pages/9_Compare.py", title="Compare", icon=":material/compare_arrows:"),
         st.Page("app_pages/6_Sentiment.py", title="Sentiment", icon=":material/psychology:"),
     ],
