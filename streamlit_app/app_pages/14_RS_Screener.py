@@ -22,23 +22,23 @@ st.markdown("""
 <style>
     .rs-hero {
         background: radial-gradient(ellipse at top left,
-                    rgba(234,179,8,0.15) 0%, rgba(15,23,42,0) 60%),
+                    rgba(139,92,246,0.15) 0%, rgba(15,23,42,0) 60%),
                     radial-gradient(ellipse at bottom right,
                     rgba(59,130,246,0.10) 0%, rgba(15,23,42,0) 60%);
-        border: 1px solid rgba(234,179,8,0.20);
+        border: 1px solid rgba(139,92,246,0.22);
         border-radius: 16px; padding: 28px 30px; margin-bottom: 20px;
     }
     .rs-hero h1 {
         font-size: 2.2rem; font-weight: 800; margin: 0 0 6px 0;
-        background: linear-gradient(135deg, #EAB308 0%, #60A5FA 70%);
+        background: linear-gradient(135deg, #A78BFA 0%, #60A5FA 70%);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         line-height: 1.15;
     }
     .rs-hero .sub { font-size: 0.95rem; color: #CBD5E1; margin: 0; }
     .rs-hero .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     .rs-hero .meta span {
-        font-size: 0.72rem; font-weight: 600; color: #FDE047;
-        background: rgba(234,179,8,0.12); border: 1px solid rgba(234,179,8,0.28);
+        font-size: 0.72rem; font-weight: 600; color: #C4B5FD;
+        background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.30);
         padding: 4px 10px; border-radius: 999px;
     }
 </style>
@@ -103,7 +103,6 @@ if not tickers_key:
     st.warning("선택된 조건에 해당하는 종목이 없습니다.")
     st.stop()
 
-# Warn on large universe
 if len(tickers_key) > 200:
     st.warning(
         f"⏱️ {len(tickers_key)}개 종목 — 첫 계산에 1~2분 소요됩니다. "
@@ -143,8 +142,8 @@ fig = go.Figure()
 fig.add_trace(go.Histogram(
     x=rs_tbl["rs_rating"].values,
     nbinsx=20,
-    marker_color="rgba(234,179,8,0.65)",
-    marker_line=dict(color="rgba(234,179,8,0.3)", width=1),
+    marker_color="rgba(139,92,246,0.65)",
+    marker_line=dict(color="rgba(139,92,246,0.3)", width=1),
 ))
 if 0 < min_rs < 99:
     fig.add_vline(
@@ -166,19 +165,19 @@ st.plotly_chart(fig, use_container_width=True)
 top90 = result[result["rs_rating"] >= 90]
 if not top90.empty:
     chips = "".join(
-        f'<span style="background:rgba(234,179,8,0.15);'
-        f'border:1px solid rgba(234,179,8,0.40);'
+        f'<span style="background:rgba(139,92,246,0.15);'
+        f'border:1px solid rgba(139,92,246,0.40);'
         f'border-radius:8px;padding:4px 13px;'
-        f'font-size:0.88rem;font-weight:700;color:#FDE047;'
+        f'font-size:0.88rem;font-weight:700;color:#C4B5FD;'
         f'font-family:monospace;margin:2px;display:inline-block;">'
         f'{row["ticker"]}'
-        f'<span style="font-weight:400;font-size:0.75rem;color:#FCA5A5;margin-left:5px;">'
+        f'<span style="font-weight:400;font-size:0.75rem;color:#A78BFA;margin-left:5px;">'
         f'RS {row["rs_rating"]}</span></span>'
         for _, row in top90.iterrows()
     )
     st.markdown(
-        f'<div style="margin:6px 0 4px 0;font-size:0.8rem;font-weight:700;color:#FDE047;">'
-        f'🔥 RS 90+ 초강세 종목 ({len(top90)}개)</div>'
+        f'<div style="margin:6px 0 4px 0;font-size:0.8rem;font-weight:700;color:#C4B5FD;">'
+        f'🚀 RS 90+ 초강세 종목 ({len(top90)}개)</div>'
         f'<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;">{chips}</div>',
         unsafe_allow_html=True,
     )
@@ -206,17 +205,20 @@ def _fmt_pct(v: float | None) -> str:
 
 fmt_cols = {c: _fmt_pct for c in ["1개월(%)", "3개월(%)", "12개월(%)"] if c in display_df.columns}
 
+def _rs_style(v: object) -> str:
+    if not isinstance(v, (int, float)):
+        return ""
+    if v >= 90:
+        return "color:#C4B5FD;font-weight:700"
+    if v >= 80:
+        return "color:#4ADE80;font-weight:600"
+    if v >= 70:
+        return "color:#60A5FA"
+    return "color:#94A3B8"
+
 styled = (
     display_df.style
-    .applymap(
-        lambda v: (
-            "color:#FDE047;font-weight:700" if isinstance(v, (int, float)) and v >= 90
-            else "color:#4ADE80;font-weight:600" if isinstance(v, (int, float)) and v >= 80
-            else "color:#60A5FA" if isinstance(v, (int, float)) and v >= 70
-            else "color:#94A3B8"
-        ),
-        subset=["RS Rating"],
-    )
+    .map(_rs_style, subset=["RS Rating"])
     .format(fmt_cols)
 )
 
