@@ -207,6 +207,7 @@ PRESETS = {
         "description": "IT 섹터, Inverse-Vol 가중, 현금 없음",
         "overrides": {
             "use_inv_vol_weight": True,
+            "use_momentum_weight": False,
             "cash_strategy": "none",
         },
     },
@@ -215,6 +216,7 @@ PRESETS = {
         "description": "IT 섹터, 균등 가중, 현금 없음",
         "overrides": {
             "use_inv_vol_weight": False,
+            "use_momentum_weight": False,
             "cash_strategy": "none",
         },
     },
@@ -223,7 +225,27 @@ PRESETS = {
         "description": "IT 섹터, Inverse-Vol 가중, HMM 레짐 현금 전략",
         "overrides": {
             "use_inv_vol_weight": True,
+            "use_momentum_weight": False,
             "cash_strategy": "combined",
+        },
+    },
+    "it_momentum": {
+        "name": "IT Momentum-Weight (No Cash)",
+        "description": "IT 섹터, 모멘텀 비례 가중, 현금 없음",
+        "overrides": {
+            "use_inv_vol_weight": False,
+            "use_momentum_weight": True,
+            "cash_strategy": "none",
+        },
+    },
+    "it_ensemble": {
+        "name": "IT Ensemble + Inv-Vol (No Cash)",
+        "description": "IT 섹터, 앙상블 모델 선별, Inverse-Vol 가중, 현금 없음",
+        "overrides": {
+            "use_ensemble": True,
+            "use_inv_vol_weight": True,
+            "use_momentum_weight": False,
+            "cash_strategy": "none",
         },
     },
 }
@@ -538,6 +560,7 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
         use_mom_filter=cfg["use_mom_filter"],
         use_turnover_buffer=cfg["use_turnover_buffer"],
         use_inv_vol_weight=cfg["use_inv_vol_weight"],
+        use_momentum_weight=cfg.get("use_momentum_weight", False),
         cash_strategy=cfg["cash_strategy"],
     )
 
@@ -771,6 +794,15 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
         inv_v = {t: 1.0 / v for t, v in vols.items()}
         total = sum(inv_v.values())
         weights = {t: iv / total for t, iv in inv_v.items()}
+    elif cfg.get("use_momentum_weight", False):
+        mom_s = {}
+        for t in top.index:
+            m3  = float(snap.loc[t, "Mom_3m"])  if ("Mom_3m"  in snap.columns and t in snap.index and not pd.isna(snap.loc[t, "Mom_3m"]))  else 0.0
+            m6  = float(snap.loc[t, "Mom_6m"])  if ("Mom_6m"  in snap.columns and t in snap.index and not pd.isna(snap.loc[t, "Mom_6m"]))  else 0.0
+            m12 = float(snap.loc[t, "Mom_12m"]) if ("Mom_12m" in snap.columns and t in snap.index and not pd.isna(snap.loc[t, "Mom_12m"])) else 0.0
+            mom_s[t] = max(0.4 * m3 + 0.3 * m6 + 0.3 * m12, 0.0)
+        total_ms = sum(mom_s.values())
+        weights = {t: s / total_ms for t, s in mom_s.items()} if total_ms > 0 else {t: 1.0 / max(len(top), 1) for t in top.index}
     else:
         w = 1.0 / max(len(top), 1)
         weights = {t: w for t in top.index}

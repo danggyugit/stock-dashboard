@@ -1563,6 +1563,7 @@ def run_backtest(
     use_turnover_buffer: bool = False,
     turnover_buffer_pct: float = 0.05,
     use_inv_vol_weight:  bool = False,
+    use_momentum_weight: bool = False,
     cash_strategy:       str = "none",  # "none" | "vol_target" | "regime" | "combined"
     rf_annual:           float = 0.04,  # annual risk-free rate for cash return
 ) -> dict:
@@ -1873,6 +1874,19 @@ def run_backtest(
             inv_vols = {t: 1 / v for t, v in vols.items()}
             total_inv = sum(inv_vols.values())
             weights_dict = {t: iv / total_inv for t, iv in inv_vols.items()}
+        elif use_momentum_weight:
+            mom_s = {}
+            for t in selected.index:
+                m3  = float(cur_snap.loc[t, "Mom_3m"])  if ("Mom_3m"  in cur_snap.columns and t in cur_snap.index and not np.isnan(cur_snap.loc[t, "Mom_3m"]))  else 0.0
+                m6  = float(cur_snap.loc[t, "Mom_6m"])  if ("Mom_6m"  in cur_snap.columns and t in cur_snap.index and not np.isnan(cur_snap.loc[t, "Mom_6m"]))  else 0.0
+                m12 = float(cur_snap.loc[t, "Mom_12m"]) if ("Mom_12m" in cur_snap.columns and t in cur_snap.index and not np.isnan(cur_snap.loc[t, "Mom_12m"])) else 0.0
+                mom_s[t] = max(0.4 * m3 + 0.3 * m6 + 0.3 * m12, 0.0)
+            total_ms = sum(mom_s.values())
+            if total_ms > 0:
+                weights_dict = {t: s / total_ms for t, s in mom_s.items()}
+            else:
+                w = 1 / n_sel
+                weights_dict = {t: w for t in selected.index}
         else:
             w = 1 / n_sel
             weights_dict = {t: w for t in selected.index}
@@ -2531,6 +2545,7 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
         last_miss_src   = results.get("last_miss_src", [])
         _cfg = st.session_state.get("cfg") or {}
         _use_inv_vol = _cfg.get("use_inv_vol_weight", False)
+        _use_mom_weight = _cfg.get("use_momentum_weight", False)
 
         if (model_rf is not None and last_imputer is not None
                 and last_all_cols and price_data and tech_map is not None
@@ -2597,7 +2612,7 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                     top = composite.nlargest(n_stocks)
                 _selected_set = set(top.index)
 
-                # 비중 계산 (역변동성 ON이면) — 선별된 n_stocks에만 적용
+                # 비중 계산 — 선별된 n_stocks에만 적용
                 _rec_weights = {}
                 if _use_inv_vol and "Volatility_30d" in cur_snap.columns:
                     vols = {}
@@ -2607,6 +2622,17 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                     inv_v = {t: 1 / v for t, v in vols.items()}
                     total_iv = sum(inv_v.values())
                     _rec_weights = {t: iv / total_iv for t, iv in inv_v.items()}
+                elif _use_mom_weight:
+                    mom_s = {}
+                    for t in top.index:
+                        m3  = float(cur_snap.loc[t, "Mom_3m"])  if ("Mom_3m"  in cur_snap.columns and t in cur_snap.index and not pd.isna(cur_snap.loc[t, "Mom_3m"]))  else 0.0
+                        m6  = float(cur_snap.loc[t, "Mom_6m"])  if ("Mom_6m"  in cur_snap.columns and t in cur_snap.index and not pd.isna(cur_snap.loc[t, "Mom_6m"]))  else 0.0
+                        m12 = float(cur_snap.loc[t, "Mom_12m"]) if ("Mom_12m" in cur_snap.columns and t in cur_snap.index and not pd.isna(cur_snap.loc[t, "Mom_12m"])) else 0.0
+                        mom_s[t] = max(0.4 * m3 + 0.3 * m6 + 0.3 * m12, 0.0)
+                    total_ms = sum(mom_s.values())
+                    _rec_weights = {t: s / total_ms for t, s in mom_s.items()} if total_ms > 0 else {t: 1 / max(len(top), 1) for t in top.index}
+                else:
+                    _rec_weights = {t: 1 / max(len(top), 1) for t in top.index}
 
                 # Full universe ranked by composite score
                 full_ranked = composite.sort_values(ascending=False)
@@ -2617,7 +2643,7 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                         tr("ax.ticker"): t,
                         "Portfolio": "✓" if t in _selected_set else "",
                     }
-                    if _use_inv_vol and _rec_weights:
+                    if (_use_inv_vol or _use_mom_weight) and _rec_weights:
                         row["비중"] = f"{_rec_weights.get(t, 0):.1%}" if t in _selected_set else "—"
                     for col_name, fmt in [
                         ("Mom_1m","pct"), ("Mom_3m","pct"), ("Mom_6m","pct"), ("Mom_12m","pct"),
@@ -3778,6 +3804,7 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
 
     # ── 투자 비중 계산 (현금 비중 반영) ─────────────────────
     _use_inv = _saved_cfg.get("use_inv_vol_weight", False)
+    _use_mom_w = _saved_cfg.get("use_momentum_weight", False)
     _pick_weights = {}
     if _use_inv and "Volatility_30d" in cur_snap.columns:
         vols = {}
@@ -3787,6 +3814,15 @@ def tab_realtime(price_data: dict, fund_map: dict, tech_map: dict,
         inv_v = {t: 1 / v for t, v in vols.items()}
         total_iv = sum(inv_v.values())
         _pick_weights = {t: iv / total_iv for t, iv in inv_v.items()}
+    elif _use_mom_w:
+        mom_s = {}
+        for t in top_recs.index:
+            m3  = float(cur_snap.loc[t, "Mom_3m"])  if ("Mom_3m"  in cur_snap.columns and t in cur_snap.index and not np.isnan(cur_snap.loc[t, "Mom_3m"]))  else 0.0
+            m6  = float(cur_snap.loc[t, "Mom_6m"])  if ("Mom_6m"  in cur_snap.columns and t in cur_snap.index and not np.isnan(cur_snap.loc[t, "Mom_6m"]))  else 0.0
+            m12 = float(cur_snap.loc[t, "Mom_12m"]) if ("Mom_12m" in cur_snap.columns and t in cur_snap.index and not np.isnan(cur_snap.loc[t, "Mom_12m"])) else 0.0
+            mom_s[t] = max(0.4 * m3 + 0.3 * m6 + 0.3 * m12, 0.0)
+        total_ms = sum(mom_s.values())
+        _pick_weights = {t: s / total_ms for t, s in mom_s.items()} if total_ms > 0 else {t: 1 / max(len(top_recs), 1) for t in top_recs.index}
     else:
         w = 1 / max(len(top_recs), 1)
         _pick_weights = {t: w for t in top_recs.index}
@@ -4108,6 +4144,7 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
         "use_mom_filter":        use_mom_filter,
         "use_turnover_buffer":   use_turnover_buffer,
         "use_inv_vol_weight":    use_inv_vol_weight,
+        "use_momentum_weight":   False,
         "cash_strategy":         cash_strategy,
     }
 
@@ -4547,6 +4584,7 @@ def main():
             use_mom_filter=cfg.get("use_mom_filter", True),
             use_turnover_buffer=cfg.get("use_turnover_buffer", False),
             use_inv_vol_weight=cfg.get("use_inv_vol_weight", False),
+            use_momentum_weight=cfg.get("use_momentum_weight", False),
             cash_strategy=cfg.get("cash_strategy", "none"),
         )
 

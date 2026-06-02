@@ -52,7 +52,7 @@ TELEGRAM_CHAT_IDS = [
 _APP_DIR = Path(__file__).resolve().parent.parent
 _CACHE_DIR = _APP_DIR / "data" / "cache" / "backtests"
 
-PRESET_ORDER = ["it_invvol", "it_equal", "it_invvol_regime"]
+PRESET_ORDER = ["it_invvol", "it_equal", "it_invvol_regime", "it_momentum", "it_ensemble"]
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────
