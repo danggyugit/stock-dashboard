@@ -48,6 +48,7 @@ PAGES = {
     ],
     "Research": [
         st.Page("app_pages/11_Macro.py", title="Macro", icon=":material/trending_up:"),
+        st.Page("app_pages/15_Guide.py", title="Guide", icon=":material/menu_book:"),
     ],
 }
 
