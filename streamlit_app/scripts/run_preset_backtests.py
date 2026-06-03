@@ -51,9 +51,13 @@ if _BRIEFING_ENV.exists():
         pass
 
 _TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
-_TG_CHAT_IDS = [
-    c.strip() for c in os.environ.get("TELEGRAM_CHAT_ID", "").split(",") if c.strip()
-]
+# QUANT_LAB_CHAT_ID가 있으면 그것을 우선 사용 (직접 봇 채팅), 없으면 TELEGRAM_CHAT_ID fallback
+_quant_lab_chat = os.environ.get("QUANT_LAB_CHAT_ID", "").strip()
+_TG_CHAT_IDS = (
+    [_quant_lab_chat]
+    if _quant_lab_chat
+    else [c.strip() for c in os.environ.get("TELEGRAM_CHAT_ID", "").split(",") if c.strip()]
+)
 
 
 def _notify_telegram(text: str) -> None:
