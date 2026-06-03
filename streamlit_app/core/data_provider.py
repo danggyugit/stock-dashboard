@@ -287,13 +287,25 @@ class MarketDataProvider:
                 price = getattr(fi, "last_price", None)
                 prev = getattr(fi, "previous_close", None)
 
-                # Fallback to history if fast_info fails
+                # Fallback 1: history()
                 if not price:
                     hist = yf.Ticker(ticker).history(period="5d")
                     if not hist.empty:
                         price = float(hist["Close"].iloc[-1])
                         if len(hist) >= 2:
                             prev = float(hist["Close"].iloc[-2])
+
+                # Fallback 2: yf.download (separate code path, avoids same rate-limit)
+                if not price:
+                    try:
+                        dl = yf.download(ticker, period="5d", progress=False,
+                                         auto_adjust=True, multi_level_index=False)
+                        if not dl.empty:
+                            price = float(dl["Close"].iloc[-1])
+                            if len(dl) >= 2:
+                                prev = float(dl["Close"].iloc[-2])
+                    except Exception:
+                        pass
 
                 change = change_pct = None
                 if price and prev and prev != 0:

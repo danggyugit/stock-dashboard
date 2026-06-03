@@ -105,7 +105,7 @@ if view_mode == "Treemap":
     fig = px.treemap(
         df, path=["sector", "ticker"], values="market_cap",
         color="change_pct",
-        color_continuous_scale=["#DC2626", "#991B1B", "#1E293B", "#166534", "#16A34A"],
+        color_continuous_scale=["#EF4444", "#F87171", "#94A3B8", "#86EFAC", "#22C55E"],
         color_continuous_midpoint=0,
         custom_data=["name", "change_label", "market_cap", "change_pct"],
         title=f"S&P 500 Heatmap — {period.upper()} Change",

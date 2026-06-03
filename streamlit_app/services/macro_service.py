@@ -1,32 +1,72 @@
 """Macro / Economy data service — FRED CSV + yfinance."""
 
+import io
 import logging
 from datetime import timedelta
 
 import numpy as np
 import pandas as pd
+import requests
 import streamlit as st
 import yfinance as yf
 
 logger = logging.getLogger(__name__)
 
 _FRED_BASE = "https://fred.stlouisfed.org/graph/fredgraph.csv"
+_FRED_API_BASE = "https://api.stlouisfed.org/fred/series/observations"
+_FRED_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+}
 
 
 def _fred_csv(series_id: str, start: str = "2021-01-01") -> pd.DataFrame:
-    """Fetch a single FRED series as DataFrame with columns [date, value]."""
-    try:
-        url = f"{_FRED_BASE}?id={series_id}&cosd={start}"
-        df = pd.read_csv(url)
+    """Fetch a FRED series. Tries CSV endpoint first, then FRED API with key."""
+
+    def _parse(text: str) -> pd.DataFrame:
+        df = pd.read_csv(io.StringIO(text))
         date_col = [c for c in df.columns if "date" in c.lower()][0]
         val_col = [c for c in df.columns if c != date_col][0]
         df = df.rename(columns={date_col: "date", val_col: "value"})
         df["date"] = pd.to_datetime(df["date"])
         df["value"] = pd.to_numeric(df["value"], errors="coerce")
         return df.dropna(subset=["value"]).reset_index(drop=True)
+
+    # 1. CSV endpoint with proper User-Agent
+    try:
+        url = f"{_FRED_BASE}?id={series_id}&cosd={start}"
+        resp = requests.get(url, headers=_FRED_HEADERS, timeout=12)
+        resp.raise_for_status()
+        return _parse(resp.text)
     except Exception as e:
-        logger.warning(f"FRED fetch failed for {series_id}: {e}")
-        return pd.DataFrame()
+        logger.warning("FRED CSV failed for %s: %s", series_id, e)
+
+    # 2. FRED API with API key (if configured)
+    try:
+        api_key = st.secrets.get("FRED_API_KEY", "")
+        if api_key:
+            resp = requests.get(
+                _FRED_API_BASE,
+                params={
+                    "series_id": series_id, "api_key": api_key,
+                    "file_type": "json", "observation_start": start,
+                    "sort_order": "asc",
+                },
+                headers=_FRED_HEADERS, timeout=12,
+            )
+            resp.raise_for_status()
+            obs = resp.json().get("observations", [])
+            df = pd.DataFrame([
+                {"date": o["date"], "value": o["value"]}
+                for o in obs if o.get("value") != "."
+            ])
+            if not df.empty:
+                df["date"] = pd.to_datetime(df["date"])
+                df["value"] = pd.to_numeric(df["value"], errors="coerce")
+                return df.dropna(subset=["value"]).reset_index(drop=True)
+    except Exception as e:
+        logger.warning("FRED API failed for %s: %s", series_id, e)
+
+    return pd.DataFrame()
 
 
 def _yf_close(ticker: str, period: str = "5y") -> pd.DataFrame:
@@ -77,8 +117,13 @@ def get_fed_balance_sheet() -> pd.DataFrame:
 
 @st.cache_data(ttl=86400, show_spinner=False)
 def get_fed_funds_rate() -> pd.DataFrame:
-    """Effective Federal Funds Rate (daily). DFF series."""
-    return _fred_csv("DFF", "2021-01-01")
+    """Effective Federal Funds Rate (daily). DFF series, yfinance ^IRX as fallback."""
+    df = _fred_csv("DFF", "2021-01-01")
+    if not df.empty:
+        return df
+    # Fallback: 13-week T-bill yield (^IRX) closely tracks Fed Funds Rate
+    logger.warning("FRED DFF unavailable — using ^IRX (13W T-bill) as proxy")
+    return _yf_close("^IRX", period="5y")
 
 
 @st.cache_data(ttl=86400, show_spinner=False)
