@@ -94,6 +94,8 @@ st.markdown("""
 STRATEGIES = list_strategies()
 KEYS = [s.key for s in STRATEGIES]
 LABEL_BY_KEY = {s.key: s.name for s in STRATEGIES}
+STRAT_BY_KEY = {s.key: s for s in STRATEGIES}
+_CATEGORY_KO = {"price": "가격", "fundamentals": "펀더멘털", "hybrid": "하이브리드"}
 
 # Unique sectors from stocks.json for filter dropdown
 _stocks = get_cached_stocks() or []
@@ -343,7 +345,10 @@ with tab_compare:
         selected = st.multiselect(
             "비교할 전략 (최대 5개)",
             options=KEYS,
-            format_func=lambda k: LABEL_BY_KEY[k],
+            format_func=lambda k: (
+                f"{LABEL_BY_KEY[k]}"
+                f" ({_CATEGORY_KO.get(STRAT_BY_KEY[k].category, STRAT_BY_KEY[k].category)})"
+            ),
             default=["momentum_12m", "low_volatility", "magic_formula"],
             max_selections=5,
             key="cmp_strats",
@@ -490,33 +495,35 @@ with tab_compare:
         cmp_df = pd.DataFrame(rows)
         st.dataframe(cmp_df, width="stretch", hide_index=True)
 
-        # Final picks per strategy
-        any_final = any(r.final_picks for r in cmp_results)
-        if any_final:
+        # Final picks per strategy — 가로 비교 레이아웃 (전략 = 컬럼, 종목 = 행)
+        results_with_picks = [r for r in cmp_results if r.final_picks]
+        if results_with_picks:
             st.divider()
-            st.markdown("#### 📌 백테스트 종료일 기준 선정 종목 (전략별)")
-            for r in cmp_results:
-                if not r.final_picks:
-                    continue
+            st.markdown("#### 📌 백테스트 종료일 기준 선정 종목 (전략별 비교)")
+            pick_cols = st.columns(len(results_with_picks))
+            for i, r in enumerate(results_with_picks):
                 fp_date_str = r.final_picks_date.strftime("%Y-%m-%d") if r.final_picks_date else ""
-                tickers_html = "".join(
-                    f'<span style="background:rgba(96,165,250,0.15);'
-                    f'border:1px solid rgba(96,165,250,0.35);'
-                    f'border-radius:6px; padding:3px 10px;'
-                    f'font-size:0.88rem; font-weight:700; color:#60A5FA;'
-                    f'font-family:monospace; margin:2px;">{t}</span>'
-                    for t in r.final_picks
-                )
-                st.markdown(
-                    f'<div style="margin-bottom:10px;">'
-                    f'<span style="font-size:0.82rem;font-weight:700;color:#CBD5E1;">'
-                    f'{r.strategy.name}</span>'
-                    f'<span style="font-size:0.75rem;color:#64748B;margin-left:8px;">'
-                    f'{fp_date_str}</span>'
-                    f'<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">'
-                    f'{tickers_html}</div></div>',
-                    unsafe_allow_html=True,
-                )
+                with pick_cols[i]:
+                    st.markdown(
+                        f'<div style="margin-bottom:6px;">'
+                        f'<span style="font-size:0.82rem;font-weight:700;color:#CBD5E1;">'
+                        f'{r.strategy.name}</span><br>'
+                        f'<span style="font-size:0.72rem;color:#64748B;">'
+                        f'{fp_date_str}</span>'
+                        f'</div>',
+                        unsafe_allow_html=True,
+                    )
+                    for t in r.final_picks:
+                        st.markdown(
+                            f'<div style="margin-bottom:4px;">'
+                            f'<span style="background:rgba(96,165,250,0.15);'
+                            f'border:1px solid rgba(96,165,250,0.35);'
+                            f'border-radius:6px; padding:3px 10px;'
+                            f'font-size:0.88rem; font-weight:700; color:#60A5FA;'
+                            f'font-family:monospace; display:inline-block;">{t}</span>'
+                            f'</div>',
+                            unsafe_allow_html=True,
+                        )
 
 
 # ═══════════════════════════════════════════════════════════

@@ -184,7 +184,7 @@ _QUANT_LAB_STRINGS: dict[str, dict[str, str]] = {
     "tab.ic":           {"en": "🎯 IC & Turnover",     "ko": "🎯 IC 분석 & 턴오버"},
     "tab.history":      {"en": "📋 Rebalance History", "ko": "📋 리밸런싱 히스토리"},
     "tab.importance":   {"en": "🔍 Feature Importance","ko": "🔍 지표 중요도"},
-    "tab.heatmap":      {"en": "🗺️ Influence Heatmap", "ko": "🗺️ 영향력 히트맵"},
+    "tab.heatmap":      {"en": "📅 Monthly Returns",   "ko": "📅 월별 수익률"},
     "tab.tracking":     {"en": "📊 Tracking",          "ko": "📊 성과 추적"},
     "tab.live":         {"en": "🔴 AI Picks",          "ko": "🔴 AI 추천"},
 

@@ -4356,7 +4356,7 @@ def main():
     # ── Load Preset Backtest (cached daily results) ────────
     _updated_at = _backtest_updated_at()
     with st.expander(f"📦 Load Saved Preset Backtest — Last updated: {_updated_at}",
-                     expanded=False):
+                     expanded=True):
         col_sel, col_btn = st.columns([3, 1])
         with col_sel:
             _preset_label = st.selectbox(
@@ -4640,13 +4640,13 @@ def main():
 
         tabs = st.tabs([
             tr("tab.summary"),
+            tr("tab.live"),
             tr("tab.performance"),
             tr("tab.ic"),
             tr("tab.history"),
             tr("tab.importance"),
             tr("tab.heatmap"),
             tr("tab.tracking"),
-            tr("tab.live"),
         ])
 
         with tabs[0]:
@@ -4659,24 +4659,24 @@ def main():
                         vix_close=st.session_state.get("vix_close"),
                         sector_map=st.session_state.get("sector_map"))
         with tabs[1]:
-            tab_performance(results, benchmarks, price_data, rf=rf_rate)
-        with tabs[2]:
-            tab_ic(results)
-        with tabs[3]:
-            tab_history(results)
-        with tabs[4]:
-            tab_importance(results)
-        with tabs[5]:
-            tab_heatmap(results)
-        with tabs[6]:
-            tab_tracking(results, price_data)
-        with tabs[7]:
             tab_realtime(price_data, fund_map, tech_map, results,
                          saved_cfg.get("n_stocks", 10),
                          pit_map=st.session_state.get("pit_map"),
                          spy_close=st.session_state.get("spy_close"),
                          vix_close=st.session_state.get("vix_close"),
                          sector_map=st.session_state.get("sector_map"))
+        with tabs[2]:
+            tab_performance(results, benchmarks, price_data, rf=rf_rate)
+        with tabs[3]:
+            tab_ic(results)
+        with tabs[4]:
+            tab_history(results)
+        with tabs[5]:
+            tab_importance(results)
+        with tabs[6]:
+            tab_heatmap(results)
+        with tabs[7]:
+            tab_tracking(results, price_data)
 
 
 # Multipage entry: Streamlit runs this file top-to-bottom on each page load.
