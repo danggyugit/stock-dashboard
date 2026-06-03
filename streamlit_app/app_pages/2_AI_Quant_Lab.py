@@ -4164,6 +4164,8 @@ PRESET_OPTIONS = {
     "it_invvol":        "IT Inverse-Vol (No Cash)",
     "it_equal":         "IT Equal-Weight (No Cash)",
     "it_invvol_regime": "IT Inverse-Vol + Regime Cash",
+    "it_momentum":      "IT Momentum-Weight (No Cash)",
+    "it_ensemble":      "IT Ensemble + Inv-Vol (No Cash)",
 }
 
 
