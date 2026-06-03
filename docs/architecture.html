@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Dashboard — Architecture</title>
+<style>
+  :root {
+    --bg: #0F172A;
+    --bg2: #131F38;
+    --bg3: #1E293B;
+    --border: rgba(59,130,246,0.18);
+    --border2: rgba(203,213,225,0.1);
+    --blue: #3B82F6;
+    --blue-lt: #60A5FA;
+    --blue-dim: rgba(59,130,246,0.12);
+    --purple: #A855F7;
+    --purple-lt: #C4B5FD;
+    --purple-dim: rgba(168,85,247,0.12);
+    --green: #22C55E;
+    --green-lt: #4ADE80;
+    --green-dim: rgba(34,197,94,0.12);
+    --amber: #F59E0B;
+    --amber-lt: #FCD34D;
+    --amber-dim: rgba(245,158,11,0.12);
+    --pink: #EC4899;
+    --pink-lt: #F9A8D4;
+    --pink-dim: rgba(236,72,153,0.12);
+    --teal: #14B8A6;
+    --teal-lt: #5EEAD4;
+    --teal-dim: rgba(20,184,166,0.12);
+    --text: #F8FAFC;
+    --text-dim: #CBD5E1;
+    --text-muted: #64748B;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 18px; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+    font-weight: 500;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    margin-bottom: 36px;
+    padding: 28px;
+    background: radial-gradient(ellipse at top, rgba(59,130,246,0.15), transparent 60%),
+                radial-gradient(ellipse at bottom right, rgba(168,85,247,0.1), transparent 60%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+  }
+  .header h1 {
+    font-size: 2rem; font-weight: 800;
+    background: linear-gradient(135deg, #60A5FA, #A855F7 50%, #EC4899);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .header p { color: var(--text-dim); font-size: 0.95rem; }
+  .header .badges { display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .badge {
+    font-size: 0.7rem; font-weight: 600; padding: 3px 10px;
+    border-radius: 999px; border: 1px solid;
+  }
+  .badge-blue   { color: #93C5FD; background: var(--blue-dim);   border-color: rgba(59,130,246,0.3); }
+  .badge-purple { color: var(--purple-lt); background: var(--purple-dim); border-color: rgba(168,85,247,0.3); }
+  .badge-green  { color: #86EFAC; background: var(--green-dim);  border-color: rgba(34,197,94,0.3); }
+  .badge-amber  { color: #FDE68A; background: var(--amber-dim);  border-color: rgba(245,158,11,0.3); }
+  .badge-pink   { color: var(--pink-lt); background: var(--pink-dim); border-color: rgba(236,72,153,0.3); }
+  .badge-teal   { color: var(--teal-lt); background: var(--teal-dim); border-color: rgba(20,184,166,0.3); }
+
+  /* ── Layout ── */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+    align-items: start;
+  }
+
+  /* ── Layer container ── */
+  .arch-col { display: flex; flex-direction: column; gap: 6px; }
+
+  .layer {
+    position: relative;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+  }
+  .layer-label {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .layer-label::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, currentColor, transparent);
+    opacity: 0.3;
+  }
+
+  /* layer accent colors */
+  .layer-user    { border-color: rgba(20,184,166,0.25); }
+  .layer-user    .layer-label { color: var(--teal-lt); }
+  .layer-entry   { border-color: rgba(59,130,246,0.25); }
+  .layer-entry   .layer-label { color: var(--blue-lt); }
+  .layer-pages   { border-color: rgba(59,130,246,0.25); }
+  .layer-pages   .layer-label { color: var(--blue-lt); }
+  .layer-service { border-color: rgba(168,85,247,0.25); }
+  .layer-service .layer-label { color: var(--purple-lt); }
+  .layer-core    { border-color: rgba(236,72,153,0.25); }
+  .layer-core    .layer-label { color: var(--pink-lt); }
+  .layer-data    { border-color: rgba(245,158,11,0.25); }
+  .layer-data    .layer-label { color: var(--amber-lt); }
+  .layer-ext     { border-color: rgba(34,197,94,0.25); }
+  .layer-ext     .layer-label { color: var(--green-lt); }
+
+  /* ── Arrow connector ── */
+  .arrow {
+    text-align: center; height: 24px; display: flex; align-items: center;
+    justify-content: center; color: var(--text-muted); font-size: 1rem;
+    position: relative;
+  }
+  .arrow::before, .arrow::after {
+    content: ''; position: absolute;
+    width: 1px; height: 8px;
+    background: var(--text-muted); opacity: 0.4;
+  }
+  .arrow::before { top: 0; }
+  .arrow::after  { bottom: 0; }
+
+  /* ── Page groups ── */
+  .page-groups { display: flex; gap: 10px; flex-wrap: wrap; }
+  .page-group { flex: 1; min-width: 140px; }
+  .page-group-title {
+    font-size: 0.68rem; font-weight: 700; color: var(--blue-lt);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-bottom: 6px; padding: 2px 6px;
+    background: var(--blue-dim); border-radius: 4px;
+    display: inline-block;
+  }
+  .page-group .page-group-title.admin { color: #FCA5A5; background: rgba(239,68,68,0.12); }
+
+  .page-list { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+  .page-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.82rem; font-weight: 600; color: var(--text-dim);
+    padding: 4px 8px; border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: default; transition: all 0.15s;
+  }
+  .page-item:hover {
+    background: rgba(59,130,246,0.08);
+    border-color: rgba(59,130,246,0.2);
+    color: var(--text);
+  }
+  .page-item .icon { font-size: 0.85rem; width: 18px; text-align: center; }
+  .page-item .login-badge {
+    margin-left: auto; font-size: 0.68rem; font-weight: 700;
+    color: #FCA5A5; background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.2);
+    padding: 1px 5px; border-radius: 999px;
+  }
+
+  /* ── Service/Core chips ── */
+  .chip-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-size: 0.74rem; font-weight: 700;
+    padding: 4px 10px; border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: var(--bg3); color: var(--text-dim);
+    cursor: default; transition: all 0.15s;
+    position: relative;
+  }
+  .chip:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+  .chip.blue   { border-color: rgba(59,130,246,0.3);  color: #93C5FD; background: var(--blue-dim); }
+  .chip.purple { border-color: rgba(168,85,247,0.3);  color: var(--purple-lt); background: var(--purple-dim); }
+  .chip.pink   { border-color: rgba(236,72,153,0.3);  color: var(--pink-lt); background: var(--pink-dim); }
+  .chip.amber  { border-color: rgba(245,158,11,0.3);  color: var(--amber-lt); background: var(--amber-dim); }
+  .chip.green  { border-color: rgba(34,197,94,0.3);   color: #86EFAC; background: var(--green-dim); }
+  .chip.teal   { border-color: rgba(20,184,166,0.3);  color: var(--teal-lt); background: var(--teal-dim); }
+  .chip.gray   { border-color: rgba(100,116,139,0.3); color: #94A3B8; background: rgba(100,116,139,0.08); }
+
+  /* ── Entry point ── */
+  .entry-box {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-radius: 10px;
+    background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(168,85,247,0.08));
+    border: 1px solid rgba(59,130,246,0.25);
+  }
+  .entry-box .file { font-size: 0.95rem; font-weight: 700; color: var(--blue-lt); font-family: monospace; }
+  .entry-box .desc { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
+  .entry-right { margin-left: auto; display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+
+  /* ── Data stores ── */
+  .data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .data-card {
+    padding: 10px 12px; border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+  }
+  .data-card .dc-title { font-size: 0.75rem; font-weight: 700; margin-bottom: 4px; }
+  .data-card .dc-items { font-size: 0.68rem; font-weight: 500; color: var(--text-dim); line-height: 1.6; }
+  .data-card.amber-card { border-color: rgba(245,158,11,0.25); }
+  .data-card.amber-card .dc-title { color: var(--amber-lt); }
+  .data-card.blue-card { border-color: rgba(59,130,246,0.25); }
+  .data-card.blue-card .dc-title { color: var(--blue-lt); }
+  .data-card.purple-card { border-color: rgba(168,85,247,0.25); }
+  .data-card.purple-card .dc-title { color: var(--purple-lt); }
+
+  /* ── Ext APIs ── */
+  .api-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .api-card {
+    padding: 10px 12px; border-radius: 8px; text-align: center;
+    border: 1px solid var(--border2); background: var(--bg3);
+  }
+  .api-card .api-icon { font-size: 1.4rem; margin-bottom: 4px; }
+  .api-card .api-name { font-size: 0.78rem; font-weight: 800; }
+  .api-card .api-role { font-size: 0.68rem; font-weight: 600; color: var(--text-dim); margin-top: 2px; }
+  .api-card.free-badge::after {
+    content: 'FREE'; font-size: 0.55rem; font-weight: 700;
+    color: #86EFAC; background: var(--green-dim);
+    border: 1px solid rgba(34,197,94,0.3);
+    padding: 1px 5px; border-radius: 999px;
+    display: block; margin-top: 4px;
+  }
+
+  /* ── Right column ── */
+  .right-col { display: flex; flex-direction: column; gap: 16px; }
+
+  /* ── Scheduler panel ── */
+  .scheduler-panel {
+    padding: 16px; border-radius: var(--radius);
+    border: 1px solid rgba(245,158,11,0.25);
+    background: var(--bg2);
+  }
+  .panel-title {
+    font-size: 0.8rem; font-weight: 700; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .sched-section { margin-bottom: 12px; }
+  .sched-section-title {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .sched-item {
+    padding: 8px 10px; border-radius: 8px; margin-bottom: 5px;
+    border: 1px solid var(--border2); background: var(--bg3);
+  }
+  .sched-time {
+    font-size: 0.68rem; font-weight: 700; font-family: monospace;
+    color: var(--amber-lt); margin-bottom: 3px;
+  }
+  .sched-script {
+    font-size: 0.78rem; font-weight: 600; color: var(--text-dim); font-family: monospace;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sched-arrow { font-size: 0.75rem; color: var(--text-muted); }
+  .sched-dest {
+    font-size: 0.74rem; font-weight: 600; color: var(--blue-lt); margin-top: 2px;
+  }
+
+  /* ── Stock Briefing panel ── */
+  .briefing-panel {
+    padding: 16px; border-radius: var(--radius);
+    border: 1px solid rgba(34,197,94,0.25);
+    background: var(--bg2);
+  }
+  .briefing-panel .panel-title { color: var(--green-lt); }
+
+  /* ── ML Model panel ── */
+  .ml-panel {
+    padding: 16px; border-radius: var(--radius);
+    border: 1px solid rgba(168,85,247,0.25);
+    background: var(--bg2);
+  }
+  .ml-panel .panel-title { color: var(--purple-lt); }
+  .ml-flow { display: flex; flex-direction: column; gap: 6px; }
+  .ml-step {
+    padding: 7px 10px; border-radius: 8px; font-size: 0.78rem;
+    border: 1px solid var(--border2); background: var(--bg3);
+    color: var(--text-dim); font-weight: 600;
+  }
+  .ml-step .step-num {
+    font-size: 0.62rem; font-weight: 700; color: var(--purple-lt);
+    background: var(--purple-dim); border: 1px solid rgba(168,85,247,0.3);
+    padding: 1px 6px; border-radius: 999px; margin-right: 6px;
+  }
+  .ml-arrow-small {
+    text-align: center; font-size: 0.7rem; color: var(--text-muted);
+    line-height: 1;
+  }
+
+  /* ── Preset presets ── */
+  .preset-list { display: flex; flex-direction: column; gap: 4px; }
+  .preset-item {
+    display: flex; align-items: center; gap: 6px;
+    padding: 5px 8px; border-radius: 6px;
+    border: 1px solid var(--border2); background: var(--bg3);
+    font-size: 0.78rem; font-weight: 600; color: var(--text-dim);
+  }
+  .preset-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Legend ── */
+  .legend {
+    padding: 14px 16px; border-radius: var(--radius);
+    border: 1px solid var(--border2); background: var(--bg2);
+  }
+  .legend-title { font-size: 0.76rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.76rem; font-weight: 600; color: var(--text-dim); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── Cache flow ── */
+  .cache-flow {
+    margin-top: 10px; padding: 10px; border-radius: 8px;
+    background: var(--bg3); border: 1px dashed rgba(245,158,11,0.3);
+    font-size: 0.76rem; font-weight: 500; color: var(--text-dim);
+    line-height: 1.8;
+  }
+  .cache-flow .cf-title { font-weight: 700; color: var(--amber-lt); font-size: 0.78rem; margin-bottom: 4px; }
+
+  /* ── Tooltip ── */
+  [data-tip] { position: relative; }
+  [data-tip]:hover::before {
+    content: attr(data-tip);
+    position: absolute; bottom: calc(100% + 6px); left: 50%;
+    transform: translateX(-50%);
+    background: #1E293B; border: 1px solid rgba(255,255,255,0.15);
+    color: #F1F5F9; font-size: 0.7rem; line-height: 1.4;
+    padding: 6px 10px; border-radius: 6px;
+    white-space: nowrap; z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  /* ── Auth box ── */
+  .auth-strip {
+    display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;
+  }
+
+  /* ── User layer ── */
+  .user-strip {
+    display: flex; gap: 10px; align-items: center;
+  }
+  .user-cloud {
+    flex: 1; padding: 8px 14px; border-radius: 8px;
+    background: var(--teal-dim); border: 1px solid rgba(20,184,166,0.3);
+    font-size: 0.82rem; font-weight: 600; color: var(--teal-lt);
+    text-align: center;
+  }
+  .user-deploy {
+    flex: 1; padding: 8px 14px; border-radius: 8px;
+    background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.3);
+    font-size: 0.82rem; font-weight: 600; color: #A5B4FC;
+    text-align: center;
+  }
+
+  /* responsive */
+  @media (max-width: 900px) {
+    .main-grid { grid-template-columns: 1fr; }
+    .api-grid { grid-template-columns: repeat(2,1fr); }
+    .data-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════════════ -->
+<div class="header">
+  <h1>📈 Stock Dashboard — Architecture</h1>
+  <p>AI 기반 미국 주식 통합 대시보드의 전체 시스템 구조</p>
+  <div class="badges">
+    <span class="badge badge-blue">Streamlit Cloud</span>
+    <span class="badge badge-purple">Python 3.11+</span>
+    <span class="badge badge-green">SQLite / Turso</span>
+    <span class="badge badge-amber">yfinance · Gemini · Finnhub</span>
+    <span class="badge badge-pink">ML: RF + XGBoost + LightGBM</span>
+    <span class="badge badge-teal">Windows Task Scheduler</span>
+  </div>
+</div>
+
+<!-- ═══ MAIN GRID ═══════════════════════════════════════════════ -->
+<div class="main-grid">
+
+  <!-- ──── LEFT: ARCHITECTURE LAYERS ──── -->
+  <div class="arch-col">
+
+    <!-- Layer 1: User / Hosting -->
+    <div class="layer layer-user">
+      <div class="layer-label">🌐 사용자 · 호스팅</div>
+      <div class="user-strip">
+        <div class="user-cloud">🖥 웹 브라우저 (사용자)</div>
+        <div style="color:var(--text-muted);font-size:0.9rem">↔</div>
+        <div class="user-deploy">☁️ Streamlit Cloud<br><span style="font-size:0.65rem;font-weight:400;color:#A5B4FC">GitHub 자동 배포</span></div>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- Layer 2: App Entry -->
+    <div class="layer layer-entry">
+      <div class="layer-label">🚀 앱 진입점</div>
+      <div class="entry-box">
+        <div>
+          <div class="file">app.py</div>
+          <div class="desc">st.navigation · 사이드바 구성 · DB 초기화</div>
+        </div>
+        <div class="entry-right">
+          <span class="chip blue" style="font-size:0.65rem" data-tip="st.set_page_config + st.navigation으로 멀티페이지 구성">멀티페이지 네비게이션</span>
+          <span class="chip purple" style="font-size:0.65rem" data-tip="render_user_sidebar(): Google OAuth 로그인 상태 표시">사이드바 Account 섹션</span>
+        </div>
+      </div>
+      <div class="auth-strip">
+        <span class="chip teal" data-tip="Google 계정으로 로그인. Turso DB에 users 테이블 저장">🔐 Google OAuth</span>
+        <span class="chip gray" data-tip="owner email 일치 여부로 Admin 메뉴 노출 여부 결정">👑 Owner Only Admin</span>
+        <span class="chip blue" data-tip="require_auth()로 인증된 사용자만 접근 가능한 페이지 보호">🔒 Auth Guard</span>
+        <span class="chip gray" data-tip="한국어/영어 전환 (services/i18n.py)">🌏 i18n</span>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- Layer 3: Pages -->
+    <div class="layer layer-pages">
+      <div class="layer-label">📄 페이지 계층 (app_pages/)</div>
+      <div class="page-groups">
+
+        <div class="page-group">
+          <div class="page-group-title">🌐 Market Overview</div>
+          <ul class="page-list">
+            <li class="page-item" data-tip="주요 지수·공포탐욕·뉴스 요약"><span class="icon">🏠</span>Home</li>
+            <li class="page-item" data-tip="포트폴리오 수익률·시장 현황"><span class="icon">📊</span>Dashboard</li>
+            <li class="page-item" data-tip="S&P 500 섹터별 트리맵"><span class="icon">🗺</span>Heatmap</li>
+            <li class="page-item" data-tip="경제지표·어닝 캘린더"><span class="icon">📅</span>Calendar</li>
+          </ul>
+        </div>
+
+        <div class="page-group">
+          <div class="page-group-title">🔍 Analysis</div>
+          <ul class="page-list">
+            <li class="page-item" data-tip="캔들차트·재무·인사이더거래·AI밸류에이션"><span class="icon">📈</span>Stock Detail</li>
+            <li class="page-item" data-tip="30+ 팩터 스크리닝"><span class="icon">🔎</span>Screener</li>
+            <li class="page-item" data-tip="IBD-style RS Rating 1~99 백분위"><span class="icon">🏆</span>RS Screener</li>
+            <li class="page-item" data-tip="최대 5종목 퍼포먼스 비교"><span class="icon">⚖️</span>Compare</li>
+            <li class="page-item" data-tip="뉴스 감정분석 (Claude API)"><span class="icon">🧠</span>Sentiment</li>
+          </ul>
+        </div>
+
+        <div class="page-group">
+          <div class="page-group-title">💼 My Investing</div>
+          <ul class="page-list">
+            <li class="page-item" data-tip="매수/매도 기록, 수익률 추적"><span class="icon">📁</span>Portfolio <span class="login-badge">LOGIN</span></li>
+            <li class="page-item" data-tip="관심종목 리스트"><span class="icon">⭐</span>Watchlist <span class="login-badge">LOGIN</span></li>
+            <li class="page-item" data-tip="ML 백테스트 + 실시간 AI 종목 추천"><span class="icon">🧪</span>AI Quant Lab <span class="login-badge">LOGIN</span></li>
+            <li class="page-item" data-tip="팩터 전략 백테스트 (모멘텀·가치·품질)"><span class="icon">∑</span>Factor Lab <span class="login-badge">LOGIN</span></li>
+            <li class="page-item" data-tip="외부 분석 도구 연동"><span class="icon">🔗</span>Stock Lab</li>
+          </ul>
+        </div>
+
+        <div class="page-group">
+          <div class="page-group-title">📚 Research + Admin</div>
+          <ul class="page-list">
+            <li class="page-item" data-tip="금리·달러·원유·금·비트코인 매크로 지표"><span class="icon">📉</span>Macro</li>
+            <li class="page-item" data-tip="앱 기능 전체 사용 가이드 (4탭)"><span class="icon">📖</span>Guide</li>
+            <li class="page-item page-group-title admin" style="margin-top:6px" data-tip="사용자 관리, 캐시 현황 (오너 전용)"><span class="icon">⚙️</span>Admin <span class="login-badge">OWNER</span></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- Layer 4: Services -->
+    <div class="layer layer-service">
+      <div class="layer-label">⚙️ 서비스 계층 (services/)</div>
+      <div class="chip-grid">
+        <span class="chip purple" data-tip="Google OAuth 로그인, 사용자 생성/조회, 세션 관리">auth_service</span>
+        <span class="chip purple" data-tip="S&P 500 히트맵 가격 데이터, 섹터별 집계">market_service</span>
+        <span class="chip purple" data-tip="IBD RS Rating 계산 (yfinance 375일 데이터)">rs_service</span>
+        <span class="chip purple" data-tip="GitHub raw URL에서 stocks/heatmap/fundamentals.json 로드">cache_loader</span>
+        <span class="chip purple" data-tip="포트폴리오 CRUD, 매매 기록, 수익률 계산">portfolio_service</span>
+        <span class="chip purple" data-tip="관심종목 추가/삭제/조회">watchlist_service</span>
+        <span class="chip purple" data-tip="공포탐욕지수 + Claude API 뉴스 감정분석">sentiment_service</span>
+        <span class="chip purple" data-tip="DCF·PBR·PSR 기반 적정가치 + Gemini 내러티브">valuation_service</span>
+        <span class="chip purple" data-tip="Gemini 2.5 Flash로 Bull/Base/Bear 시나리오 생성, 24h 캐시">ai_valuation_service</span>
+        <span class="chip purple" data-tip="금리·달러·원유·금 거시경제 시계열 데이터">macro_service</span>
+        <span class="chip purple" data-tip="경제지표·어닝 발표 스케줄, Finnhub">calendar_service</span>
+        <span class="chip purple" data-tip="내부자 거래 데이터 (매수/매도)">insider_service</span>
+        <span class="chip purple" data-tip="OHLCV 과거 데이터 캐시 관리">historical_data_service</span>
+        <span class="chip purple" data-tip="팩터 전략 정의 (모멘텀·가치·품질)">factor_strategies</span>
+        <span class="chip purple" data-tip="팩터 백테스트 엔진">factor_backtest_service</span>
+        <span class="chip gray" data-tip="한국어/영어 문자열 테이블 관리">i18n</span>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- Layer 5: Core Providers -->
+    <div class="layer layer-core">
+      <div class="layer-label">🔌 코어 프로바이더 (core/)</div>
+      <div class="chip-grid">
+        <span class="chip pink" data-tip="yfinance 래퍼. 가격/재무/시총/지수 조회. ThreadPoolExecutor 20 workers">data_provider</span>
+        <span class="chip pink" data-tip="Anthropic Claude API. 감정분석·시장 리포트. 사용자 수동 트리거만">llm_provider</span>
+        <span class="chip pink" data-tip="Finnhub 뉴스 API. 폴백: yfinance Ticker.news">news_provider</span>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- Layer 6: Data Stores -->
+    <div class="layer layer-data">
+      <div class="layer-label">💾 데이터 저장소</div>
+      <div class="data-grid">
+        <div class="data-card amber-card" data-tip="사용자·포트폴리오·관심종목 영구 저장. Streamlit Cloud → Turso(클라우드 SQLite)">
+          <div class="dc-title">🗄 SQLite / Turso</div>
+          <div class="dc-items">
+            users · portfolios · trades<br>
+            watchlist · alerts · daily_prices<br>
+            fundamentals · news_articles<br>
+            earnings_calendar · cache_meta
+          </div>
+        </div>
+        <div class="data-card blue-card" data-tip="GitHub Actions가 6시간마다 갱신. Streamlit Cloud에서 raw URL로 직접 로드 (DB 조회보다 빠름)">
+          <div class="dc-title">📦 GitHub Cache</div>
+          <div class="dc-items">
+            stocks.json (S&P 1500)<br>
+            heatmap.json (5일 가격)<br>
+            fundamentals.json (PE/PB…)<br>
+            valuation/{TICKER}.json
+          </div>
+        </div>
+        <div class="data-card purple-card" data-tip="로컬 배치 스크립트가 생성. AI Quant Lab 프리셋 로딩에 사용.">
+          <div class="dc-title">🤖 Backtest Cache</div>
+          <div class="dc-items">
+            it_invvol.json<br>
+            it_equal.json<br>
+            it_invvol_regime.json<br>
+            it_momentum.json<br>
+            it_ensemble.json
+          </div>
+        </div>
+      </div>
+      <div class="cache-flow">
+        <div class="cf-title">⏱ 캐시 갱신 전략</div>
+        GitHub Actions (6h) → GitHub raw URL → Streamlit @st.cache_data (TTL 1~6h)<br>
+        로컬 배치 (일 1회) → data/cache/backtests/*.json → 프리셋 로드
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <!-- Layer 7: External APIs -->
+    <div class="layer layer-ext">
+      <div class="layer-label">🌐 외부 API · 서비스</div>
+      <div class="api-grid">
+        <div class="api-card free-badge" data-tip="가격·재무·배당·시총·지수. yfinance + curl_cffi(bot차단 우회)">
+          <div class="api-icon">📊</div>
+          <div class="api-name" style="color:#86EFAC">yfinance</div>
+          <div class="api-role">가격·재무·지수</div>
+        </div>
+        <div class="api-card free-badge" data-tip="AI Valuation 시나리오 생성 (Bull/Base/Bear). 1500req/day 무료. 24h 캐시로 절약.">
+          <div class="api-icon">✨</div>
+          <div class="api-name" style="color:#FCD34D">Gemini 2.5</div>
+          <div class="api-role">AI 밸류에이션</div>
+        </div>
+        <div class="api-card" data-tip="뉴스 감정분석·시장 리포트. 사용자가 버튼 클릭 시에만 호출 (비용 관리)">
+          <div class="api-icon">🤖</div>
+          <div class="api-name" style="color:#93C5FD">Claude API</div>
+          <div class="api-role">감정분석·리포트</div>
+        </div>
+        <div class="api-card" data-tip="실시간 뉴스 피드. 폴백: yfinance RSS. API 키 선택적.">
+          <div class="api-icon">📰</div>
+          <div class="api-name" style="color:#C4B5FD">Finnhub</div>
+          <div class="api-role">뉴스·어닝 데이터</div>
+        </div>
+        <div class="api-card free-badge" data-tip="월간 리밸런싱 알림 · 일일 시장 브리핑 · 어닝 알림 발송">
+          <div class="api-icon">✈️</div>
+          <div class="api-name" style="color:#5EEAD4">Telegram Bot</div>
+          <div class="api-role">알림 발송</div>
+        </div>
+        <div class="api-card" data-tip="사용자 인증. Turso DB에 email·name 저장.">
+          <div class="api-icon">🔐</div>
+          <div class="api-name" style="color:#F9A8D4">Google OAuth</div>
+          <div class="api-role">사용자 인증</div>
+        </div>
+        <div class="api-card free-badge" data-tip="클라우드 SQLite. Streamlit Cloud에서 SQLite 파일 대신 사용. 무료 플랜.">
+          <div class="api-icon">🗄</div>
+          <div class="api-name" style="color:#FDE68A">Turso</div>
+          <div class="api-role">클라우드 DB</div>
+        </div>
+        <div class="api-card free-badge" data-tip="GitHub 연동 자동 배포. main 브랜치 push 시 자동 리빌드.">
+          <div class="api-icon">☁️</div>
+          <div class="api-name" style="color:#A5B4FC">Streamlit Cloud</div>
+          <div class="api-role">앱 호스팅</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /arch-col -->
+
+  <!-- ──── RIGHT COLUMN ──── -->
+  <div class="right-col">
+
+    <!-- ML Pipeline -->
+    <div class="ml-panel">
+      <div class="panel-title">🧪 AI Quant Lab — ML 파이프라인</div>
+      <div class="ml-flow">
+        <div class="ml-step"><span class="step-num">1</span>S&P 1500 Large Cap IT 섹터 유니버스</div>
+        <div class="ml-arrow-small">↓</div>
+        <div class="ml-step"><span class="step-num">2</span>유동성 필터 (20일 평균 거래대금)</div>
+        <div class="ml-arrow-small">↓</div>
+        <div class="ml-step"><span class="step-num">3</span>스냅샷 생성 (기술 + 펀더멘털 + PIT)</div>
+        <div class="ml-arrow-small">↓</div>
+        <div class="ml-step"><span class="step-num">4</span>롤링 학습 (12개월 윈도우, Purged CV)</div>
+        <div class="ml-arrow-small">↓</div>
+        <div class="ml-step" style="border-color:rgba(168,85,247,0.3);background:var(--purple-dim)">
+          <span class="step-num">5</span>RF + XGBoost + LightGBM<br>
+          <span style="font-size:0.65rem;color:var(--text-muted);margin-left:26px">앙상블: 평균 순위 합산</span>
+        </div>
+        <div class="ml-arrow-small">↓</div>
+        <div class="ml-step"><span class="step-num">6</span>HMM 레짐 감지 (Bull/Bear/Normal)</div>
+        <div class="ml-arrow-small">↓</div>
+        <div class="ml-step" style="border-color:rgba(34,197,94,0.3);background:var(--green-dim)">
+          <span class="step-num">7</span>가중 배분 → 포트폴리오
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <div style="font-size:0.65rem;color:var(--text-muted);margin-bottom:6px;font-weight:700;text-transform:uppercase">5개 프리셋</div>
+        <div class="preset-list">
+          <div class="preset-item"><div class="preset-dot" style="background:#3B82F6"></div>IT Inverse-Vol (No Cash)</div>
+          <div class="preset-item"><div class="preset-dot" style="background:#22C55E"></div>IT Equal-Weight (No Cash)</div>
+          <div class="preset-item"><div class="preset-dot" style="background:#F59E0B"></div>IT Inverse-Vol + Regime Cash</div>
+          <div class="preset-item"><div class="preset-dot" style="background:#EC4899"></div>IT Momentum-Weight (No Cash)</div>
+          <div class="preset-item"><div class="preset-dot" style="background:#A855F7"></div>IT Ensemble + Inv-Vol (No Cash)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scheduler -->
+    <div class="scheduler-panel">
+      <div class="panel-title" style="color:var(--amber-lt)">⏰ 스케줄 작업</div>
+
+      <div class="sched-section">
+        <div class="sched-section-title">☁️ GitHub Actions (자동)</div>
+        <div class="sched-item">
+          <div class="sched-time">06:30 / 13:00 / 22:30 / 02:30 KST</div>
+          <div class="sched-script">fetch_cache.py (prices_only)</div>
+          <div class="sched-dest">→ GitHub raw cache (6h 주기)</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-time">매일 12:00 KST</div>
+          <div class="sched-script">build_valuation_cache.py</div>
+          <div class="sched-dest">→ valuation/{TICKER}.json</div>
+        </div>
+      </div>
+
+      <div class="sched-section">
+        <div class="sched-section-title">🖥 Windows Task Scheduler (로컬)</div>
+        <div class="sched-item">
+          <div class="sched-time">매일 07:00 KST</div>
+          <div class="sched-script">stock_briefing/main.py</div>
+          <div class="sched-dest">→ Telegram 일일 증시 브리핑</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-time">매일 09:00 KST</div>
+          <div class="sched-script">earnings_alert.py (AMC)</div>
+          <div class="sched-dest">→ Telegram 어닝 알림</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-time">매일 22:30 KST</div>
+          <div class="sched-script">earnings_alert.py (BMO)</div>
+          <div class="sched-dest">→ Telegram 어닝 알림</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-time">매월 1일 11:00 KST</div>
+          <div class="sched-script">run_preset_backtests.py</div>
+          <div class="sched-dest">→ data/cache/backtests/*.json</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-time">매월 1일 11:30 KST</div>
+          <div class="sched-script">send_rebalancing_alert.py</div>
+          <div class="sched-dest">→ Telegram 리밸런싱 알림</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stock Briefing -->
+    <div class="briefing-panel">
+      <div class="panel-title">📨 stock_briefing 프로젝트</div>
+      <div class="chip-grid" style="margin-bottom:8px">
+        <span class="chip green" style="font-size:0.68rem">별도 프로젝트</span>
+        <span class="chip teal" style="font-size:0.68rem">.env 공유</span>
+      </div>
+      <div style="font-size:0.72rem;color:var(--text-dim);line-height:1.7">
+        <strong style="color:var(--green-lt)">collectors/market.py</strong> — yfinance 지수·매크로<br>
+        <strong style="color:var(--green-lt)">collectors/news.py</strong> — Finnhub + Yahoo RSS<br>
+        <strong style="color:var(--green-lt)">summarizer.py</strong> — Gemini 2.0 Flash 한국어 요약<br>
+        <strong style="color:var(--green-lt)">notifier.py</strong> — Telegram HTML 4000자 분할
+      </div>
+      <div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--bg3);font-size:0.68rem;color:var(--text-muted)">
+        📎 공유 자산: <span style="color:var(--teal-lt)">TELEGRAM_BOT_TOKEN</span>, <span style="color:var(--teal-lt)">TELEGRAM_CHAT_ID</span><br>
+        send_rebalancing_alert.py가 이 .env를 자동으로 로드
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-title">색상 범례</div>
+      <div class="legend-grid">
+        <div class="legend-item"><div class="legend-dot" style="background:#14B8A6"></div>사용자·호스팅</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3B82F6"></div>앱·페이지 계층</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#A855F7"></div>서비스 계층</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#EC4899"></div>코어 프로바이더</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#F59E0B"></div>데이터 저장소</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#22C55E"></div>외부 API</div>
+      </div>
+      <div style="margin-top:8px;font-size:0.67rem;color:var(--text-muted)">
+        🖱 카드에 마우스를 올리면 상세 설명이 표시됩니다
+      </div>
+    </div>
+
+  </div><!-- /right-col -->
+
+</div><!-- /main-grid -->
+
+<!-- Footer -->
+<div style="text-align:center;margin-top:24px;font-size:0.7rem;color:var(--text-muted)">
+  Stock Dashboard · Generated 2026-06-03 · Streamlit + Python + SQLite/Turso
+</div>
+
+</body>
+</html>

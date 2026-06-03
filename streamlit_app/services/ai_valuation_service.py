@@ -150,6 +150,35 @@ IMPORTANT:
 - Output ONLY valid JSON."""
 
 
+def _classify_error(exc: Exception) -> dict:
+    """예외를 분류해 사용자 친화적 에러 딕셔너리 반환."""
+    msg = str(exc).lower()
+    if any(k in msg for k in ("429", "quota", "resource_exhausted", "rate limit")):
+        return {
+            "error": "quota_exceeded",
+            "user_message": "⏳ Gemini 일일 요청 한도 초과 — 내일 자동 갱신됩니다.",
+        }
+    if any(k in msg for k in ("403", "permission", "api key", "invalid", "unauthorized")):
+        return {
+            "error": "auth_error",
+            "user_message": "🔑 Gemini API 키 오류 — secrets.toml의 GEMINI_API_KEY를 확인하세요.",
+        }
+    if any(k in msg for k in ("timeout", "connection", "network", "ssl", "socket")):
+        return {
+            "error": "network_error",
+            "user_message": "🌐 네트워크 오류 — 잠시 후 다시 시도하세요.",
+        }
+    if any(k in msg for k in ("503", "500", "server", "unavailable", "overloaded")):
+        return {
+            "error": "server_error",
+            "user_message": "🔧 Gemini 서버 일시 장애 — 잠시 후 다시 시도하세요.",
+        }
+    return {
+        "error": "unknown_error",
+        "user_message": f"❌ AI 분석 실패 — {str(exc)[:120]}",
+    }
+
+
 def _parse_json_response(text: str) -> dict | None:
     """Extract JSON object from Gemini response (handles markdown fences)."""
     if not text:
@@ -198,12 +227,18 @@ def get_ai_scenario_analysis(
         text = getattr(resp, "text", None) or ""
     except Exception as e:
         logger.warning("Gemini call failed for %s (%s): %s", ticker, model, e)
-        return {"error": str(e), "_model": model}
+        err = _classify_error(e)
+        err["_model"] = model
+        return err
 
     parsed = _parse_json_response(text)
     if not parsed:
-        return {"error": "Could not parse AI response",
-                "raw": text[:500], "_model": model}
+        return {
+            "error": "parse_error",
+            "user_message": "❌ AI 응답 파싱 실패 — 잠시 후 다시 시도하세요.",
+            "raw": text[:500],
+            "_model": model,
+        }
 
     parsed["_model"] = model
     parsed["_ticker"] = ticker

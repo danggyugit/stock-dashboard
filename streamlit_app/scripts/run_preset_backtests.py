@@ -40,6 +40,44 @@ logger = logging.getLogger("preset-backtests")
 _APP_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_APP_DIR))
 
+# ── Telegram 알림 설정 ──────────────────────────────────────
+_WORKSPACE_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+_BRIEFING_ENV = _WORKSPACE_ROOT / "stock_briefing" / ".env"
+if _BRIEFING_ENV.exists():
+    try:
+        from dotenv import load_dotenv
+        load_dotenv(_BRIEFING_ENV, override=False)
+    except ImportError:
+        pass
+
+_TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+_TG_CHAT_IDS = [
+    c.strip() for c in os.environ.get("TELEGRAM_CHAT_ID", "").split(",") if c.strip()
+]
+
+
+def _notify_telegram(text: str) -> None:
+    """배치 결과를 Telegram으로 발송. 실패해도 배치 자체에 영향 없음."""
+    if not _TG_TOKEN or not _TG_CHAT_IDS:
+        logger.info("Telegram 미설정 — 알림 건너뜀")
+        return
+    import urllib.parse
+    import urllib.request
+    for chat_id in _TG_CHAT_IDS:
+        try:
+            url = f"https://api.telegram.org/bot{_TG_TOKEN}/sendMessage"
+            payload = urllib.parse.urlencode({
+                "chat_id": chat_id,
+                "text": text,
+                "parse_mode": "Markdown",
+            }).encode()
+            req = urllib.request.Request(url, data=payload, method="POST")
+            with urllib.request.urlopen(req, timeout=10):
+                pass
+            logger.info("Telegram 알림 발송: %s", chat_id)
+        except Exception as e:
+            logger.warning("Telegram 알림 실패 (%s): %s", chat_id, e)
+
 
 # Minimal Streamlit stub (just enough to satisfy module-level imports)
 def _passthrough_decorator(*args, **kwargs):
@@ -930,6 +968,25 @@ def main() -> int:
         encoding="utf-8",
     )
     logger.info("Done. %d success, %d failures", len(results_by_id), len(failures))
+
+    # ── Telegram 결과 알림 ──────────────────────────────────
+    kst_now = datetime.now().strftime("%m/%d %H:%M")
+    if failures:
+        _notify_telegram(
+            f"⚠️ *프리셋 백테스트 일부 실패* ({kst_now} KST)\n"
+            f"❌ 실패: `{'`, `'.join(failures)}`\n"
+            f"✅ 성공: `{'`, `'.join(results_by_id.keys()) or '없음'}`\n"
+            f"로그를 확인하세요."
+        )
+    else:
+        _notify_telegram(
+            f"✅ *프리셋 백테스트 완료* ({kst_now} KST)\n"
+            + "\n".join(
+                f"• {r['name']}: CAGR {r['summary'].get('cagr_pct', '?')}%"
+                for r in results_by_id.values()
+            )
+        )
+
     return 0 if not failures else 1
 
 

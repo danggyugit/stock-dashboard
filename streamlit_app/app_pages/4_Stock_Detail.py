@@ -491,7 +491,8 @@ if _val_core:
             st.info(f"{label_prefix}No result.")
             return
         if _ai_result.get("error"):
-            st.error(f"{label_prefix}Failed: {_ai_result['error']}")
+            msg = _ai_result.get("user_message") or f"AI 분석 실패: {_ai_result['error']}"
+            st.warning(f"{label_prefix}{msg}")
             return
 
         eps_basis = _ai_result.get("eps_basis", {}) or {}

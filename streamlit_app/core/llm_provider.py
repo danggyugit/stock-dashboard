@@ -8,6 +8,20 @@ import streamlit as st
 logger = logging.getLogger(__name__)
 
 
+def _classify_anthropic_error(exc: Exception) -> str:
+    """Anthropic 예외를 사용자 친화적 메시지로 변환."""
+    msg = str(exc).lower()
+    if any(k in msg for k in ("529", "overloaded", "rate_limit", "429")):
+        return "⏳ Claude API 한도 초과 — 잠시 후 다시 시도하세요."
+    if any(k in msg for k in ("401", "403", "authentication", "api key", "invalid")):
+        return "🔑 Claude API 키 오류 — secrets.toml의 ANTHROPIC_API_KEY를 확인하세요."
+    if any(k in msg for k in ("timeout", "connection", "network", "ssl")):
+        return "🌐 네트워크 오류 — 잠시 후 다시 시도하세요."
+    if any(k in msg for k in ("500", "503", "server")):
+        return "🔧 Claude 서버 일시 장애 — 잠시 후 다시 시도하세요."
+    return f"❌ Claude API 오류 — {str(exc)[:100]}"
+
+
 def _get_anthropic_key() -> str:
     try:
         return st.secrets.get("ANTHROPIC_API_KEY", "")
@@ -64,8 +78,8 @@ Respond with a JSON array only:
                         json_lines.append(line)
                 text = "\n".join(json_lines)
             return json.loads(text)
-        except Exception:
-            logger.exception("Sentiment analysis failed.")
+        except Exception as e:
+            logger.warning("Sentiment analysis failed: %s", _classify_anthropic_error(e))
             return None
 
     def generate_market_report(self, market_data: dict) -> str | None:
@@ -89,6 +103,6 @@ Format in Markdown. 300-500 words.
                 messages=[{"role": "user", "content": prompt}],
             )
             return msg.content[0].text.strip()
-        except Exception:
-            logger.exception("Report generation failed.")
+        except Exception as e:
+            logger.warning("Report generation failed: %s", _classify_anthropic_error(e))
             return None
