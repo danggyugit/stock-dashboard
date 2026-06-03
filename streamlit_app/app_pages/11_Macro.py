@@ -107,6 +107,7 @@ with liq1:
             )
     else:
         st.caption("M1/M2 data unavailable")
+        st.caption("💡 FRED API 키를 Streamlit secrets에 `FRED_API_KEY`로 추가하면 활성화됩니다.")
 
 # Fed Balance Sheet
 with liq2:
@@ -137,6 +138,7 @@ with liq2:
         )
     else:
         st.caption("Fed Balance Sheet data unavailable")
+        st.caption("💡 FRED API 키를 Streamlit secrets에 `FRED_API_KEY`로 추가하면 활성화됩니다.")
 
 # ═══════════════════════════════════════════════════════════
 # 2. INTEREST RATES

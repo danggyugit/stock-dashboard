@@ -128,16 +128,31 @@ def get_fed_funds_rate() -> pd.DataFrame:
 
 @st.cache_data(ttl=86400, show_spinner=False)
 def get_treasury_yields() -> pd.DataFrame:
-    """10Y and 2Y Treasury yields + spread (daily)."""
+    """10Y and 2Y Treasury yields + spread. FRED primary, yfinance ^TNX/^IRX fallback."""
     y10 = _fred_csv("DGS10", "2021-01-01")
     y2 = _fred_csv("DGS2", "2021-01-01")
-    if y10.empty or y2.empty:
+    if not y10.empty and not y2.empty:
+        y10 = y10.rename(columns={"value": "10Y"})
+        y2 = y2.rename(columns={"value": "2Y"})
+        df = pd.merge(y10, y2, on="date", how="inner").sort_values("date")
+        df["Spread"] = df["10Y"] - df["2Y"]
+        return df.dropna().reset_index(drop=True)
+
+    # Fallback: ^TNX (10Y) + ^IRX (3M short-rate proxy for 2Y)
+    logger.warning("FRED DGS10/DGS2 unavailable — using ^TNX/^IRX as proxy")
+    t10 = _yf_close("^TNX", period="5y")
+    t_short = _yf_close("^IRX", period="5y")
+    if t10.empty:
         return pd.DataFrame()
-    y10 = y10.rename(columns={"value": "10Y"})
-    y2 = y2.rename(columns={"value": "2Y"})
-    df = pd.merge(y10, y2, on="date", how="inner").sort_values("date")
-    df["Spread"] = df["10Y"] - df["2Y"]
-    return df.dropna().reset_index(drop=True)
+    t10 = t10.rename(columns={"value": "10Y"})
+    if not t_short.empty:
+        t_short = t_short.rename(columns={"value": "2Y"})
+        df = pd.merge(t10, t_short, on="date", how="inner").sort_values("date")
+        df["Spread"] = df["10Y"] - df["2Y"]
+        return df.dropna().reset_index(drop=True)
+    t10["2Y"] = np.nan
+    t10["Spread"] = np.nan
+    return t10.sort_values("date").reset_index(drop=True)
 
 
 # ═══════════════════════════════════════════════════════════
