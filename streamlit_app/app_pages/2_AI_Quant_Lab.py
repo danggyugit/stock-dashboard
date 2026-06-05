@@ -4055,7 +4055,7 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
             f'🎯 {tr("settings.adv_strategy")}</div>',
             unsafe_allow_html=True,
         )
-        sk1, sk2, sk3, sk4 = st.columns(4)
+        sk1, sk2, sk3, sk4, sk5 = st.columns(5)
         with sk1:
             use_ensemble = st.checkbox(
                 "🤖 " + tr("settings.ensemble"),
@@ -4079,6 +4079,13 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
                 "⚖️ " + tr("settings.inv_vol"),
                 value=False,
                 help=tr("settings.inv_vol_help"),
+            )
+        with sk5:
+            use_momentum_weight = st.checkbox(
+                "🚀 " + tr("settings.mom_weight"),
+                value=False,
+                disabled=use_inv_vol_weight,
+                help=tr("settings.mom_weight_help"),
             )
 
         st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
@@ -4144,7 +4151,7 @@ def render_topbar(sp1500_df: pd.DataFrame, all_sectors: list) -> dict:
         "use_mom_filter":        use_mom_filter,
         "use_turnover_buffer":   use_turnover_buffer,
         "use_inv_vol_weight":    use_inv_vol_weight,
-        "use_momentum_weight":   False,
+        "use_momentum_weight":   use_momentum_weight and not use_inv_vol_weight,
         "cash_strategy":         cash_strategy,
     }
 

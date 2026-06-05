@@ -554,6 +554,18 @@ _QUANT_LAB_STRINGS: dict[str, dict[str, str]] = {
                "효과: MDD 축소, Sharpe 개선. 단, 고변동 종목의 급등 수익은 줄어들 수 있습니다. "
                "추천 탭에서 종목별 투자 비중(%)을 함께 표시합니다."),
     },
+    "settings.mom_weight":      {"en": "Momentum weighting",
+                                 "ko": "모멘텀 가중"},
+    "settings.mom_weight_help": {
+        "en": ("Weights stocks by their momentum score instead of equally. "
+               "Higher-momentum stocks receive a larger allocation. "
+               "Effect: concentrates on recent winners → higher return potential but higher volatility. "
+               "Cannot be combined with Inverse volatility weighting."),
+        "ko": ("종목을 균등이 아닌 모멘텀 점수에 비례해 가중 배분합니다. "
+               "모멘텀이 높은 종목에 더 많은 비중을 배분합니다. "
+               "효과: 최근 강세 종목 집중 → 수익 잠재력 상승, 변동성도 증가. "
+               "역변동성 가중과 동시에 사용할 수 없습니다."),
+    },
 
     # ── Ver4.2: Summary tab strings ───────────────────────
     "tab.summary":          {"en": "🏠 Summary",        "ko": "🏠 요약"},
