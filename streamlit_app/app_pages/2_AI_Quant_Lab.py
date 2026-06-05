@@ -1207,7 +1207,7 @@ def build_snapshot_df(
     tech_map: dict,
     fund_map: dict,
     date: pd.Timestamp,
-    min_history: int = 252,
+    min_history: int = 263,
     pit_map: dict = None,
     price_data: dict = None,
     backtest_mode: bool = False,
@@ -1215,6 +1215,7 @@ def build_snapshot_df(
     """모든 종목에 대해 특정 날짜의 피처 DataFrame 구성.
     pit_map: {ticker: {"income": df, "balance": df, "cashflow": df, ...}}
     price_data: {ticker: OHLCV DataFrame} — 역사적 주가 조회용
+    min_history=263: pct_change(252)의 첫 유효값은 253번째 행이므로 10행 버퍼 추가
     """
     rows = []
     for t in tickers:
@@ -2549,7 +2550,9 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
 
         if (model_rf is not None and last_imputer is not None
                 and last_all_cols and price_data and tech_map is not None
-                and fund_map is not None):
+                and fund_map is not None
+                and not st.session_state.get("_today_picks")):
+            # 오늘 기준 추천이 없을 때만 (백테스트 직후는 _today_picks가 항상 채워짐)
             all_max = [ohlcv.index.max() for ohlcv in price_data.values() if len(ohlcv) > 0]
             latest_date = max(all_max) if all_max else pd.Timestamp.today()
 
@@ -2572,7 +2575,7 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                     unsafe_allow_html=True,
                 )
 
-            st.caption(f"{tr('pk.as_of')}: {latest_date.strftime('%Y-%m-%d')}")
+            st.caption(f"{tr('pk.as_of')}: {latest_date.strftime('%Y-%m-%d')} · 백테스트 데이터 기준 (프리셋 대비 최신 데이터 차이 있을 수 있음)")
 
             cur_snap = build_snapshot_df(
                 list(price_data.keys()), tech_map, fund_map, latest_date,
@@ -2668,10 +2671,11 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                 pd.Timestamp(_today_at).strftime("%Y-%m-%d")
                 if _today_at else "today"
             )
-            st.caption(
-                f"🟢 **오늘 기준 추천** ({_today_at_short}) · "
-                f"매일 11:00 KST 자동 갱신"
-            )
+            _picks_src = st.session_state.get("_today_picks_src", "preset")
+            _src_label = ("백테스트 완료 후 계산"
+                          if _picks_src == "backtest"
+                          else "매일 11:00 KST 자동 갱신")
+            st.caption(f"🟢 **오늘 기준 추천** ({_today_at_short}) · {_src_label}")
 
             # Regime + Cash banner if applicable
             _t_regime = st.session_state.get("_today_regime")
@@ -4621,6 +4625,112 @@ def main():
         st.session_state.vix_close   = vix_close
         st.session_state.sector_map  = sector_map
         st.session_state.cfg         = cfg
+
+        # 이전 picks 초기화 (새 백테스트 결과로 덮어씀)
+        for _k in ("_today_picks", "_today_full_ranking", "_today_picks_at",
+                   "_today_regime", "_today_cash_pct"):
+            st.session_state.pop(_k, None)
+
+        # ── 프리셋 구조 적용: 백테스트 완료 후 오늘 기준 추천 계산 ──
+        _bt_model_rf    = results.get("last_model_rf")
+        _bt_imputer     = results.get("last_imputer")
+        _bt_avail_cols  = results.get("last_avail_cols", [])
+        _bt_all_cols    = results.get("last_all_cols", [])
+        _bt_win_bounds  = results.get("last_win_bounds", {})
+        _bt_miss_src    = results.get("last_miss_src", [])
+        _bt_is_ens      = results.get("use_ensemble", False)
+        _bt_model_xgb   = results.get("last_model_xgb")
+        _bt_model_lgbm  = results.get("last_model_lgbm")
+
+        if _bt_model_rf is not None and _bt_imputer is not None and _bt_all_cols:
+            update_prog(0.97, "🔄 오늘 기준 추천 종목 계산 중...")
+            try:
+                _today_ts = pd.Timestamp.today().normalize()
+
+                _today_snap = build_snapshot_df(
+                    list(price_data.keys()), tech_map, fund_map, _today_ts,
+                    pit_map=pit_map, price_data=price_data,
+                )
+                if not _today_snap.empty:
+                    _today_snap = enrich_snapshot(
+                        _today_snap, _today_ts,
+                        spy_close=spy_close, vix_close=vix_close,
+                        sector_map=sector_map,
+                    )
+                    _avail_t = [c for c in _bt_avail_cols if c in _today_snap.columns]
+                    X_t = _today_snap[_avail_t].reindex(columns=_bt_avail_cols)
+                    for _col in _bt_avail_cols:
+                        if _col in _bt_win_bounds and _col in X_t.columns:
+                            _lo, _hi = _bt_win_bounds[_col]
+                            X_t[_col] = X_t[_col].clip(_lo, _hi)
+                    for _mc in _bt_miss_src:
+                        X_t[f"{_mc}_miss"] = X_t[_mc].isna().astype(int) if _mc in X_t.columns else 0
+                    X_t = X_t.reindex(columns=_bt_all_cols)
+                    X_t_imp = _bt_imputer.transform(X_t)
+
+                    _pred_rf_t = pd.Series(_bt_model_rf.predict(X_t_imp), index=_today_snap.index)
+                    if _bt_is_ens and _bt_model_xgb and _bt_model_lgbm:
+                        _pred_xgb_t  = pd.Series(_bt_model_xgb.predict(X_t_imp),  index=_today_snap.index)
+                        _pred_lgbm_t = pd.Series(_bt_model_lgbm.predict(X_t_imp), index=_today_snap.index)
+                        _avg_rk = (_pred_rf_t.rank(ascending=False) +
+                                   _pred_xgb_t.rank(ascending=False) +
+                                   _pred_lgbm_t.rank(ascending=False)) / 3
+                        _comp_t = -_avg_rk
+                    else:
+                        _comp_t = _pred_rf_t
+
+                    _n_s = cfg.get("n_stocks", 5)
+                    if cfg.get("use_mom_filter", True) and "Mom_1m" in _today_snap.columns:
+                        _mom_ok = _today_snap["Mom_1m"] > 0
+                        _filt_t = _comp_t[_comp_t.index.isin(_today_snap[_mom_ok].index)]
+                        _top_t  = _filt_t.nlargest(_n_s) if len(_filt_t) >= _n_s else _comp_t.nlargest(_n_s)
+                    else:
+                        _top_t = _comp_t.nlargest(_n_s)
+
+                    # 비중 계산 (백테스트 설정 그대로)
+                    _use_inv_t  = cfg.get("use_inv_vol_weight", False)
+                    _use_mom_t  = cfg.get("use_momentum_weight", False)
+                    if _use_inv_t and "Volatility_30d" in _today_snap.columns:
+                        _vols_t = {}
+                        for _t in _top_t.index:
+                            _v = _today_snap.loc[_t, "Volatility_30d"] if _t in _today_snap.index else np.nan
+                            _vols_t[_t] = _v if (not pd.isna(_v) and _v > 0) else 0.30
+                        _inv_v_t = {_t: 1 / _v for _t, _v in _vols_t.items()}
+                        _tiv = sum(_inv_v_t.values())
+                        _weights_t = {_t: _iv / _tiv for _t, _iv in _inv_v_t.items()}
+                    elif _use_mom_t:
+                        _mom_s_t = {}
+                        for _t in _top_t.index:
+                            _m3  = float(_today_snap.loc[_t, "Mom_3m"])  if ("Mom_3m"  in _today_snap.columns and _t in _today_snap.index and not pd.isna(_today_snap.loc[_t, "Mom_3m"]))  else 0.0
+                            _m6  = float(_today_snap.loc[_t, "Mom_6m"])  if ("Mom_6m"  in _today_snap.columns and _t in _today_snap.index and not pd.isna(_today_snap.loc[_t, "Mom_6m"]))  else 0.0
+                            _m12 = float(_today_snap.loc[_t, "Mom_12m"]) if ("Mom_12m" in _today_snap.columns and _t in _today_snap.index and not pd.isna(_today_snap.loc[_t, "Mom_12m"])) else 0.0
+                            _mom_s_t[_t] = max(0.4 * _m3 + 0.3 * _m6 + 0.3 * _m12, 0.0)
+                        _tms = sum(_mom_s_t.values())
+                        _weights_t = ({_t: _s / _tms for _t, _s in _mom_s_t.items()}
+                                      if _tms > 0 else {_t: 1 / max(len(_top_t), 1) for _t in _top_t.index})
+                    else:
+                        _weights_t = {_t: 1 / max(len(_top_t), 1) for _t in _top_t.index}
+
+                    # today_full_ranking 빌드 (프리셋 JSON 포맷과 동일)
+                    _full_ranking_t = []
+                    for _t, _sc in _comp_t.sort_values(ascending=False).items():
+                        _entry = {"ticker": _t, "composite_score": float(_sc)}
+                        for _col in ("Mom_1m", "Mom_3m", "Mom_6m", "Mom_12m", "Volatility_30d"):
+                            _val = (_today_snap.loc[_t, _col]
+                                    if _col in _today_snap.columns and _t in _today_snap.index
+                                    else np.nan)
+                            _entry[_col] = float(_val) if not pd.isna(_val) else None
+                        _full_ranking_t.append(_entry)
+
+                    st.session_state["_today_full_ranking"] = _full_ranking_t
+                    st.session_state["_today_picks"] = [
+                        {"ticker": _t, "weight": _weights_t.get(_t, 1 / max(len(_top_t), 1))}
+                        for _t in _top_t.index
+                    ]
+                    st.session_state["_today_picks_at"]  = _today_ts.isoformat()
+                    st.session_state["_today_picks_src"] = "backtest"
+            except Exception as _e:
+                pass  # 실패해도 백테스트 결과 표시는 유지
 
         _prog_slot.progress(1.0, tr("prog.done_short"))
         time.sleep(0.4)
