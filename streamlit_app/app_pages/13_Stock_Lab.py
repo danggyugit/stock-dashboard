@@ -81,15 +81,15 @@ st.markdown("""
     border-color: rgba(46,134,171,0.5);
     transform: translateY(-3px);
 }
-.sl-card-icon { font-size: 1.6rem; margin-bottom: 10px; }
+.sl-card-icon { font-size: 1.7rem; margin-bottom: 10px; }
 .sl-card-title {
-    font-size: 0.9rem;
+    font-size: 1.0rem;
     font-weight: 700;
     color: #E2E8F0;
     margin-bottom: 6px;
 }
 .sl-card-desc {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: #64748B;
     line-height: 1.55;
 }
@@ -121,8 +121,8 @@ st.markdown("""
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 10px;
 }
-.sl-step-title { font-size: 0.85rem; font-weight: 700; color: #CBD5E1; margin-bottom: 4px; }
-.sl-step-desc { font-size: 0.75rem; color: #64748B; line-height: 1.5; }
+.sl-step-title { font-size: 0.95rem; font-weight: 700; color: #CBD5E1; margin-bottom: 4px; }
+.sl-step-desc { font-size: 0.82rem; color: #64748B; line-height: 1.5; }
 .sl-arrow {
     color: #334155;
     font-size: 1.2rem;
@@ -130,7 +130,33 @@ st.markdown("""
     flex-shrink: 0;
 }
 
-.sl-cta-wrap { text-align: center; padding: 8px 0 24px; }
+.sl-cta-wrap { text-align: center; padding: 16px 0 32px; }
+.sl-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #1a6b8a 0%, #2E86AB 50%, #1a6b8a 100%);
+    background-size: 200% auto;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 16px 44px;
+    border-radius: 50px;
+    border: 1px solid rgba(126,200,227,0.35);
+    box-shadow: 0 4px 24px rgba(46,134,171,0.35), 0 0 0 0 rgba(46,134,171,0.4);
+    transition: background-position 0.4s, box-shadow 0.3s, transform 0.2s;
+    cursor: pointer;
+}
+.sl-cta-btn:hover {
+    background-position: right center;
+    box-shadow: 0 8px 32px rgba(46,134,171,0.55), 0 0 0 4px rgba(46,134,171,0.15);
+    transform: translateY(-2px);
+    color: #ffffff !important;
+    text-decoration: none !important;
+}
+.sl-cta-btn .btn-icon { font-size: 1.2rem; }
 .sl-disclaimer {
     text-align: center;
     font-size: 0.72rem;
@@ -198,9 +224,11 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="sl-cta-wrap">', unsafe_allow_html=True)
-st.link_button("🔬  Stock Lab 바로가기", TARGET_URL, use_container_width=False, type="primary")
-st.markdown("""
-    <p class="sl-disclaimer">분석 리포트는 투자 참고용이며 투자 권유가 아닙니다.</p>
+st.markdown(f"""
+<div class="sl-cta-wrap">
+  <a href="{TARGET_URL}" target="_blank" class="sl-cta-btn">
+    <span class="btn-icon">🔬</span> Stock Lab 바로가기
+  </a>
+  <p class="sl-disclaimer">분석 리포트는 투자 참고용이며 투자 권유가 아닙니다.</p>
 </div>
 """, unsafe_allow_html=True)
