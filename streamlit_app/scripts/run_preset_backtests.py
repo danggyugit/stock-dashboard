@@ -991,6 +991,28 @@ def main() -> int:
             )
         )
 
+    # ── Git push (서버 동기화) ─────────────────────────────
+    try:
+        import subprocess as _sp
+        _repo = Path(__file__).resolve().parents[2]
+        _files = [
+            "streamlit_app/data/cache/backtests/_metadata.json",
+            "streamlit_app/data/cache/backtests/it_invvol.json",
+            "streamlit_app/data/cache/backtests/it_equal.json",
+            "streamlit_app/data/cache/backtests/it_invvol_regime.json",
+            "streamlit_app/data/cache/backtests/it_momentum.json",
+        ]
+        _sp.run(["git", "add"] + _files, cwd=_repo, check=True)
+        _sp.run(
+            ["git", "commit", "-m",
+             f"chore: refresh preset backtest cache [skip ci] ({kst_now} KST)"],
+            cwd=_repo, check=True,
+        )
+        _sp.run(["git", "push", "origin", "main"], cwd=_repo, check=True)
+        logger.info("Git push complete.")
+    except Exception as _git_e:
+        logger.warning("Git push failed (non-critical): %s", _git_e)
+
     return 0 if not failures else 1
 
 
