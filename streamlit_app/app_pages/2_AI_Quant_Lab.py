@@ -2707,9 +2707,9 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
             for i, r in ranked_df.iterrows():
                 t = str(r["ticker"])
                 row = {
-                    "#": i + 1,
                     "ticker": t,
                     "Portfolio": "✓" if t in selected_set else "",
+                    "_weight_val": weight_map.get(t, 0),
                     "비중": (f"{weight_map[t]:.1%}"
                              if t in weight_map else "—"),
                 }
@@ -2718,11 +2718,21 @@ def tab_summary(results: dict, benchmarks: dict, price_data: dict,
                     label = FEAT_NAMES.get(src, src)
                     row[label] = (f"{v:.1%}" if pd.notna(v) and isinstance(v, (int, float)) else "—")
                 rows.append(row)
+
+            # Portfolio ✓ 먼저, 비중 높은 순 → 나머지는 composite_score 순 유지
+            rows_df = pd.DataFrame(rows)
+            rows_df["_in_port"] = rows_df["Portfolio"].eq("✓").astype(int)
+            rows_df = rows_df.sort_values(
+                ["_in_port", "_weight_val"], ascending=[False, False]
+            ).reset_index(drop=True)
+            rows_df.insert(0, "#", rows_df.index + 1)
+            rows_df = rows_df.drop(columns=["_in_port", "_weight_val"])
+
             st.caption(
-                f"Ranked universe: {len(rows)} tickers · "
+                f"Ranked universe: {len(rows_df)} tickers · "
                 f"✓ = 오늘 매수 추천 (top {len(selected_set)})"
             )
-            st.dataframe(pd.DataFrame(rows), use_container_width=True,
+            st.dataframe(rows_df, use_container_width=True,
                          hide_index=True, height=420)
         elif rebal_hist:
             # Fallback: older preset without today_picks — show last rebalance's picks
