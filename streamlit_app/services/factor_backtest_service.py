@@ -55,6 +55,15 @@ BENCHMARK_TICKERS = ["SPY", "QQQ", "RSP"]
 PIT_FUND_MAX_YEARS = 4   # yfinance annual statements typically go back ~4 years
 PIT_FUND_WARN_YEARS = 4
 
+# Delisting return assumption — applied to a held stock that stops trading
+# mid-period and has NO price anywhere in the holding window (the common case
+# uses the last available price instead). S&P 500 delistings are a mix of M&A
+# (often near deal price) and distress (near zero); -30% is the widely-cited
+# Shumway (1997) average performance-related delisting return — a conservative
+# middle ground that avoids both inflating returns (the old bug) and the over-
+# punitive -100%.
+DELISTING_RETURN = -0.30
+
 
 def _default_start() -> date:
     return date.today() - timedelta(days=5 * 365)
@@ -436,15 +445,38 @@ def run_backtest(
         picks = merged.head(cfg.n_stocks).index.tolist()
         n_actual = len(picks)
 
-        # Period return (equal-weight)
+        # Period return (equal-weight) — survivorship-correct.
+        # A held stock that delists mid-period has a NaN price at next_rd.
+        # Previously such names were dropped (intersection), silently excluding
+        # their loss and inflating returns. Now each held name is exited at its
+        # last available price within the window (captures the delisting
+        # decline); if it has no price anywhere in the window, DELISTING_RETURN
+        # is applied instead of dropping it.
         period_ret = 0.0
         if rd in prices.index and next_rd in prices.index:
-            px_rd = prices.loc[rd, picks].dropna()
-            px_next = prices.loc[next_rd, picks].dropna()
-            common = px_rd.index.intersection(px_next.index)
-            if len(common) > 0:
-                rets = (px_next[common] / px_rd[common] - 1).fillna(0)
-                period_ret = float(rets.mean())
+            px_rd = prices.loc[rd, picks]
+            px_next = prices.loc[next_rd, picks]
+            # Exit-price search panel EXCLUDING the entry row (rd) — otherwise a
+            # stock that never traded after purchase would "exit" at its own
+            # entry price (0% return) instead of taking the delisting loss.
+            post_window = prices.loc[rd:next_rd, picks].iloc[1:]
+            held_rets: list[float] = []
+            for tk in picks:
+                p0 = px_rd.get(tk)
+                if p0 is None or pd.isna(p0) or p0 == 0:
+                    continue  # no valid entry price → could not have bought it
+                p1 = px_next.get(tk)
+                if p1 is not None and pd.notna(p1):
+                    held_rets.append(p1 / p0 - 1.0)
+                    continue
+                # Delisted mid-period: exit at last available price after entry
+                col = post_window[tk].dropna() if tk in post_window.columns else pd.Series(dtype=float)
+                if len(col) > 0:
+                    held_rets.append(float(col.iloc[-1]) / p0 - 1.0)
+                else:
+                    held_rets.append(DELISTING_RETURN)
+            if held_rets:
+                period_ret = float(np.mean(held_rets))
 
         # Transaction cost (tiered by cap_tier: Large 0.5×, Mid 1×, Small 2×)
         holdings_now = set(picks)

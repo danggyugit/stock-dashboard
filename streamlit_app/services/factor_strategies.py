@@ -36,6 +36,7 @@ class Strategy:
     has_lookahead: bool
     rank_fn: Callable[[pd.DataFrame], pd.Series]
     requires: list[str]  # columns that must exist in df
+    enabled: bool = True  # False → hidden from UI (e.g. data not yet available)
 
 
 # ── Price-based scoring helpers ────────────────────────────────────────
@@ -248,6 +249,7 @@ STRATEGIES: dict[str, Strategy] = {
         has_lookahead=False,
         rank_fn=_score_high_dividend_safe,
         requires=["dividend_yield", "debt_to_equity"],
+        enabled=False,  # PIT dividend yield not yet collected — see pit_factors_at
     ),
     "low_pbr_high_div": Strategy(
         key="low_pbr_high_div",
@@ -261,12 +263,18 @@ STRATEGIES: dict[str, Strategy] = {
         has_lookahead=False,
         rank_fn=_score_low_pbr_high_div,
         requires=["pb_ratio", "dividend_yield"],
+        enabled=False,  # PIT dividend yield not yet collected — see pit_factors_at
     ),
 }
 
 
-def list_strategies() -> list[Strategy]:
-    return list(STRATEGIES.values())
+def list_strategies(include_disabled: bool = False) -> list[Strategy]:
+    """Return strategies for UI. Disabled ones (data not yet available) are
+    hidden by default so users don't get silently-empty backtests."""
+    vals = STRATEGIES.values()
+    if include_disabled:
+        return list(vals)
+    return [s for s in vals if s.enabled]
 
 
 def get_strategy(key: str) -> Strategy:

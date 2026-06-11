@@ -1220,7 +1220,13 @@ def build_snapshot_df(
     rows = []
     for t in tickers:
         td = tech_map.get(t)
-        if td is None or len(td) < min_history:
+        if td is None:
+            continue
+        # Enforce min_history at `date`, not on the full series. A newly-listed
+        # ticker can have a long total history yet < min_history rows up to an
+        # early backtest date → its 12m momentum (pct_change(252)) is NaN and
+        # would otherwise be imputed and leak into the ranking.
+        if len(td.loc[td.index <= date]) < min_history:
             continue
 
         # 해당 날짜의 실제 주가 조회
@@ -1332,19 +1338,36 @@ def forward_return(tech_df: pd.DataFrame, start: pd.Timestamp, end: pd.Timestamp
     return np.nan  # placeholder — actual call uses price_data dict
 
 
+# 진입·청산가가 신호일에서 이만큼 이상 떨어져 있으면 데이터 갭으로 간주하고
+# NaN 반환 → 호출부에서 윈도우 기반 _delisted_return으로 폴백 (미세 lookahead 방지)
+_MAX_FILL_GAP_DAYS = 10
+
+
 def fwd_ret_from_price(price_data: dict, ticker: str,
                        start: pd.Timestamp, end: pd.Timestamp,
                        use_next_open: bool = False) -> float:
-    """start → end 수익률. use_next_open=True이면 T+1 시가 기준."""
+    """start → end 수익률. use_next_open=True이면 T+1 시가 기준.
+
+    진입/청산 가격이 요청 시점에서 _MAX_FILL_GAP_DAYS 이상 떨어진 경우
+    (데이터 갭/거래중단) NaN을 반환해 신호 시점 이후 가격을 진입가로 쓰는
+    미세한 lookahead를 차단한다.
+    """
     try:
         ohlcv = price_data[ticker]
+        col = "Open" if use_next_open else "Close"
         if use_next_open:
-            s = ohlcv.loc[ohlcv.index > start, "Open"].iloc[0]
-            e = ohlcv.loc[ohlcv.index > end,   "Open"].iloc[0]
+            s_slice = ohlcv.loc[ohlcv.index > start, col]
+            e_slice = ohlcv.loc[ohlcv.index > end,   col]
         else:
-            s = ohlcv.loc[ohlcv.index >= start, "Close"].iloc[0]
-            e = ohlcv.loc[ohlcv.index >= end,   "Close"].iloc[0]
-        return e / s - 1
+            s_slice = ohlcv.loc[ohlcv.index >= start, col]
+            e_slice = ohlcv.loc[ohlcv.index >= end,   col]
+        if len(s_slice) == 0 or len(e_slice) == 0:
+            return np.nan
+        # 채워진 가격의 실제 날짜가 신호일에서 너무 멀면 갭으로 처리
+        if (s_slice.index[0] - start).days > _MAX_FILL_GAP_DAYS or \
+           (e_slice.index[0] - end).days > _MAX_FILL_GAP_DAYS:
+            return np.nan
+        return float(e_slice.iloc[0]) / float(s_slice.iloc[0]) - 1
     except Exception:
         return np.nan
 

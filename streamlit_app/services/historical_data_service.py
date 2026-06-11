@@ -173,11 +173,36 @@ def get_sp500_change_history(force_refresh: bool = False) -> pd.DataFrame:
 
     df = _fetch_sp500_changes_from_wiki()
     if df.empty:
-        # fallback to whatever's cached, even if stale
+        # Wikipedia scrape failed or its table schema changed. Fall back to the
+        # cached change log, but warn loudly with its age — silently using a
+        # stale membership log degrades survivorship correction without notice.
+        meta_row = conn.execute(
+            "SELECT updated_at FROM sp500_changes_meta WHERE key = ?",
+            (_CHANGES_CACHE_KEY,),
+        ).fetchone()
+        age_str = "unknown age"
+        if meta_row and meta_row[0]:
+            try:
+                age_days = (datetime.utcnow() - datetime.fromisoformat(meta_row[0])).days
+                age_str = f"{age_days}d old"
+            except Exception:
+                pass
         rows = conn.execute(
             "SELECT date, added_ticker, removed_ticker FROM sp500_changes ORDER BY date"
         ).fetchall()
-        return pd.DataFrame(rows, columns=["date", "added_ticker", "removed_ticker"]) if rows else pd.DataFrame()
+        if rows:
+            logger.warning(
+                "S&P 500 change log scrape returned no data — using STALE cached "
+                "membership log (%s, %d rows). Survivorship correction may be "
+                "outdated; check if Wikipedia's table layout changed.",
+                age_str, len(rows),
+            )
+            return pd.DataFrame(rows, columns=["date", "added_ticker", "removed_ticker"])
+        logger.error(
+            "S&P 500 change log scrape returned no data AND no cache exists — "
+            "survivorship correction is DISABLED for this run."
+        )
+        return pd.DataFrame()
 
     # Refresh cache
     conn.execute("DELETE FROM sp500_changes")
