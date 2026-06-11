@@ -1,8 +1,15 @@
 """Home page — landing screen with hero, welcome, and quick action cards."""
 
+import logging
 from datetime import datetime, timedelta, timezone
+from datetime import date as _date, timedelta as _td
 
 import streamlit as st
+import pandas as _pd
+import plotly.express as _px
+import plotly.graph_objects as _go
+
+logger = logging.getLogger(__name__)
 
 from services.auth_service import (
     is_logged_in, get_or_create_user, claim_legacy_data,
@@ -11,6 +18,7 @@ from services.market_service import get_indices, get_heatmap_data
 from services.portfolio_service import get_portfolios, get_holdings
 from services.sentiment_service import get_fear_greed
 from services.calendar_service import get_earnings_events
+from services.cache_loader import render_freshness_banner
 from services.i18n import t as tr
 
 # ═══════════════════════════════════════════════════════════
@@ -628,12 +636,15 @@ else:
                 if st.button(WB_LOGOUT_LABEL, key="home_logout"):
                     st.logout()
 
-        # Legacy data claim
-        from database import get_connection
-        conn = get_connection()
-        legacy_count = conn.execute(
-            "SELECT COUNT(*) FROM portfolios WHERE user_id IS NULL"
-        ).fetchone()[0]
+        # Legacy data claim — query once per session (avoids a DB round-trip
+        # to Turso on every rerun; the count only changes after a claim action)
+        if "_legacy_count" not in st.session_state:
+            from database import get_connection
+            conn = get_connection()
+            st.session_state["_legacy_count"] = conn.execute(
+                "SELECT COUNT(*) FROM portfolios WHERE user_id IS NULL"
+            ).fetchone()[0]
+        legacy_count = st.session_state["_legacy_count"]
         if legacy_count > 0:
             st.warning(
                 f"Found **{legacy_count}** unassigned portfolios from before sign-in was added."
@@ -642,6 +653,7 @@ else:
             with cl1:
                 if st.button(tr("home.claim_yes"), type="primary"):
                     counts = claim_legacy_data(user["id"])
+                    st.session_state.pop("_legacy_count", None)  # invalidate cached count
                     st.success(
                         f"Claimed: {counts['portfolios']} portfolios, "
                         f"{counts['watchlist']} watchlist items, "
@@ -657,7 +669,8 @@ else:
         # ═══════════════════════════════════════════════════
         try:
             portfolios = get_portfolios(user_id=user["id"])
-        except Exception:
+        except Exception as e:
+            logger.warning("Portfolio summary load failed: %s", e)
             portfolios = []
 
         if portfolios:
@@ -787,7 +800,8 @@ try:
         for stock in sector.get("stocks", []):
             if stock.get("change_pct") is not None and stock.get("price"):
                 all_stocks.append(stock)
-except Exception:
+except Exception as e:
+    logger.warning("Top Movers heatmap load failed: %s", e)
     all_stocks = []
 
 if all_stocks:
@@ -896,11 +910,7 @@ if all_stocks:
 # MARKET PULSE — Mini Heatmap + Fear & Greed + Earnings Today
 # ═══════════════════════════════════════════════════════════
 st.markdown('<div class="section-h">🌡️ Market Pulse</div>', unsafe_allow_html=True)
-
-import plotly.express as _px
-import plotly.graph_objects as _go
-import pandas as _pd
-from datetime import date as _date, timedelta as _td
+render_freshness_banner()
 
 pulse_col1, pulse_col2, pulse_col3 = st.columns([2, 1, 1.7])
 

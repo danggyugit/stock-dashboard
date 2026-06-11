@@ -236,6 +236,15 @@ def _build_heatmap_from_cache(period: str) -> dict:
     if not stocks:
         return {"sectors": [], "period": period, "updated_at": None}
 
+    # Bulk-load all daily_prices in a single query, then group in memory.
+    # Previously this ran one SELECT per ticker (~1500 round-trips).
+    from collections import defaultdict
+    prices_by_ticker: dict[str, list] = defaultdict(list)
+    for p_ticker, p_date, p_close, p_volume in conn.execute(
+        "SELECT ticker, date, close, volume FROM daily_prices ORDER BY ticker, date ASC"
+    ).fetchall():
+        prices_by_ticker[p_ticker].append((p_date, p_close, p_volume))
+
     sectors: dict[str, dict] = {}
     for row in stocks:
         ticker, name, sector_name, mkt_cap = row
@@ -245,11 +254,7 @@ def _build_heatmap_from_cache(period: str) -> dict:
         if sector_name not in sectors:
             sectors[sector_name] = {"name": sector_name, "stocks": [], "total_market_cap": 0}
 
-        # Get price change from cached daily_prices
-        prices = conn.execute(
-            "SELECT date, close, volume FROM daily_prices WHERE ticker = ? ORDER BY date ASC",
-            (ticker,),
-        ).fetchall()
+        prices = prices_by_ticker.get(ticker, [])
 
         change_pct = price = volume = None
         if prices and len(prices) >= 2:

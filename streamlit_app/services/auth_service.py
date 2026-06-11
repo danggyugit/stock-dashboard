@@ -19,12 +19,27 @@ from database import get_connection
 logger = logging.getLogger(__name__)
 
 _OWNER_EMAIL    = "sksk28y@gmail.com"
-_APPROVE_SECRET = "aiquantlab-approve-2026"
 _APPROVE_BASE   = "https://aiquantlab-stocklab.pages.dev/approve-user"
 
 
+def _get_approve_secret() -> str:
+    """승인 토큰 서명 키 — st.secrets 우선, 없으면 환경변수, 최종 레거시 fallback.
+
+    레포 공개 시 토큰 위조를 막기 위해 키는 secrets.toml로 관리.
+    """
+    try:
+        val = st.secrets.get("APPROVE_SECRET", "")
+        if val:
+            return str(val)
+    except Exception:
+        pass
+    import os
+    return os.environ.get("APPROVE_SECRET", "") or "aiquantlab-approve-2026"
+
+
 def _make_approve_url(email: str) -> str:
-    token = hmac_lib.new(_APPROVE_SECRET.encode(), email.lower().encode(), hashlib.sha256).hexdigest()
+    secret = _get_approve_secret()
+    token = hmac_lib.new(secret.encode(), email.lower().encode(), hashlib.sha256).hexdigest()
     return f"{_APPROVE_BASE}?email={urllib.parse.quote(email.lower())}&token={token}"
 
 

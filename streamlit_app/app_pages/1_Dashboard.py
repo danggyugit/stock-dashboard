@@ -1,5 +1,7 @@
 """Dashboard page — Market overview + heatmap + portfolio summary."""
 
+import logging
+
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
@@ -9,10 +11,14 @@ from services.market_service import get_indices, get_chart_data, get_heatmap_dat
 from services.portfolio_service import get_portfolios, get_holdings
 from services.sentiment_service import get_stock_news
 from services.auth_service import is_logged_in, get_or_create_user, render_user_sidebar
+from services.cache_loader import render_freshness_banner
 from services.i18n import t as tr
 from components.ui import inject_css, page_header, render_sidebar_info
 
+logger = logging.getLogger(__name__)
+
 page_header("page.dashboard.title", "page.dashboard.subtitle")
+render_freshness_banner()
 
 # User context (Dashboard works without login but portfolio requires it)
 _user = get_or_create_user() if is_logged_in() else None
@@ -420,7 +426,8 @@ else:
                 # Fetch news for this ticker
                 try:
                     raw_articles = get_stock_news(t) or []
-                except Exception:
+                except Exception as e:
+                    logger.warning("News fetch failed for %s: %s", t, e)
                     raw_articles = []
                 articles = raw_articles[:articles_per_ticker]
 

@@ -547,12 +547,34 @@ def main() -> int:
                     }
                     write_json("fundamentals.json", fund_data)
 
-        # 4. Meta (prices/caps may be absent in --fundamentals-only mode)
+        # 4. Meta — in --fundamentals-only mode prices/heatmap are NOT refreshed,
+        #    so carry forward the prior counts instead of overwriting with 0
+        #    (otherwise meta.json falsely reports price_count: 0 even though
+        #     heatmap.json still holds valid prices from the last full fetch).
+        prev_meta = {}
+        try:
+            _mp = CACHE_DIR / "meta.json"
+            if _mp.exists():
+                prev_meta = json.loads(_mp.read_text(encoding="utf-8"))
+        except Exception:
+            prev_meta = {}
+
+        if fundamentals_only:
+            price_count = prev_meta.get("price_count", 0)
+            cap_count = prev_meta.get("market_cap_count", 0)
+            # keep the timestamp of the last real price refresh
+            prices_updated_at = prev_meta.get("prices_updated_at") or prev_meta.get("updated_at")
+        else:
+            price_count = len(prices)
+            cap_count = len(caps)
+            prices_updated_at = now_iso
+
         meta = {
             "updated_at": now_iso,
             "stock_count": len(stocks_df),
-            "price_count": len(prices) if "prices" in dir() else 0,
-            "market_cap_count": len(caps),
+            "price_count": price_count,
+            "market_cap_count": cap_count,
+            "prices_updated_at": prices_updated_at,
             "duration_seconds": round(time.time() - start, 1),
         }
         write_json("meta.json", meta)

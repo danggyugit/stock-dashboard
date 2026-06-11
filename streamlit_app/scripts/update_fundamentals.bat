@@ -32,6 +32,16 @@ cd /d "%REPO%"
 git pull --rebase origin main >> "%LOG%" 2>&1
 cd /d "%REPO%\streamlit_app"
 
+REM Step 1: prices/heatmap refresh (no flags = stocks.json + heatmap only).
+REM Separate process from fundamentals so the batch yf.download() session
+REM does not contaminate the per-ticker .info calls with rate limits.
+echo [%date% %time%] Running fetch_cache.py (prices/heatmap) >> "%LOG%"
+python scripts\fetch_cache.py >> "%LOG%" 2>&1
+if errorlevel 1 (
+    echo [%date% %time%] WARNING: prices/heatmap fetch failed - continuing to fundamentals >> "%LOG%"
+)
+
+REM Step 2: fundamentals refresh (full 1500, incremental merge)
 echo [%date% %time%] Running fetch_cache.py --fundamentals-only --merge >> "%LOG%"
 python scripts\fetch_cache.py --fundamentals-only --merge >> "%LOG%" 2>&1
 if errorlevel 1 (
@@ -41,14 +51,14 @@ if errorlevel 1 (
 
 cd /d "%REPO%" || exit /b 1
 
-echo [%date% %time%] git add fundamentals.json + meta.json >> "%LOG%"
-git add streamlit_app/data/cache/fundamentals.json streamlit_app/data/cache/meta.json >> "%LOG%" 2>&1
+echo [%date% %time%] git add cache (fundamentals + heatmap + stocks + meta) >> "%LOG%"
+git add streamlit_app/data/cache/fundamentals.json streamlit_app/data/cache/heatmap.json streamlit_app/data/cache/stocks.json streamlit_app/data/cache/meta.json >> "%LOG%" 2>&1
 
 REM Skip commit if no changes
 git diff --staged --quiet
 if errorlevel 1 (
     echo [%date% %time%] Committing changes >> "%LOG%"
-    git commit -m "chore: refresh fundamentals cache (local scheduler)" >> "%LOG%" 2>&1
+    git commit -m "chore: refresh price + fundamentals cache (local scheduler)" >> "%LOG%" 2>&1
     git push origin main >> "%LOG%" 2>&1
     if errorlevel 1 (
         echo [%date% %time%] Initial push failed — pull rebase + retry >> "%LOG%"

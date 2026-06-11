@@ -100,6 +100,44 @@ def get_cache_age(filename: str) -> float | None:
     return age_h
 
 
+def get_price_cache_age_hours() -> float | None:
+    """가격 캐시(heatmap.json)의 실제 갱신 경과 시간(시간 단위).
+
+    heatmap.json의 updated_at(마지막 가격 수집 시각) 기준. 파싱 실패 시 None.
+    데이터 신선도 배너에 사용.
+    """
+    from datetime import datetime, timezone
+
+    meta = load_cache_file("meta.json") or {}
+    ts = meta.get("prices_updated_at") or meta.get("updated_at")
+    if not ts:
+        hm = load_cache_file("heatmap.json") or {}
+        ts = hm.get("updated_at")
+    if not ts:
+        return None
+    try:
+        dt = datetime.fromisoformat(ts)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return round((datetime.now(timezone.utc) - dt).total_seconds() / 3600, 1)
+    except Exception:
+        return None
+
+
+def render_freshness_banner(stale_hours: float = 24.0) -> None:
+    """가격 캐시가 stale_hours 이상 오래됐으면 경고 배너 표시."""
+    age = get_price_cache_age_hours()
+    if age is None:
+        return
+    if age >= stale_hours:
+        days = age / 24
+        label = f"{days:.1f}일" if age >= 48 else f"{age:.0f}시간"
+        st.warning(
+            f"⚠️ 가격 데이터가 {label} 전 기준입니다. "
+            "시세가 최신이 아닐 수 있어 투자 판단 시 유의하세요."
+        )
+
+
 def get_cached_heatmap() -> dict | None:
     """Return cached heatmap data dict, or None if unavailable."""
     return load_cache_file("heatmap.json")
