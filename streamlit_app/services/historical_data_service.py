@@ -64,7 +64,40 @@ _SCHEMA = [
         ticker      TEXT PRIMARY KEY,
         updated_at  TEXT
     )""",
+    # Raw dividend ex-date history (for point-in-time trailing dividend yield)
+    """CREATE TABLE IF NOT EXISTS pit_dividends (
+        ticker   TEXT NOT NULL,
+        ex_date  TEXT NOT NULL,
+        amount   REAL,
+        PRIMARY KEY (ticker, ex_date)
+    )""",
 ]
+
+# Columns added to pit_fundamentals after the original schema shipped — applied
+# via ALTER TABLE on existing DBs (CREATE TABLE IF NOT EXISTS won't add them).
+_PIT_MIGRATION_COLUMNS = {
+    "shares_out": "REAL",       # shares outstanding (buyback yield)
+    "ebit": "REAL",             # operating income (EBIT/EV magic formula)
+    "cash": "REAL",             # cash & equivalents (enterprise value)
+    "total_debt_abs": "REAL",   # absolute total debt (enterprise value)
+}
+
+
+def _migrate_pit_columns(conn: sqlite3.Connection) -> None:
+    """Add any missing pit_fundamentals columns (idempotent).
+
+    When new columns are added the first time, clear the freshness meta so the
+    next backtest refetches the universe and populates the new fields
+    (shares/EBIT/cash/debt + dividends) on demand.
+    """
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(pit_fundamentals)")}
+    added = False
+    for col, typ in _PIT_MIGRATION_COLUMNS.items():
+        if col not in existing:
+            conn.execute(f"ALTER TABLE pit_fundamentals ADD COLUMN {col} {typ}")
+            added = True
+    if added:
+        conn.execute("DELETE FROM pit_fundamentals_meta")
 
 
 _conn: sqlite3.Connection | None = None
@@ -78,6 +111,7 @@ def _get_conn() -> sqlite3.Connection:
         _conn.execute("PRAGMA synchronous=NORMAL")
         for stmt in _SCHEMA:
             _conn.execute(stmt)
+        _migrate_pit_columns(_conn)
         _conn.commit()
     return _conn
 
@@ -317,11 +351,18 @@ def _fetch_one_ticker_pit(ticker: str) -> list[dict]:
 
         net_income = _extract(inc, ["Net Income", "Net Income Common Stockholders"])
         revenue = _extract(inc, ["Total Revenue", "Revenue"])
+        ebit = _extract(inc, ["EBIT", "Operating Income", "Total Operating Income As Reported"])
         equity = _extract(bs, ["Stockholders Equity", "Total Stockholder Equity",
                                "Common Stock Equity"])
         total_debt = _extract(bs, ["Total Debt", "Long Term Debt", "Net Debt"])
+        cash = _extract(bs, ["Cash And Cash Equivalents",
+                             "Cash Cash Equivalents And Short Term Investments",
+                             "Cash And Cash Equivalents And Short Term Investments"])
         shares = _extract(bs, ["Share Issued", "Ordinary Shares Number",
                                "Common Stock Shares Issued"])
+
+        def _val(series: pd.Series, p) -> float | None:
+            return float(series.get(p)) if p in series.index and pd.notna(series.get(p)) else None
 
         for p in periods:
             if not hasattr(p, "strftime"):
@@ -330,11 +371,13 @@ def _fetch_one_ticker_pit(ticker: str) -> list[dict]:
                 except Exception:
                     continue
             period_end = p.strftime("%Y-%m-%d")
-            ni = float(net_income.get(p)) if p in net_income.index and pd.notna(net_income.get(p)) else None
-            rev = float(revenue.get(p)) if p in revenue.index and pd.notna(revenue.get(p)) else None
-            eq = float(equity.get(p)) if p in equity.index and pd.notna(equity.get(p)) else None
-            td = float(total_debt.get(p)) if p in total_debt.index and pd.notna(total_debt.get(p)) else None
-            sh = float(shares.get(p)) if p in shares.index and pd.notna(shares.get(p)) else None
+            ni = _val(net_income, p)
+            rev = _val(revenue, p)
+            eq = _val(equity, p)
+            td = _val(total_debt, p)
+            sh = _val(shares, p)
+            ebit_v = _val(ebit, p)
+            cash_v = _val(cash, p)
 
             eps = (ni / sh) if (ni is not None and sh and sh > 0) else None
             bvps = (eq / sh) if (eq is not None and sh and sh > 0) else None
@@ -352,13 +395,33 @@ def _fetch_one_ticker_pit(ticker: str) -> list[dict]:
                 "revenue_per_share": rps,
                 "roe": roe,
                 "debt_to_equity": de,
-                "dividend_rate": None,  # Populated separately if needed
+                "dividend_rate": None,  # legacy column (unused; PIT yield via pit_dividends)
+                "shares_out": sh,
+                "ebit": ebit_v,
+                "cash": cash_v,
+                "total_debt_abs": td,
             })
         return out
 
     rows.extend(_build_period_rows(q_inc, q_bs, "Q"))
     rows.extend(_build_period_rows(a_inc, a_bs, "A"))
-    return rows
+
+    # Dividend ex-date history (point-in-time trailing yield source)
+    div_rows: list[dict] = []
+    try:
+        divs = tk.dividends  # Series indexed by ex-date
+        if divs is not None and not divs.empty:
+            for ex_date, amt in divs.items():
+                if pd.notna(amt) and amt > 0:
+                    div_rows.append({
+                        "ticker": ticker,
+                        "ex_date": pd.Timestamp(ex_date).strftime("%Y-%m-%d"),
+                        "amount": float(amt),
+                    })
+    except Exception:
+        pass
+
+    return rows, div_rows
 
 
 def prefetch_pit_fundamentals(
@@ -381,25 +444,36 @@ def prefetch_pit_fundamentals(
     result: dict[str, int] = {}
     done = 0
 
-    def _task(t: str) -> tuple[str, list[dict]]:
-        return t, _fetch_one_ticker_pit(t)
+    def _task(t: str) -> tuple[str, list[dict], list[dict]]:
+        rows, div_rows = _fetch_one_ticker_pit(t)
+        return t, rows, div_rows
 
     with ThreadPoolExecutor(max_workers=max_workers) as ex:
         futures = {ex.submit(_task, t): t for t in to_fetch}
         for fut in as_completed(futures):
-            t, rows = fut.result()
+            t, rows, div_rows = fut.result()
             if rows:
                 conn.execute("DELETE FROM pit_fundamentals WHERE ticker = ?", (t,))
                 conn.executemany(
                     """INSERT OR REPLACE INTO pit_fundamentals
                        (ticker, period_end, frequency, eps, book_value_per_share,
-                        revenue_per_share, roe, debt_to_equity, dividend_rate)
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                        revenue_per_share, roe, debt_to_equity, dividend_rate,
+                        shares_out, ebit, cash, total_debt_abs)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                     [(r["ticker"], r["period_end"], r["frequency"],
                       r["eps"], r["book_value_per_share"],
                       r["revenue_per_share"], r["roe"],
-                      r["debt_to_equity"], r["dividend_rate"])
+                      r["debt_to_equity"], r["dividend_rate"],
+                      r.get("shares_out"), r.get("ebit"),
+                      r.get("cash"), r.get("total_debt_abs"))
                      for r in rows],
+                )
+            if div_rows:
+                conn.execute("DELETE FROM pit_dividends WHERE ticker = ?", (t,))
+                conn.executemany(
+                    "INSERT OR REPLACE INTO pit_dividends (ticker, ex_date, amount) "
+                    "VALUES (?, ?, ?)",
+                    [(d["ticker"], d["ex_date"], d["amount"]) for d in div_rows],
                 )
             conn.execute(
                 "INSERT OR REPLACE INTO pit_fundamentals_meta (ticker, updated_at) "
@@ -424,7 +498,8 @@ def load_pit_fundamentals(tickers: list[str]) -> pd.DataFrame:
     placeholders = ",".join("?" for _ in tickers)
     rows = conn.execute(
         f"""SELECT ticker, period_end, frequency, eps, book_value_per_share,
-                   revenue_per_share, roe, debt_to_equity, dividend_rate
+                   revenue_per_share, roe, debt_to_equity, dividend_rate,
+                   shares_out, ebit, cash, total_debt_abs
             FROM pit_fundamentals
             WHERE ticker IN ({placeholders})
             ORDER BY ticker, period_end""",
@@ -436,14 +511,34 @@ def load_pit_fundamentals(tickers: list[str]) -> pd.DataFrame:
         "ticker", "period_end", "frequency", "eps",
         "book_value_per_share", "revenue_per_share",
         "roe", "debt_to_equity", "dividend_rate",
+        "shares_out", "ebit", "cash", "total_debt_abs",
     ])
     df["period_end"] = pd.to_datetime(df["period_end"])
+    return df
+
+
+def load_pit_dividends(tickers: list[str]) -> pd.DataFrame:
+    """Load raw dividend ex-date history for the given tickers."""
+    if not tickers:
+        return pd.DataFrame()
+    conn = _get_conn()
+    placeholders = ",".join("?" for _ in tickers)
+    rows = conn.execute(
+        f"SELECT ticker, ex_date, amount FROM pit_dividends "
+        f"WHERE ticker IN ({placeholders}) ORDER BY ticker, ex_date",
+        tickers,
+    ).fetchall()
+    if not rows:
+        return pd.DataFrame(columns=["ticker", "ex_date", "amount"])
+    df = pd.DataFrame(rows, columns=["ticker", "ex_date", "amount"])
+    df["ex_date"] = pd.to_datetime(df["ex_date"])
     return df
 
 
 def pit_factors_at(
     fund_df: pd.DataFrame, ticker: str, as_of: pd.Timestamp,
     price_at_as_of: float | None,
+    div_df: pd.DataFrame | None = None,
 ) -> dict:
     """Compute point-in-time factor values for a ticker at `as_of`.
 
@@ -451,7 +546,9 @@ def pit_factors_at(
     (assumes a 90-day reporting lag — e.g. FY2023 data isn't usable until
     about April 2024).
 
-    Returns a dict with: pe_ratio, pb_ratio, ps_ratio, roe, debt_to_equity.
+    Returns a dict that may include: pe_ratio, pb_ratio, ps_ratio, roe,
+    debt_to_equity, net_margin, eps_growth, rev_growth, margin_change, f_score,
+    dividend_yield, buyback_yield, shareholder_yield, ebit_ev_yield, roic.
     """
     if fund_df.empty or price_at_as_of is None or price_at_as_of <= 0:
         return {}
@@ -461,10 +558,11 @@ def pit_factors_at(
         return {}
 
     # 90-day reporting lag: we can only use a report that's ≥90 days old at as_of
-    usable = sub[sub["period_end"] <= as_of - pd.Timedelta(days=90)]
+    usable = sub[sub["period_end"] <= as_of - pd.Timedelta(days=90)].sort_values("period_end")
     if usable.empty:
         return {}
-    latest = usable.sort_values("period_end").iloc[-1]
+    latest = usable.iloc[-1]
+    prior = usable.iloc[-2] if len(usable) >= 2 else None  # 직전 연도 (성장 팩터용)
 
     eps = latest.get("eps")
     bvps = latest.get("book_value_per_share")
@@ -483,4 +581,75 @@ def pit_factors_at(
         out["roe"] = roe
     if de is not None:
         out["debt_to_equity"] = de
+
+    # Net margin (순이익률) = EPS / 매출주당 = 순이익/매출
+    net_margin = (eps / rps) if (eps is not None and rps and rps > 0) else None
+    if net_margin is not None:
+        out["net_margin"] = net_margin
+
+    # ── 성장·개선 팩터 (직전 연도 보고서 필요 → 백테스트 가능 기간 1년 단축) ──
+    if prior is not None:
+        eps_p = prior.get("eps")
+        rps_p = prior.get("revenue_per_share")
+        roe_p = prior.get("roe")
+        de_p = prior.get("debt_to_equity")
+
+        if eps is not None and eps_p is not None and eps_p > 0:
+            out["eps_growth"] = eps / eps_p - 1.0
+        if rps is not None and rps_p is not None and rps_p > 0:
+            out["rev_growth"] = rps / rps_p - 1.0
+
+        net_margin_p = (eps_p / rps_p) if (eps_p is not None and rps_p and rps_p > 0) else None
+        if net_margin is not None and net_margin_p is not None:
+            out["margin_change"] = net_margin - net_margin_p
+
+        # Mini Piotroski F-Score (0~4): 수익성·개선·재무건전성 4개 항목
+        if roe is not None and roe_p is not None and de is not None and de_p is not None \
+                and net_margin is not None and net_margin_p is not None:
+            fscore = 0
+            fscore += 1 if roe > 0 else 0              # 흑자
+            fscore += 1 if roe > roe_p else 0          # ROE 개선
+            fscore += 1 if de < de_p else 0            # 부채비율 감소
+            fscore += 1 if net_margin > net_margin_p else 0  # 마진 개선
+            out["f_score"] = float(fscore)
+
+        # Buyback yield = 발행주식수 감소율 (자사주 매입). 직전 연도 대비.
+        sh = latest.get("shares_out")
+        sh_p = prior.get("shares_out")
+        buyback_yield = None
+        if sh is not None and sh_p is not None and sh_p > 0:
+            buyback_yield = (sh_p - sh) / sh_p
+            out["buyback_yield"] = buyback_yield
+
+    # ── EBIT/EV earnings yield + ROIC (Greenblatt 원전 Magic Formula) ──
+    ebit = latest.get("ebit")
+    sh_latest = latest.get("shares_out")
+    debt_abs = latest.get("total_debt_abs") or 0.0
+    cash = latest.get("cash") or 0.0
+    if ebit is not None and sh_latest and sh_latest > 0:
+        market_cap = price_at_as_of * sh_latest
+        ev = market_cap + debt_abs - cash
+        if ev > 0:
+            out["ebit_ev_yield"] = ebit / ev
+        invested_capital = debt_abs + (bvps * sh_latest if (bvps and bvps > 0) else 0.0) - cash
+        if invested_capital > 0:
+            out["roic"] = ebit / invested_capital
+
+    # ── Trailing-12-month dividend yield (point-in-time via ex-dates) ──
+    if div_df is not None and not div_df.empty:
+        dsub = div_df[div_df["ticker"] == ticker]
+        if not dsub.empty:
+            window_start = as_of - pd.Timedelta(days=365)
+            ttm = dsub[(dsub["ex_date"] > window_start) & (dsub["ex_date"] <= as_of)]
+            ttm_div = float(ttm["amount"].sum()) if not ttm.empty else 0.0
+            # only emit when the stock actually pays a dividend
+            if ttm_div > 0:
+                out["dividend_yield"] = ttm_div / price_at_as_of
+
+    # Shareholder yield = 배당수익률 + 자사주매입수익률 (총 주주환원)
+    _div_y = out.get("dividend_yield")
+    _bb_y = out.get("buyback_yield")
+    if _div_y is not None or _bb_y is not None:
+        out["shareholder_yield"] = (_div_y or 0.0) + (_bb_y or 0.0)
+
     return out

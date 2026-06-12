@@ -250,10 +250,17 @@ def compute_returns_and_vol(
     pct = df.pct_change(fill_method=None).dropna(how="all")
     vol = pct.tail(3).std()
 
+    # 52-week high proximity: last price / trailing 12-month high (≤1.0).
+    # George & Hwang (2004) — an anomaly independent of price momentum.
+    window = df.tail(13)  # ~12 months of monthly closes + current
+    high_52w = window.max()
+    high_prox = (last / high_52w).where(high_52w > 0)
+
     return pd.DataFrame({
         "ret_1m":  _ret(1),
         "ret_3m":  _ret(3),
         "ret_6m":  _ret(6),
         "ret_12m": _ret(12),
         "vol_90d": vol,
+        "high_52w_prox": high_prox,
     })

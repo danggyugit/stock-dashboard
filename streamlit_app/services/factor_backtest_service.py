@@ -42,8 +42,8 @@ import streamlit as st
 from services.cache_loader import get_cached_fundamentals, get_cached_stocks
 from services.factor_strategies import Strategy, get_strategy
 from services.historical_data_service import (
-    get_sp500_change_history, load_pit_fundamentals, pit_factors_at,
-    prefetch_pit_fundamentals, reconstruct_sp500_at,
+    get_sp500_change_history, load_pit_dividends, load_pit_fundamentals,
+    pit_factors_at, prefetch_pit_fundamentals, reconstruct_sp500_at,
 )
 from services.price_history_service import (
     compute_returns_and_vol, load_monthly_prices, prefetch,
@@ -343,6 +343,9 @@ def run_backtest(
             universe_tickers, progress_callback=_fund_prog,
         )
         pit_df = load_pit_fundamentals(universe_tickers)
+        div_df = load_pit_dividends(universe_tickers)
+    else:
+        div_df = pd.DataFrame()
 
     # 6) Filter to tickers with enough price history
     coverage = prices.notna().sum()
@@ -410,7 +413,7 @@ def run_backtest(
                 if px_series.empty:
                     continue
                 px = float(px_series.iloc[-1])
-                f = pit_factors_at(pit_df, t, rd, px)
+                f = pit_factors_at(pit_df, t, rd, px, div_df=div_df)
                 if not f:
                     continue
                 f["ticker"] = t
@@ -452,6 +455,18 @@ def run_backtest(
         # last available price within the window (captures the delisting
         # decline); if it has no price anywhere in the window, DELISTING_RETURN
         # is applied instead of dropping it.
+        # Absolute-momentum cash overlay (dual momentum): picks whose signal is
+        # below the hurdle at rd are held as cash (0% return) instead of the stock.
+        cash_picks: set[str] = set()
+        if getattr(strategy, "abs_mom_overlay", False):
+            _sig_col = strategy.abs_mom_col
+            if _sig_col in merged.columns:
+                _sig = merged.loc[picks, _sig_col] if set(picks) <= set(merged.index) else merged[_sig_col]
+                cash_picks = {
+                    t for t in picks
+                    if pd.isna(_sig.get(t)) or _sig.get(t) < strategy.abs_mom_hurdle
+                }
+
         period_ret = 0.0
         if rd in prices.index and next_rd in prices.index:
             px_rd = prices.loc[rd, picks]
@@ -462,6 +477,9 @@ def run_backtest(
             post_window = prices.loc[rd:next_rd, picks].iloc[1:]
             held_rets: list[float] = []
             for tk in picks:
+                if tk in cash_picks:
+                    held_rets.append(0.0)  # held as cash this period
+                    continue
                 p0 = px_rd.get(tk)
                 if p0 is None or pd.isna(p0) or p0 == 0:
                     continue  # no valid entry price → could not have bought it
@@ -549,7 +567,7 @@ def run_backtest(
                             px_s = col[col.index <= last_rd].dropna()
                             if px_s.empty:
                                 continue
-                            f = pit_factors_at(pit_df, t, last_rd, float(px_s.iloc[-1]))
+                            f = pit_factors_at(pit_df, t, last_rd, float(px_s.iloc[-1]), div_df=div_df)
                             if not f:
                                 continue
                             f["ticker"] = t
