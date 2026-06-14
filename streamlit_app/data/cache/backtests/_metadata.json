@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-13T04:10:37.785899+00:00",
+  "updated_at": "2026-06-14T04:06:03.216681+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -18,7 +18,7 @@
     "use_mom_filter": false,
     "use_turnover_buffer": true,
     "start": "2023-01-01T00:00:00",
-    "end": "2026-06-12T00:00:00",
+    "end": "2026-06-13T00:00:00",
     "min_test": 5
   },
   "presets": {
@@ -26,31 +26,31 @@
       "name": "IT Inverse-Vol (No Cash)",
       "description": "IT 섹터, Inverse-Vol 가중, 현금 없음",
       "success": true,
-      "updated_at": "2026-06-13T02:11:10.891233+00:00"
+      "updated_at": "2026-06-14T02:08:38.173776+00:00"
     },
     "it_equal": {
       "name": "IT Equal-Weight (No Cash)",
       "description": "IT 섹터, 균등 가중, 현금 없음",
       "success": true,
-      "updated_at": "2026-06-13T02:19:15.951332+00:00"
+      "updated_at": "2026-06-14T02:15:24.144129+00:00"
     },
     "it_invvol_regime": {
       "name": "IT Inverse-Vol + Regime Cash",
       "description": "IT 섹터, Inverse-Vol 가중, HMM 레짐 현금 전략",
       "success": true,
-      "updated_at": "2026-06-13T02:26:07.595600+00:00"
+      "updated_at": "2026-06-14T02:22:16.816288+00:00"
     },
     "it_momentum": {
       "name": "IT Momentum-Weight (No Cash)",
       "description": "IT 섹터, 모멘텀 비례 가중, 현금 없음",
       "success": true,
-      "updated_at": "2026-06-13T04:02:47.348991+00:00"
+      "updated_at": "2026-06-14T02:29:02.017083+00:00"
     },
     "it_ensemble": {
       "name": "IT Ensemble + Inv-Vol (No Cash)",
       "description": "IT 섹터, 앙상블 모델 선별, Inverse-Vol 가중, 현금 없음",
       "success": true,
-      "updated_at": "2026-06-13T04:10:37.766831+00:00"
+      "updated_at": "2026-06-14T04:06:03.188201+00:00"
     }
   },
   "failures": []
