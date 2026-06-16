@@ -13,16 +13,17 @@ on:
           - prices_only           # heatmap + stocks only (~3 min)
           - fundamentals_chunked  # +full S&P 1500 fundamentals (~75 min)
 
-  # Scheduled runs (UTC) — prices/heatmap only
-  schedule:
-    # 22:30 KST (US market open)        = 13:30 UTC
-    - cron: "30 13 * * 1-5"
-    # 02:30 KST (4 hours later, midday) = 17:30 UTC
-    - cron: "30 17 * * 1-5"
-    # 06:30 KST (US market close + 30m) = 21:30 UTC
-    - cron: "30 21 * * 1-5"
-    # 13:00 KST (Korea midday)          = 04:00 UTC
-    - cron: "0 4 * * 1-5"
+  # Scheduled runs DISABLED — this GitHub Actions runner uses a data-center IP
+  # that yfinance rate-limits (produced empty price_count:0 caches). The local
+  # Windows scheduler (update_fundamentals.bat, residential IP) now refreshes
+  # prices + fundamentals + heatmap and pushes them. Keeping this on a schedule
+  # only caused two writers to diverge on main and reject the local push.
+  # Manual trigger (workflow_dispatch) is retained as a fallback.
+  # schedule:
+  #   - cron: "30 13 * * 1-5"
+  #   - cron: "30 17 * * 1-5"
+  #   - cron: "30 21 * * 1-5"
+  #   - cron: "0 4 * * 1-5"
 
 permissions:
   contents: write

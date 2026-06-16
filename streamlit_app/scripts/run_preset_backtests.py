@@ -1001,6 +1001,7 @@ def main() -> int:
             "streamlit_app/data/cache/backtests/it_equal.json",
             "streamlit_app/data/cache/backtests/it_invvol_regime.json",
             "streamlit_app/data/cache/backtests/it_momentum.json",
+            "streamlit_app/data/cache/backtests/it_ensemble.json",
         ]
         _sp.run(["git", "add"] + _files, cwd=_repo, check=True)
         _sp.run(
@@ -1008,6 +1009,14 @@ def main() -> int:
              f"chore: refresh preset backtest cache [skip ci] ({kst_now} KST)"],
             cwd=_repo, check=True,
         )
+        # Integrate any remote commits (GitHub Actions valuation cache, etc.)
+        # before pushing — otherwise the push is rejected as non-fast-forward.
+        # merge -X ours keeps our fresh local cache on conflict while preserving
+        # remote-only files. core.protectNTFS=false + sparse-checkout (set on this
+        # machine) let the merge tolerate the Windows-illegal valuation/CON.json.
+        _sp.run(["git", "fetch", "origin"], cwd=_repo, check=True)
+        _sp.run(["git", "merge", "-X", "ours", "origin/main", "--no-edit"],
+                cwd=_repo, check=True)
         _sp.run(["git", "push", "origin", "main"], cwd=_repo, check=True)
         logger.info("Git push complete.")
     except Exception as _git_e:
