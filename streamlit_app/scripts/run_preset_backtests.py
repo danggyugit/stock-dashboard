@@ -998,21 +998,31 @@ def main() -> int:
                     bits.append(f"현금 {cash:.0f}%")
                 lines.append("  " + " · ".join(bits))
             picks = r.get("today_picks") or []
-            if not picks:
+            ranking = r.get("today_full_ranking") or []
+            if not picks and not ranking:
                 lines.append("  _추천 데이터 없음_")
-            # 앱의 AI Recommended Stocks 테이블과 동일하게 비중 내림차순 표시
-            picks = sorted(picks[:5], key=lambda x: x.get("weight") or 0.0, reverse=True)
-            for i, p in enumerate(picks, 1):
-                w = p.get("weight") or 0.0
+                return "\n".join(lines)
+
+            # 앱의 AI Recommended Stocks 테이블과 동일한 구성:
+            # 상위 = 매수 추천(비중 내림차순, 가중치 표시), 이후 = 랭킹순(비중 —)
+            picks_sorted = sorted(picks, key=lambda x: x.get("weight") or 0.0, reverse=True)
+            pick_tickers = {p.get("ticker") for p in picks_sorted}
+            rest = [r2 for r2 in ranking if r2.get("ticker") not in pick_tickers]
+            rows = (picks_sorted + rest)[:10]
+
+            for i, p in enumerate(rows, 1):
+                w = p.get("weight")
+                mark = "✓" if p.get("ticker") in pick_tickers else " "
+                wtxt = f"{w * 100:>4.1f}%" if isinstance(w, (int, float)) else "  —  "
                 lines.append(
-                    f"  {i}. `{p.get('ticker', '?'):<5}` {w * 100:>4.1f}% "
+                    f"  {i:>2}. {mark} `{p.get('ticker', '?'):<5}` {wtxt} "
                     f"(1M {_fmt_pct(p.get('Mom_1m'))} · 12M {_fmt_pct(p.get('Mom_12m'))})"
                 )
             return "\n".join(lines)
 
         _notify_telegram(
             f"✅ *프리셋 백테스트 완료* ({kst_now} KST)\n"
-            "📊 각 프리셋 오늘 기준 추천 TOP5\n\n"
+            "📊 각 프리셋 오늘 기준 추천 TOP10 (✓ = 매수 추천)\n\n"
             + "\n\n".join(_preset_block(r) for r in results_by_id.values())
         )
 
