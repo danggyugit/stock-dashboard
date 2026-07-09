@@ -983,12 +983,37 @@ def main() -> int:
             f"로그를 확인하세요."
         )
     else:
+        def _fmt_pct(v) -> str:
+            return f"{v * 100:+.0f}%" if isinstance(v, (int, float)) else "—"
+
+        def _preset_block(r: dict) -> str:
+            lines = [f"*{r['name']}* · CAGR {r['summary'].get('cagr_pct', '?')}%"]
+            regime = r.get("today_regime")
+            cash = r.get("today_cash_ratio_pct")
+            if regime or cash is not None:
+                bits = []
+                if regime:
+                    bits.append({"Bull": "🐂 Bull", "Bear": "🐻 Bear"}.get(regime, regime))
+                if cash is not None:
+                    bits.append(f"현금 {cash:.0f}%")
+                lines.append("  " + " · ".join(bits))
+            picks = r.get("today_picks") or []
+            if not picks:
+                lines.append("  _추천 데이터 없음_")
+            # 앱의 AI Recommended Stocks 테이블과 동일하게 비중 내림차순 표시
+            picks = sorted(picks[:5], key=lambda x: x.get("weight") or 0.0, reverse=True)
+            for i, p in enumerate(picks, 1):
+                w = p.get("weight") or 0.0
+                lines.append(
+                    f"  {i}. `{p.get('ticker', '?'):<5}` {w * 100:>4.1f}% "
+                    f"(1M {_fmt_pct(p.get('Mom_1m'))} · 12M {_fmt_pct(p.get('Mom_12m'))})"
+                )
+            return "\n".join(lines)
+
         _notify_telegram(
             f"✅ *프리셋 백테스트 완료* ({kst_now} KST)\n"
-            + "\n".join(
-                f"• {r['name']}: CAGR {r['summary'].get('cagr_pct', '?')}%"
-                for r in results_by_id.values()
-            )
+            "📊 각 프리셋 오늘 기준 추천 TOP5\n\n"
+            + "\n\n".join(_preset_block(r) for r in results_by_id.values())
         )
 
     # ── Git push (서버 동기화) ─────────────────────────────
