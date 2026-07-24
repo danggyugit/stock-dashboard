@@ -39,3 +39,10 @@ docs/instagram/output/
 
 # Local scheduler logs (not needed in repo)
 streamlit_app/scripts/*.log
+streamlit_app/data/logs/
+
+# Local runtime state (not needed in repo)
+streamlit_app/data/cache/portfolio_alert_state.json
+
+# Claude Code agent worktrees
+.claude/worktrees/
