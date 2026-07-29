@@ -58,7 +58,7 @@ def _cap_tier(mc: float | None) -> str:
 
 # ── Compute controls (require Run) ───────────────────────────────────────────
 st.markdown("#### 채널 설정")
-c1, c2, c3 = st.columns([2, 2, 1])
+c1, c2, c3, c4 = st.columns([2, 2, 2, 1])
 with c1:
     lookback = st.slider("조회 기간 (개월)", min_value=12, max_value=60, value=60, step=6,
                          help="추세채널을 적합할 월봉 개수. 60 = 최근 5년")
@@ -66,6 +66,9 @@ with c2:
     k = st.slider("채널 폭 (표준편차 배수)", min_value=1.0, max_value=3.0, value=2.0, step=0.25,
                   help="상단/하단 = 회귀선 ± k×잔차표준편차. 작을수록 돌파가 자주, 클수록 강한 돌파만")
 with c3:
+    scan_months = st.slider("돌파 발생 범위 (최근 N개월)", min_value=1, max_value=12, value=1, step=1,
+                            help="최근 N개월 내에 채널 상단을 '처음' 돌파한 종목을 찾음. 1 = 이번 달만")
+with c4:
     st.markdown("<div style='height:28px'></div>", unsafe_allow_html=True)
     run = st.button("🔎 스캔 실행", use_container_width=True, type="primary")
 
@@ -84,10 +87,10 @@ if run:
             prog.progress(0.9, text="추세채널 계산 중...")
             mw = load_monthly_prices(_universe, f"{pd.Timestamp.today().year - years_needed}-01-01",
                                      pd.Timestamp.today().strftime("%Y-%m-%d"))
-            res = compute_breakouts(mw, lookback=lookback, k=k)
+            res = compute_breakouts(mw, lookback=lookback, k=k, scan_months=scan_months)
             prog.progress(1.0, text="완료")
             st.session_state["_bo_result"] = res
-            st.session_state["_bo_params"] = {"lookback": lookback, "k": k,
+            st.session_state["_bo_params"] = {"lookback": lookback, "k": k, "scan_months": scan_months,
                                               "asof": (mw.index[-1].strftime("%Y-%m") if not mw.empty else "?")}
         except Exception as e:
             logger.exception("Breakout scan failed")
@@ -106,35 +109,32 @@ st.divider()
 st.markdown("#### 필터")
 f1, f2, f3, f4 = st.columns(4)
 with f1:
-    fresh_only = st.toggle("이번 달 신규 돌파만", value=True,
-                           help="지난달엔 상단 아래였다가 이번 달 처음 돌파한 종목만")
-with f2:
     direction = st.selectbox("추세 방향", ["전체", "상승 추세만", "하락 추세만"],
                              help="채널 기울기 부호. 상승채널 돌파 = 추세 가속, 하락채널 돌파 = 반전 후보")
-with f3:
+with f2:
     min_r2 = st.slider("최소 추세 적합도 R²", 0.0, 0.95, 0.50, 0.05,
                        help="채널이 얼마나 '추세다운가'. 낮으면 횡보·노이즈까지 잡힘")
+with f3:
+    still_only = st.toggle("현재도 상단 위 유지만", value=False,
+                           help="돌파 후 현재까지 채널 상단 위를 유지 중인 종목만 (되돌림 제외)")
 with f4:
     sectors = sorted({(_meta.get(t, {}).get("sector") or "-") for t in res.index})
     sector_pick = st.selectbox("섹터", ["전체"] + [s for s in sectors if s != "-"])
 
-f5, f6 = st.columns([1, 3])
+f5, _ = st.columns([1, 3])
 with f5:
     cap_pick = st.selectbox("시총", ["전체", "대형", "중형", "소형"])
 
-# apply filters
+# apply filters (display-only, no recompute)
 df = res.copy()
-if fresh_only:
-    df = df[df["fresh"]]
-else:
-    df = df[df["breakout"]]
 if direction == "상승 추세만":
     df = df[df["slope_ann_pct"] > 0]
 elif direction == "하락 추세만":
     df = df[df["slope_ann_pct"] < 0]
 df = df[df["r2"] >= min_r2]
+if still_only:
+    df = df[df["still_above"]]
 
-# enrich with name / sector / cap
 df = df.copy()
 df["name"] = [(_meta.get(t, {}).get("name") or t) for t in df.index]
 df["sector"] = [(_meta.get(t, {}).get("sector") or "-") for t in df.index]
@@ -144,11 +144,14 @@ if sector_pick != "전체":
 if cap_pick != "전체":
     df = df[df["cap"] == cap_pick]
 
-df = df.sort_values("pct_above", ascending=False)
+# 최근 돌파 먼저, 같은 시점이면 돌파 강도 순
+df = df.sort_values(["months_ago", "pct_above_bo"], ascending=[True, False])
 
 asof = params.get("asof", "?")
+scan_n = params.get("scan_months", 1)
+scan_label = "이번 달" if scan_n == 1 else f"최근 {scan_n}개월"
 st.caption(f"기준월: **{asof}** · 조회 {params.get('lookback')}개월 · 채널폭 {params.get('k')}σ · "
-           f"돌파 {len(df)}종목")
+           f"돌파 탐색 {scan_label} · **{len(df)}종목**")
 if asof != pd.Timestamp.today().strftime("%Y-%m"):
     st.caption("ℹ️ 현재 월봉은 월말에 확정됩니다 — 진행 중인 달은 마지막 종가 기준(잠정)입니다.")
 
@@ -156,15 +159,25 @@ if df.empty:
     st.warning("조건에 맞는 종목이 없습니다. R²를 낮추거나 채널 폭(k)을 줄여보세요.")
     st.stop()
 
+def _when(months_ago: int, month: str) -> str:
+    tag = "이번 달" if months_ago == 0 else f"{months_ago}개월 전"
+    return f"{tag} ({month})"
+
+def _status(row) -> str:
+    if row["still_above"]:
+        return f"유지 +{row['cur_pct_above']:.1f}%"
+    return f"복귀 {row['cur_pct_above']:+.1f}%"
+
 table = pd.DataFrame({
     "티커": df.index,
-    "종목": df["name"].str.slice(0, 24).values,
+    "종목": df["name"].str.slice(0, 22).values,
     "섹터": df["sector"].values,
-    "시총": df["cap"].values,
-    "현재가": df["close"].map(lambda x: f"${x:,.2f}").values,
-    "상단밴드": df["upper"].map(lambda x: f"${x:,.2f}").values,
-    "상단대비": df["pct_above"].map(lambda x: f"+{x:.1f}%").values,
-    "연 추세기울기": df["slope_ann_pct"].map(lambda x: f"{x:+.0f}%/년").values,
+    "돌파 시점": [_when(m, mo) for m, mo in zip(df["months_ago"], df["breakout_month"])],
+    "돌파강도": df["pct_above_bo"].map(lambda x: f"+{x:.1f}%").values,
+    "돌파가": df["close_at_bo"].map(lambda x: f"${x:,.2f}").values,
+    "현재가": df["cur_close"].map(lambda x: f"${x:,.2f}").values,
+    "현재상태": [_status(r) for _, r in df.iterrows()],
+    "연 추세": df["slope_ann_pct"].map(lambda x: f"{x:+.0f}%/년").values,
     "R²": df["r2"].values,
     "월봉수": df["n_months"].values,
 })
@@ -174,8 +187,8 @@ st.dataframe(table, use_container_width=True, hide_index=True, height=520)
 with st.expander("ℹ️ 계산 방식 / 해석 주의"):
     st.markdown(f"""
 - **채널**: 각 종목의 월봉 **로그 종가**에 선형회귀선을 긋고, 상단/하단 = 회귀선 ± **{params.get('k')}σ**(잔차 표준편차).
-- **돌파 판정**: 채널은 *현재월 직전까지*의 데이터로 적합해 최신 바가 추세선을 끌어올리지 않게 하고, 그 상단을 현재월로 투영해 **현재 종가가 상단 위**면 돌파.
-- **이번 달 신규 돌파**: 지난달엔 상단 아래였는데 이번 달 처음 위로 올라온 경우.
+- **돌파 판정**: 각 월(m)마다 *그 직전까지*의 데이터로 채널을 적합해 최신 바가 추세선을 끌어올리지 않게 하고, 상단을 m월로 투영해 **m월 종가가 상단 위**면 돌파.
+- **돌파 발생 범위 (최근 {scan_n}개월)**: 최근 {scan_n}개월 안에서 채널 상단을 **처음 뚫은(crossing)** 달을 찾습니다. '돌파 시점'은 그 crossing이 일어난 달, '현재상태'는 그 뒤 지금까지 상단 위 **유지** 중인지 **복귀**(다시 채널 안)인지 표시.
 - **R²**: 채널이 얼마나 직선 추세에 가까운가(0~1). 낮으면 횡보/노이즈라 '돌파'의 의미가 약합니다 — 0.5 이상 권장.
 - **연 추세기울기**: 채널의 연환산 상승률. 양(+)=상승채널 가속, 음(−)=하락채널 반전 후보.
 - **한계**: 월봉 캐시가 **종가만** 저장하므로 고가(wick) 기반 돌파는 반영하지 않습니다. 최소 {MIN_MONTHS}개월 이력이 있어야 계산됩니다. 투자 참고용이며 권유가 아닙니다.
