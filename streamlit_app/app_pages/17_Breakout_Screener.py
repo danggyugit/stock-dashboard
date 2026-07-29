@@ -14,8 +14,7 @@ import math
 import pandas as pd
 import streamlit as st
 
-from components.ui import inject_css, render_sidebar_info
-from services.auth_service import render_user_sidebar
+from components.ui import inject_css
 from services.cache_loader import get_cached_stocks
 from services.price_history_service import load_monthly_prices, prefetch
 from services.breakout_service import compute_breakouts, MIN_MONTHS
@@ -40,8 +39,6 @@ st.markdown("""
   <span class="bo-badge">종가 기준</span>
 </div>
 """, unsafe_allow_html=True)
-
-render_user_sidebar()
 
 # ── Universe (cached stocks) ─────────────────────────────────────────────────
 _stocks = get_cached_stocks() or []
