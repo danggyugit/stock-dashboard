@@ -82,6 +82,21 @@ Respond with a JSON array only:
             logger.warning("Sentiment analysis failed: %s", _classify_anthropic_error(e))
             return None
 
+    def complete(self, prompt: str, max_tokens: int = 1024) -> str | None:
+        """General-purpose text completion via Claude."""
+        if self._client is None:
+            return None
+        try:
+            msg = self._client.messages.create(
+                model="claude-sonnet-4-20250514",
+                max_tokens=max_tokens,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            return msg.content[0].text.strip()
+        except Exception as e:
+            logger.warning("LLM completion failed: %s", _classify_anthropic_error(e))
+            return None
+
     def generate_market_report(self, market_data: dict) -> str | None:
         """Generate a daily market report using Claude."""
         if self._client is None:

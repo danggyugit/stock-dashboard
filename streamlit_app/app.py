@@ -42,9 +42,10 @@ PAGES = {
         st.Page("app_pages/10_Watchlist.py",    title="Watchlist",    icon=":material/star:"),
     ],
     "Analysis Tools": [
-        st.Page("app_pages/2_AI_Quant_Lab.py", title="AI Quant Lab", icon=":material/science:"),
-        st.Page("app_pages/12_Factor_Lab.py",  title="Factor Lab",   icon=":material/functions:"),
-        st.Page("app_pages/13_Stock_Lab.py",   title="Stock Lab",    icon=":material/biotech:"),
+        st.Page("app_pages/2_AI_Quant_Lab.py",       title="AI Quant Lab",     icon=":material/science:"),
+        st.Page("app_pages/12_Factor_Lab.py",         title="Factor Lab",       icon=":material/functions:"),
+        st.Page("app_pages/13_Stock_Lab.py",          title="Stock Lab",        icon=":material/biotech:"),
+        st.Page("app_pages/16_SEC_Intelligence.py",   title="SEC Intelligence", icon=":material/account_balance:"),
     ],
     "Portfolio": [
         st.Page("app_pages/5_Portfolio.py", title="Portfolio", icon=":material/folder:"),
