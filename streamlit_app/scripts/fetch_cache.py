@@ -32,6 +32,116 @@ logger = logging.getLogger(__name__)
 CACHE_DIR = Path(__file__).resolve().parent.parent / "data" / "cache"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
+_SECTOR_ETFS = {
+    "XLK": "Technology", "XLF": "Financials", "XLV": "Health Care",
+    "XLY": "Consumer Discretionary", "XLP": "Consumer Staples",
+    "XLE": "Energy", "XLI": "Industrials", "XLB": "Materials",
+    "XLRE": "Real Estate", "XLU": "Utilities", "XLC": "Communication",
+}
+
+
+def _trend_stats(series: pd.Series, days: int = 30) -> dict:
+    """{current,min,max,avg,trend} for the tail of a price series."""
+    import numpy as np
+    s = series.dropna().tail(days)
+    if s.empty:
+        return {}
+    vals = s.values.astype(float)
+    cur = float(vals[-1])
+    out = {
+        "current": round(cur, 4), "min": round(float(vals.min()), 4),
+        "max": round(float(vals.max()), 4), "avg": round(float(vals.mean()), 4),
+    }
+    if len(vals) >= 5:
+        slope = float(np.polyfit(range(len(vals)), vals, 1)[0])
+        out["trend"] = "up" if slope > 0.05 else ("down" if slope < -0.05 else "flat")
+    else:
+        out["trend"] = "flat"
+    return out
+
+
+def build_market_snapshot() -> dict:
+    """Daily market indicators snapshot for the remote MCP server.
+
+    The MCP host (Render) can't call yfinance (Yahoo blocks datacenter IPs),
+    so this residential-IP run precomputes: VIX, sector-ETF returns, S&P 500
+    breadth, XLY/XLP risk ratio, DXY/Gold/Oil, and Fear & Greed.
+    """
+    snap: dict = {"updated_at": datetime.now(timezone.utc).isoformat()}
+
+    tickers = ["^VIX", "SPY", "XLY", "XLP", "DX-Y.NYB", "GC=F", "CL=F"] + list(_SECTOR_ETFS)
+    data = yf.download(tickers, period="1y", auto_adjust=True,
+                       group_by="ticker", progress=False, threads=True)
+
+    def _close(tkr: str) -> pd.Series:
+        try:
+            return data[tkr]["Close"].dropna()
+        except Exception:
+            return pd.Series(dtype=float)
+
+    # VIX — 90d history + trend
+    vix = _close("^VIX")
+    if not vix.empty:
+        snap["vix"] = {
+            **_trend_stats(vix, 30),
+            "history": [{"date": d.strftime("%Y-%m-%d"), "close": round(float(v), 2)}
+                        for d, v in vix.tail(90).items()],
+        }
+
+    # Sector ETF returns (1w / 1m)
+    sectors = []
+    for etf, name in _SECTOR_ETFS.items():
+        c = _close(etf)
+        if len(c) < 22:
+            continue
+        sectors.append({
+            "ticker": etf, "sector": name,
+            "ret_1w_pct": round((float(c.iloc[-1]) / float(c.iloc[-6]) - 1) * 100, 2),
+            "ret_1m_pct": round((float(c.iloc[-1]) / float(c.iloc[-22]) - 1) * 100, 2),
+        })
+    if sectors:
+        snap["sectors"] = sorted(sectors, key=lambda x: x["ret_1m_pct"], reverse=True)
+
+    # Breadth — SPY vs 200DMA
+    spy = _close("SPY")
+    if len(spy) >= 200:
+        sma200 = float(spy.rolling(200).mean().iloc[-1])
+        cur = float(spy.iloc[-1])
+        snap["breadth"] = {
+            "spy_close": round(cur, 2), "sma200": round(sma200, 2),
+            "above_pct": round((cur / sma200 - 1) * 100, 2),
+        }
+
+    # Risk on/off — XLY/XLP ratio
+    xly, xlp = _close("XLY"), _close("XLP")
+    if not xly.empty and not xlp.empty:
+        ratio = (xly / xlp).dropna()
+        snap["risk_on_off"] = _trend_stats(ratio, 60)
+
+    # Commodities / DXY
+    comms = {}
+    for key, tkr, label in [("dxy", "DX-Y.NYB", "DXY"), ("gold", "GC=F", "Gold"),
+                            ("oil_wti", "CL=F", "WTI Oil")]:
+        c = _close(tkr)
+        if not c.empty:
+            comms[key] = {"label": label, **_trend_stats(c, 30)}
+    if comms:
+        snap["commodities"] = comms
+
+    # Fear & Greed — reuse the app's own calculation (streamlit installed locally)
+    try:
+        _app_dir = Path(__file__).resolve().parent.parent
+        if str(_app_dir) not in sys.path:
+            sys.path.insert(0, str(_app_dir))
+        from services.sentiment_service import get_fear_greed
+        fg = get_fear_greed()
+        if fg:
+            snap["fear_greed"] = fg
+    except Exception as e:
+        logger.warning("Fear&Greed snapshot failed: %s", e)
+
+    return snap
+
 
 def fetch_sp1500_list() -> pd.DataFrame:
     """Fetch S&P 1500 (Large + Mid + Small Cap) list from Wikipedia.
@@ -460,6 +570,14 @@ def main() -> int:
                     "prices": prices.get(ticker, []),
                 }
             write_json("heatmap.json", heatmap)
+
+            # Market snapshot for the remote MCP server (VIX/sectors/breadth/...)
+            try:
+                snap = build_market_snapshot()
+                if snap and len(snap) > 1:
+                    write_json("market_snapshot.json", snap)
+            except Exception:
+                logger.exception("market snapshot build failed (non-critical)")
         else:
             logger.info("--fundamentals-only: skipping heatmap/prices")
             caps = {}  # empty — sort by ticker list order

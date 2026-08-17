@@ -196,6 +196,11 @@ def get_net_liquidity() -> pd.DataFrame:
     rrp_s = rrp.rename(columns={"value": "rrp"}).sort_values("date")
     tga_s = tga.rename(columns={"value": "tga"}).sort_values("date")
 
+    # CSV vs API paths can yield different datetime64 resolutions (s/us/ns);
+    # merge_asof requires identical dtypes — normalize all to ns.
+    for _df in (base, rrp_s, tga_s):
+        _df["date"] = pd.to_datetime(_df["date"]).astype("datetime64[ns]")
+
     df = pd.merge_asof(base, rrp_s, on="date", direction="backward")
     df = pd.merge_asof(df, tga_s, on="date", direction="backward")
     df = df.dropna(subset=["walcl", "rrp", "tga"])

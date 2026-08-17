@@ -52,7 +52,7 @@ if errorlevel 1 (
 cd /d "%REPO%" || exit /b 1
 
 echo [%date% %time%] git add cache (fundamentals + heatmap + stocks + meta) >> "%LOG%"
-git add streamlit_app/data/cache/fundamentals.json streamlit_app/data/cache/heatmap.json streamlit_app/data/cache/stocks.json streamlit_app/data/cache/meta.json >> "%LOG%" 2>&1
+git add streamlit_app/data/cache/fundamentals.json streamlit_app/data/cache/heatmap.json streamlit_app/data/cache/stocks.json streamlit_app/data/cache/meta.json streamlit_app/data/cache/market_snapshot.json >> "%LOG%" 2>&1
 
 REM Skip commit if no changes
 git diff --staged --quiet

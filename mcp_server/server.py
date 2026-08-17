@@ -194,7 +194,48 @@ def _latest_with_trend(df, value_col: str, days: int = 30) -> dict:
 
 # ══════════════════════════════════════════════════════════════════════════
 # Stock tools
+#
+# Data-source strategy (this server may run on a datacenter host where Yahoo
+# blocks yfinance): official/keyed APIs and GitHub-cached JSON first, live
+# yfinance only as a last resort (works when running locally via stdio).
 # ══════════════════════════════════════════════════════════════════════════
+
+def _val_cache(ticker: str) -> dict | None:
+    """Daily valuation cache: {"core", "consensus", "individual", "updated_at"}."""
+    try:
+        from services.cache_loader import get_cached_valuation
+        return get_cached_valuation(ticker)
+    except Exception:
+        return None
+
+
+def _finnhub_quote(ticker: str) -> dict | None:
+    """Live quote via Finnhub official API (datacenter-safe)."""
+    import requests as _rq
+    key = os.environ.get("FINNHUB_API_KEY", "")
+    if not key:
+        return None
+    try:
+        r = _rq.get("https://finnhub.io/api/v1/quote",
+                    params={"symbol": ticker, "token": key}, timeout=8)
+        r.raise_for_status()
+        q = r.json()
+        if not q.get("c"):
+            return None
+        return {"price": q["c"], "change_pct": q.get("dp"),
+                "high": q.get("h"), "low": q.get("l"), "prev_close": q.get("pc")}
+    except Exception:
+        return None
+
+
+def _snapshot_cache() -> dict | None:
+    """Daily market snapshot (VIX/sectors/breadth/... built by local scheduler)."""
+    try:
+        from services.cache_loader import load_cache_file
+        return load_cache_file("market_snapshot.json")
+    except Exception:
+        return None
+
 
 @mcp.tool()
 def get_quote(ticker: str) -> dict:
@@ -204,33 +245,44 @@ def get_quote(ticker: str) -> dict:
         ticker: Stock symbol (e.g. "NVDA", "AAPL", "BRK-B").
 
     Returns:
-        dict with current_price, market_cap, change_pct, 52w high/low, volume
+        dict with current_price (live via Finnhub when available, else daily
+        cache), market_cap, 52w high/low, source and as_of fields.
     """
     ticker = ticker.upper()
-    try:
-        core = get_valuation_core(ticker)
-    except Exception as e:
-        return {"error": str(e)}
+    out: dict = {"ticker": ticker}
 
-    if not core:
-        return {"error": "No data"}
+    val = _val_cache(ticker) or {}
+    core = val.get("core") or {}
 
-    import yfinance as yf
-    try:
-        info = yf.Ticker(ticker).info or {}
-    except Exception:
-        info = {}
+    live = _finnhub_quote(ticker)
+    if live:
+        out.update({
+            "current_price": live["price"], "change_pct": live["change_pct"],
+            "day_high": live["high"], "day_low": live["low"],
+            "prev_close": live["prev_close"],
+            "source": "finnhub_live",
+        })
+    elif core.get("current_price"):
+        out.update({
+            "current_price": core["current_price"],
+            "source": "daily_cache", "as_of": val.get("updated_at"),
+        })
+    else:
+        # Last resort — live yfinance (works when running locally)
+        try:
+            core = get_valuation_core(ticker) or {}
+            out.update({"current_price": core.get("current_price"), "source": "yfinance_live"})
+        except Exception as e:
+            return {"error": f"No quote available: {e}"}
 
-    return _json({
-        "ticker": ticker,
-        "current_price": core.get("current_price"),
+    out.update({
         "market_cap": core.get("market_cap"),
-        "change_pct": info.get("regularMarketChangePercent"),
-        "fifty_two_week_high": info.get("fiftyTwoWeekHigh"),
-        "fifty_two_week_low": info.get("fiftyTwoWeekLow"),
-        "volume": info.get("regularMarketVolume"),
+        "fifty_two_week_high": core.get("fifty_two_week_high"),
+        "fifty_two_week_low": core.get("fifty_two_week_low"),
+        "trailing_pe": core.get("trailing_pe"),
         "ttm_revenue": core.get("ttm_revenue"),
     })
+    return _json(out)
 
 
 @mcp.tool()
@@ -297,19 +349,29 @@ def get_analyst_consensus(ticker: str) -> dict:
         ticker: Stock symbol.
     """
     ticker = ticker.upper()
-    try:
-        core = get_valuation_core(ticker)
-        cons = _svc_get_analyst_consensus(ticker)
-    except Exception as e:
-        return {"error": str(e)}
 
-    cur = core.get("current_price") if core else None
+    # Daily valuation cache first (datacenter-safe), live yfinance fallback
+    val = _val_cache(ticker) or {}
+    cons = val.get("consensus") or {}
+    cur = (val.get("core") or {}).get("current_price")
+    source = "daily_cache"
+    if not cons:
+        try:
+            core = get_valuation_core(ticker)
+            cons = _svc_get_analyst_consensus(ticker)
+            cur = core.get("current_price") if core else None
+            source = "yfinance_live"
+        except Exception as e:
+            return {"error": str(e)}
+
     mean = cons.get("target_mean")
     high = cons.get("target_high")
 
     result = {
         "ticker": ticker,
         "current_price": cur,
+        "source": source,
+        "as_of": val.get("updated_at") if source == "daily_cache" else None,
         **cons,
     }
     if cur and mean:
@@ -338,10 +400,13 @@ def get_scenario_bands(ticker: str) -> dict:
     try:
         core = get_valuation_core(ticker)
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": f"{e} — this tool needs live P/E history (yfinance), "
+                         "which datacenter hosts block; it works when the MCP "
+                         "server runs locally. Try get_analyst_consensus instead."}
 
     if not core:
-        return {"error": "No valuation core data"}
+        return {"error": "No valuation core data (yfinance unavailable on this host — "
+                         "works locally; try get_analyst_consensus instead)"}
 
     fwd_eps = core.get("forward_eps") or core.get("trailing_eps")
     if not fwd_eps:
@@ -429,29 +494,29 @@ def compare_stocks(tickers: list[str]) -> dict:
     rows = []
     for tkr in tickers[:8]:
         tkr = tkr.upper()
-        try:
-            core = get_valuation_core(tkr) or {}
-            cons = _svc_get_analyst_consensus(tkr) or {}
-            bands = _svc_build_scenario_bands(core, ticker=tkr) if core else {}
-        except Exception:
-            core, cons, bands = {}, {}, {}
-
-        base = bands.get("base", {})
-        base_high = base.get("high") if isinstance(base, dict) else None
+        # Daily valuation cache first; live yfinance only if uncached
+        val = _val_cache(tkr) or {}
+        core = val.get("core") or {}
+        cons = val.get("consensus") or {}
+        if not core:
+            try:
+                core = get_valuation_core(tkr) or {}
+                cons = _svc_get_analyst_consensus(tkr) or {}
+            except Exception:
+                core, cons = {}, {}
 
         rows.append({
             "ticker": tkr,
             "current_price": core.get("current_price"),
             "trailing_pe": core.get("trailing_pe"),
-            "pe_ratio": core.get("trailing_pe"),
-            "pb_ratio": None,
+            "forward_pe": core.get("forward_pe"),
             "forward_eps": core.get("forward_eps"),
             "gross_margin": core.get("gross_margin"),
             "operating_margin": core.get("operating_margin"),
             "earnings_growth_yoy": core.get("earnings_growth_yoy"),
+            "revenue_growth_yoy": core.get("revenue_growth_yoy"),
             "market_cap": core.get("market_cap"),
             "target_mean": cons.get("target_mean"),
-            "base_high": base_high,
             "rec_key": cons.get("rec_key"),
         })
 
@@ -554,31 +619,50 @@ def get_analyst_targets(ticker: str, limit: int = 20) -> dict:
         {ticker, current_price, count, firms: [{date, firm, target, prior, action, grade}]}
     """
     ticker = ticker.upper()
-    try:
-        core = get_valuation_core(ticker) or {}
-        df = _svc_get_individual_analyst_targets(ticker, limit=limit)
-    except Exception as e:
-        return {"error": str(e)}
 
-    cur = core.get("current_price")
+    # Daily valuation cache first (has per-firm targets), live fallback
+    val = _val_cache(ticker) or {}
+    cached_firms = val.get("individual") or []
+    cur = (val.get("core") or {}).get("current_price")
     firms = []
-    if df is not None and not df.empty:
-        for row in df.itertuples():
+
+    if cached_firms:
+        for f in cached_firms[:limit]:
             entry = {
-                "date": str(getattr(row, "date", "")),
-                "firm": getattr(row, "firm", None),
-                "target": getattr(row, "target", None),
-                "prior": getattr(row, "prior", None),
-                "action": getattr(row, "action", None),
-                "grade": getattr(row, "grade", None),
+                "date": f.get("date"), "firm": f.get("firm"),
+                "target": f.get("target"), "prior": f.get("prior_target"),
+                "action": f.get("action"), "grade": f.get("grade"),
             }
             if cur and entry["target"]:
                 entry["upside_pct"] = round((entry["target"] / cur - 1) * 100, 1)
             firms.append(entry)
+        source = "daily_cache"
+    else:
+        try:
+            core = get_valuation_core(ticker) or {}
+            cur = core.get("current_price")
+            df = _svc_get_individual_analyst_targets(ticker, limit=limit)
+        except Exception as e:
+            return {"error": str(e)}
+        if df is not None and not df.empty:
+            for row in df.itertuples():
+                entry = {
+                    "date": str(getattr(row, "date", "")),
+                    "firm": getattr(row, "firm", None),
+                    "target": getattr(row, "target", None),
+                    "prior": getattr(row, "prior", None),
+                    "action": getattr(row, "action", None),
+                    "grade": getattr(row, "grade", None),
+                }
+                if cur and entry["target"]:
+                    entry["upside_pct"] = round((entry["target"] / cur - 1) * 100, 1)
+                firms.append(entry)
+        source = "yfinance_live"
 
     return _json({
         "ticker": ticker,
         "current_price": cur,
+        "source": source,
         "count": len(firms),
         "firms": firms,
     })
@@ -600,10 +684,12 @@ def get_pe_rank(ticker: str) -> dict:
     try:
         result = _svc_get_pe_percentiles(ticker)
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": f"{e} — needs live P/E history (yfinance); blocked on "
+                         "datacenter hosts, works when the server runs locally."}
 
     if not result.get("available"):
-        return {"ticker": ticker, "available": False, "note": "Insufficient history"}
+        return {"ticker": ticker, "available": False,
+                "note": "Insufficient history (or yfinance unavailable on this host — works locally)"}
 
     return _json({"ticker": ticker, **result})
 
@@ -628,17 +714,24 @@ def get_vix(days: int = 30) -> dict:
     Returns:
         {current, min, max, avg, trend (up/down/flat), label}
     """
-    try:
-        df = _svc_vix_history(days=max(days, 30))
-    except Exception as e:
-        return {"error": str(e)}
-
-    if df is None or df.empty:
-        return {"error": "VIX data unavailable"}
-
-    result = _latest_with_trend(df, "VIX", days=days)
-    if not result:
-        return {"error": "Insufficient VIX data"}
+    # Daily snapshot cache first (datacenter-safe), live yfinance fallback
+    snap = _snapshot_cache() or {}
+    if snap.get("vix"):
+        v = snap["vix"]
+        result = {k: v.get(k) for k in ("current", "min", "max", "avg", "trend")}
+        result["source"] = "daily_cache"
+        result["as_of"] = snap.get("updated_at")
+    else:
+        try:
+            df = _svc_vix_history(days=max(days, 30))
+        except Exception as e:
+            return {"error": str(e)}
+        if df is None or df.empty:
+            return {"error": "VIX data unavailable"}
+        result = _latest_with_trend(df, "VIX", days=days)
+        if not result:
+            return {"error": "Insufficient VIX data"}
+        result["source"] = "yfinance_live"
 
     cur = result["current"]
     if cur < 15:
@@ -664,6 +757,10 @@ def get_fear_greed() -> dict:
       60-80 → Greed
       80-100 → Extreme Greed
     """
+    snap = _snapshot_cache() or {}
+    if snap.get("fear_greed"):
+        return _json({**snap["fear_greed"], "source": "daily_cache",
+                      "as_of": snap.get("updated_at")})
     try:
         data = _svc_fear_greed()
     except Exception as e:
@@ -679,6 +776,15 @@ def get_market_breadth() -> dict:
     Positive spread = market above long-term trend (bullish).
     Negative = below trend (bearish).
     """
+    snap = _snapshot_cache() or {}
+    if snap.get("breadth"):
+        b = snap["breadth"]
+        return _json({
+            **b, "source": "daily_cache", "as_of": snap.get("updated_at"),
+            "label": "Bullish (above 200d)" if (b.get("above_pct") or 0) > 0
+                     else "Bearish (below 200d)",
+        })
+
     try:
         data = _svc_market_breadth()
     except Exception as e:
@@ -708,18 +814,23 @@ def get_risk_on_off() -> dict:
     Rising ratio = Risk-On (investors prefer cyclicals → market bullish).
     Falling = Risk-Off (flight to defensives → cautious market).
     """
-    try:
-        df = _svc_risk_on_off()
-    except Exception as e:
-        return {"error": str(e)}
-
-    if df is None or df.empty:
-        return {"error": "Risk-On/Off data unavailable"}
-
-    ratio_col = "ratio" if "ratio" in df.columns else df.columns[-1]
-    result = _latest_with_trend(df, ratio_col)
-    if not result:
-        return {"ticker": "XLY/XLP", "error": "Insufficient data"}
+    snap = _snapshot_cache() or {}
+    if snap.get("risk_on_off"):
+        result = dict(snap["risk_on_off"])
+        result["source"] = "daily_cache"
+        result["as_of"] = snap.get("updated_at")
+    else:
+        try:
+            df = _svc_risk_on_off()
+        except Exception as e:
+            return {"error": str(e)}
+        if df is None or df.empty:
+            return {"error": "Risk-On/Off data unavailable"}
+        ratio_col = "ratio" if "ratio" in df.columns else df.columns[-1]
+        result = _latest_with_trend(df, ratio_col)
+        if not result:
+            return {"ticker": "XLY/XLP", "error": "Insufficient data"}
+        result["source"] = "yfinance_live"
 
     avg = result.get("avg", 0)
     cur = result.get("current", 0)
@@ -740,6 +851,11 @@ def get_sector_rotation() -> dict:
 
     Tells you which sectors are leading/lagging the market right now.
     """
+    snap = _snapshot_cache() or {}
+    if snap.get("sectors"):
+        return _json({"sectors": snap["sectors"], "source": "daily_cache",
+                      "as_of": snap.get("updated_at")})
+
     try:
         df = _svc_sector_returns()
     except Exception as e:
@@ -755,7 +871,7 @@ def get_sector_rotation() -> dict:
     except Exception:
         pass
 
-    return _json({"sectors": records})
+    return _json({"sectors": records, "source": "yfinance_live"})
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -839,6 +955,11 @@ def get_commodities() -> dict:
     """Get current levels of DXY (USD index), Gold, and WTI Oil plus short-term
     trends.
     """
+    snap = _snapshot_cache() or {}
+    if snap.get("commodities"):
+        return _json({**snap["commodities"], "source": "daily_cache",
+                      "as_of": snap.get("updated_at")})
+
     result: dict[str, Any] = {}
 
     for key, fn, label in [
