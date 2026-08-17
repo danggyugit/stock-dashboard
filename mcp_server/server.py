@@ -1230,6 +1230,18 @@ def get_economic_events(
     return _json({"from": from_date, "to": to_date, "count": len(events), "events": events})
 
 
+# ── Health check (keep-alive pings, no secret path needed) ─────────────────
+try:
+    from starlette.requests import Request
+    from starlette.responses import PlainTextResponse
+
+    @mcp.custom_route("/healthz", methods=["GET", "HEAD"])
+    async def _healthz(request: Request) -> PlainTextResponse:
+        return PlainTextResponse("ok")
+except Exception:  # pragma: no cover — stdio mode doesn't need it
+    pass
+
+
 # ── Entry point ────────────────────────────────────────────────────────────
 # Two transports:
 #   default        — stdio (Claude Desktop local MCP config)
