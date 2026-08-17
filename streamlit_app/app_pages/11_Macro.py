@@ -10,6 +10,7 @@ from services.macro_service import (
     get_fed_funds_rate, get_treasury_yields,
     get_cpi, get_core_pce,
     get_dxy, get_gold, get_oil,
+    get_rrp, get_tga, get_bank_reserves, get_hy_spread, get_net_liquidity,
 )
 from services.auth_service import require_auth
 from components.ui import inject_css
@@ -57,7 +58,133 @@ def _metric_card(label: str, value: str, color: str = "#e2e8f0"):
 # ═══════════════════════════════════════════════════════════
 # 1. LIQUIDITY
 # ═══════════════════════════════════════════════════════════
-_section("💧 Liquidity — Money Supply & Fed Balance Sheet")
+_section("💧 Liquidity — 시장 유동성 종합")
+
+# ── 유동성 요약 배지 ──────────────────────────────────────────
+_nl_df = get_net_liquidity()
+_rrp_df = get_rrp()
+_tga_df = get_tga()
+_res_df = get_bank_reserves()
+_hy_df = get_hy_spread()
+
+
+def _trend_badge(df, col="value", weeks=4, invert=False):
+    """최근 4주 변화 방향 배지. invert=True면 감소가 유동성에 긍정."""
+    if df is None or df.empty or len(df) < 2:
+        return None, None
+    s = df[col].dropna()
+    lookback = min(len(s) - 1, weeks)
+    chg = float(s.iloc[-1] - s.iloc[-1 - lookback])
+    positive_for_liq = (chg < 0) if invert else (chg > 0)
+    icon = "🟢" if positive_for_liq else "🔴"
+    return float(s.iloc[-1]), f"{icon} {chg:+.2f}"
+
+
+if not _nl_df.empty:
+    b1, b2, b3, b4, b5 = st.columns(5)
+    _badges = [
+        (b1, "순유동성 Net Liq", _nl_df, "net_liq", False, "T", "WALCL − RRP − TGA"),
+        (b2, "역레포 RRP", _rrp_df, "value", True, "T", "감소 = 시중 방출 🟢"),
+        (b3, "재무부 TGA", _tga_df, "value", True, "T", "증가 = 유동성 흡수 🔴"),
+        (b4, "은행 지준금", _res_df, "value", False, "T", "은행계 실탄"),
+        (b5, "HY 스프레드", _hy_df, "value", True, "%", "급등 = 신용 스트레스"),
+    ]
+    for col_box, label, dfx, valcol, inv, unit, tip in _badges:
+        with col_box:
+            val, badge = _trend_badge(dfx, valcol, invert=inv)
+            if val is None:
+                st.metric(label, "—")
+            else:
+                disp = f"${val:.2f}T" if unit == "T" else f"{val:.2f}%"
+                st.metric(label, disp, badge, delta_color="off", help=tip)
+    st.caption("배지 = 최근 4주 변화 · 🟢 유동성에 우호 / 🔴 유동성 흡수·스트레스 방향")
+
+# ── 순유동성 vs S&P500 오버레이 (메인 차트) ────────────────────
+if not _nl_df.empty and "spx" in _nl_df.columns:
+    st.markdown("**⭐ Net Liquidity vs S&P500** — 순유동성(연준자산−역레포−재무부계정)과 주가의 동행")
+    fig_nl = go.Figure()
+    fig_nl.add_trace(go.Scatter(
+        x=_nl_df["date"], y=_nl_df["net_liq"],
+        name="Net Liquidity", line=dict(color="#22D3EE", width=2.5),
+        hovertemplate="%{x|%Y-%m-%d}<br>Net Liq: $%{y:.2f}T<extra></extra>",
+    ))
+    fig_nl.add_trace(go.Scatter(
+        x=_nl_df["date"], y=_nl_df["spx"],
+        name="S&P 500", yaxis="y2",
+        line=dict(color="#F59E0B", width=1.8, dash="dot"),
+        hovertemplate="%{x|%Y-%m-%d}<br>S&P: %{y:,.0f}<extra></extra>",
+    ))
+    fig_nl.update_layout(
+        **_CHART_LAYOUT, height=320,
+        yaxis=dict(title="Net Liq ($T)", tickprefix="$", ticksuffix="T"),
+        yaxis2=dict(title="S&P 500", overlaying="y", side="right", showgrid=False),
+        legend=dict(orientation="h", y=1.12),
+    )
+    st.plotly_chart(fig_nl, use_container_width=True)
+
+# ── RRP · TGA · 지준금 · HY 스프레드 ──────────────────────────
+liq_r1c1, liq_r1c2 = st.columns(2)
+with liq_r1c1:
+    st.markdown("**역레포 (RRP)** — 연준에 잠긴 유동성")
+    if not _rrp_df.empty:
+        fig = go.Figure(go.Scatter(
+            x=_rrp_df["date"], y=_rrp_df["value"],
+            line=dict(color="#818CF8", width=2), fill="tozeroy",
+            fillcolor="rgba(129,140,248,0.08)",
+            hovertemplate="%{x|%Y-%m-%d}<br>$%{y:.2f}T<extra></extra>",
+        ))
+        fig.update_layout(**_CHART_LAYOUT, height=220, showlegend=False,
+                          yaxis_tickprefix="$", yaxis_ticksuffix="T")
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.caption("RRP data unavailable")
+with liq_r1c2:
+    st.markdown("**재무부 계정 (TGA)** — 재무부 보유 현금")
+    if not _tga_df.empty:
+        fig = go.Figure(go.Scatter(
+            x=_tga_df["date"], y=_tga_df["value"],
+            line=dict(color="#F472B6", width=2), fill="tozeroy",
+            fillcolor="rgba(244,114,182,0.08)",
+            hovertemplate="%{x|%Y-%m-%d}<br>$%{y:.2f}T<extra></extra>",
+        ))
+        fig.update_layout(**_CHART_LAYOUT, height=220, showlegend=False,
+                          yaxis_tickprefix="$", yaxis_ticksuffix="T")
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.caption("TGA data unavailable")
+
+liq_r2c1, liq_r2c2 = st.columns(2)
+with liq_r2c1:
+    st.markdown("**은행 지준금 (Reserves)** — 은행 시스템의 실탄")
+    if not _res_df.empty:
+        fig = go.Figure(go.Scatter(
+            x=_res_df["date"], y=_res_df["value"],
+            line=dict(color="#34D399", width=2),
+            hovertemplate="%{x|%Y-%m-%d}<br>$%{y:.2f}T<extra></extra>",
+        ))
+        fig.update_layout(**_CHART_LAYOUT, height=220, showlegend=False,
+                          yaxis_tickprefix="$", yaxis_ticksuffix="T")
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.caption("Reserves data unavailable")
+with liq_r2c2:
+    st.markdown("**하이일드 스프레드 (HY OAS)** — 신용시장 스트레스")
+    if not _hy_df.empty:
+        fig = go.Figure(go.Scatter(
+            x=_hy_df["date"], y=_hy_df["value"],
+            line=dict(color="#F87171", width=2),
+            hovertemplate="%{x|%Y-%m-%d}<br>%{y:.2f}%<extra></extra>",
+        ))
+        fig.add_hline(y=5.0, line_color="#64748b", line_width=1, line_dash="dot",
+                      annotation_text="주의 5%", annotation_font_size=10)
+        fig.update_layout(**_CHART_LAYOUT, height=220, showlegend=False,
+                          yaxis_ticksuffix="%")
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.caption("HY spread data unavailable")
+
+st.markdown("---")
+st.markdown("**통화량 · 연준 자산** (기존)")
 
 liq1, liq2 = st.columns(2)
 

@@ -111,6 +111,86 @@ def get_fed_balance_sheet() -> pd.DataFrame:
     return df
 
 
+@st.cache_data(ttl=86400, show_spinner=False)
+def get_rrp() -> pd.DataFrame:
+    """Overnight Reverse Repo (daily, $Trillions). RRPONTSYD series.
+
+    연준이 역레포로 흡수해 둔 유동성 — 감소하면 시중으로 방출.
+    """
+    df = _fred_csv("RRPONTSYD", "2021-01-01")
+    if df.empty:
+        return pd.DataFrame()
+    df["value"] = df["value"] / 1000  # billions → trillions
+    return df
+
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def get_tga() -> pd.DataFrame:
+    """Treasury General Account (weekly, $Trillions). WTREGEN series.
+
+    재무부가 연준에 쌓아둔 현금 — 증가하면 시중 유동성 흡수.
+    """
+    df = _fred_csv("WTREGEN", "2021-01-01")
+    if df.empty:
+        return pd.DataFrame()
+    df["value"] = df["value"] / 1_000_000  # millions → trillions
+    return df
+
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def get_bank_reserves() -> pd.DataFrame:
+    """Bank reserve balances at the Fed (weekly, $Trillions). WRESBAL series."""
+    df = _fred_csv("WRESBAL", "2021-01-01")
+    if df.empty:
+        return pd.DataFrame()
+    df["value"] = df["value"] / 1_000_000  # millions → trillions
+    return df
+
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def get_hy_spread() -> pd.DataFrame:
+    """ICE BofA US High-Yield OAS (daily, %). BAMLH0A0HYM2 series.
+
+    자금경색·위험선호 온도계 — 급등하면 신용시장 스트레스.
+    """
+    return _fred_csv("BAMLH0A0HYM2", "2021-01-01")
+
+
+@st.cache_data(ttl=86400, show_spinner=False)
+def get_net_liquidity() -> pd.DataFrame:
+    """Net Liquidity = Fed 총자산(WALCL) − 역레포(RRP) − 재무부계정(TGA).
+
+    시장이 가장 주시하는 합성 유동성 지표 (S&P500과 높은 상관).
+    주간(WALCL 기준일) 스파인에 RRP(일간)·TGA(주간)를 as-of 병합.
+
+    Returns:
+        DataFrame [date, net_liq, walcl, rrp, tga, spx] — $Trillions, spx는 지수.
+    """
+    walcl = get_fed_balance_sheet()
+    rrp = get_rrp()
+    tga = get_tga()
+    if walcl.empty or rrp.empty or tga.empty:
+        return pd.DataFrame()
+
+    base = walcl.rename(columns={"value": "walcl"}).sort_values("date")
+    rrp_s = rrp.rename(columns={"value": "rrp"}).sort_values("date")
+    tga_s = tga.rename(columns={"value": "tga"}).sort_values("date")
+
+    df = pd.merge_asof(base, rrp_s, on="date", direction="backward")
+    df = pd.merge_asof(df, tga_s, on="date", direction="backward")
+    df = df.dropna(subset=["walcl", "rrp", "tga"])
+    df["net_liq"] = df["walcl"] - df["rrp"] - df["tga"]
+
+    spx = _yf_close("^GSPC", period="5y")
+    if not spx.empty:
+        spx = spx.rename(columns={"value": "spx"}).sort_values("date")
+        spx["date"] = pd.to_datetime(spx["date"]).dt.tz_localize(None)
+        df["date"] = pd.to_datetime(df["date"])
+        df = pd.merge_asof(df, spx, on="date", direction="backward")
+
+    return df.reset_index(drop=True)
+
+
 # ═══════════════════════════════════════════════════════════
 # 2. Interest Rates
 # ═══════════════════════════════════════════════════════════
