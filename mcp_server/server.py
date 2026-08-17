@@ -1095,6 +1095,15 @@ def get_liquidity() -> dict:
     except Exception as e:
         result["hy_spread"] = {"error": str(e)}
 
+    if not result:
+        # Every FRED series came back empty — almost certainly the anonymous
+        # FRED CSV endpoint rejecting this host (datacenter IP). The official
+        # API works from anywhere with a free key.
+        return {"error": "FRED data unreachable from this server. "
+                         "Set the FRED_API_KEY environment variable "
+                         "(free key: https://fred.stlouisfed.org/docs/api/api_key.html) "
+                         "and retry."}
+
     return _json(result)
 
 

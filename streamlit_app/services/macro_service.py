@@ -20,7 +20,14 @@ _FRED_HEADERS = {
 
 
 def _fred_csv(series_id: str, start: str = "2021-01-01") -> pd.DataFrame:
-    """Fetch a FRED series. Tries CSV endpoint first, then FRED API with key."""
+    """Fetch a FRED series.
+
+    Order depends on whether an API key is configured:
+      key present → official API first (works from datacenter IPs — the
+                    anonymous CSV endpoint blocks/hangs on cloud hosts like
+                    Render), CSV as fallback
+      no key      → CSV only (fine from residential IPs / Streamlit Cloud)
+    """
 
     def _parse(text: str) -> pd.DataFrame:
         df = pd.read_csv(io.StringIO(text))
@@ -31,19 +38,18 @@ def _fred_csv(series_id: str, start: str = "2021-01-01") -> pd.DataFrame:
         df["value"] = pd.to_numeric(df["value"], errors="coerce")
         return df.dropna(subset=["value"]).reset_index(drop=True)
 
-    # 1. CSV endpoint with proper User-Agent
-    try:
-        url = f"{_FRED_BASE}?id={series_id}&cosd={start}"
-        resp = requests.get(url, headers=_FRED_HEADERS, timeout=12)
-        resp.raise_for_status()
-        return _parse(resp.text)
-    except Exception as e:
-        logger.warning("FRED CSV failed for %s: %s", series_id, e)
+    def _try_csv() -> pd.DataFrame:
+        try:
+            url = f"{_FRED_BASE}?id={series_id}&cosd={start}"
+            resp = requests.get(url, headers=_FRED_HEADERS, timeout=12)
+            resp.raise_for_status()
+            return _parse(resp.text)
+        except Exception as e:
+            logger.warning("FRED CSV failed for %s: %s", series_id, e)
+            return pd.DataFrame()
 
-    # 2. FRED API with API key (if configured)
-    try:
-        api_key = st.secrets.get("FRED_API_KEY", "")
-        if api_key:
+    def _try_api(api_key: str) -> pd.DataFrame:
+        try:
             resp = requests.get(
                 _FRED_API_BASE,
                 params={
@@ -63,9 +69,23 @@ def _fred_csv(series_id: str, start: str = "2021-01-01") -> pd.DataFrame:
                 df["date"] = pd.to_datetime(df["date"])
                 df["value"] = pd.to_numeric(df["value"], errors="coerce")
                 return df.dropna(subset=["value"]).reset_index(drop=True)
-    except Exception as e:
-        logger.warning("FRED API failed for %s: %s", series_id, e)
+        except Exception as e:
+            logger.warning("FRED API failed for %s: %s", series_id, e)
+        return pd.DataFrame()
 
+    try:
+        api_key = st.secrets.get("FRED_API_KEY", "") or ""
+    except Exception:
+        api_key = ""
+
+    if api_key:
+        df = _try_api(api_key)
+        if not df.empty:
+            return df
+        return _try_csv()
+    df = _try_csv()
+    if not df.empty:
+        return df
     return pd.DataFrame()
 
 
