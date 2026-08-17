@@ -1139,12 +1139,18 @@ def get_stock_report(ticker: str, max_chars: int = 15000) -> dict:
     scenarios, bull/bear risk assessment, and a PM verdict with target price.
     Much deeper than the quick-lookup tools — use for "심층 분석" requests.
 
+    IMPORTANT: the report is a point-in-time analysis — its prices, P/E and
+    target-upside figures reflect the generation date, not today. After
+    reading it, ALWAYS refresh the numbers via get_quote / get_fundamentals /
+    get_analyst_consensus and explicitly note where today's data diverges
+    from the report (price vs target, valuation re-rating, new events).
+
     Args:
         ticker: Stock symbol (check list_stock_reports for availability).
         max_chars: Max text length to return (default 15000).
 
     Returns:
-        {ticker, url, text, truncated} — text is the tag-stripped report body.
+        {ticker, url, text, truncated, freshness_note}.
     """
     import re as _re
     import requests as _rq
@@ -1181,6 +1187,9 @@ def get_stock_report(ticker: str, max_chars: int = 15000) -> dict:
         "url": url,
         "chars": len(txt),
         "truncated": truncated,
+        "freshness_note": ("Point-in-time report. Pair with get_quote/"
+                           "get_fundamentals/get_analyst_consensus for current "
+                           "numbers and flag divergences from the report."),
         "text": txt[:max_chars],
     }
 
