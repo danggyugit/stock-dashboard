@@ -1,0 +1,23 @@
+# Render blueprint — remote MCP server (stock-dashboard tools for Claude).
+# Deploy: Render dashboard → New → Blueprint → connect this repo.
+# After deploy, add "https://<service>.onrender.com$MCP_PATH" as a custom
+# connector in Claude (Settings → Connectors → Add custom connector).
+services:
+  - type: web
+    name: aiquantlab-mcp
+    runtime: python
+    plan: free
+    buildCommand: pip install -r mcp_server/requirements.txt
+    startCommand: python mcp_server/server.py --http
+    envVars:
+      - key: MCP_TRANSPORT
+        value: http
+      - key: MCP_PATH
+        # unguessable path = lightweight auth for a personal server;
+        # change this value to rotate access
+        generateValue: false
+        value: /mcp
+      - key: FINNHUB_API_KEY
+        sync: false   # set in Render dashboard (optional — news/calendar tools)
+      - key: PYTHON_VERSION
+        value: 3.12.0

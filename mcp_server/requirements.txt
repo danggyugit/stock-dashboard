@@ -1,0 +1,9 @@
+# Lean deps for the remote MCP server (no Streamlit, no ML libs).
+# The imported streamlit_app services only need pandas/numpy/requests/yfinance;
+# streamlit itself is stubbed in server.py.
+mcp>=1.9.0
+pandas>=2.2.0
+numpy>=1.26.0
+requests>=2.32.0
+yfinance>=0.2.40
+lxml>=5.2.0

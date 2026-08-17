@@ -817,12 +817,17 @@ def get_macro_snapshot() -> dict:
     except Exception as e:
         result["core_pce_yoy"] = {"error": str(e)}
 
-    # Money supply
+    # Money supply (get_money_supply returns columns date/M1/M2 in $T)
     try:
         df = _svc_money_supply()
         if df is not None and not df.empty:
-            r = df.dropna(subset=["value"]).iloc[-1]
-            result["money_supply"] = {"value": float(r["value"]), "date": str(r["date"])}
+            r = df.dropna(subset=["M2"]).iloc[-1]
+            entry = {"m2_trillions": round(float(r["M2"]), 2),
+                     "m1_trillions": round(float(r["M1"]), 2),
+                     "date": str(r["date"])}
+            if len(df) >= 13:
+                entry["m2_yoy_pct"] = round((df["M2"].iloc[-1] / df["M2"].iloc[-13] - 1) * 100, 2)
+            result["money_supply"] = entry
     except Exception as e:
         result["money_supply"] = {"error": str(e)}
 
@@ -854,6 +859,241 @@ def get_commodities() -> dict:
                 result[key] = {"label": label, **info}
         except Exception as e:
             result[key] = {"error": str(e)}
+
+    return _json(result)
+
+
+# ══════════════════════════════════════════════════════════════════════════
+# Quant / SEC / Liquidity tools (synced with aiquantlab.streamlit.app)
+# ══════════════════════════════════════════════════════════════════════════
+
+_PRESET_IDS = ["it_momentum", "it_invvol", "it_equal", "it_invvol_regime", "it_ensemble"]
+
+
+@mcp.tool()
+def get_ai_picks(preset: str = "it_momentum") -> dict:
+    """Get today's AI-recommended stocks from the daily preset backtests
+    (AI Quant Lab — ML ensemble ranking of IT-sector large caps, refreshed
+    daily at 11:00 KST).
+
+    Args:
+        preset: One of "it_momentum" (momentum-weighted, highest CAGR),
+                "it_invvol" (inverse-volatility), "it_equal" (equal weight),
+                "it_invvol_regime" (with HMM regime cash overlay),
+                "it_ensemble" (RF+XGB+LGBM ensemble).
+
+    Returns:
+        {preset, name, cagr_pct, sharpe, max_dd_pct, updated_at, regime,
+         cash_pct, picks: [{ticker, weight, Mom_1m, Mom_3m, Mom_12m}],
+         next_ranked: [...]}  — picks are today's buy list.
+    """
+    from services.cache_loader import load_cache_file
+
+    pid = preset.lower().strip()
+    if pid not in _PRESET_IDS:
+        return {"error": f"Unknown preset. Choose from {_PRESET_IDS}"}
+
+    data = load_cache_file(f"backtests/{pid}.json")
+    if not data:
+        return {"error": "Preset cache unavailable"}
+
+    summary = data.get("summary", {})
+    picks = data.get("today_picks") or []
+    ranking = data.get("today_full_ranking") or []
+    pick_set = {p.get("ticker") for p in picks}
+    next_ranked = [r for r in ranking if r.get("ticker") not in pick_set][:5]
+
+    def _slim(p: dict) -> dict:
+        return {k: p.get(k) for k in ("ticker", "weight", "Mom_1m", "Mom_3m", "Mom_12m")}
+
+    return _json({
+        "preset": pid,
+        "name": data.get("name"),
+        "cagr_pct": summary.get("cagr_pct"),
+        "sharpe": summary.get("sharpe"),
+        "max_dd_pct": summary.get("max_dd_pct"),
+        "picks_as_of": data.get("today_picks_at"),
+        "updated_at": data.get("updated_at"),
+        "regime": data.get("today_regime"),
+        "cash_pct": data.get("today_cash_ratio_pct"),
+        "picks": [_slim(p) for p in sorted(picks, key=lambda x: x.get("weight") or 0, reverse=True)],
+        "next_ranked": [_slim(r) for r in next_ranked],
+        "note": "Backtested strategy output, not investment advice.",
+    })
+
+
+@mcp.tool()
+def get_whale_holdings(manager: str, top_n: int = 15) -> dict:
+    """Get a famous investor's latest 13F portfolio (from SEC EDGAR filings,
+    cached daily). Covers 20 managers: Warren Buffett, Bill Ackman, Michael
+    Burry, David Tepper, Dan Loeb, David Einhorn, Stan Druckenmiller, Seth
+    Klarman, Andreas Halvorsen, Philippe Laffont, Chase Coleman, Steve Cohen,
+    Ken Griffin, Jim Simons, Stephen Mandel, Lee Ainslie, Jeffrey Ubben,
+    Howard Marks, Chris Hohn, David Abrams.
+
+    Args:
+        manager: Manager or fund name (partial match OK, e.g. "buffett",
+                 "Berkshire", "ackman").
+        top_n: Number of top holdings to return (default 15).
+
+    Returns:
+        {manager, fund, period, filed_date, total_value_usd, n_holdings,
+         holdings: [{ticker, company, pct_port, value_usd, shares}]}
+    """
+    from services.cache_loader import load_cache_file
+    from services.sec_intelligence_service import WHALE_MANAGERS
+
+    q = manager.lower().strip()
+    match = None
+    for m in WHALE_MANAGERS:
+        if q in m["manager"].lower() or q in m["name"].lower():
+            match = m
+            break
+    if not match:
+        return {"error": f"Manager not found. Available: "
+                         f"{[m['manager'] for m in WHALE_MANAGERS]}"}
+
+    meta = load_cache_file("sec/_metadata.json") or {}
+    period = meta.get("13f", {}).get(match["cik"], {}).get("latest_period")
+    if not period:
+        return {"error": "13F cache metadata unavailable for this manager"}
+
+    data = load_cache_file(f"sec/13f/{match['cik']}_{period.replace('-', '')}.json")
+    if not data:
+        return {"error": "13F holdings cache unavailable"}
+
+    holdings = data.get("holdings", [])
+    total = sum(h.get("value_k", 0) for h in holdings) * 1000
+
+    return _json({
+        "manager": data.get("manager"),
+        "fund": data.get("name"),
+        "style": data.get("style"),
+        "period": data.get("period"),
+        "filed_date": data.get("filed_date"),
+        "total_value_usd": total,
+        "n_holdings": len(holdings),
+        "holdings": [
+            {
+                "ticker": h.get("ticker") or None,
+                "company": h.get("company"),
+                "pct_port": h.get("pct_port"),
+                "value_usd": h.get("value_k", 0) * 1000,
+                "shares": h.get("shares"),
+            }
+            for h in holdings[:top_n]
+        ],
+    })
+
+
+@mcp.tool()
+def get_insider_trades(ticker: str, days: int = 180) -> dict:
+    """Get recent insider (officer/director) trades for a ticker from SEC
+    EDGAR Form 4 filings — live data.
+
+    Args:
+        ticker: Stock symbol.
+        days: Look-back window in days (default 180).
+
+    Returns:
+        {ticker, count, buys_total_usd, sells_total_usd,
+         trades: [{date, insider, role, type, shares, price, value_usd}]}
+    """
+    from services.insider_service import get_insider_trades as _svc_insider
+
+    ticker = ticker.upper()
+    try:
+        df = _svc_insider(ticker, days=days)
+    except Exception as e:
+        return {"error": str(e)}
+
+    if df is None or df.empty:
+        return {"ticker": ticker, "count": 0, "trades": [],
+                "note": "No insider transactions found in window"}
+
+    buys = df[df["Type"] == "Buy"]["Value ($)"].sum()
+    sells = df[df["Type"] == "Sell"]["Value ($)"].sum()
+    trades = [
+        {
+            "date": r.get("Date"), "insider": r.get("Insider"),
+            "role": r.get("Role"), "type": r.get("Type"),
+            "shares": r.get("Shares"), "price": r.get("Price"),
+            "value_usd": r.get("Value ($)"),
+        }
+        for r in df.head(30).to_dict(orient="records")
+    ]
+
+    return _json({
+        "ticker": ticker, "count": len(df),
+        "buys_total_usd": buys, "sells_total_usd": sells,
+        "trades": trades,
+    })
+
+
+@mcp.tool()
+def get_liquidity() -> dict:
+    """Get the US market liquidity dashboard: Net Liquidity (Fed balance
+    sheet − reverse repo − Treasury General Account), plus RRP, TGA, bank
+    reserves, and high-yield credit spread with 4-week trends.
+
+    Direction guide (liquidity-friendly): RRP↓, TGA↓, reserves↑, HY spread↓.
+    """
+    from services.macro_service import (
+        get_net_liquidity, get_rrp, get_tga, get_bank_reserves, get_hy_spread,
+    )
+
+    result: dict[str, Any] = {}
+
+    try:
+        nl = get_net_liquidity()
+        if nl is not None and not nl.empty:
+            r = nl.iloc[-1]
+            prior = nl.iloc[-5] if len(nl) >= 5 else nl.iloc[0]
+            result["net_liquidity"] = {
+                "trillions": round(float(r["net_liq"]), 2),
+                "walcl": round(float(r["walcl"]), 2),
+                "rrp": round(float(r["rrp"]), 3),
+                "tga": round(float(r["tga"]), 2),
+                "date": str(r["date"]),
+                "chg_4w_trillions": round(float(r["net_liq"] - prior["net_liq"]), 2),
+                "spx_at_date": round(float(r["spx"]), 0) if "spx" in nl.columns else None,
+            }
+    except Exception as e:
+        result["net_liquidity"] = {"error": str(e)}
+
+    for key, fn, invert in [("rrp", get_rrp, True), ("tga", get_tga, True),
+                            ("bank_reserves", get_bank_reserves, False)]:
+        try:
+            df = fn()
+            if df is None or df.empty:
+                continue
+            cur = float(df["value"].iloc[-1])
+            lb = min(len(df) - 1, 20)
+            chg = cur - float(df["value"].iloc[-1 - lb])
+            friendly = (chg < 0) if invert else (chg > 0)
+            result[key] = {
+                "trillions": round(cur, 3),
+                "chg_4w": round(chg, 3),
+                "liquidity_friendly": bool(friendly),
+                "date": str(df["date"].iloc[-1]),
+            }
+        except Exception as e:
+            result[key] = {"error": str(e)}
+
+    try:
+        hy = get_hy_spread()
+        if hy is not None and not hy.empty:
+            cur = float(hy["value"].iloc[-1])
+            lb = min(len(hy) - 1, 20)
+            chg = cur - float(hy["value"].iloc[-1 - lb])
+            result["hy_spread"] = {
+                "pct": round(cur, 2), "chg_4w": round(chg, 2),
+                "liquidity_friendly": bool(chg < 0),
+                "stress": "elevated" if cur >= 5.0 else "normal",
+                "date": str(hy["date"].iloc[-1]),
+            }
+    except Exception as e:
+        result["hy_spread"] = {"error": str(e)}
 
     return _json(result)
 
@@ -991,5 +1231,22 @@ def get_economic_events(
 
 
 # ── Entry point ────────────────────────────────────────────────────────────
+# Two transports:
+#   default        — stdio (Claude Desktop local MCP config)
+#   --http / env   — streamable HTTP for remote hosting (Render etc.)
+#                    PORT is set by the host; MCP_PATH lets you mount the
+#                    endpoint on an unguessable path as lightweight auth
+#                    (e.g. MCP_PATH=/mcp-x7k2p9). Add the full URL as a
+#                    custom connector in Claude settings.
 if __name__ == "__main__":
-    mcp.run()
+    use_http = "--http" in sys.argv or os.environ.get("MCP_TRANSPORT", "").lower() in ("http", "streamable-http")
+    if use_http:
+        mcp.settings.host = "0.0.0.0"
+        mcp.settings.port = int(os.environ.get("PORT", "8000"))
+        mcp.settings.streamable_http_path = os.environ.get("MCP_PATH", "/mcp")
+        mcp.settings.stateless_http = True  # survives host restarts / scale-to-zero
+        logger.info("Starting streamable-http on :%s%s",
+                    mcp.settings.port, mcp.settings.streamable_http_path)
+        mcp.run(transport="streamable-http")
+    else:
+        mcp.run()
