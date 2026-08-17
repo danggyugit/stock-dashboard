@@ -1166,6 +1166,14 @@ def get_stock_report(ticker: str, max_chars: int = 15000) -> dict:
     txt = _re.sub(r"<script.*?</script>|<style.*?</style>", " ", html, flags=_re.S)
     txt = _re.sub(r"<[^>]+>", " ", txt)
     txt = _re.sub(r"\s+", " ", txt).strip()
+
+    # Cloudflare Pages serves a 200 fallback page for unknown routes — verify
+    # this is actually the requested report (title mentions the ticker).
+    if f"({ticker.upper()})" not in txt[:400]:
+        avail = list_stock_reports()
+        return {"error": f"No report for {ticker.upper()}.",
+                "available": avail.get("tickers", [])}
+
     truncated = len(txt) > max_chars
 
     return {
