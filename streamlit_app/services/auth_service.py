@@ -375,10 +375,9 @@ def render_user_sidebar() -> None:
     SB_LOGOUT_LABEL      = "⇥"     # button text/icon
 
     # Subtle gray logout button
-    # NOTE: We boost selector specificity (extra [data-testid] prefixes) to
-    # beat the global Quick Actions rule from 0_Home.py which targets
-    # [data-testid="stHorizontalBlock"] [data-testid="stButton"] button and
-    # forces height:110px on every column-based button.
+    # NOTE: Selector specificity is boosted (extra [data-testid] prefixes) so
+    # this rule wins over any page-level global button CSS (some pages style
+    # [data-testid="stHorizontalBlock"] [data-testid="stButton"] button broadly).
     st.sidebar.markdown(f"""
     <style>
     [data-testid="stSidebar"] [data-testid="stHorizontalBlock"] div.st-key-logout_btn button,

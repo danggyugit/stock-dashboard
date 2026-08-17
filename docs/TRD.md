@@ -1,437 +1,118 @@
-# TRD: Stock Dashboard (기술 설계 문서)
+# TRD — AI Quant Lab (Stock Dashboard)
 
-## 1. 기술 스택
+> 현행 버전 기준 (Streamlit). 구버전(React+FastAPI) 스펙은 `TRD_legacy_react.md` 참고.
 
-### 1.1 선정 결과
-
-| 영역 | 기술 | 버전 | 선정 근거 |
-|---|---|---|---|
-| **프론트엔드** | React + TypeScript | 19.x / 5.9 | 기존 경험, 컴포넌트 생태계 |
-| **빌드** | Vite | 6.x | 빠른 HMR, 기존 경험 |
-| **라우팅** | React Router | v7 | 기존 경험, 파일 기반 불필요 |
-| **상태관리** | Zustand + TanStack Query | 5.x / 5.x | 서버 상태(TQ) + 클라이언트 상태(Zustand) 분리 |
-| **스타일링** | Tailwind CSS + shadcn/ui | 4.x | 빠른 개발, 일관된 디자인 시스템 |
-| **차트 (일반)** | Recharts | 2.x | React 친화적, 파이/라인/바 차트 |
-| **차트 (트리맵)** | D3.js | 7.x | 트리맵 히트맵 커스터마이징에 최적 |
-| **차트 (캔들)** | lightweight-charts | 4.x | TradingView 오픈소스, 금융 차트 특화 |
-| **테이블** | TanStack Table | 8.x | 정렬/필터/페이지네이션 내장 |
-| **날짜** | date-fns | 4.x | 트리쉐이킹, 배당 캘린더 |
-| **백엔드** | FastAPI | 0.115+ | 비동기, 타입 안전, 기존 경험 |
-| **DB** | DuckDB | 1.2+ | 로컬 분석용, 서버 불필요 |
-| **데이터** | yfinance + finnhub | - | 무료, 포괄적 미국 시장 데이터 |
-| **LLM** | Anthropic Claude API | SDK 0.86+ | 감성분석, 시장 요약 |
-| **스케줄러** | APScheduler | 3.10+ | 데이터 갱신 자동화 |
-| **검증** | Pydantic v2 | 2.x | 요청/응답 스키마 |
-| **테스트** | pytest + Vitest | - | 백/프론트 각각 |
-
-### 1.2 스택 선정 이유 (Next.js 대신 Vite+React)
-- SSR/SEO 불필요 (단일 사용자 대시보드)
-- 기존 QuantScope 패턴 재활용 가능
-- FastAPI 백엔드와 명확한 역할 분리
-- 빌드 속도 우위
-
----
-
-## 2. 시스템 아키텍처
+## 1. 아키텍처 개요
 
 ```
-┌─────────────────────────────────────────────────┐
-│                   Frontend (Vite + React)        │
-│  ┌──────────┐ ┌──────────┐ ┌──────────────────┐ │
-│  │ Market   │ │Portfolio │ │ Sentiment        │ │
-│  │ Heatmap  │ │ Tracker  │ │ Dashboard        │ │
-│  │ Screener │ │ Trades   │ │ Fear&Greed       │ │
-│  │ Compare  │ │ Dividend │ │ AI Report        │ │
-│  └────┬─────┘ └────┬─────┘ └───────┬──────────┘ │
-│       │             │               │            │
-│       └─────────────┼───────────────┘            │
-│                     │ Axios (API Client)         │
-└─────────────────────┼───────────────────────────-┘
-                      │ HTTP (localhost:8001)
-┌─────────────────────┼───────────────────────────-┐
-│                FastAPI Backend                    │
-│  ┌──────────┐ ┌──────────┐ ┌──────────────────┐ │
-│  │ /market  │ │/portfolio│ │ /sentiment       │ │
-│  │ routers  │ │ routers  │ │ routers          │ │
-│  └────┬─────┘ └────┬─────┘ └───────┬──────────┘ │
-│       │             │               │            │
-│  ┌────┴─────────────┴───────────────┴──────────┐ │
-│  │              Service Layer                   │ │
-│  │  MarketService  PortfolioService  Sentiment  │ │
-│  └────┬─────────────┬───────────────┬──────────┘ │
-│       │             │               │            │
-│  ┌────┴─────┐ ┌─────┴────┐ ┌───────┴──────────┐ │
-│  │DataProvider│ │  DuckDB  │ │ Claude API      │ │
-│  │(yfinance) │ │ (Local)  │ │ (LLM)           │ │
-│  └──────────┘ └──────────┘ └──────────────────┘ │
-│                                                  │
-│  ┌──────────────────────────────────────────────┐│
-│  │ APScheduler (데이터 갱신 스케줄러)             ││
-│  └──────────────────────────────────────────────┘│
-└──────────────────────────────────────────────────┘
+┌─ 로컬 PC (Windows Task Scheduler) ──────────────┐
+│  run_preset_backtests / fetch_cache /            │
+│  fetch_sec_intelligence / portfolio_risk_alert / │
+│  send_rebalancing_alert                          │
+│        │ 데이터 수집·계산 → data/cache/*.json     │
+│        └── git commit + push ──────────┐         │
+└────────────────────────────────────────┼─────────┘
+                                         ▼
+┌─ GitHub (danggyugit/stock-dashboard) ───────────┐
+│  · 캐시 JSON 저장소 (raw URL로 서빙)              │
+│  · Actions: update_valuation_cache (매일)        │
+└───────────────┬─────────────────────────────────┘
+                ▼ (재배포/raw fetch)
+┌─ Streamlit Cloud (aiquantlab.streamlit.app) ────┐
+│  streamlit_app/app.py — st.navigation 18페이지    │
+│  services/ 19모듈 · core/ 3 provider             │
+└───────────────┬─────────────────────────────────┘
+                ▼
+┌─ Turso (libsql) ── 사용자·포트폴리오·워치리스트 DB │
+└─────────────────────────────────────────────────┘
 ```
 
-### 2.1 데이터 흐름
+- **로컬 SQLite 캐시** (git 미추적): `data/price_cache.db`(월봉), `data/historical_cache.db`(S&P500 멤버십·PIT 재무·배당), `data/stock_dashboard.db`(로컬 폴백 DB)
+- **MCP 서버**: `mcp_server/server.py` — streamlit_app services를 재사용해 Claude Desktop에 시세·밸류에이션 도구 제공 (stdio)
 
-1. **시장 데이터**: APScheduler → yfinance/finnhub → DuckDB 캐시 → API → Frontend
-2. **포트폴리오**: Frontend → API → DuckDB (CRUD) → 현재가 조인 → Frontend
-3. **센티먼트**: 수동 트리거 → finnhub News → Claude API (감성분석) → DuckDB → Frontend
+## 2. 기술 스택
 
----
-
-## 3. 프로젝트 디렉토리 구조
-
-```
-stock_dashboard/
-├── docs/
-│   ├── PRD.md
-│   └── TRD.md
-├── backend/
-│   ├── main.py                  # FastAPI app 진입점
-│   ├── config.py                # Pydantic Settings
-│   ├── db.py                    # DuckDB 연결 관리
-│   ├── scheduler.py             # APScheduler 설정
-│   ├── routers/
-│   │   ├── market.py            # 히트맵, 스크리너, 종목 상세
-│   │   ├── portfolio.py         # 포트폴리오 CRUD, 손익
-│   │   └── sentiment.py         # 센티먼트, Fear&Greed, AI 리포트
-│   ├── services/
-│   │   ├── market_service.py    # 시장 데이터 비즈니스 로직
-│   │   ├── portfolio_service.py # 포트폴리오 계산 로직
-│   │   └── sentiment_service.py # 감성분석, F&G 계산
-│   ├── providers/
-│   │   ├── data_provider.py     # yfinance 래퍼
-│   │   ├── news_provider.py     # 뉴스 데이터 수집
-│   │   └── llm_provider.py      # Claude API 래퍼
-│   ├── models/
-│   │   ├── market.py            # 시장 데이터 Pydantic 모델
-│   │   ├── portfolio.py         # 포트폴리오 Pydantic 모델
-│   │   └── sentiment.py         # 센티먼트 Pydantic 모델
-│   ├── tests/
-│   │   └── ...
-│   ├── requirements.txt
-│   └── pyproject.toml
-├── frontend/
-│   ├── index.html
-│   ├── package.json
-│   ├── tsconfig.json
-│   ├── vite.config.ts
-│   ├── tailwind.config.ts
-│   ├── src/
-│   │   ├── main.tsx
-│   │   ├── App.tsx
-│   │   ├── api/
-│   │   │   ├── client.ts        # Axios 인스턴스
-│   │   │   ├── market.ts        # 시장 API 호출
-│   │   │   ├── portfolio.ts     # 포트폴리오 API 호출
-│   │   │   └── sentiment.ts     # 센티먼트 API 호출
-│   │   ├── components/
-│   │   │   ├── ui/              # shadcn/ui 컴포넌트
-│   │   │   ├── layout/          # Header, Sidebar, Layout
-│   │   │   ├── market/          # Heatmap, Screener, StockCard
-│   │   │   ├── portfolio/       # Holdings, TradeForm, AllocationChart
-│   │   │   └── sentiment/       # FearGreedGauge, NewsList, SentimentChart
-│   │   ├── pages/
-│   │   │   ├── Dashboard.tsx
-│   │   │   ├── Market.tsx
-│   │   │   ├── Screener.tsx
-│   │   │   ├── StockDetail.tsx
-│   │   │   ├── Compare.tsx
-│   │   │   ├── Portfolio.tsx
-│   │   │   ├── Trades.tsx
-│   │   │   ├── Dividends.tsx
-│   │   │   ├── Tax.tsx
-│   │   │   ├── Sentiment.tsx
-│   │   │   └── AIReport.tsx
-│   │   ├── stores/
-│   │   │   └── app-store.ts     # Zustand 글로벌 상태
-│   │   ├── hooks/
-│   │   │   └── ...              # 커스텀 훅
-│   │   ├── lib/
-│   │   │   └── utils.ts         # 유틸리티 함수
-│   │   └── types/
-│   │       └── index.ts         # 공유 TypeScript 타입
-│   └── components.json          # shadcn/ui 설정
-├── data/                        # DuckDB 파일 저장 위치
-│   └── stock_dashboard.duckdb
-├── .env.example
-├── .gitignore
-├── CLAUDE.md
-└── README.md
-```
-
----
-
-## 4. DB 스키마 (DuckDB)
-
-### 4.1 시장 데이터
-
-```sql
--- 종목 마스터
-CREATE TABLE stocks (
-    ticker       VARCHAR PRIMARY KEY,
-    name         VARCHAR NOT NULL,
-    sector       VARCHAR,
-    industry     VARCHAR,
-    market_cap   BIGINT,
-    exchange     VARCHAR,          -- NYSE / NASDAQ
-    updated_at   TIMESTAMP DEFAULT current_timestamp
-);
-
--- 일별 OHLCV (캐시)
-CREATE TABLE daily_prices (
-    ticker       VARCHAR NOT NULL,
-    date         DATE NOT NULL,
-    open         DOUBLE,
-    high         DOUBLE,
-    low          DOUBLE,
-    close        DOUBLE,
-    adj_close    DOUBLE,
-    volume       BIGINT,
-    PRIMARY KEY (ticker, date)
-);
-
--- 기업 재무 지표 (캐시)
-CREATE TABLE fundamentals (
-    ticker              VARCHAR PRIMARY KEY,
-    pe_ratio            DOUBLE,
-    pb_ratio            DOUBLE,
-    ps_ratio            DOUBLE,
-    eps                 DOUBLE,
-    roe                 DOUBLE,
-    debt_to_equity      DOUBLE,
-    dividend_yield      DOUBLE,
-    beta                DOUBLE,
-    fifty_two_week_high DOUBLE,
-    fifty_two_week_low  DOUBLE,
-    avg_volume          BIGINT,
-    updated_at          TIMESTAMP DEFAULT current_timestamp
-);
-
--- 배당 데이터
-CREATE TABLE dividends (
-    ticker       VARCHAR NOT NULL,
-    ex_date      DATE NOT NULL,
-    payment_date DATE,
-    amount       DOUBLE,
-    PRIMARY KEY (ticker, ex_date)
-);
-```
-
-### 4.2 포트폴리오
-
-```sql
--- 포트폴리오
-CREATE TABLE portfolios (
-    id           INTEGER PRIMARY KEY,
-    name         VARCHAR NOT NULL,
-    description  VARCHAR,
-    created_at   TIMESTAMP DEFAULT current_timestamp
-);
-
--- 거래 내역
-CREATE TABLE trades (
-    id           INTEGER PRIMARY KEY,
-    portfolio_id INTEGER NOT NULL REFERENCES portfolios(id),
-    ticker       VARCHAR NOT NULL,
-    trade_type   VARCHAR NOT NULL,  -- 'BUY' / 'SELL'
-    quantity     DOUBLE NOT NULL,
-    price        DOUBLE NOT NULL,
-    commission   DOUBLE DEFAULT 0,
-    trade_date   DATE NOT NULL,
-    note         VARCHAR,
-    created_at   TIMESTAMP DEFAULT current_timestamp
-);
-
--- 포트폴리오 일별 스냅샷 (성과 추적용)
-CREATE TABLE portfolio_snapshots (
-    portfolio_id INTEGER NOT NULL,
-    date         DATE NOT NULL,
-    total_value  DOUBLE,
-    total_cost   DOUBLE,
-    PRIMARY KEY (portfolio_id, date)
-);
-```
-
-### 4.3 센티먼트
-
-```sql
--- 뉴스 기사
-CREATE TABLE news_articles (
-    id           INTEGER PRIMARY KEY,
-    ticker       VARCHAR,           -- NULL이면 시장 전체 뉴스
-    headline     VARCHAR NOT NULL,
-    summary      VARCHAR,
-    source       VARCHAR,
-    url          VARCHAR,
-    published_at TIMESTAMP,
-    sentiment    DOUBLE,            -- -1.0 ~ 1.0
-    sentiment_label VARCHAR,        -- 'Very Bearish' ~ 'Very Bullish'
-    ai_summary   VARCHAR,
-    analyzed_at  TIMESTAMP
-);
-
--- Fear & Greed 일별 기록
-CREATE TABLE fear_greed_history (
-    date              DATE PRIMARY KEY,
-    score             DOUBLE,           -- 0 ~ 100
-    label             VARCHAR,          -- 'Extreme Fear' ~ 'Extreme Greed'
-    vix_score         DOUBLE,
-    momentum_score    DOUBLE,
-    put_call_score    DOUBLE,
-    high_low_score    DOUBLE,
-    volume_score      DOUBLE
-);
-
--- AI 일일 리포트
-CREATE TABLE daily_reports (
-    date         DATE PRIMARY KEY,
-    content      TEXT,
-    generated_at TIMESTAMP
-);
-
--- DuckDB 시퀀스 (auto-increment 대체)
-CREATE SEQUENCE seq_news_id START 1;
-CREATE SEQUENCE seq_trade_id START 1;
-CREATE SEQUENCE seq_portfolio_id START 1;
-```
-
----
-
-## 5. API 설계
-
-### 5.1 Market API
-
-| Method | Endpoint | 설명 | 주요 파라미터 |
-|---|---|---|---|
-| GET | `/api/market/heatmap` | 히트맵 데이터 | `period` (1d/1w/1m/3m/ytd/1y) |
-| GET | `/api/market/screener` | 스크리너 결과 | `sector`, `min_cap`, `max_pe`, `sort`, `page` |
-| GET | `/api/market/indices` | 주요 지수 현황 | - |
-| GET | `/api/market/stock/{ticker}` | 종목 상세 | - |
-| GET | `/api/market/stock/{ticker}/chart` | 종목 차트 데이터 | `period`, `interval` |
-| GET | `/api/market/stock/{ticker}/financials` | 재무 지표 | - |
-| GET | `/api/market/compare` | 종목 비교 | `tickers` (쉼표 구분) |
-| GET | `/api/market/search` | 종목 검색 (자동완성) | `q` |
-| POST | `/api/market/refresh` | 데이터 수동 갱신 | - |
-
-### 5.2 Portfolio API
-
-| Method | Endpoint | 설명 | 주요 파라미터 |
-|---|---|---|---|
-| GET | `/api/portfolio` | 포트폴리오 목록 | - |
-| POST | `/api/portfolio` | 포트폴리오 생성 | `name`, `description` |
-| GET | `/api/portfolio/{id}` | 포트폴리오 상세 (보유현황+손익) | - |
-| DELETE | `/api/portfolio/{id}` | 포트폴리오 삭제 | - |
-| GET | `/api/portfolio/{id}/trades` | 거래 내역 | `page` |
-| POST | `/api/portfolio/{id}/trades` | 거래 추가 | Trade 객체 |
-| PUT | `/api/portfolio/{id}/trades/{tid}` | 거래 수정 | Trade 객체 |
-| DELETE | `/api/portfolio/{id}/trades/{tid}` | 거래 삭제 | - |
-| POST | `/api/portfolio/{id}/trades/import` | CSV 가져오기 | CSV 파일 |
-| GET | `/api/portfolio/{id}/allocation` | 자산배분 데이터 | - |
-| GET | `/api/portfolio/{id}/performance` | 수익률 추이 | `period` |
-| GET | `/api/portfolio/{id}/dividends` | 배당 일정 | `year` |
-| GET | `/api/portfolio/{id}/tax` | 세금 계산 | `year` |
-
-### 5.3 Sentiment API
-
-| Method | Endpoint | 설명 | 주요 파라미터 |
-|---|---|---|---|
-| GET | `/api/sentiment/fear-greed` | Fear & Greed 현재값 | - |
-| GET | `/api/sentiment/fear-greed/history` | F&G 추이 | `days` (30/90) |
-| GET | `/api/sentiment/news` | 뉴스 목록 (감성 포함) | `ticker`, `page` |
-| POST | `/api/sentiment/analyze` | 뉴스 감성분석 실행 (수동) | `ticker` (선택) |
-| GET | `/api/sentiment/trend/{ticker}` | 종목 센티먼트 트렌드 | `days` |
-| GET | `/api/sentiment/report` | 오늘의 AI 리포트 | - |
-| POST | `/api/sentiment/report/generate` | AI 리포트 생성 (수동) | - |
-
----
-
-## 6. 프론트엔드 핵심 컴포넌트
-
-### 6.1 차트 라이브러리 분담
-
-| 차트 유형 | 라이브러리 | 사용처 |
-|---|---|---|
-| 트리맵 히트맵 | D3.js | Market Heatmap |
-| 캔들스틱 + 볼륨 | lightweight-charts | Stock Detail |
-| 라인/바/에어리어 | Recharts | 수익률 추이, 센티먼트 트렌드, F&G 히스토리 |
-| 파이/도넛 | Recharts | 자산배분, 섹터 비중 |
-| 게이지 | 커스텀 SVG | Fear & Greed 게이지 |
-| 캘린더 | 커스텀 그리드 | 배당 캘린더 |
-
-### 6.2 주요 공유 컴포넌트
-
-| 컴포넌트 | 설명 |
+| 계층 | 기술 |
 |---|---|
-| `TickerSearch` | 종목 검색 자동완성 (debounce) |
-| `PriceChange` | 가격 변동 표시 (색상 + 화살표 + %) |
-| `DataTable` | TanStack Table 래퍼 (정렬/필터/페이지네이션) |
-| `ChartContainer` | 차트 공통 래퍼 (로딩/에러/빈 상태) |
-| `MetricCard` | 지표 카드 (라벨 + 값 + 변화량) |
-| `SentimentBadge` | 감성 태그 (Bullish/Bearish/Neutral) |
+| 앱 | Streamlit ≥1.42 (multipage, `st.navigation`), Plotly |
+| 인증 | `st.login` (Google OIDC, Authlib) + 소유자 승인(HMAC 토큰) |
+| DB | Turso(libsql, 클라우드) / SQLite(로컬 폴백·캐시) |
+| ML | scikit-learn(RF), XGBoost, LightGBM, hmmlearn(HMM), scipy |
+| 데이터 | yfinance, SEC EDGAR API, Finnhub, FRED, Wikipedia(S&P500 변경이력) |
+| LLM | Anthropic Claude(공시 요약·센티먼트, 수동 트리거), Google Gemini |
+| 알림 | Telegram Bot API |
+| 배포 | Streamlit Cloud (`streamlit_app/app.py`) |
 
----
+## 3. 핵심 모듈
 
-## 7. 구현 단계 (Phase)
+### streamlit_app/services/
+| 모듈 | 책임 |
+|---|---|
+| auth_service | 로그인·승인·사이드바 계정 UI |
+| market_service | 지수·히트맵(로컬 DB 벌크 쿼리) |
+| portfolio_service / watchlist_service | 매매·보유·관심종목 (Turso) |
+| cache_loader | GitHub raw → 로컬 → tmp 3단 캐시 로더 + 신선도 배너 |
+| factor_backtest_service | 팩터 백테스트 엔진 (멤버십 복원·PIT·상폐손실·듀얼모멘텀 오버레이) |
+| factor_strategies | 23개 전략 정의 (rank_fn·requires·enabled) |
+| historical_data_service | S&P500 변경이력·PIT 재무·배당 SQLite 캐시 |
+| price_history_service | 월봉 종가 캐시 (prefetch / load_monthly_prices) |
+| breakout_service | 회귀 추세채널 돌파 계산 |
+| rs_service | IBD식 RS 랭킹 |
+| sec_intelligence_service | 13F 파싱·QoQ diff·내부자 스캔·공시 조회 |
+| insider_service | Form 4 파싱 (CIK 매핑 공용) |
+| valuation_service / ai_valuation_service | 밸류에이션·시나리오 밴드 |
+| sentiment_service / macro_service / calendar_service | 센티먼트·매크로·캘린더 |
+| i18n | 한/영 문자열 + 토글 |
 
-### Phase 1: 프로젝트 셋업 + 시장 데이터 기반
-1. 프로젝트 초기화 (Vite, FastAPI, DuckDB)
-2. 종목 마스터 데이터 수집 파이프라인
-3. 일별 가격 데이터 수집 + 캐싱
-4. 기본 API (indices, search, stock detail)
-5. 기본 레이아웃 + 라우팅
+### 백테스트 무결성 규칙 (수정 시 반드시 유지)
+- **PIT**: 재무 데이터는 보고 지연(연간 90일) 반영, 스냅샷은 `date` 이전 데이터만
+- **Embargo**: ML 학습·검증 사이 21일 갭
+- **생존편향**: Wikipedia 변경이력으로 과거 멤버십 복원, 상폐 종목은 마지막 거래가/-30% 청산
+- **min_history**: 평가일 기준 263개월봉(12M 모멘텀 유효성) 강제
 
-### Phase 2: 마켓 히트맵 + 스크리너
-1. D3 트리맵 히트맵 구현
-2. 스크리너 필터 + 테이블
-3. 종목 상세 페이지 (캔들 차트, 재무)
-4. 종목 비교
+## 4. 데이터 파이프라인 (스케줄)
 
-### Phase 3: 포트폴리오 트래커
-1. 포트폴리오/거래 CRUD API
-2. 거래 입력 폼 + 내역 관리
-3. 보유현황 + 손익 계산
-4. 자산배분 차트
-5. 배당 캘린더 + 세금 계산
+| Task (Windows) | 시각 | 스크립트 | 산출물 |
+|---|---|---|---|
+| StockDashboard-PresetBacktests | 매일 11:00 | run_preset_backtests.py | backtests/*.json + Telegram |
+| StockDashboard-Fundamentals | 매일 13:00 | fetch_cache.py (가격→재무 2단계) | heatmap/stocks/fundamentals/meta.json |
+| StockDashboard-SecIntelligence | 매일 11:30 | fetch_sec_intelligence.py | sec/*.json + Telegram |
+| StockDashboard-PortfolioRiskAlert | 매일 07:00 | portfolio_risk_alert.py | Telegram (플래그 시만) |
+| StockDashboard-RebalancingAlert | 매월 1일 11:30 | send_rebalancing_alert.py | Telegram |
+| (GitHub Actions) update_valuation_cache | 매일 03:00 UTC | build_valuation_cache.py | valuation/*.json |
 
-### Phase 4: 센티먼트 대시보드
-1. 뉴스 수집 파이프라인
-2. Claude API 감성분석 연동
-3. Fear & Greed 지표 계산 + 게이지
-4. 종목별 센티먼트 트렌드
-5. AI 일일 리포트
+**git push 패턴**: 스크립트는 `fetch → merge -X ours origin/main → push`로 원격 커밋을 흡수.
+⚠️ 이 패턴은 캐시 전용이다 — 신규 기능 커밋이 로컬에만 있는 상태에서 원격과 분기되면 rebase로 보존할 것 (과거 `merge -s ours`로 기능 커밋 유실 사고 있었음).
 
-### Phase 5: 통합 + 폴리시
-1. 대시보드 홈 (시장 요약 + 포트폴리오 요약 + 센티먼트 요약)
-2. APScheduler 자동 갱신
-3. 에러 처리, 로딩 상태
-4. 반응형 조정
-5. README + 스크린샷
+**Windows 특이사항**: `valuation/CON.json`(예약어)은 로컬 체크아웃 불가 →
+이 저장소는 `core.protectNTFS=false` + sparse-checkout(valuation 제외)로 운영.
 
----
+## 5. 환경 설정
 
-## 8. 외부 API 제한사항 및 대응
+### streamlit_app/.streamlit/secrets.toml
+```toml
+[turso]            # 클라우드 DB
+url = "libsql://..."
+auth_token = "..."
 
-| API | 무료 제한 | 대응 전략 |
-|---|---|---|
-| yfinance | 비공식 API, rate limit 있음 | DuckDB 캐싱, 배치 요청, 15분 간격 |
-| Finnhub | 60 calls/min (무료) | 뉴스만 사용, 캐싱 |
-| Claude API | 유료 (토큰 기반) | 수동 트리거만, 배치 분석 |
-| Alpha Vantage | 25 calls/day (무료) | 보조 소스로만 사용 |
+[auth]             # st.login OIDC (Streamlit Cloud에는 클라우드 secrets로)
+# redirect_uri, client_id, client_secret, server_metadata_url, cookie_secret
 
----
-
-## 9. 환경 변수
-
-```env
-# Backend
-DUCKDB_PATH=./data/stock_dashboard.duckdb
-ANTHROPIC_API_KEY=sk-ant-...
-FINNHUB_API_KEY=...
-
-# 선택적
-ALPHA_VANTAGE_API_KEY=...
-
-# Frontend (Vite)
-VITE_API_BASE_URL=http://localhost:8001
+APPROVE_SECRET = "..."     # 사용자 승인 HMAC 키
+ANTHROPIC_API_KEY = "..."  # 공시 요약 등 (수동 트리거만)
+FINNHUB_API_KEY = "..."
+GEMINI_API_KEY = "..."
 ```
+
+### 스케줄러 환경변수 (stock_briefing/.env 공유)
+`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `QUANT_LAB_CHAT_ID`
+
+## 6. 실행
+
+```bash
+cd streamlit_app
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+배치 스크립트 수동 실행: `python scripts/run_preset_backtests.py` 등 (streamlit_app 디렉터리에서).
