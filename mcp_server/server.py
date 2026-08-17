@@ -1241,10 +1241,22 @@ def get_economic_events(
 if __name__ == "__main__":
     use_http = "--http" in sys.argv or os.environ.get("MCP_TRANSPORT", "").lower() in ("http", "streamable-http")
     if use_http:
+        from mcp.server.transport_security import TransportSecuritySettings
+
         mcp.settings.host = "0.0.0.0"
         mcp.settings.port = int(os.environ.get("PORT", "8000"))
         mcp.settings.streamable_http_path = os.environ.get("MCP_PATH", "/mcp")
         mcp.settings.stateless_http = True  # survives host restarts / scale-to-zero
+        # The SDK's DNS-rebinding protection only allows localhost Hosts by
+        # default → public hosts (Render etc.) get "421 Invalid Host header".
+        # Access control for this personal server is the unguessable MCP_PATH,
+        # so disable the Host allowlist (or set MCP_ALLOWED_HOSTS to restrict).
+        allowed = [h.strip() for h in os.environ.get("MCP_ALLOWED_HOSTS", "").split(",") if h.strip()]
+        mcp.settings.transport_security = (
+            TransportSecuritySettings(allowed_hosts=allowed, allowed_origins=["*"])
+            if allowed else
+            TransportSecuritySettings(enable_dns_rebinding_protection=False)
+        )
         logger.info("Starting streamable-http on :%s%s",
                     mcp.settings.port, mcp.settings.streamable_http_path)
         mcp.run(transport="streamable-http")
