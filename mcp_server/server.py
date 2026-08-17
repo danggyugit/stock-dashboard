@@ -1110,6 +1110,101 @@ def get_whale_holdings(manager: str, top_n: int = 15) -> dict:
 _STOCKLAB_BASE = "https://aiquantlab-stocklab.pages.dev"
 
 
+def _turso_queue():
+    """Connection to the report-request queue (Turso). Needs TURSO_URL/TURSO_AUTH_TOKEN."""
+    import libsql
+    url = os.environ.get("TURSO_URL", "")
+    token = os.environ.get("TURSO_AUTH_TOKEN", "")
+    if not url or not token:
+        # Local stdio fallback: read the dashboard's secrets.toml
+        try:
+            import tomllib
+            sec = tomllib.loads(
+                (_STREAMLIT_APP / ".streamlit" / "secrets.toml").read_text(encoding="utf-8"))
+            url = sec.get("turso", {}).get("url", "")
+            token = sec.get("turso", {}).get("auth_token", "")
+        except Exception:
+            pass
+    if not url or not token:
+        raise RuntimeError("Turso credentials not configured (TURSO_URL/TURSO_AUTH_TOKEN)")
+    conn = libsql.connect(database=url, auth_token=token)
+    conn.execute("""CREATE TABLE IF NOT EXISTS report_requests (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, ticker TEXT NOT NULL,
+        status TEXT DEFAULT 'pending', requested_at TEXT, started_at TEXT,
+        completed_at TEXT, note TEXT)""")
+    return conn
+
+
+@mcp.tool()
+def request_stock_report(ticker: str) -> dict:
+    """Request generation of a NEW Stock Lab in-depth report for a ticker
+    that doesn't have one yet.
+
+    Generation runs on the owner's home workstation (12-agent Claude Code
+    pipeline, ~20-40 min) — this tool only queues the request. A watcher on
+    the PC picks it up (checks every ~15 min while the PC is on), generates,
+    deploys, and sends a Telegram notification when the report is live.
+
+    Args:
+        ticker: Stock symbol to analyze (individual stocks only — no ETFs).
+
+    Returns:
+        Queue confirmation, or current status if already queued/available.
+    """
+    tk = ticker.upper().strip()
+    if not tk.isalpha() or len(tk) > 6:
+        return {"error": f"Invalid ticker: {ticker}"}
+
+    # Already published?
+    try:
+        existing = get_stock_report(tk, max_chars=50)
+        if not existing.get("error"):
+            return {"status": "already_available",
+                    "message": f"{tk} report already exists — use get_stock_report.",
+                    "url": existing.get("url")}
+    except Exception:
+        pass
+
+    from datetime import datetime as _dt, timezone as _tz
+    try:
+        conn = _turso_queue()
+        row = conn.execute(
+            "SELECT id, status, requested_at FROM report_requests "
+            "WHERE ticker=? AND status IN ('pending','running') "
+            "ORDER BY id DESC LIMIT 1", (tk,)).fetchone()
+        if row:
+            return {"status": row[1], "request_id": row[0],
+                    "message": f"{tk} request already {row[1]} (since {row[2]})."}
+        now = _dt.now(_tz.utc).isoformat()
+        conn.execute(
+            "INSERT INTO report_requests (ticker, status, requested_at) "
+            "VALUES (?, 'pending', ?)", (tk, now))
+        conn.commit()
+        rid = conn.execute("SELECT MAX(id) FROM report_requests").fetchone()[0]
+        return {"status": "queued", "request_id": rid, "ticker": tk,
+                "message": (f"{tk} 리포트 생성 요청 접수. 홈 PC가 켜져 있으면 "
+                            "~15분 내 시작, 완료(20~40분 소요) 시 Telegram 알림이 갑니다.")}
+    except Exception as e:
+        return {"error": f"Queue unavailable: {e}"}
+
+
+@mcp.tool()
+def get_report_requests(limit: int = 10) -> dict:
+    """Check the status of recent stock-report generation requests
+    (pending / running / done / failed)."""
+    try:
+        conn = _turso_queue()
+        rows = conn.execute(
+            "SELECT id, ticker, status, requested_at, started_at, completed_at, note "
+            "FROM report_requests ORDER BY id DESC LIMIT ?", (int(limit),)).fetchall()
+        return {"requests": [
+            {"id": r[0], "ticker": r[1], "status": r[2], "requested_at": r[3],
+             "started_at": r[4], "completed_at": r[5], "note": r[6]}
+            for r in rows]}
+    except Exception as e:
+        return {"error": f"Queue unavailable: {e}"}
+
+
 @mcp.tool()
 def list_stock_reports() -> dict:
     """List tickers that have an in-depth Stock Lab investment report available.
