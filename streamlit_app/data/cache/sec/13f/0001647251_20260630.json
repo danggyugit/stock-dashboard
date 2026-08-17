@@ -1,0 +1,121 @@
+{
+  "cik": "0001647251",
+  "name": "TCI Fund Mgmt",
+  "manager": "Chris Hohn",
+  "style": "Activist",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "GE AEROSPACE",
+      "cusip": "369604301",
+      "shares": 47428233,
+      "value_k": 17725353,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 33.59,
+      "value_usd": 17725353000
+    },
+    {
+      "company": "VISA INC",
+      "cusip": "92826C839",
+      "shares": 30494133,
+      "value_k": 10462232,
+      "shr_type": "SH",
+      "ticker": "V",
+      "pct_port": 19.83,
+      "value_usd": 10462232000
+    },
+    {
+      "company": "MOODYS CORP",
+      "cusip": "615369105",
+      "shares": 14334027,
+      "value_k": 6492167,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 12.3,
+      "value_usd": 6492167000
+    },
+    {
+      "company": "S&P GLOBAL INC",
+      "cusip": "78409V104",
+      "shares": 14081957,
+      "value_k": 5735017,
+      "shr_type": "SH",
+      "ticker": "SPGI",
+      "pct_port": 10.87,
+      "value_usd": 5735017000
+    },
+    {
+      "company": "CANADIAN PACIFIC KANSAS CITY",
+      "cusip": "13646K108",
+      "shares": 45325726,
+      "value_k": 3925911,
+      "shr_type": "SH",
+      "ticker": "CP",
+      "pct_port": 7.44,
+      "value_usd": 3925911000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K107",
+      "shares": 9938819,
+      "value_k": 3511682,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 6.65,
+      "value_usd": 3511682000
+    },
+    {
+      "company": "FERROVIAL NV",
+      "cusip": "N3168P101",
+      "shares": 20940441,
+      "value_k": 1434611,
+      "shr_type": "SH",
+      "ticker": "FER",
+      "pct_port": 2.72,
+      "value_usd": 1434611000
+    },
+    {
+      "company": "CANADIAN NATL RY CO",
+      "cusip": "136375102",
+      "shares": 9433422,
+      "value_k": 1124534,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 2.13,
+      "value_usd": 1124534000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K305",
+      "shares": 2457000,
+      "value_k": 878058,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 1.66,
+      "value_usd": 878058000
+    },
+    {
+      "company": "MARTIN MARIETTA MATLS INC",
+      "cusip": "573284106",
+      "shares": 1315109,
+      "value_k": 758423,
+      "shr_type": "SH",
+      "ticker": "MLM",
+      "pct_port": 1.44,
+      "value_usd": 758423000
+    },
+    {
+      "company": "VULCAN MATLS CO",
+      "cusip": "929160109",
+      "shares": 2447004,
+      "value_k": 721890,
+      "shr_type": "SH",
+      "ticker": "VMC",
+      "pct_port": 1.37,
+      "value_usd": 721890000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:44:50.949441+00:00"
+}

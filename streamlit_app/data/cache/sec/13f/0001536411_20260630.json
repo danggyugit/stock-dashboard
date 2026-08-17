@@ -1,0 +1,961 @@
+{
+  "cik": "0001536411",
+  "name": "Duquesne Family Office",
+  "manager": "Stan Druckenmiller",
+  "style": "Macro",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "Natera Inc",
+      "cusip": "632307104",
+      "shares": 3186306,
+      "value_k": 864,
+      "shr_type": "SH",
+      "ticker": "NTRA",
+      "pct_port": 16.74,
+      "value_usd": 864000
+    },
+    {
+      "company": "Taiwan Semiconductor Manufac",
+      "cusip": "874039100",
+      "shares": 589680,
+      "value_k": 281,
+      "shr_type": "SH",
+      "ticker": "TSMWF",
+      "pct_port": 5.44,
+      "value_usd": 281000
+    },
+    {
+      "company": "Stmicroelectronics N V",
+      "cusip": "861012102",
+      "shares": 3102880,
+      "value_k": 232,
+      "shr_type": "SH",
+      "ticker": "STMEF",
+      "pct_port": 4.49,
+      "value_usd": 232000
+    },
+    {
+      "company": "Invesco Exchange Traded Fd T",
+      "cusip": "46137V357",
+      "shares": 821000,
+      "value_k": 174,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 3.37,
+      "value_usd": 174000
+    },
+    {
+      "company": "Insmed Inc",
+      "cusip": "457669307",
+      "shares": 1424690,
+      "value_k": 151,
+      "shr_type": "SH",
+      "ticker": "INSM",
+      "pct_port": 2.93,
+      "value_usd": 151000
+    },
+    {
+      "company": "Ishares Inc",
+      "cusip": "464286400",
+      "shares": 4228000,
+      "value_k": 145,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 2.81,
+      "value_usd": 145000
+    },
+    {
+      "company": "Insmed Inc",
+      "cusip": "457669307",
+      "shares": 1350000,
+      "value_k": 143,
+      "shr_type": "SH",
+      "ticker": "INSM",
+      "pct_port": 2.77,
+      "value_usd": 143000
+    },
+    {
+      "company": "Ypf Sociedad Anonima",
+      "cusip": "984245100",
+      "shares": 3138897,
+      "value_k": 142,
+      "shr_type": "SH",
+      "ticker": "YPF",
+      "pct_port": 2.75,
+      "value_usd": 142000
+    },
+    {
+      "company": "Amazon Com Inc",
+      "cusip": "023135106",
+      "shares": 541600,
+      "value_k": 129,
+      "shr_type": "SH",
+      "ticker": "AMZN",
+      "pct_port": 2.5,
+      "value_usd": 129000
+    },
+    {
+      "company": "Alphabet Inc",
+      "cusip": "02079K305",
+      "shares": 336300,
+      "value_k": 120,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 2.32,
+      "value_usd": 120000
+    },
+    {
+      "company": "Bbb Foods Inc",
+      "cusip": "G0896C103",
+      "shares": 2901733,
+      "value_k": 120,
+      "shr_type": "SH",
+      "ticker": "TBBB",
+      "pct_port": 2.32,
+      "value_usd": 120000
+    },
+    {
+      "company": "Ishares Inc",
+      "cusip": "464286400",
+      "shares": 3436170,
+      "value_k": 118,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 2.29,
+      "value_usd": 118000
+    },
+    {
+      "company": "Seagate Technology Hldngs Pl",
+      "cusip": "G7997R103",
+      "shares": 122000,
+      "value_k": 117,
+      "shr_type": "SH",
+      "ticker": "STX",
+      "pct_port": 2.27,
+      "value_usd": 117000
+    },
+    {
+      "company": "Fox Corp",
+      "cusip": "35137L105",
+      "shares": 2204600,
+      "value_k": 114,
+      "shr_type": "SH",
+      "ticker": "FOX",
+      "pct_port": 2.21,
+      "value_usd": 114000
+    },
+    {
+      "company": "Amazon Com Inc",
+      "cusip": "023135106",
+      "shares": 459300,
+      "value_k": 109,
+      "shr_type": "SH",
+      "ticker": "AMZN",
+      "pct_port": 2.11,
+      "value_usd": 109000
+    },
+    {
+      "company": "United Airls Hldgs Inc",
+      "cusip": "910047109",
+      "shares": 794795,
+      "value_k": 108,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 2.09,
+      "value_usd": 108000
+    },
+    {
+      "company": "Sea Ltd",
+      "cusip": "81141R100",
+      "shares": 1099905,
+      "value_k": 105,
+      "shr_type": "SH",
+      "ticker": "SE",
+      "pct_port": 2.03,
+      "value_usd": 105000
+    },
+    {
+      "company": "Cdw Corp",
+      "cusip": "12514G108",
+      "shares": 743950,
+      "value_k": 104,
+      "shr_type": "SH",
+      "ticker": "CDW",
+      "pct_port": 2.01,
+      "value_usd": 104000
+    },
+    {
+      "company": "Newamsterdam Pharma Company",
+      "cusip": "N62509109",
+      "shares": 3070146,
+      "value_k": 104,
+      "shr_type": "SH",
+      "ticker": "NAMSW",
+      "pct_port": 2.01,
+      "value_usd": 104000
+    },
+    {
+      "company": "Ishares Tr",
+      "cusip": "464287655",
+      "shares": 330000,
+      "value_k": 99,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.92,
+      "value_usd": 99000
+    },
+    {
+      "company": "Sandisk Corp",
+      "cusip": "80004C200",
+      "shares": 34900,
+      "value_k": 79,
+      "shr_type": "SH",
+      "ticker": "SNDK",
+      "pct_port": 1.53,
+      "value_usd": 79000
+    },
+    {
+      "company": "Revolution Medicines Inc",
+      "cusip": "76155X100",
+      "shares": 399587,
+      "value_k": 74,
+      "shr_type": "SH",
+      "ticker": "RVMDW",
+      "pct_port": 1.43,
+      "value_usd": 74000
+    },
+    {
+      "company": "State Str Spdr S&P 500 Etf T",
+      "cusip": "78462F103",
+      "shares": 90000,
+      "value_k": 67,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.3,
+      "value_usd": 67000
+    },
+    {
+      "company": "Bitdeer Technologies Group",
+      "cusip": "G11448100",
+      "shares": 4074993,
+      "value_k": 64,
+      "shr_type": "SH",
+      "ticker": "BTDR",
+      "pct_port": 1.24,
+      "value_usd": 64000
+    },
+    {
+      "company": "Crh Plc",
+      "cusip": "G25508105",
+      "shares": 553555,
+      "value_k": 59,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.14,
+      "value_usd": 59000
+    },
+    {
+      "company": "Delta Air Lines Inc",
+      "cusip": "247361702",
+      "shares": 603000,
+      "value_k": 56,
+      "shr_type": "SH",
+      "ticker": "DAL",
+      "pct_port": 1.08,
+      "value_usd": 56000
+    },
+    {
+      "company": "Tesla Inc",
+      "cusip": "88160R101",
+      "shares": 126000,
+      "value_k": 52,
+      "shr_type": "SH",
+      "ticker": "TSLA",
+      "pct_port": 1.01,
+      "value_usd": 52000
+    },
+    {
+      "company": "Fluor Corp",
+      "cusip": "343412102",
+      "shares": 982200,
+      "value_k": 51,
+      "shr_type": "SH",
+      "ticker": "FLR",
+      "pct_port": 0.99,
+      "value_usd": 51000
+    },
+    {
+      "company": "D R Horton Inc",
+      "cusip": "23331A109",
+      "shares": 299000,
+      "value_k": 48,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.93,
+      "value_usd": 48000
+    },
+    {
+      "company": "Coupang Inc",
+      "cusip": "22266T109",
+      "shares": 2667485,
+      "value_k": 46,
+      "shr_type": "SH",
+      "ticker": "CPNG",
+      "pct_port": 0.89,
+      "value_usd": 46000
+    },
+    {
+      "company": "Advanced Micro Devices Inc",
+      "cusip": "007903107",
+      "shares": 72900,
+      "value_k": 42,
+      "shr_type": "SH",
+      "ticker": "AMD",
+      "pct_port": 0.81,
+      "value_usd": 42000
+    },
+    {
+      "company": "Cleveland-Cliffs Inc New",
+      "cusip": "185899101",
+      "shares": 4216184,
+      "value_k": 39,
+      "shr_type": "SH",
+      "ticker": "CLF",
+      "pct_port": 0.76,
+      "value_usd": 39000
+    },
+    {
+      "company": "Palo Alto Networks Inc",
+      "cusip": "697435105",
+      "shares": 116650,
+      "value_k": 39,
+      "shr_type": "SH",
+      "ticker": "PANW",
+      "pct_port": 0.76,
+      "value_usd": 39000
+    },
+    {
+      "company": "Hut 8 Corp",
+      "cusip": "44812J104",
+      "shares": 314150,
+      "value_k": 36,
+      "shr_type": "SH",
+      "ticker": "HUT",
+      "pct_port": 0.7,
+      "value_usd": 36000
+    },
+    {
+      "company": "Cdw Corp",
+      "cusip": "12514G108",
+      "shares": 250000,
+      "value_k": 35,
+      "shr_type": "SH",
+      "ticker": "CDW",
+      "pct_port": 0.68,
+      "value_usd": 35000
+    },
+    {
+      "company": "Caris Life Sciences Inc",
+      "cusip": "142152107",
+      "shares": 1894450,
+      "value_k": 33,
+      "shr_type": "SH",
+      "ticker": "CAI",
+      "pct_port": 0.64,
+      "value_usd": 33000
+    },
+    {
+      "company": "Global X Fds",
+      "cusip": "37950E259",
+      "shares": 328800,
+      "value_k": 30,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.58,
+      "value_usd": 30000
+    },
+    {
+      "company": "Fox Corp",
+      "cusip": "35137L204",
+      "shares": 632600,
+      "value_k": 29,
+      "shr_type": "SH",
+      "ticker": "FOX",
+      "pct_port": 0.56,
+      "value_usd": 29000
+    },
+    {
+      "company": "Meta Platforms Inc",
+      "cusip": "30303M102",
+      "shares": 50000,
+      "value_k": 28,
+      "shr_type": "SH",
+      "ticker": "META",
+      "pct_port": 0.54,
+      "value_usd": 28000
+    },
+    {
+      "company": "Woodward Inc",
+      "cusip": "980745103",
+      "shares": 67194,
+      "value_k": 28,
+      "shr_type": "SH",
+      "ticker": "WWD",
+      "pct_port": 0.54,
+      "value_usd": 28000
+    },
+    {
+      "company": "Nuvation Bio Inc",
+      "cusip": "67080N101",
+      "shares": 4539800,
+      "value_k": 25,
+      "shr_type": "SH",
+      "ticker": "NUVB",
+      "pct_port": 0.48,
+      "value_usd": 25000
+    },
+    {
+      "company": "Protagonist Therapeutics Inc",
+      "cusip": "74366E102",
+      "shares": 208900,
+      "value_k": 25,
+      "shr_type": "SH",
+      "ticker": "PTGX",
+      "pct_port": 0.48,
+      "value_usd": 25000
+    },
+    {
+      "company": "Roku Inc",
+      "cusip": "77543R102",
+      "shares": 184055,
+      "value_k": 25,
+      "shr_type": "SH",
+      "ticker": "ROKU",
+      "pct_port": 0.48,
+      "value_usd": 25000
+    },
+    {
+      "company": "Cavco Inds Inc Del",
+      "cusip": "149568107",
+      "shares": 39500,
+      "value_k": 24,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.46,
+      "value_usd": 24000
+    },
+    {
+      "company": "Adma Biologics Inc",
+      "cusip": "000899104",
+      "shares": 2784110,
+      "value_k": 23,
+      "shr_type": "SH",
+      "ticker": "ADMA",
+      "pct_port": 0.45,
+      "value_usd": 23000
+    },
+    {
+      "company": "Hyperliquid Strategies Inc",
+      "cusip": "44916Y106",
+      "shares": 2941500,
+      "value_k": 23,
+      "shr_type": "SH",
+      "ticker": "PURR",
+      "pct_port": 0.45,
+      "value_usd": 23000
+    },
+    {
+      "company": "Champion Homes Inc",
+      "cusip": "830830105",
+      "shares": 254400,
+      "value_k": 22,
+      "shr_type": "SH",
+      "ticker": "SKY",
+      "pct_port": 0.43,
+      "value_usd": 22000
+    },
+    {
+      "company": "Rambus Inc Del",
+      "cusip": "750917106",
+      "shares": 173000,
+      "value_k": 22,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.43,
+      "value_usd": 22000
+    },
+    {
+      "company": "Rhythm Pharmaceuticals Inc",
+      "cusip": "76243J105",
+      "shares": 203618,
+      "value_k": 22,
+      "shr_type": "SH",
+      "ticker": "RYTM",
+      "pct_port": 0.43,
+      "value_usd": 22000
+    },
+    {
+      "company": "Daktronics Inc",
+      "cusip": "234264109",
+      "shares": 1123109,
+      "value_k": 21,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.41,
+      "value_usd": 21000
+    },
+    {
+      "company": "Entegris Inc",
+      "cusip": "29362U104",
+      "shares": 118300,
+      "value_k": 21,
+      "shr_type": "SH",
+      "ticker": "ENTG",
+      "pct_port": 0.41,
+      "value_usd": 21000
+    },
+    {
+      "company": "Linde Plc",
+      "cusip": "G54950103",
+      "shares": 41200,
+      "value_k": 21,
+      "shr_type": "SH",
+      "ticker": "LIN",
+      "pct_port": 0.41,
+      "value_usd": 21000
+    },
+    {
+      "company": "Purecycle Technologies Inc",
+      "cusip": "74623V103",
+      "shares": 2681415,
+      "value_k": 21,
+      "shr_type": "SH",
+      "ticker": "PCTTW",
+      "pct_port": 0.41,
+      "value_usd": 21000
+    },
+    {
+      "company": "Southern Copper Corp",
+      "cusip": "84265V105",
+      "shares": 123060,
+      "value_k": 21,
+      "shr_type": "SH",
+      "ticker": "SCCO",
+      "pct_port": 0.41,
+      "value_usd": 21000
+    },
+    {
+      "company": "Teva Pharmaceutical Inds Ltd",
+      "cusip": "881624209",
+      "shares": 624999,
+      "value_k": 21,
+      "shr_type": "SH",
+      "ticker": "TEVJF",
+      "pct_port": 0.41,
+      "value_usd": 21000
+    },
+    {
+      "company": "Unity Software Inc",
+      "cusip": "91332U101",
+      "shares": 738785,
+      "value_k": 21,
+      "shr_type": "SH",
+      "ticker": "U",
+      "pct_port": 0.41,
+      "value_usd": 21000
+    },
+    {
+      "company": "Aeva Technologies Inc",
+      "cusip": "00835Q202",
+      "shares": 720175,
+      "value_k": 20,
+      "shr_type": "SH",
+      "ticker": "AEVA",
+      "pct_port": 0.39,
+      "value_usd": 20000
+    },
+    {
+      "company": "Qnity Electronics Inc",
+      "cusip": "74743L100",
+      "shares": 125655,
+      "value_k": 20,
+      "shr_type": "SH",
+      "ticker": "Q",
+      "pct_port": 0.39,
+      "value_usd": 20000
+    },
+    {
+      "company": "Riot Platforms Inc",
+      "cusip": "767292105",
+      "shares": 754800,
+      "value_k": 20,
+      "shr_type": "SH",
+      "ticker": "RIOT",
+      "pct_port": 0.39,
+      "value_usd": 20000
+    },
+    {
+      "company": "Equinix Inc",
+      "cusip": "29444U700",
+      "shares": 18450,
+      "value_k": 19,
+      "shr_type": "SH",
+      "ticker": "EQIX",
+      "pct_port": 0.37,
+      "value_usd": 19000
+    },
+    {
+      "company": "Lam Research Corp",
+      "cusip": "512807306",
+      "shares": 43600,
+      "value_k": 18,
+      "shr_type": "SH",
+      "ticker": "LRCX",
+      "pct_port": 0.35,
+      "value_usd": 18000
+    },
+    {
+      "company": "Belite Bio Inc Sponsored",
+      "cusip": "07782B104",
+      "shares": 106100,
+      "value_k": 16,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.31,
+      "value_usd": 16000
+    },
+    {
+      "company": "Definium Therapeutics Inc",
+      "cusip": "24477V105",
+      "shares": 356600,
+      "value_k": 16,
+      "shr_type": "SH",
+      "ticker": "DFTX",
+      "pct_port": 0.31,
+      "value_usd": 16000
+    },
+    {
+      "company": "10X Genomics Inc",
+      "cusip": "88025U109",
+      "shares": 403100,
+      "value_k": 15,
+      "shr_type": "SH",
+      "ticker": "TXG",
+      "pct_port": 0.29,
+      "value_usd": 15000
+    },
+    {
+      "company": "Invesco Exchange Traded Fd T",
+      "cusip": "46137V357",
+      "shares": 74400,
+      "value_k": 15,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.29,
+      "value_usd": 15000
+    },
+    {
+      "company": "Wabtec",
+      "cusip": "929740108",
+      "shares": 56595,
+      "value_k": 15,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.29,
+      "value_usd": 15000
+    },
+    {
+      "company": "Eli Lilly & Co",
+      "cusip": "532457108",
+      "shares": 12380,
+      "value_k": 14,
+      "shr_type": "SH",
+      "ticker": "LLY",
+      "pct_port": 0.27,
+      "value_usd": 14000
+    },
+    {
+      "company": "Xenon Pharmaceuticals Inc",
+      "cusip": "98420N105",
+      "shares": 238600,
+      "value_k": 14,
+      "shr_type": "SH",
+      "ticker": "XENE",
+      "pct_port": 0.27,
+      "value_usd": 14000
+    },
+    {
+      "company": "Olema Pharmaceuticals Inc",
+      "cusip": "68062P106",
+      "shares": 986827,
+      "value_k": 12,
+      "shr_type": "SH",
+      "ticker": "OLMA",
+      "pct_port": 0.23,
+      "value_usd": 12000
+    },
+    {
+      "company": "Baidu Inc",
+      "cusip": "056752108",
+      "shares": 88200,
+      "value_k": 10,
+      "shr_type": "SH",
+      "ticker": "BAIDF",
+      "pct_port": 0.19,
+      "value_usd": 10000
+    },
+    {
+      "company": "Repligen Corp",
+      "cusip": "759916109",
+      "shares": 77400,
+      "value_k": 10,
+      "shr_type": "SH",
+      "ticker": "RGEN",
+      "pct_port": 0.19,
+      "value_usd": 10000
+    },
+    {
+      "company": "Rocket Cos Inc",
+      "cusip": "77311W101",
+      "shares": 652220,
+      "value_k": 10,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.19,
+      "value_usd": 10000
+    },
+    {
+      "company": "Alcoa Corp",
+      "cusip": "013872106",
+      "shares": 185640,
+      "value_k": 9,
+      "shr_type": "SH",
+      "ticker": "AA",
+      "pct_port": 0.17,
+      "value_usd": 9000
+    },
+    {
+      "company": "Arm Holdings Plc",
+      "cusip": "042068205",
+      "shares": 28090,
+      "value_k": 9,
+      "shr_type": "SH",
+      "ticker": "ARM",
+      "pct_port": 0.17,
+      "value_usd": 9000
+    },
+    {
+      "company": "Carvana Co",
+      "cusip": "146869102",
+      "shares": 151000,
+      "value_k": 9,
+      "shr_type": "SH",
+      "ticker": "CVNA",
+      "pct_port": 0.17,
+      "value_usd": 9000
+    },
+    {
+      "company": "Danaher Corp Del",
+      "cusip": "235851102",
+      "shares": 50300,
+      "value_k": 9,
+      "shr_type": "SH",
+      "ticker": "DHR",
+      "pct_port": 0.17,
+      "value_usd": 9000
+    },
+    {
+      "company": "F5 Inc",
+      "cusip": "315616102",
+      "shares": 22000,
+      "value_k": 9,
+      "shr_type": "SH",
+      "ticker": "FFIV",
+      "pct_port": 0.17,
+      "value_usd": 9000
+    },
+    {
+      "company": "Reddit Inc",
+      "cusip": "75734B100",
+      "shares": 56550,
+      "value_k": 9,
+      "shr_type": "SH",
+      "ticker": "RDDT",
+      "pct_port": 0.17,
+      "value_usd": 9000
+    },
+    {
+      "company": "Thermo Fisher Scientific Inc",
+      "cusip": "883556102",
+      "shares": 19200,
+      "value_k": 9,
+      "shr_type": "SH",
+      "ticker": "TMO",
+      "pct_port": 0.17,
+      "value_usd": 9000
+    },
+    {
+      "company": "Skeena Res Ltd New",
+      "cusip": "83056P715",
+      "shares": 300200,
+      "value_k": 8,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.15,
+      "value_usd": 8000
+    },
+    {
+      "company": "Vista Energy S.A.B. De C.V.",
+      "cusip": "92837L109",
+      "shares": 134700,
+      "value_k": 8,
+      "shr_type": "SH",
+      "ticker": "VSOGF",
+      "pct_port": 0.15,
+      "value_usd": 8000
+    },
+    {
+      "company": "Jbs N.V.",
+      "cusip": "N4732M103",
+      "shares": 655900,
+      "value_k": 7,
+      "shr_type": "SH",
+      "ticker": "JBS",
+      "pct_port": 0.14,
+      "value_usd": 7000
+    },
+    {
+      "company": "Monte Rosa Therapeutics Inc",
+      "cusip": "61225M102",
+      "shares": 297600,
+      "value_k": 7,
+      "shr_type": "SH",
+      "ticker": "GLUE",
+      "pct_port": 0.14,
+      "value_usd": 7000
+    },
+    {
+      "company": "Ccc Intelligent Solutions Hl",
+      "cusip": "12510Q100",
+      "shares": 1170900,
+      "value_k": 6,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.12,
+      "value_usd": 6000
+    },
+    {
+      "company": "Dbv Technologies S A Sponsored",
+      "cusip": "23306J309",
+      "shares": 383363,
+      "value_k": 6,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.12,
+      "value_usd": 6000
+    },
+    {
+      "company": "Relay Therapeutics Inc",
+      "cusip": "75943R102",
+      "shares": 349000,
+      "value_k": 6,
+      "shr_type": "SH",
+      "ticker": "RLAY",
+      "pct_port": 0.12,
+      "value_usd": 6000
+    },
+    {
+      "company": "Beam Therapeutics Inc",
+      "cusip": "07373V105",
+      "shares": 153600,
+      "value_k": 5,
+      "shr_type": "SH",
+      "ticker": "BEAM",
+      "pct_port": 0.1,
+      "value_usd": 5000
+    },
+    {
+      "company": "Ftai Aviation Ltd",
+      "cusip": "G3730V105",
+      "shares": 20200,
+      "value_k": 5,
+      "shr_type": "SH",
+      "ticker": "FTAIM",
+      "pct_port": 0.1,
+      "value_usd": 5000
+    },
+    {
+      "company": "Navitas Semiconductor Corp",
+      "cusip": "63942X106",
+      "shares": 311100,
+      "value_k": 5,
+      "shr_type": "SH",
+      "ticker": "NVTS",
+      "pct_port": 0.1,
+      "value_usd": 5000
+    },
+    {
+      "company": "Solstice Advanced Matls Inc",
+      "cusip": "83443Q103",
+      "shares": 62525,
+      "value_k": 5,
+      "shr_type": "SH",
+      "ticker": "SOLS",
+      "pct_port": 0.1,
+      "value_usd": 5000
+    },
+    {
+      "company": "Uwm Holdings Corporation",
+      "cusip": "91823B109",
+      "shares": 2583000,
+      "value_k": 5,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.1,
+      "value_usd": 5000
+    },
+    {
+      "company": "Aurora Innovation Inc",
+      "cusip": "051774107",
+      "shares": 633700,
+      "value_k": 4,
+      "shr_type": "SH",
+      "ticker": "AUROW",
+      "pct_port": 0.08,
+      "value_usd": 4000
+    },
+    {
+      "company": "Iren Limited",
+      "cusip": "Q4982L109",
+      "shares": 87100,
+      "value_k": 3,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.06,
+      "value_usd": 3000
+    },
+    {
+      "company": "Grupo Financiero Galicia S.A",
+      "cusip": "399909100",
+      "shares": 59500,
+      "value_k": 2,
+      "shr_type": "SH",
+      "ticker": "GGAL",
+      "pct_port": 0.04,
+      "value_usd": 2000
+    },
+    {
+      "company": "Wave Life Sciences Ltd",
+      "cusip": "Y95308105",
+      "shares": 173000,
+      "value_k": 1,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.02,
+      "value_usd": 1000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:28:41.390362+00:00"
+}

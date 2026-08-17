@@ -1,0 +1,91 @@
+{
+  "cik": "0001649339",
+  "name": "Scion Asset Mgmt",
+  "manager": "Michael Burry",
+  "style": "Contrarian",
+  "period": "2025-09-30",
+  "filed_date": "2025-11-03",
+  "holdings": [
+    {
+      "company": "PALANTIR TECHNOLOGIES INC",
+      "cusip": "69608A108",
+      "shares": 5000000,
+      "value_k": 912100,
+      "shr_type": "SH",
+      "ticker": "PLTR",
+      "pct_port": 66.04,
+      "value_usd": 912100000
+    },
+    {
+      "company": "NVIDIA CORPORATION",
+      "cusip": "67066G104",
+      "shares": 1000000,
+      "value_k": 186580,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 13.51,
+      "value_usd": 186580000
+    },
+    {
+      "company": "PFIZER INC",
+      "cusip": "717081103",
+      "shares": 6000000,
+      "value_k": 152880,
+      "shr_type": "SH",
+      "ticker": "PFE",
+      "pct_port": 11.07,
+      "value_usd": 152880000
+    },
+    {
+      "company": "HALLIBURTON CO",
+      "cusip": "406216101",
+      "shares": 2500000,
+      "value_k": 61500,
+      "shr_type": "SH",
+      "ticker": "HAL",
+      "pct_port": 4.45,
+      "value_usd": 61500000
+    },
+    {
+      "company": "MOLINA HEALTHCARE INC",
+      "cusip": "60855R100",
+      "shares": 125000,
+      "value_k": 23920,
+      "shr_type": "SH",
+      "ticker": "MOH",
+      "pct_port": 1.73,
+      "value_usd": 23920000
+    },
+    {
+      "company": "LULULEMON ATHLETICA INC",
+      "cusip": "550021109",
+      "shares": 100000,
+      "value_k": 17793,
+      "shr_type": "SH",
+      "ticker": "LULU",
+      "pct_port": 1.29,
+      "value_usd": 17793000
+    },
+    {
+      "company": "SLM CORP",
+      "cusip": "78442P106",
+      "shares": 480054,
+      "value_k": 13287,
+      "shr_type": "SH",
+      "ticker": "SLMBP",
+      "pct_port": 0.96,
+      "value_usd": 13287000
+    },
+    {
+      "company": "BRUKER CORP",
+      "cusip": "116794207",
+      "shares": 48334,
+      "value_k": 13137,
+      "shr_type": "SH",
+      "ticker": "BRKRP",
+      "pct_port": 0.95,
+      "value_usd": 13137000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:28:29.107854+00:00"
+}

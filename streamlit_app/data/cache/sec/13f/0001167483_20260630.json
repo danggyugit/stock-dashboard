@@ -1,0 +1,471 @@
+{
+  "cik": "0001167483",
+  "name": "Tiger Global",
+  "manager": "Chase Coleman",
+  "style": "Tech Growth",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "TAIWAN SEMICONDUCTOR MANUFAC",
+      "cusip": "874039100",
+      "shares": 4881008,
+      "value_k": 2331022,
+      "shr_type": "SH",
+      "ticker": "TSMWF",
+      "pct_port": 9.72,
+      "value_usd": 2331022000
+    },
+    {
+      "company": "AMAZON COM INC",
+      "cusip": "023135106",
+      "shares": 9683558,
+      "value_k": 2307979,
+      "shr_type": "SH",
+      "ticker": "AMZN",
+      "pct_port": 9.62,
+      "value_usd": 2307979000
+    },
+    {
+      "company": "NVIDIA CORPORATION",
+      "cusip": "67066G104",
+      "shares": 11198773,
+      "value_k": 2240762,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 9.34,
+      "value_usd": 2240762000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K305",
+      "shares": 5805687,
+      "value_k": 2074778,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 8.65,
+      "value_usd": 2074778000
+    },
+    {
+      "company": "META PLATFORMS INC",
+      "cusip": "30303M102",
+      "shares": 2823180,
+      "value_k": 1590269,
+      "shr_type": "SH",
+      "ticker": "META",
+      "pct_port": 6.63,
+      "value_usd": 1590269000
+    },
+    {
+      "company": "LAM RESEARCH CORP",
+      "cusip": "512807306",
+      "shares": 3163495,
+      "value_k": 1370837,
+      "shr_type": "SH",
+      "ticker": "LRCX",
+      "pct_port": 5.72,
+      "value_usd": 1370837000
+    },
+    {
+      "company": "SEA LTD",
+      "cusip": "81141R100",
+      "shares": 12559152,
+      "value_k": 1203543,
+      "shr_type": "SH",
+      "ticker": "SE",
+      "pct_port": 5.02,
+      "value_usd": 1203543000
+    },
+    {
+      "company": "APPLIED MATLS INC",
+      "cusip": "038222105",
+      "shares": 1632210,
+      "value_k": 1180087,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 4.92,
+      "value_usd": 1180087000
+    },
+    {
+      "company": "GE VERNOVA INC",
+      "cusip": "36828A101",
+      "shares": 797511,
+      "value_k": 936963,
+      "shr_type": "SH",
+      "ticker": "GEV",
+      "pct_port": 3.91,
+      "value_usd": 936963000
+    },
+    {
+      "company": "MICROSOFT CORP",
+      "cusip": "594918104",
+      "shares": 2266913,
+      "value_k": 845603,
+      "shr_type": "SH",
+      "ticker": "MSFT",
+      "pct_port": 3.53,
+      "value_usd": 845603000
+    },
+    {
+      "company": "CORPAY INC",
+      "cusip": "219948106",
+      "shares": 2149877,
+      "value_k": 716489,
+      "shr_type": "SH",
+      "ticker": "CPAY",
+      "pct_port": 2.99,
+      "value_usd": 716489000
+    },
+    {
+      "company": "CEREBRAS SYSTEMS INC",
+      "cusip": "15675D103",
+      "shares": 2999000,
+      "value_k": 662779,
+      "shr_type": "SH",
+      "ticker": "CBRS",
+      "pct_port": 2.76,
+      "value_usd": 662779000
+    },
+    {
+      "company": "BROADCOM INC",
+      "cusip": "11135F101",
+      "shares": 1754062,
+      "value_k": 662596,
+      "shr_type": "SH",
+      "ticker": "AVGO",
+      "pct_port": 2.76,
+      "value_usd": 662596000
+    },
+    {
+      "company": "COUPANG INC",
+      "cusip": "22266T109",
+      "shares": 36467972,
+      "value_k": 633448,
+      "shr_type": "SH",
+      "ticker": "CPNG",
+      "pct_port": 2.64,
+      "value_usd": 633448000
+    },
+    {
+      "company": "INTEL CORP",
+      "cusip": "458140100",
+      "shares": 4252690,
+      "value_k": 593803,
+      "shr_type": "SH",
+      "ticker": "INTC",
+      "pct_port": 2.48,
+      "value_usd": 593803000
+    },
+    {
+      "company": "SPOTIFY TECHNOLOGY S A",
+      "cusip": "L8681T102",
+      "shares": 1171427,
+      "value_k": 537837,
+      "shr_type": "SH",
+      "ticker": "SPOT",
+      "pct_port": 2.24,
+      "value_usd": 537837000
+    },
+    {
+      "company": "TAKE-TWO INTERACTIVE SOFTWAR",
+      "cusip": "874054109",
+      "shares": 1809348,
+      "value_k": 452300,
+      "shr_type": "SH",
+      "ticker": "TTWO",
+      "pct_port": 1.89,
+      "value_usd": 452300000
+    },
+    {
+      "company": "REDDIT INC",
+      "cusip": "75734B100",
+      "shares": 2528819,
+      "value_k": 438952,
+      "shr_type": "SH",
+      "ticker": "RDDT",
+      "pct_port": 1.83,
+      "value_usd": 438952000
+    },
+    {
+      "company": "ADVANCED MICRO DEVICES INC",
+      "cusip": "007903107",
+      "shares": 674727,
+      "value_k": 391955,
+      "shr_type": "SH",
+      "ticker": "AMD",
+      "pct_port": 1.63,
+      "value_usd": 391955000
+    },
+    {
+      "company": "BLOCK INC",
+      "cusip": "852234103",
+      "shares": 4576007,
+      "value_k": 347776,
+      "shr_type": "SH",
+      "ticker": "BSQKZ",
+      "pct_port": 1.45,
+      "value_usd": 347776000
+    },
+    {
+      "company": "APOLLO GLOBAL MGMT INC",
+      "cusip": "03769M106",
+      "shares": 2723110,
+      "value_k": 322171,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.34,
+      "value_usd": 322171000
+    },
+    {
+      "company": "SEAGATE TECHNOLOGY HLDNGS PL",
+      "cusip": "G7997R103",
+      "shares": 285100,
+      "value_k": 275121,
+      "shr_type": "SH",
+      "ticker": "STX",
+      "pct_port": 1.15,
+      "value_usd": 275121000
+    },
+    {
+      "company": "VISA INC",
+      "cusip": "92826C839",
+      "shares": 798697,
+      "value_k": 274024,
+      "shr_type": "SH",
+      "ticker": "V",
+      "pct_port": 1.14,
+      "value_usd": 274024000
+    },
+    {
+      "company": "MERCADOLIBRE INC",
+      "cusip": "58733R102",
+      "shares": 153126,
+      "value_k": 259914,
+      "shr_type": "SH",
+      "ticker": "MELI",
+      "pct_port": 1.08,
+      "value_usd": 259914000
+    },
+    {
+      "company": "LIBERTY MEDIA CORP DEL",
+      "cusip": "531229755",
+      "shares": 2278555,
+      "value_k": 216781,
+      "shr_type": "SH",
+      "ticker": "FWONB",
+      "pct_port": 0.9,
+      "value_usd": 216781000
+    },
+    {
+      "company": "NU HLDGS LTD",
+      "cusip": "G6683N103",
+      "shares": 11032555,
+      "value_k": 147394,
+      "shr_type": "SH",
+      "ticker": "NU",
+      "pct_port": 0.61,
+      "value_usd": 147394000
+    },
+    {
+      "company": "WEALTHFRONT CORP",
+      "cusip": "947002101",
+      "shares": 15156877,
+      "value_k": 135502,
+      "shr_type": "SH",
+      "ticker": "WLTH",
+      "pct_port": 0.57,
+      "value_usd": 135502000
+    },
+    {
+      "company": "UNITEDHEALTH GROUP INC",
+      "cusip": "91324P102",
+      "shares": 297452,
+      "value_k": 123629,
+      "shr_type": "SH",
+      "ticker": "UNH",
+      "pct_port": 0.52,
+      "value_usd": 123629000
+    },
+    {
+      "company": "CHIME FINL INC",
+      "cusip": "16935C109",
+      "shares": 5284045,
+      "value_k": 108217,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.45,
+      "value_usd": 108217000
+    },
+    {
+      "company": "EQUIPMENTSHARE COM INC",
+      "cusip": "29445S100",
+      "shares": 4579646,
+      "value_k": 90035,
+      "shr_type": "SH",
+      "ticker": "EQPT",
+      "pct_port": 0.38,
+      "value_usd": 90035000
+    },
+    {
+      "company": "SHERWIN WILLIAMS CO",
+      "cusip": "824348106",
+      "shares": 257083,
+      "value_k": 88518,
+      "shr_type": "SH",
+      "ticker": "SHW",
+      "pct_port": 0.37,
+      "value_usd": 88518000
+    },
+    {
+      "company": "DANAHER CORP DEL",
+      "cusip": "235851102",
+      "shares": 456000,
+      "value_k": 86858,
+      "shr_type": "SH",
+      "ticker": "DHR",
+      "pct_port": 0.36,
+      "value_usd": 86858000
+    },
+    {
+      "company": "SERVICENOW INC",
+      "cusip": "81762P102",
+      "shares": 873485,
+      "value_k": 86719,
+      "shr_type": "SH",
+      "ticker": "NOW",
+      "pct_port": 0.36,
+      "value_usd": 86719000
+    },
+    {
+      "company": "SPACE EXPLORATION TECHN CORP",
+      "cusip": "84615Q103",
+      "shares": 375000,
+      "value_k": 64072,
+      "shr_type": "SH",
+      "ticker": "SPCX",
+      "pct_port": 0.27,
+      "value_usd": 64072000
+    },
+    {
+      "company": "WEBULL CORP",
+      "cusip": "G9572D103",
+      "shares": 6724137,
+      "value_k": 43841,
+      "shr_type": "SH",
+      "ticker": "BULLW",
+      "pct_port": 0.18,
+      "value_usd": 43841000
+    },
+    {
+      "company": "ATRENEW INC",
+      "cusip": "00138L108",
+      "shares": 9831218,
+      "value_k": 38046,
+      "shr_type": "SH",
+      "ticker": "RERE",
+      "pct_port": 0.16,
+      "value_usd": 38046000
+    },
+    {
+      "company": "APPLIED DIGITAL CORP",
+      "cusip": "038169207",
+      "shares": 885000,
+      "value_k": 33010,
+      "shr_type": "SH",
+      "ticker": "APLD",
+      "pct_port": 0.14,
+      "value_usd": 33010000
+    },
+    {
+      "company": "CIPHER DIGITAL INC",
+      "cusip": "17253J106",
+      "shares": 927000,
+      "value_k": 22711,
+      "shr_type": "SH",
+      "ticker": "CIFR",
+      "pct_port": 0.09,
+      "value_usd": 22711000
+    },
+    {
+      "company": "CORE SCIENTIFIC INC NEW",
+      "cusip": "21874A106",
+      "shares": 817000,
+      "value_k": 20907,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.09,
+      "value_usd": 20907000
+    },
+    {
+      "company": "UBER TECHNOLOGIES INC",
+      "cusip": "90353T100",
+      "shares": 151178,
+      "value_k": 10909,
+      "shr_type": "SH",
+      "ticker": "UBER",
+      "pct_port": 0.05,
+      "value_usd": 10909000
+    },
+    {
+      "company": "JD.COM INC",
+      "cusip": "47215P106",
+      "shares": 201500,
+      "value_k": 5134,
+      "shr_type": "SH",
+      "ticker": "JDCMF",
+      "pct_port": 0.02,
+      "value_usd": 5134000
+    },
+    {
+      "company": "DOORDASH INC",
+      "cusip": "25809K105",
+      "shares": 25337,
+      "value_k": 4675,
+      "shr_type": "SH",
+      "ticker": "DASH",
+      "pct_port": 0.02,
+      "value_usd": 4675000
+    },
+    {
+      "company": "PONY AI INC",
+      "cusip": "732908108",
+      "shares": 310287,
+      "value_k": 2156,
+      "shr_type": "SH",
+      "ticker": "PYAIF",
+      "pct_port": 0.01,
+      "value_usd": 2156000
+    },
+    {
+      "company": "ACCELERANT HOLDINGS",
+      "cusip": "G00894108",
+      "shares": 75000,
+      "value_k": 879,
+      "shr_type": "SH",
+      "ticker": "ARX",
+      "pct_port": 0.0,
+      "value_usd": 879000
+    },
+    {
+      "company": "GEMINI SPACE STA INC",
+      "cusip": "36866J105",
+      "shares": 70000,
+      "value_k": 298,
+      "shr_type": "SH",
+      "ticker": "GEMI",
+      "pct_port": 0.0,
+      "value_usd": 298000
+    },
+    {
+      "company": "MNTN INC",
+      "cusip": "55318A108",
+      "shares": 20000,
+      "value_k": 184,
+      "shr_type": "SH",
+      "ticker": "MNTN",
+      "pct_port": 0.0,
+      "value_usd": 184000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:28:51.043116+00:00"
+}

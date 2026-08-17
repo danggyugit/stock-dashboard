@@ -1,0 +1,901 @@
+{
+  "cik": "0001067983",
+  "name": "Berkshire Hathaway",
+  "manager": "Warren Buffett",
+  "style": "Value",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "AMERICAN EXPRESS CO",
+      "cusip": "025816109",
+      "shares": 149061045,
+      "value_k": 50419898,
+      "shr_type": "SH",
+      "ticker": "AXP",
+      "pct_port": 16.85,
+      "value_usd": 50419898000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K305",
+      "shares": 65824467,
+      "value_k": 23523689,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 7.86,
+      "value_usd": 23523689000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 80664820,
+      "value_k": 23341172,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 7.8,
+      "value_usd": 23341172000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 282722729,
+      "value_k": 22976876,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 7.68,
+      "value_usd": 22976876000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 61542988,
+      "value_k": 17808079,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 5.95,
+      "value_usd": 17808079000
+    },
+    {
+      "company": "BANK OF AMER CORP",
+      "cusip": "060505104",
+      "shares": 308808515,
+      "value_k": 17595909,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 5.88,
+      "value_usd": 17595909000
+    },
+    {
+      "company": "OCCIDENTAL PETE CORP",
+      "cusip": "674599105",
+      "shares": 264941431,
+      "value_k": 12868205,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 4.3,
+      "value_usd": 12868205000
+    },
+    {
+      "company": "CHUBB LIMITED",
+      "cusip": "H1467J104",
+      "shares": 34249183,
+      "value_k": 11670066,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 3.9,
+      "value_usd": 11670066000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 34724000,
+      "value_k": 10047736,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 3.36,
+      "value_usd": 10047736000
+    },
+    {
+      "company": "CHEVRON CORPORATION",
+      "cusip": "166764100",
+      "shares": 58251749,
+      "value_k": 9655809,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 3.23,
+      "value_usd": 9655809000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K107",
+      "shares": 27188433,
+      "value_k": 9606489,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 3.21,
+      "value_usd": 9606489000
+    },
+    {
+      "company": "KRAFT HEINZ CO",
+      "cusip": "500754106",
+      "shares": 325634818,
+      "value_k": 7691494,
+      "shr_type": "SH",
+      "ticker": "KHC",
+      "pct_port": 2.57,
+      "value_usd": 7691494000
+    },
+    {
+      "company": "BANK OF AMER CORP",
+      "cusip": "060505104",
+      "shares": 125720000,
+      "value_k": 7163525,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 2.39,
+      "value_usd": 7163525000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 80283200,
+      "value_k": 6524615,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 2.18,
+      "value_usd": 6524615000
+    },
+    {
+      "company": "MOODYS CORP",
+      "cusip": "615369105",
+      "shares": 12623750,
+      "value_k": 5717548,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.91,
+      "value_usd": 5717548000
+    },
+    {
+      "company": "MOODYS CORP",
+      "cusip": "615369105",
+      "shares": 11973928,
+      "value_k": 5423231,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.81,
+      "value_usd": 5423231000
+    },
+    {
+      "company": "DELTA AIR LINES INC",
+      "cusip": "247361702",
+      "shares": 57320000,
+      "value_k": 5368591,
+      "shr_type": "SH",
+      "ticker": "DAL",
+      "pct_port": 1.79,
+      "value_usd": 5368591000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 15532000,
+      "value_k": 4494339,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 1.5,
+      "value_usd": 4494339000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 14472000,
+      "value_k": 4187617,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 1.4,
+      "value_usd": 4187617000
+    },
+    {
+      "company": "DAVITA INC",
+      "cusip": "23918K108",
+      "shares": 14973608,
+      "value_k": 3331328,
+      "shr_type": "SH",
+      "ticker": "DVA",
+      "pct_port": 1.11,
+      "value_usd": 3331328000
+    },
+    {
+      "company": "SIRIUSXM HOLDINGS INC",
+      "cusip": "829933100",
+      "shares": 108822227,
+      "value_k": 3214608,
+      "shr_type": "SH",
+      "ticker": "SIRI",
+      "pct_port": 1.07,
+      "value_usd": 3214608000
+    },
+    {
+      "company": "DAVITA INC",
+      "cusip": "23918K108",
+      "shares": 13906601,
+      "value_k": 3093940,
+      "shr_type": "SH",
+      "ticker": "DVA",
+      "pct_port": 1.03,
+      "value_usd": 3093940000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K305",
+      "shares": 6700000,
+      "value_k": 2394379,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 0.8,
+      "value_usd": 2394379000
+    },
+    {
+      "company": "CHEVRON CORPORATION",
+      "cusip": "166764100",
+      "shares": 13477678,
+      "value_k": 2234059,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.75,
+      "value_usd": 2234059000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K305",
+      "shares": 6250000,
+      "value_k": 2233562,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 0.75,
+      "value_usd": 2233562000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 7204000,
+      "value_k": 2084549,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 0.7,
+      "value_usd": 2084549000
+    },
+    {
+      "company": "VERISIGN INC",
+      "cusip": "92343E102",
+      "shares": 8016933,
+      "value_k": 2016739,
+      "shr_type": "SH",
+      "ticker": "VRSN",
+      "pct_port": 0.67,
+      "value_usd": 2016739000
+    },
+    {
+      "company": "CHEVRON CORPORATION",
+      "cusip": "166764100",
+      "shares": 9192171,
+      "value_k": 1523694,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.51,
+      "value_usd": 1523694000
+    },
+    {
+      "company": "KROGER CO",
+      "cusip": "501044101",
+      "shares": 27257260,
+      "value_k": 1513595,
+      "shr_type": "SH",
+      "ticker": "KR",
+      "pct_port": 0.51,
+      "value_usd": 1513595000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 14990400,
+      "value_k": 1218269,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 0.41,
+      "value_usd": 1218269000
+    },
+    {
+      "company": "BANK OF AMER CORP",
+      "cusip": "060505104",
+      "shares": 21000000,
+      "value_k": 1196580,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.4,
+      "value_usd": 1196580000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 14411200,
+      "value_k": 1171198,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 0.39,
+      "value_usd": 1171198000
+    },
+    {
+      "company": "LENNAR CORP",
+      "cusip": "526057104",
+      "shares": 12366349,
+      "value_k": 1119030,
+      "shr_type": "SH",
+      "ticker": "LEA",
+      "pct_port": 0.37,
+      "value_usd": 1119030000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 3840000,
+      "value_k": 1111142,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 0.37,
+      "value_usd": 1111142000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 3776000,
+      "value_k": 1092623,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 0.37,
+      "value_usd": 1092623000
+    },
+    {
+      "company": "NEW YORK TIMES CO MTN BE",
+      "cusip": "650111107",
+      "shares": 14300000,
+      "value_k": 1000714,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.33,
+      "value_usd": 1000714000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 2724000,
+      "value_k": 788216,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 0.26,
+      "value_usd": 788216000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 2712000,
+      "value_k": 784744,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 0.26,
+      "value_usd": 784744000
+    },
+    {
+      "company": "BANK OF AMER CORP",
+      "cusip": "060505104",
+      "shares": 11900000,
+      "value_k": 678062,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.23,
+      "value_usd": 678062000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909308",
+      "shares": 5507583,
+      "value_k": 581821,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 0.19,
+      "value_usd": 581821000
+    },
+    {
+      "company": "ALLY FINL INC",
+      "cusip": "02005N100",
+      "shares": 12561737,
+      "value_k": 577211,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.19,
+      "value_usd": 577211000
+    },
+    {
+      "company": "CHEVRON CORPORATION",
+      "cusip": "166764100",
+      "shares": 3454258,
+      "value_k": 572577,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.19,
+      "value_usd": 572577000
+    },
+    {
+      "company": "BANK OF AMER CORP",
+      "cusip": "060505104",
+      "shares": 9800000,
+      "value_k": 558404,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.19,
+      "value_usd": 558404000
+    },
+    {
+      "company": "AMERICAN EXPRESS CO",
+      "cusip": "025816109",
+      "shares": 1399713,
+      "value_k": 473452,
+      "shr_type": "SH",
+      "ticker": "AXP",
+      "pct_port": 0.16,
+      "value_usd": 473452000
+    },
+    {
+      "company": "SIRIUSXM HOLDINGS INC",
+      "cusip": "829933100",
+      "shares": 15984890,
+      "value_k": 472193,
+      "shr_type": "SH",
+      "ticker": "SIRI",
+      "pct_port": 0.16,
+      "value_usd": 472193000
+    },
+    {
+      "company": "NUCOR CORP",
+      "cusip": "670346105",
+      "shares": 1857752,
+      "value_k": 413814,
+      "shr_type": "SH",
+      "ticker": "NUE",
+      "pct_port": 0.14,
+      "value_usd": 413814000
+    },
+    {
+      "company": "AMERICAN EXPRESS CO",
+      "cusip": "025816109",
+      "shares": 1149942,
+      "value_k": 388967,
+      "shr_type": "SH",
+      "ticker": "AXP",
+      "pct_port": 0.13,
+      "value_usd": 388967000
+    },
+    {
+      "company": "CAPITAL ONE FINL CORP",
+      "cusip": "14040H105",
+      "shares": 1861888,
+      "value_k": 373531,
+      "shr_type": "SH",
+      "ticker": "COF-PN",
+      "pct_port": 0.12,
+      "value_usd": 373531000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909308",
+      "shares": 3479651,
+      "value_k": 367590,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 0.12,
+      "value_usd": 367590000
+    },
+    {
+      "company": "LOUISIANA PAC CORP",
+      "cusip": "546347105",
+      "shares": 4344909,
+      "value_k": 341770,
+      "shr_type": "SH",
+      "ticker": "LPX",
+      "pct_port": 0.11,
+      "value_usd": 341770000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909100",
+      "shares": 3284775,
+      "value_k": 332616,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 0.11,
+      "value_usd": 332616000
+    },
+    {
+      "company": "KROGER CO",
+      "cusip": "501044101",
+      "shares": 5607090,
+      "value_k": 311361,
+      "shr_type": "SH",
+      "ticker": "KR",
+      "pct_port": 0.1,
+      "value_usd": 311361000
+    },
+    {
+      "company": "KROGER CO",
+      "cusip": "501044101",
+      "shares": 5367119,
+      "value_k": 298036,
+      "shr_type": "SH",
+      "ticker": "KR",
+      "pct_port": 0.1,
+      "value_usd": 298036000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 3552000,
+      "value_k": 288671,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 0.1,
+      "value_usd": 288671000
+    },
+    {
+      "company": "VERISIGN INC",
+      "cusip": "92343E102",
+      "shares": 972947,
+      "value_k": 244754,
+      "shr_type": "SH",
+      "ticker": "VRSN",
+      "pct_port": 0.08,
+      "value_usd": 244754000
+    },
+    {
+      "company": "CAPITAL ONE FINL CORP",
+      "cusip": "14040H105",
+      "shares": 1138112,
+      "value_k": 228328,
+      "shr_type": "SH",
+      "ticker": "COF-PN",
+      "pct_port": 0.08,
+      "value_usd": 228328000
+    },
+    {
+      "company": "BANK OF AMER CORP",
+      "cusip": "060505104",
+      "shares": 3920000,
+      "value_k": 223361,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.07,
+      "value_usd": 223361000
+    },
+    {
+      "company": "ALLY FINL INC",
+      "cusip": "02005N100",
+      "shares": 4423608,
+      "value_k": 203264,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.07,
+      "value_usd": 203264000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 692000,
+      "value_k": 200237,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 0.07,
+      "value_usd": 200237000
+    },
+    {
+      "company": "ALLY FINL INC",
+      "cusip": "02005N100",
+      "shares": 4228200,
+      "value_k": 194285,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.06,
+      "value_usd": 194285000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909308",
+      "shares": 1437289,
+      "value_k": 151835,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 0.05,
+      "value_usd": 151835000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 1824000,
+      "value_k": 148236,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 0.05,
+      "value_usd": 148236000
+    },
+    {
+      "company": "MACYS INC",
+      "cusip": "55616P104",
+      "shares": 5527401,
+      "value_k": 130170,
+      "shr_type": "SH",
+      "ticker": "M",
+      "pct_port": 0.04,
+      "value_usd": 130170000
+    },
+    {
+      "company": "ALLY FINL INC",
+      "cusip": "02005N100",
+      "shares": 2803875,
+      "value_k": 128838,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.04,
+      "value_usd": 128838000
+    },
+    {
+      "company": "BANK OF AMER CORP",
+      "cusip": "060505104",
+      "shares": 2100000,
+      "value_k": 119658,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.04,
+      "value_usd": 119658000
+    },
+    {
+      "company": "LOUISIANA PAC CORP",
+      "cusip": "546347105",
+      "shares": 1319884,
+      "value_k": 103822,
+      "shr_type": "SH",
+      "ticker": "LPX",
+      "pct_port": 0.03,
+      "value_usd": 103822000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909100",
+      "shares": 1011698,
+      "value_k": 102444,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 0.03,
+      "value_usd": 102444000
+    },
+    {
+      "company": "NEW YORK TIMES CO MTN BE",
+      "cusip": "650111107",
+      "shares": 1400000,
+      "value_k": 97972,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.03,
+      "value_usd": 97972000
+    },
+    {
+      "company": "ALLY FINL INC",
+      "cusip": "02005N100",
+      "shares": 1707580,
+      "value_k": 78463,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.03,
+      "value_usd": 78463000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 960000,
+      "value_k": 78019,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 0.03,
+      "value_usd": 78019000
+    },
+    {
+      "company": "NVR INC",
+      "cusip": "62944T105",
+      "shares": 11112,
+      "value_k": 75710,
+      "shr_type": "SH",
+      "ticker": "NVR",
+      "pct_port": 0.03,
+      "value_usd": 75710000
+    },
+    {
+      "company": "LENNAR CORP",
+      "cusip": "526057104",
+      "shares": 745392,
+      "value_k": 67450,
+      "shr_type": "SH",
+      "ticker": "LEA",
+      "pct_port": 0.02,
+      "value_usd": 67450000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 800000,
+      "value_k": 65016,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 0.02,
+      "value_usd": 65016000
+    },
+    {
+      "company": "ALLY FINL INC",
+      "cusip": "02005N100",
+      "shares": 1275000,
+      "value_k": 58586,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.02,
+      "value_usd": 58586000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909100",
+      "shares": 456768,
+      "value_k": 46252,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 0.02,
+      "value_usd": 46252000
+    },
+    {
+      "company": "KROGER CO",
+      "cusip": "501044101",
+      "shares": 768531,
+      "value_k": 42676,
+      "shr_type": "SH",
+      "ticker": "KR",
+      "pct_port": 0.01,
+      "value_usd": 42676000
+    },
+    {
+      "company": "MOODYS CORP",
+      "cusip": "615369105",
+      "shares": 72100,
+      "value_k": 32655,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.01,
+      "value_usd": 32655000
+    },
+    {
+      "company": "MACYS INC",
+      "cusip": "55616P104",
+      "shares": 1376226,
+      "value_k": 32410,
+      "shr_type": "SH",
+      "ticker": "M",
+      "pct_port": 0.01,
+      "value_usd": 32410000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 371471,
+      "value_k": 30189,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 0.01,
+      "value_usd": 30189000
+    },
+    {
+      "company": "LENNAR CORP",
+      "cusip": "526057302",
+      "shares": 298117,
+      "value_k": 26445,
+      "shr_type": "SH",
+      "ticker": "LEA",
+      "pct_port": 0.01,
+      "value_usd": 26445000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909100",
+      "shares": 233347,
+      "value_k": 23628,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 0.01,
+      "value_usd": 23628000
+    },
+    {
+      "company": "JEFFERIES FINANCIAL GROUP IN",
+      "cusip": "47233W109",
+      "shares": 433558,
+      "value_k": 21669,
+      "shr_type": "SH",
+      "ticker": "JEF",
+      "pct_port": 0.01,
+      "value_usd": 21669000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909308",
+      "shares": 162620,
+      "value_k": 17179,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 0.01,
+      "value_usd": 17179000
+    },
+    {
+      "company": "MACYS INC",
+      "cusip": "55616P104",
+      "shares": 443799,
+      "value_k": 10451,
+      "shr_type": "SH",
+      "ticker": "M",
+      "pct_port": 0.0,
+      "value_usd": 10451000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 34000,
+      "value_k": 9838,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 0.0,
+      "value_usd": 9838000
+    },
+    {
+      "company": "BANK OF AMER CORP",
+      "cusip": "060505104",
+      "shares": 145500,
+      "value_k": 8290,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.0,
+      "value_usd": 8290000
+    },
+    {
+      "company": "COCA COLA CO",
+      "cusip": "191216100",
+      "shares": 85000,
+      "value_k": 6907,
+      "shr_type": "SH",
+      "ticker": "KO",
+      "pct_port": 0.0,
+      "value_usd": 6907000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K305",
+      "shares": 16700,
+      "value_k": 5968,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 0.0,
+      "value_usd": 5968000
+    },
+    {
+      "company": "D R HORTON INC",
+      "cusip": "23331A109",
+      "shares": 3564,
+      "value_k": 580,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.0,
+      "value_usd": 580000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:28:23.992545+00:00"
+}

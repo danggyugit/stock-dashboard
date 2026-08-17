@@ -1,0 +1,281 @@
+{
+  "cik": "0001656456",
+  "name": "Appaloosa LP",
+  "manager": "David Tepper",
+  "style": "Event-Driven",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "AMAZON COM INC",
+      "cusip": "023135106",
+      "shares": 5000000,
+      "value_k": 1191700,
+      "shr_type": "SH",
+      "ticker": "AMZN",
+      "pct_port": 15.43,
+      "value_usd": 1191700000
+    },
+    {
+      "company": "MICRON TECHNOLOGY INC",
+      "cusip": "595112103",
+      "shares": 975000,
+      "value_k": 1125432,
+      "shr_type": "SH",
+      "ticker": "MU",
+      "pct_port": 14.57,
+      "value_usd": 1125432000
+    },
+    {
+      "company": "TAIWAN SEMICONDUCTOR MANUFAC",
+      "cusip": "874039100",
+      "shares": 1650000,
+      "value_k": 787990,
+      "shr_type": "SH",
+      "ticker": "TSMWF",
+      "pct_port": 10.2,
+      "value_usd": 787990000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K107",
+      "shares": 1850000,
+      "value_k": 653660,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 8.46,
+      "value_usd": 653660000
+    },
+    {
+      "company": "UBER TECHNOLOGIES INC",
+      "cusip": "90353T100",
+      "shares": 7694071,
+      "value_k": 555204,
+      "shr_type": "SH",
+      "ticker": "UBER",
+      "pct_port": 7.19,
+      "value_usd": 555204000
+    },
+    {
+      "company": "ISHARES INC",
+      "cusip": "464286772",
+      "shares": 2425000,
+      "value_k": 489607,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 6.34,
+      "value_usd": 489607000
+    },
+    {
+      "company": "META PLATFORMS INC",
+      "cusip": "30303M102",
+      "shares": 675000,
+      "value_k": 380220,
+      "shr_type": "SH",
+      "ticker": "META",
+      "pct_port": 4.92,
+      "value_usd": 380220000
+    },
+    {
+      "company": "VISTRA CORP",
+      "cusip": "92840M102",
+      "shares": 2215272,
+      "value_k": 351408,
+      "shr_type": "SH",
+      "ticker": "VST",
+      "pct_port": 4.55,
+      "value_usd": 351408000
+    },
+    {
+      "company": "NVIDIA CORPORATION",
+      "cusip": "67066G104",
+      "shares": 1525000,
+      "value_k": 305137,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 3.95,
+      "value_usd": 305137000
+    },
+    {
+      "company": "NRG ENERGY INC",
+      "cusip": "629377508",
+      "shares": 1760000,
+      "value_k": 257065,
+      "shr_type": "SH",
+      "ticker": "NRG",
+      "pct_port": 3.33,
+      "value_usd": 257065000
+    },
+    {
+      "company": "APPLE INC",
+      "cusip": "037833100",
+      "shares": 835000,
+      "value_k": 241615,
+      "shr_type": "SH",
+      "ticker": "AAPL",
+      "pct_port": 3.13,
+      "value_usd": 241615000
+    },
+    {
+      "company": "ALIBABA GROUP HLDG LTD",
+      "cusip": "01609W102",
+      "shares": 2000000,
+      "value_k": 191960,
+      "shr_type": "SH",
+      "ticker": "BBAAY",
+      "pct_port": 2.48,
+      "value_usd": 191960000
+    },
+    {
+      "company": "BOEING CO",
+      "cusip": "097023105",
+      "shares": 800000,
+      "value_k": 173176,
+      "shr_type": "SH",
+      "ticker": "BA-PA",
+      "pct_port": 2.24,
+      "value_usd": 173176000
+    },
+    {
+      "company": "LAM RESEARCH CORP",
+      "cusip": "512807306",
+      "shares": 382500,
+      "value_k": 165748,
+      "shr_type": "SH",
+      "ticker": "LRCX",
+      "pct_port": 2.15,
+      "value_usd": 165748000
+    },
+    {
+      "company": "BAIDU INC",
+      "cusip": "056752108",
+      "shares": 1295000,
+      "value_k": 148005,
+      "shr_type": "SH",
+      "ticker": "BAIDF",
+      "pct_port": 1.92,
+      "value_usd": 148005000
+    },
+    {
+      "company": "AMERICAN AIRLINES GROUP INC",
+      "cusip": "02376R102",
+      "shares": 7500000,
+      "value_k": 135525,
+      "shr_type": "SH",
+      "ticker": "AAL",
+      "pct_port": 1.75,
+      "value_usd": 135525000
+    },
+    {
+      "company": "ADVANCED MICRO DEVICES INC",
+      "cusip": "007903107",
+      "shares": 197500,
+      "value_k": 114729,
+      "shr_type": "SH",
+      "ticker": "AMD",
+      "pct_port": 1.49,
+      "value_usd": 114729000
+    },
+    {
+      "company": "COREWEAVE INC",
+      "cusip": "21873S108",
+      "shares": 1078248,
+      "value_k": 107328,
+      "shr_type": "SH",
+      "ticker": "CRWV",
+      "pct_port": 1.39,
+      "value_usd": 107328000
+    },
+    {
+      "company": "ASML HLDG NV",
+      "cusip": "N07059210",
+      "shares": 50000,
+      "value_k": 99472,
+      "shr_type": "SH",
+      "ticker": "ASMLF",
+      "pct_port": 1.29,
+      "value_usd": 99472000
+    },
+    {
+      "company": "BROADCOM INC",
+      "cusip": "11135F101",
+      "shares": 150000,
+      "value_k": 56662,
+      "shr_type": "SH",
+      "ticker": "AVGO",
+      "pct_port": 0.73,
+      "value_usd": 56662000
+    },
+    {
+      "company": "QUALCOMM INC",
+      "cusip": "747525103",
+      "shares": 250000,
+      "value_k": 46197,
+      "shr_type": "SH",
+      "ticker": "QCOM",
+      "pct_port": 0.6,
+      "value_usd": 46197000
+    },
+    {
+      "company": "SPACE EXPLORATION TECHN CORP",
+      "cusip": "84615Q103",
+      "shares": 225000,
+      "value_k": 38443,
+      "shr_type": "SH",
+      "ticker": "SPCX",
+      "pct_port": 0.5,
+      "value_usd": 38443000
+    },
+    {
+      "company": "ENERGY TRANSFER L P",
+      "cusip": "29273V100",
+      "shares": 1576125,
+      "value_k": 30135,
+      "shr_type": "SH",
+      "ticker": "ET-PI",
+      "pct_port": 0.39,
+      "value_usd": 30135000
+    },
+    {
+      "company": "MPLX LP",
+      "cusip": "55336V100",
+      "shares": 502460,
+      "value_k": 28303,
+      "shr_type": "SH",
+      "ticker": "MPLXP",
+      "pct_port": 0.37,
+      "value_usd": 28303000
+    },
+    {
+      "company": "WHIRLPOOL CORP",
+      "cusip": "963320106",
+      "shares": 715000,
+      "value_k": 28185,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.36,
+      "value_usd": 28185000
+    },
+    {
+      "company": "BERKSHIRE HATHAWAY INC DEL",
+      "cusip": "084670702",
+      "shares": 25000,
+      "value_k": 12509,
+      "shr_type": "SH",
+      "ticker": "BRK-A",
+      "pct_port": 0.16,
+      "value_usd": 12509000
+    },
+    {
+      "company": "GOODYEAR TIRE & RUBR CO",
+      "cusip": "382550101",
+      "shares": 1508591,
+      "value_k": 9956,
+      "shr_type": "SH",
+      "ticker": "GT",
+      "pct_port": 0.13,
+      "value_usd": 9956000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:40:41.683208+00:00"
+}

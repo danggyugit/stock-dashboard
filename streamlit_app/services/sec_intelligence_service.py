@@ -31,25 +31,25 @@ _RATE_SLEEP = 0.12  # ~8 req/s (EDGAR limit: 10/s)
 
 WHALE_MANAGERS: list[dict] = [
     {"cik": "0001067983", "name": "Berkshire Hathaway",     "manager": "Warren Buffett",       "style": "Value"},
-    {"cik": "0001336528", "name": "Pershing Square",         "manager": "Bill Ackman",           "style": "Activist"},
+    {"cik": "0002026053", "name": "Pershing Square Holdco",  "manager": "Bill Ackman",           "style": "Activist"},
     {"cik": "0001649339", "name": "Scion Asset Mgmt",        "manager": "Michael Burry",         "style": "Contrarian"},
-    {"cik": "0000813672", "name": "Appaloosa Mgmt",          "manager": "David Tepper",          "style": "Event-Driven"},
+    {"cik": "0001656456", "name": "Appaloosa LP",            "manager": "David Tepper",          "style": "Event-Driven"},
     {"cik": "0001040273", "name": "Third Point",             "manager": "Dan Loeb",              "style": "Activist"},
-    {"cik": "0001079114", "name": "Greenlight Capital",      "manager": "David Einhorn",         "style": "Value/Short"},
+    {"cik": "0001489933", "name": "DME Capital (Greenlight)","manager": "David Einhorn",         "style": "Value/Short"},
     {"cik": "0001536411", "name": "Duquesne Family Office",  "manager": "Stan Druckenmiller",    "style": "Macro"},
-    {"cik": "0000862418", "name": "Baupost Group",           "manager": "Seth Klarman",          "style": "Value"},
+    {"cik": "0001061768", "name": "Baupost Group",           "manager": "Seth Klarman",          "style": "Value"},
     {"cik": "0001103804", "name": "Viking Global",           "manager": "Andreas Halvorsen",     "style": "L/S Equity"},
-    {"cik": "0001336920", "name": "Coatue Mgmt",             "manager": "Philippe Laffont",      "style": "Tech Growth"},
+    {"cik": "0001135730", "name": "Coatue Mgmt",             "manager": "Philippe Laffont",      "style": "Tech Growth"},
     {"cik": "0001167483", "name": "Tiger Global",            "manager": "Chase Coleman",         "style": "Tech Growth"},
     {"cik": "0001603466", "name": "Point72",                 "manager": "Steve Cohen",           "style": "Multi-Strategy"},
-    {"cik": "0001423313", "name": "Citadel Advisors",        "manager": "Ken Griffin",           "style": "Quant"},
-    {"cik": "0000814612", "name": "Renaissance Technologies","manager": "Jim Simons",            "style": "Quant"},
-    {"cik": "0001093052", "name": "Lone Pine Capital",       "manager": "Stephen Mandel",        "style": "Growth"},
-    {"cik": "0000895421", "name": "Maverick Capital",        "manager": "Lee Ainslie",           "style": "L/S Equity"},
-    {"cik": "0001336410", "name": "ValueAct Capital",        "manager": "Jeffrey Ubben",         "style": "Activist"},
-    {"cik": "0001047469", "name": "Oaktree Capital",         "manager": "Howard Marks",          "style": "Credit/Value"},
-    {"cik": "0001567461", "name": "TCI Fund Mgmt",           "manager": "Chris Hohn",            "style": "Activist"},
-    {"cik": "0001603902", "name": "Abrams Capital",          "manager": "David Abrams",          "style": "Concentrated Value"},
+    {"cik": "0001423053", "name": "Citadel Advisors",        "manager": "Ken Griffin",           "style": "Quant"},
+    {"cik": "0001037389", "name": "Renaissance Technologies","manager": "Jim Simons",            "style": "Quant"},
+    {"cik": "0001061165", "name": "Lone Pine Capital",       "manager": "Stephen Mandel",        "style": "Growth"},
+    {"cik": "0000934639", "name": "Maverick Capital",        "manager": "Lee Ainslie",           "style": "L/S Equity"},
+    {"cik": "0001418814", "name": "ValueAct Holdings",       "manager": "Jeffrey Ubben",         "style": "Activist"},
+    {"cik": "0000949509", "name": "Oaktree Capital Mgmt",    "manager": "Howard Marks",          "style": "Credit/Value"},
+    {"cik": "0001647251", "name": "TCI Fund Mgmt",           "manager": "Chris Hohn",            "style": "Activist"},
+    {"cik": "0001358706", "name": "Abrams Capital",          "manager": "David Abrams",          "style": "Concentrated Value"},
 ]
 
 WHALE_BY_CIK: dict[str, dict] = {m["cik"]: m for m in WHALE_MANAGERS}
@@ -174,38 +174,36 @@ def _fetch_info_table_xml(cik: str, accession_no: str) -> str | None:
     cik_int = int(cik.lstrip("0") or "0")
     acc_clean = accession_no.replace("-", "")
 
-    # Fetch filing index JSON
-    index_url = f"https://www.sec.gov/Archives/edgar/data/{cik_int}/{acc_clean}/{acc_clean}-index.json"
+    # Fetch filing index JSON — the directory listing lives at .../{acc}/index.json
+    # (NOT "{acc}-index.json", which 404s)
+    index_url = f"https://www.sec.gov/Archives/edgar/data/{cik_int}/{acc_clean}/index.json"
     try:
         idx = _get(index_url).json()
     except Exception as e:
         logger.warning("Filing index fetch failed %s: %s", accession_no, e)
         return None
 
+    # The info table is a separate XML (often an arbitrary name like 56757.xml
+    # or infotable.xml). primary_doc.xml is the COVER PAGE — it contains no
+    # holdings, so it must only ever be a last resort.
     items = idx.get("directory", {}).get("item", [])
+    xml_names = [i.get("name", "") for i in items if i.get("name", "").lower().endswith(".xml")]
+
     info_table_file = None
-    for item in items:
-        doc_type = item.get("type", "").upper()
-        name = item.get("name", "")
-        if "INFORMATION TABLE" in doc_type or name.lower() in (
-            "informationtable.xml", "form13finfotable.xml", "primary_doc.xml"
-        ):
+    # 1) explicit info-table names
+    for name in xml_names:
+        if "infotable" in name.lower() or "informationtable" in name.lower():
             info_table_file = name
             break
-
-    # Fallback: any .xml that isn't the cover form
+    # 2) any XML that is NOT the cover page
     if not info_table_file:
-        for item in items:
-            name = item.get("name", "")
-            if name.endswith(".xml") and "13f" not in name.lower():
+        for name in xml_names:
+            if name.lower() != "primary_doc.xml":
                 info_table_file = name
                 break
-        if not info_table_file:
-            for item in items:
-                name = item.get("name", "")
-                if name.endswith(".xml"):
-                    info_table_file = name
-                    break
+    # 3) last resort
+    if not info_table_file and xml_names:
+        info_table_file = xml_names[0]
 
     if not info_table_file:
         logger.warning("No info table XML found in %s", accession_no)
@@ -254,13 +252,18 @@ def _parse_13f_xml(xml_text: str) -> list[dict]:
         shr_type = _nested("shrsOrPrnAmt", "sshPrnamtType")
 
         try:
-            value_k = int(float(value_str)) if value_str else 0
+            value_raw = int(float(value_str)) if value_str else 0
         except ValueError:
-            value_k = 0
+            value_raw = 0
         try:
             shares = int(float(shares_str)) if shares_str else 0
         except ValueError:
             shares = 0
+
+        # SEC rule change (2023-01): 13F values are reported in WHOLE DOLLARS
+        # (previously thousands). We only fetch current filings, so normalize
+        # dollars → thousands to keep the value_k semantics used downstream.
+        value_k = value_raw // 1000
 
         if name and (value_k > 0 or shares > 0):
             holdings.append({
@@ -560,7 +563,7 @@ def get_recent_filings(ticker: str, form_types: tuple[str, ...] = ("8-K", "10-K"
         if form not in form_types:
             continue
         acc_clean = acc.replace("-", "")
-        url = f"https://www.sec.gov/Archives/edgar/data/{cik_int}/{acc_clean}/{acc_clean}-index.htm"
+        url = f"https://www.sec.gov/Archives/edgar/data/{cik_int}/{acc_clean}/{acc}-index.htm"
         rows.append({
             "Form": form,
             "Filed": date_str,
@@ -584,7 +587,7 @@ def get_filing_text(ticker: str, accession_no: str) -> str | None:
 
     cik_int = int(cik.lstrip("0") or "0")
     acc_clean = accession_no.replace("-", "")
-    index_url = f"https://www.sec.gov/Archives/edgar/data/{cik_int}/{acc_clean}/{acc_clean}-index.json"
+    index_url = f"https://www.sec.gov/Archives/edgar/data/{cik_int}/{acc_clean}/index.json"
 
     try:
         idx = _get(index_url).json()

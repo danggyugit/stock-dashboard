@@ -1,0 +1,121 @@
+{
+  "cik": "0001358706",
+  "name": "Abrams Capital",
+  "manager": "David Abrams",
+  "style": "Concentrated Value",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-13",
+  "holdings": [
+    {
+      "company": "LOAR HOLDINGS INC",
+      "cusip": "53947R105",
+      "shares": 32050240,
+      "value_k": 2583569,
+      "shr_type": "SH",
+      "ticker": "LOAR",
+      "pct_port": 47.15,
+      "value_usd": 2583569000
+    },
+    {
+      "company": "LITHIA MTRS INC",
+      "cusip": "536797103",
+      "shares": 2490534,
+      "value_k": 723475,
+      "shr_type": "SH",
+      "ticker": "LAD",
+      "pct_port": 13.2,
+      "value_usd": 723475000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K305",
+      "shares": 1370495,
+      "value_k": 489773,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 8.94,
+      "value_usd": 489773000
+    },
+    {
+      "company": "SOMNIGROUP INTERNATIONAL INC",
+      "cusip": "88023U101",
+      "shares": 5798776,
+      "value_k": 454624,
+      "shr_type": "SH",
+      "ticker": "SGI",
+      "pct_port": 8.3,
+      "value_usd": 454624000
+    },
+    {
+      "company": "ASBURY AUTOMOTIVE GROUP INC",
+      "cusip": "043436104",
+      "shares": 2155492,
+      "value_k": 433426,
+      "shr_type": "SH",
+      "ticker": "ABG",
+      "pct_port": 7.91,
+      "value_usd": 433426000
+    },
+    {
+      "company": "COUPANG INC",
+      "cusip": "22266T109",
+      "shares": 13017964,
+      "value_k": 226122,
+      "shr_type": "SH",
+      "ticker": "CPNG",
+      "pct_port": 4.13,
+      "value_usd": 226122000
+    },
+    {
+      "company": "WILLIS TOWERS WATSON PLC LTD",
+      "cusip": "G96629103",
+      "shares": 720779,
+      "value_k": 188390,
+      "shr_type": "SH",
+      "ticker": "WTW",
+      "pct_port": 3.44,
+      "value_usd": 188390000
+    },
+    {
+      "company": "U HAUL HOLDING COMPANY",
+      "cusip": "023586506",
+      "shares": 3251469,
+      "value_k": 187609,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 3.42,
+      "value_usd": 187609000
+    },
+    {
+      "company": "META PLATFORMS INC",
+      "cusip": "30303M102",
+      "shares": 325155,
+      "value_k": 183156,
+      "shr_type": "SH",
+      "ticker": "META",
+      "pct_port": 3.34,
+      "value_usd": 183156000
+    },
+    {
+      "company": "NUVATION BIO INC",
+      "cusip": "67080N101",
+      "shares": 1270504,
+      "value_k": 7216,
+      "shr_type": "SH",
+      "ticker": "NUVB",
+      "pct_port": 0.13,
+      "value_usd": 7216000
+    },
+    {
+      "company": "U HAUL HOLDING COMPANY",
+      "cusip": "023586100",
+      "shares": 36401,
+      "value_k": 2382,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.04,
+      "value_usd": 2382000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:44:53.547163+00:00"
+}

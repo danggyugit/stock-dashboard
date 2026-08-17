@@ -1,0 +1,241 @@
+{
+  "cik": "0001061768",
+  "name": "Baupost Group",
+  "manager": "Seth Klarman",
+  "style": "Value",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-13",
+  "holdings": [
+    {
+      "company": "AMAZON COM INC",
+      "cusip": "023135106",
+      "shares": 3743854,
+      "value_k": 892,
+      "shr_type": "SH",
+      "ticker": "AMZN",
+      "pct_port": 16.51,
+      "value_usd": 892000
+    },
+    {
+      "company": "ELEVANCE HEALTH INC FORMERLY",
+      "cusip": "036752103",
+      "shares": 1275154,
+      "value_k": 493,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 9.12,
+      "value_usd": 493000
+    },
+    {
+      "company": "RESTAURANT BRANDS INTL INC",
+      "cusip": "76131D103",
+      "shares": 6753112,
+      "value_k": 489,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 9.05,
+      "value_usd": 489000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K107",
+      "shares": 1371931,
+      "value_k": 484,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 8.96,
+      "value_usd": 484000
+    },
+    {
+      "company": "FERGUSON ENTERPRISES INC",
+      "cusip": "31488V107",
+      "shares": 1450594,
+      "value_k": 344,
+      "shr_type": "SH",
+      "ticker": "FERG",
+      "pct_port": 6.37,
+      "value_usd": 344000
+    },
+    {
+      "company": "GENUINE PARTS CO",
+      "cusip": "372460105",
+      "shares": 2816178,
+      "value_k": 332,
+      "shr_type": "SH",
+      "ticker": "GPC",
+      "pct_port": 6.14,
+      "value_usd": 332000
+    },
+    {
+      "company": "UNION PAC CORP",
+      "cusip": "907818108",
+      "shares": 1185395,
+      "value_k": 322,
+      "shr_type": "SH",
+      "ticker": "UNP",
+      "pct_port": 5.96,
+      "value_usd": 322000
+    },
+    {
+      "company": "VISA INC",
+      "cusip": "92826C839",
+      "shares": 701355,
+      "value_k": 240,
+      "shr_type": "SH",
+      "ticker": "V",
+      "pct_port": 4.44,
+      "value_usd": 240000
+    },
+    {
+      "company": "WESCO INTL INC",
+      "cusip": "95082P105",
+      "shares": 662881,
+      "value_k": 228,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 4.22,
+      "value_usd": 228000
+    },
+    {
+      "company": "AON PLC",
+      "cusip": "G0403H108",
+      "shares": 687000,
+      "value_k": 227,
+      "shr_type": "SH",
+      "ticker": "AON",
+      "pct_port": 4.2,
+      "value_usd": 227000
+    },
+    {
+      "company": "TELEFLEX INCORPORATED",
+      "cusip": "879369106",
+      "shares": 1409000,
+      "value_k": 178,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 3.29,
+      "value_usd": 178000
+    },
+    {
+      "company": "NORWEGIAN CRUISE LINE HLDGS",
+      "cusip": "G66721104",
+      "shares": 7730000,
+      "value_k": 163,
+      "shr_type": "SH",
+      "ticker": "NCLH",
+      "pct_port": 3.02,
+      "value_usd": 163000
+    },
+    {
+      "company": "MOLINA HEALTHCARE INC",
+      "cusip": "60855R100",
+      "shares": 633609,
+      "value_k": 144,
+      "shr_type": "SH",
+      "ticker": "MOH",
+      "pct_port": 2.67,
+      "value_usd": 144000
+    },
+    {
+      "company": "CME GROUP INC",
+      "cusip": "12572Q105",
+      "shares": 619000,
+      "value_k": 136,
+      "shr_type": "SH",
+      "ticker": "CME",
+      "pct_port": 2.52,
+      "value_usd": 136000
+    },
+    {
+      "company": "HERBALIFE LTD",
+      "cusip": "G4412G101",
+      "shares": 9259844,
+      "value_k": 121,
+      "shr_type": "SH",
+      "ticker": "HLF",
+      "pct_port": 2.24,
+      "value_usd": 121000
+    },
+    {
+      "company": "EAGLE MATLS INC",
+      "cusip": "26969P108",
+      "shares": 530763,
+      "value_k": 119,
+      "shr_type": "SH",
+      "ticker": "EXP",
+      "pct_port": 2.2,
+      "value_usd": 119000
+    },
+    {
+      "company": "GDS HLDGS LTD",
+      "cusip": "36165L108",
+      "shares": 3769818,
+      "value_k": 113,
+      "shr_type": "SH",
+      "ticker": "GDHLF",
+      "pct_port": 2.09,
+      "value_usd": 113000
+    },
+    {
+      "company": "AMERICOLD REALTY TRUST INC",
+      "cusip": "03064D108",
+      "shares": 6830230,
+      "value_k": 107,
+      "shr_type": "SH",
+      "ticker": "COLD",
+      "pct_port": 1.98,
+      "value_usd": 107000
+    },
+    {
+      "company": "LIBERTY GLOBAL LTD",
+      "cusip": "G61188127",
+      "shares": 8543161,
+      "value_k": 93,
+      "shr_type": "SH",
+      "ticker": "LBTYK",
+      "pct_port": 1.72,
+      "value_usd": 93000
+    },
+    {
+      "company": "GRUPO AEROMEXICO SAB DE CV",
+      "cusip": "40054J109",
+      "shares": 4880188,
+      "value_k": 87,
+      "shr_type": "SH",
+      "ticker": "AERO",
+      "pct_port": 1.61,
+      "value_usd": 87000
+    },
+    {
+      "company": "AXALTA COATING SYS LTD",
+      "cusip": "G0750C108",
+      "shares": 1274356,
+      "value_k": 43,
+      "shr_type": "SH",
+      "ticker": "AXTA",
+      "pct_port": 0.8,
+      "value_usd": 43000
+    },
+    {
+      "company": "DNOW INC",
+      "cusip": "67011P100",
+      "shares": 2788000,
+      "value_k": 36,
+      "shr_type": "SH",
+      "ticker": "DNOW",
+      "pct_port": 0.67,
+      "value_usd": 36000
+    },
+    {
+      "company": "PERSHING SQUARE INC",
+      "cusip": "71531U102",
+      "shares": 392000,
+      "value_k": 12,
+      "shr_type": "SH",
+      "ticker": "PS",
+      "pct_port": 0.22,
+      "value_usd": 12000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:40:47.607918+00:00"
+}

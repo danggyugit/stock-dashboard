@@ -1,0 +1,351 @@
+{
+  "cik": "0001061165",
+  "name": "Lone Pine Capital",
+  "manager": "Stephen Mandel",
+  "style": "Growth",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "NEBIUS GROUP N.V.",
+      "cusip": "N97284108",
+      "shares": 4258008,
+      "value_k": 1175934,
+      "shr_type": "SH",
+      "ticker": "NBIS",
+      "pct_port": 7.19,
+      "value_usd": 1175934000
+    },
+    {
+      "company": "ASML HLDG NV",
+      "cusip": "N07059210",
+      "shares": 569174,
+      "value_k": 1132337,
+      "shr_type": "SH",
+      "ticker": "ASMLF",
+      "pct_port": 6.92,
+      "value_usd": 1132337000
+    },
+    {
+      "company": "SEAGATE TECHNOLOGY HLDNGS PL",
+      "cusip": "G7997R103",
+      "shares": 1000109,
+      "value_k": 965105,
+      "shr_type": "SH",
+      "ticker": "STX",
+      "pct_port": 5.9,
+      "value_usd": 965105000
+    },
+    {
+      "company": "HOME DEPOT INC",
+      "cusip": "437076102",
+      "shares": 2603189,
+      "value_k": 918092,
+      "shr_type": "SH",
+      "ticker": "HD",
+      "pct_port": 5.61,
+      "value_usd": 918092000
+    },
+    {
+      "company": "APPLIED MATLS INC",
+      "cusip": "038222105",
+      "shares": 1207737,
+      "value_k": 873193,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 5.34,
+      "value_usd": 873193000
+    },
+    {
+      "company": "MEDLINE INC",
+      "cusip": "58507V107",
+      "shares": 20968367,
+      "value_k": 826992,
+      "shr_type": "SH",
+      "ticker": "MDLN",
+      "pct_port": 5.06,
+      "value_usd": 826992000
+    },
+    {
+      "company": "LINDE PLC",
+      "cusip": "G54950103",
+      "shares": 1558081,
+      "value_k": 808550,
+      "shr_type": "SH",
+      "ticker": "LIN",
+      "pct_port": 4.94,
+      "value_usd": 808550000
+    },
+    {
+      "company": "TERADYNE INC",
+      "cusip": "880770102",
+      "shares": 1493080,
+      "value_k": 722411,
+      "shr_type": "SH",
+      "ticker": "TER",
+      "pct_port": 4.42,
+      "value_usd": 722411000
+    },
+    {
+      "company": "CORNING INC",
+      "cusip": "219350105",
+      "shares": 2728058,
+      "value_k": 696827,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 4.26,
+      "value_usd": 696827000
+    },
+    {
+      "company": "CARVANA CO",
+      "cusip": "146869102",
+      "shares": 10520666,
+      "value_k": 692470,
+      "shr_type": "SH",
+      "ticker": "CVNA",
+      "pct_port": 4.23,
+      "value_usd": 692470000
+    },
+    {
+      "company": "HUT 8 CORP",
+      "cusip": "44812J104",
+      "shares": 5773045,
+      "value_k": 666469,
+      "shr_type": "SH",
+      "ticker": "HUT",
+      "pct_port": 4.07,
+      "value_usd": 666469000
+    },
+    {
+      "company": "PERFORMANCE FOOD GROUP CO",
+      "cusip": "71377A103",
+      "shares": 5852740,
+      "value_k": 654277,
+      "shr_type": "SH",
+      "ticker": "PFGC",
+      "pct_port": 4.0,
+      "value_usd": 654277000
+    },
+    {
+      "company": "NU HLDGS LTD",
+      "cusip": "G6683N103",
+      "shares": 47219717,
+      "value_k": 630855,
+      "shr_type": "SH",
+      "ticker": "NU",
+      "pct_port": 3.86,
+      "value_usd": 630855000
+    },
+    {
+      "company": "TERAWULF INC",
+      "cusip": "88080T104",
+      "shares": 24144625,
+      "value_k": 596372,
+      "shr_type": "SH",
+      "ticker": "WULF",
+      "pct_port": 3.65,
+      "value_usd": 596372000
+    },
+    {
+      "company": "CARPENTER TECHNOLOGY CORP",
+      "cusip": "144285103",
+      "shares": 962839,
+      "value_k": 593917,
+      "shr_type": "SH",
+      "ticker": "CRS",
+      "pct_port": 3.63,
+      "value_usd": 593917000
+    },
+    {
+      "company": "MASTEC INC",
+      "cusip": "576323109",
+      "shares": 1345157,
+      "value_k": 559666,
+      "shr_type": "SH",
+      "ticker": "MTZ",
+      "pct_port": 3.42,
+      "value_usd": 559666000
+    },
+    {
+      "company": "APPLOVIN CORP",
+      "cusip": "03831W108",
+      "shares": 1042268,
+      "value_k": 537007,
+      "shr_type": "SH",
+      "ticker": "APP",
+      "pct_port": 3.28,
+      "value_usd": 537007000
+    },
+    {
+      "company": "TTM TECHNOLOGIES INC",
+      "cusip": "87305R109",
+      "shares": 2738075,
+      "value_k": 512074,
+      "shr_type": "SH",
+      "ticker": "TTMI",
+      "pct_port": 3.13,
+      "value_usd": 512074000
+    },
+    {
+      "company": "STERLING INFRASTRUCTURE INC",
+      "cusip": "859241101",
+      "shares": 609643,
+      "value_k": 511709,
+      "shr_type": "SH",
+      "ticker": "STRL",
+      "pct_port": 3.13,
+      "value_usd": 511709000
+    },
+    {
+      "company": "US FOODS HLDG CORP",
+      "cusip": "912008109",
+      "shares": 4914492,
+      "value_k": 502506,
+      "shr_type": "SH",
+      "ticker": "USFD",
+      "pct_port": 3.07,
+      "value_usd": 502506000
+    },
+    {
+      "company": "ON HLDG AG",
+      "cusip": "H5919C104",
+      "shares": 13280030,
+      "value_k": 470378,
+      "shr_type": "SH",
+      "ticker": "ONON",
+      "pct_port": 2.88,
+      "value_usd": 470378000
+    },
+    {
+      "company": "LPL FINL HLDGS INC",
+      "cusip": "50212V100",
+      "shares": 1219099,
+      "value_k": 343395,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 2.1,
+      "value_usd": 343395000
+    },
+    {
+      "company": "ARGAN INC",
+      "cusip": "04010E109",
+      "shares": 368673,
+      "value_k": 294403,
+      "shr_type": "SH",
+      "ticker": "AGX",
+      "pct_port": 1.8,
+      "value_usd": 294403000
+    },
+    {
+      "company": "BITDEER TECHNOLOGIES GROUP",
+      "cusip": "G11448100",
+      "shares": 7020026,
+      "value_k": 111407,
+      "shr_type": "SH",
+      "ticker": "BTDR",
+      "pct_port": 0.68,
+      "value_usd": 111407000
+    },
+    {
+      "company": "SHARONAI HOLDINGS INC",
+      "cusip": "778920306",
+      "shares": 1209848,
+      "value_k": 102425,
+      "shr_type": "SH",
+      "ticker": "SHAZW",
+      "pct_port": 0.63,
+      "value_usd": 102425000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K305",
+      "shares": 215574,
+      "value_k": 77039,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 0.47,
+      "value_usd": 77039000
+    },
+    {
+      "company": "KODIAK GAS SVCS INC",
+      "cusip": "50012A108",
+      "shares": 845070,
+      "value_k": 63490,
+      "shr_type": "SH",
+      "ticker": "KGS",
+      "pct_port": 0.39,
+      "value_usd": 63490000
+    },
+    {
+      "company": "VISA INC",
+      "cusip": "92826C839",
+      "shares": 165960,
+      "value_k": 56939,
+      "shr_type": "SH",
+      "ticker": "V",
+      "pct_port": 0.35,
+      "value_usd": 56939000
+    },
+    {
+      "company": "INTERACTIVE BROKERS GROUP IN",
+      "cusip": "45841N107",
+      "shares": 577666,
+      "value_k": 50280,
+      "shr_type": "SH",
+      "ticker": "IBKR",
+      "pct_port": 0.31,
+      "value_usd": 50280000
+    },
+    {
+      "company": "TAIWAN SEMICONDUCTOR MANUFAC",
+      "cusip": "874039100",
+      "shares": 101242,
+      "value_k": 48350,
+      "shr_type": "SH",
+      "ticker": "TSMWF",
+      "pct_port": 0.3,
+      "value_usd": 48350000
+    },
+    {
+      "company": "SEA LTD",
+      "cusip": "81141R100",
+      "shares": 494581,
+      "value_k": 47395,
+      "shr_type": "SH",
+      "ticker": "SE",
+      "pct_port": 0.29,
+      "value_usd": 47395000
+    },
+    {
+      "company": "MCKESSON CORP",
+      "cusip": "58155Q103",
+      "shares": 57851,
+      "value_k": 43712,
+      "shr_type": "SH",
+      "ticker": "MCK",
+      "pct_port": 0.27,
+      "value_usd": 43712000
+    },
+    {
+      "company": "TRANSDIGM GROUP INC",
+      "cusip": "893641100",
+      "shares": 28532,
+      "value_k": 38005,
+      "shr_type": "SH",
+      "ticker": "TDG",
+      "pct_port": 0.23,
+      "value_usd": 38005000
+    },
+    {
+      "company": "BROOKFIELD CORP",
+      "cusip": "11271J107",
+      "shares": 792717,
+      "value_k": 33761,
+      "shr_type": "SH",
+      "ticker": "BXDIF",
+      "pct_port": 0.21,
+      "value_usd": 33761000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:44:38.214873+00:00"
+}

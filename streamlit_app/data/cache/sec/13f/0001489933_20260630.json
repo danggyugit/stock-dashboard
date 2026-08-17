@@ -1,0 +1,961 @@
+{
+  "cik": "0001489933",
+  "name": "DME Capital (Greenlight)",
+  "manager": "David Einhorn",
+  "style": "Value/Short",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "GREEN BRICK PARTNERS INC",
+      "cusip": "392709101",
+      "shares": 8642507,
+      "value_k": 691746,
+      "shr_type": "SH",
+      "ticker": "GRBK-PA",
+      "pct_port": 17.7,
+      "value_usd": 691746000
+    },
+    {
+      "company": "FLUOR CORP",
+      "cusip": "343412102",
+      "shares": 3828230,
+      "value_k": 200560,
+      "shr_type": "SH",
+      "ticker": "FLR",
+      "pct_port": 5.13,
+      "value_usd": 200560000
+    },
+    {
+      "company": "CORE NATURAL RESOURCES INC",
+      "cusip": "218937100",
+      "shares": 1946578,
+      "value_k": 155765,
+      "shr_type": "SH",
+      "ticker": "CNR",
+      "pct_port": 3.98,
+      "value_usd": 155765000
+    },
+    {
+      "company": "BRIGHTHOUSE FINL INC",
+      "cusip": "10922N103",
+      "shares": 2293716,
+      "value_k": 145192,
+      "shr_type": "SH",
+      "ticker": "BHFAP",
+      "pct_port": 3.71,
+      "value_usd": 145192000
+    },
+    {
+      "company": "ACADIA HEALTHCARE COMPANY IN",
+      "cusip": "00404A109",
+      "shares": 3786931,
+      "value_k": 111828,
+      "shr_type": "SH",
+      "ticker": "ACHC",
+      "pct_port": 2.86,
+      "value_usd": 111828000
+    },
+    {
+      "company": "FORTUNE BRANDS INNOVATIONS I",
+      "cusip": "34964C106",
+      "shares": 2006795,
+      "value_k": 110173,
+      "shr_type": "SH",
+      "ticker": "FBIN",
+      "pct_port": 2.82,
+      "value_usd": 110173000
+    },
+    {
+      "company": "PENN ENTERTAINMENT INC",
+      "cusip": "707569109",
+      "shares": 4815969,
+      "value_k": 102869,
+      "shr_type": "SH",
+      "ticker": "PENN",
+      "pct_port": 2.63,
+      "value_usd": 102869000
+    },
+    {
+      "company": "PG&E CORP",
+      "cusip": "69331C108",
+      "shares": 5594092,
+      "value_k": 94092,
+      "shr_type": "SH",
+      "ticker": "PCG-PX",
+      "pct_port": 2.41,
+      "value_usd": 94092000
+    },
+    {
+      "company": "CENTENE CORP DEL",
+      "cusip": "15135B101",
+      "shares": 1393630,
+      "value_k": 89457,
+      "shr_type": "SH",
+      "ticker": "CNC",
+      "pct_port": 2.29,
+      "value_usd": 89457000
+    },
+    {
+      "company": "TD SYNNEX CORPORATION",
+      "cusip": "87162W100",
+      "shares": 324632,
+      "value_k": 86787,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 2.22,
+      "value_usd": 86787000
+    },
+    {
+      "company": "VERSIGENT PLC",
+      "cusip": "G9600F104",
+      "shares": 1981680,
+      "value_k": 83250,
+      "shr_type": "SH",
+      "ticker": "VGNT",
+      "pct_port": 2.13,
+      "value_usd": 83250000
+    },
+    {
+      "company": "GRAPHIC PACKAGING HLDG CO",
+      "cusip": "388689101",
+      "shares": 7872960,
+      "value_k": 83217,
+      "shr_type": "SH",
+      "ticker": "GPK",
+      "pct_port": 2.13,
+      "value_usd": 83217000
+    },
+    {
+      "company": "TEVA PHARMACEUTICAL INDS LTD",
+      "cusip": "881624209",
+      "shares": 2451802,
+      "value_k": 83067,
+      "shr_type": "SH",
+      "ticker": "TEVJF",
+      "pct_port": 2.13,
+      "value_usd": 83067000
+    },
+    {
+      "company": "CAPRI HOLDINGS LIMITED",
+      "cusip": "G1890L107",
+      "shares": 4084228,
+      "value_k": 75844,
+      "shr_type": "SH",
+      "ticker": "CPRI",
+      "pct_port": 1.94,
+      "value_usd": 75844000
+    },
+    {
+      "company": "BKV CORP",
+      "cusip": "05603J108",
+      "shares": 2670133,
+      "value_k": 73054,
+      "shr_type": "SH",
+      "ticker": "BKV",
+      "pct_port": 1.87,
+      "value_usd": 73054000
+    },
+    {
+      "company": "DHT HOLDINGS INC",
+      "cusip": "Y2065G121",
+      "shares": 4294055,
+      "value_k": 70980,
+      "shr_type": "SH",
+      "ticker": "DHT",
+      "pct_port": 1.82,
+      "value_usd": 70980000
+    },
+    {
+      "company": "CROCS INC",
+      "cusip": "227046109",
+      "shares": 559200,
+      "value_k": 67461,
+      "shr_type": "SH",
+      "ticker": "CROX",
+      "pct_port": 1.73,
+      "value_usd": 67461000
+    },
+    {
+      "company": "PRIMO BRANDS CORPORATION",
+      "cusip": "741623102",
+      "shares": 2723300,
+      "value_k": 66557,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.7,
+      "value_usd": 66557000
+    },
+    {
+      "company": "GREEN BRICK PARTNERS INC",
+      "cusip": "392709101",
+      "shares": 824876,
+      "value_k": 66023,
+      "shr_type": "SH",
+      "ticker": "GRBK-PA",
+      "pct_port": 1.69,
+      "value_usd": 66023000
+    },
+    {
+      "company": "SOTERA HEALTH CO",
+      "cusip": "83601L102",
+      "shares": 3704765,
+      "value_k": 65759,
+      "shr_type": "SH",
+      "ticker": "SHC",
+      "pct_port": 1.68,
+      "value_usd": 65759000
+    },
+    {
+      "company": "DAUCH CORP",
+      "cusip": "024061103",
+      "shares": 10936304,
+      "value_k": 59274,
+      "shr_type": "SH",
+      "ticker": "DCH",
+      "pct_port": 1.52,
+      "value_usd": 59274000
+    },
+    {
+      "company": "VERSANT MEDIA GROUP INC",
+      "cusip": "925283103",
+      "shares": 1629012,
+      "value_k": 58660,
+      "shr_type": "SH",
+      "ticker": "VSNT",
+      "pct_port": 1.5,
+      "value_usd": 58660000
+    },
+    {
+      "company": "ROIVANT SCIENCES LTD",
+      "cusip": "G76279101",
+      "shares": 1644729,
+      "value_k": 58206,
+      "shr_type": "SH",
+      "ticker": "ROIV",
+      "pct_port": 1.49,
+      "value_usd": 58206000
+    },
+    {
+      "company": "WARNER BROS DISCOVERY INC",
+      "cusip": "934423104",
+      "shares": 2088340,
+      "value_k": 55675,
+      "shr_type": "SH",
+      "ticker": "WBD",
+      "pct_port": 1.42,
+      "value_usd": 55675000
+    },
+    {
+      "company": "PAYPAL HLDGS INC",
+      "cusip": "70450Y103",
+      "shares": 1212790,
+      "value_k": 52368,
+      "shr_type": "SH",
+      "ticker": "PYPL",
+      "pct_port": 1.34,
+      "value_usd": 52368000
+    },
+    {
+      "company": "SCHEIN HENRY INC",
+      "cusip": "806407102",
+      "shares": 624680,
+      "value_k": 52173,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.33,
+      "value_usd": 52173000
+    },
+    {
+      "company": "ANTERO RESOURCES CORP",
+      "cusip": "03674X106",
+      "shares": 1394910,
+      "value_k": 49017,
+      "shr_type": "SH",
+      "ticker": "AR",
+      "pct_port": 1.25,
+      "value_usd": 49017000
+    },
+    {
+      "company": "LIBERTY GLOBAL LTD",
+      "cusip": "G61188101",
+      "shares": 4164132,
+      "value_k": 47346,
+      "shr_type": "SH",
+      "ticker": "LBTYK",
+      "pct_port": 1.21,
+      "value_usd": 47346000
+    },
+    {
+      "company": "RESIDEO TECHNOLOGIES INC",
+      "cusip": "76118Y104",
+      "shares": 1475294,
+      "value_k": 45881,
+      "shr_type": "SH",
+      "ticker": "REZI",
+      "pct_port": 1.17,
+      "value_usd": 45881000
+    },
+    {
+      "company": "STUBHUB HLDGS INC",
+      "cusip": "86384P109",
+      "shares": 3562630,
+      "value_k": 45851,
+      "shr_type": "SH",
+      "ticker": "STUB",
+      "pct_port": 1.17,
+      "value_usd": 45851000
+    },
+    {
+      "company": "DECKERS OUTDOOR CORP",
+      "cusip": "243537107",
+      "shares": 428018,
+      "value_k": 42497,
+      "shr_type": "SH",
+      "ticker": "DECK",
+      "pct_port": 1.09,
+      "value_usd": 42497000
+    },
+    {
+      "company": "SPECTRUM BRANDS HOLDINGS INC",
+      "cusip": "84790A105",
+      "shares": 474474,
+      "value_k": 40686,
+      "shr_type": "SH",
+      "ticker": "SPB",
+      "pct_port": 1.04,
+      "value_usd": 40686000
+    },
+    {
+      "company": "VIATRIS INC",
+      "cusip": "92556V106",
+      "shares": 2503880,
+      "value_k": 39761,
+      "shr_type": "SH",
+      "ticker": "VTRS",
+      "pct_port": 1.02,
+      "value_usd": 39761000
+    },
+    {
+      "company": "CNH INDL N V",
+      "cusip": "N20944109",
+      "shares": 3489690,
+      "value_k": 39189,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.0,
+      "value_usd": 39189000
+    },
+    {
+      "company": "FLUOR CORP",
+      "cusip": "343412102",
+      "shares": 688790,
+      "value_k": 36085,
+      "shr_type": "SH",
+      "ticker": "FLR",
+      "pct_port": 0.92,
+      "value_usd": 36085000
+    },
+    {
+      "company": "COMCAST CORP NEW",
+      "cusip": "20030N101",
+      "shares": 1345780,
+      "value_k": 33038,
+      "shr_type": "SH",
+      "ticker": "CCZ",
+      "pct_port": 0.85,
+      "value_usd": 33038000
+    },
+    {
+      "company": "PVH CORPORATION",
+      "cusip": "693656100",
+      "shares": 443820,
+      "value_k": 32958,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.84,
+      "value_usd": 32958000
+    },
+    {
+      "company": "PARAMOUNT SKYDANCE CORP",
+      "cusip": "69932A204",
+      "shares": 3272790,
+      "value_k": 32269,
+      "shr_type": "SH",
+      "ticker": "PSKY",
+      "pct_port": 0.83,
+      "value_usd": 32269000
+    },
+    {
+      "company": "TRIPADVISOR INC",
+      "cusip": "896945201",
+      "shares": 2349353,
+      "value_k": 32209,
+      "shr_type": "SH",
+      "ticker": "TRIP",
+      "pct_port": 0.82,
+      "value_usd": 32209000
+    },
+    {
+      "company": "SPDR GOLD TR",
+      "cusip": "78463V107",
+      "shares": 83421,
+      "value_k": 30730,
+      "shr_type": "SH",
+      "ticker": "GLD",
+      "pct_port": 0.79,
+      "value_usd": 30730000
+    },
+    {
+      "company": "SLIDE INS HLDGS INC",
+      "cusip": "831349105",
+      "shares": 1409110,
+      "value_k": 27294,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.7,
+      "value_usd": 27294000
+    },
+    {
+      "company": "CORE NATURAL RESOURCES INC",
+      "cusip": "218937100",
+      "shares": 336622,
+      "value_k": 26936,
+      "shr_type": "SH",
+      "ticker": "CNR",
+      "pct_port": 0.69,
+      "value_usd": 26936000
+    },
+    {
+      "company": "BRIGHTHOUSE FINL INC",
+      "cusip": "10922N103",
+      "shares": 416272,
+      "value_k": 26350,
+      "shr_type": "SH",
+      "ticker": "BHFAP",
+      "pct_port": 0.67,
+      "value_usd": 26350000
+    },
+    {
+      "company": "THE CIGNA GROUP",
+      "cusip": "125523100",
+      "shares": 75100,
+      "value_k": 20703,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.53,
+      "value_usd": 20703000
+    },
+    {
+      "company": "PENN ENTERTAINMENT INC",
+      "cusip": "707569109",
+      "shares": 863624,
+      "value_k": 18447,
+      "shr_type": "SH",
+      "ticker": "PENN",
+      "pct_port": 0.47,
+      "value_usd": 18447000
+    },
+    {
+      "company": "ACADIA HEALTHCARE COMPANY IN",
+      "cusip": "00404A109",
+      "shares": 613710,
+      "value_k": 18122,
+      "shr_type": "SH",
+      "ticker": "ACHC",
+      "pct_port": 0.46,
+      "value_usd": 18122000
+    },
+    {
+      "company": "PG&E CORP",
+      "cusip": "69331C108",
+      "shares": 1038760,
+      "value_k": 17471,
+      "shr_type": "SH",
+      "ticker": "PCG-PX",
+      "pct_port": 0.45,
+      "value_usd": 17471000
+    },
+    {
+      "company": "CENTENE CORP DEL",
+      "cusip": "15135B101",
+      "shares": 257520,
+      "value_k": 16530,
+      "shr_type": "SH",
+      "ticker": "CNC",
+      "pct_port": 0.42,
+      "value_usd": 16530000
+    },
+    {
+      "company": "GRAPHIC PACKAGING HLDG CO",
+      "cusip": "388689101",
+      "shares": 1520400,
+      "value_k": 16070,
+      "shr_type": "SH",
+      "ticker": "GPK",
+      "pct_port": 0.41,
+      "value_usd": 16070000
+    },
+    {
+      "company": "TD SYNNEX CORPORATION",
+      "cusip": "87162W100",
+      "shares": 56410,
+      "value_k": 15080,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.39,
+      "value_usd": 15080000
+    },
+    {
+      "company": "TEVA PHARMACEUTICAL INDS LTD",
+      "cusip": "881624209",
+      "shares": 434257,
+      "value_k": 14712,
+      "shr_type": "SH",
+      "ticker": "TEVJF",
+      "pct_port": 0.38,
+      "value_usd": 14712000
+    },
+    {
+      "company": "CAPRI HOLDINGS LIMITED",
+      "cusip": "G1890L107",
+      "shares": 735890,
+      "value_k": 13665,
+      "shr_type": "SH",
+      "ticker": "CPRI",
+      "pct_port": 0.35,
+      "value_usd": 13665000
+    },
+    {
+      "company": "CROCS INC",
+      "cusip": "227046109",
+      "shares": 109940,
+      "value_k": 13263,
+      "shr_type": "SH",
+      "ticker": "CROX",
+      "pct_port": 0.34,
+      "value_usd": 13263000
+    },
+    {
+      "company": "VERSIGENT PLC",
+      "cusip": "G9600F104",
+      "shares": 295960,
+      "value_k": 12433,
+      "shr_type": "SH",
+      "ticker": "VGNT",
+      "pct_port": 0.32,
+      "value_usd": 12433000
+    },
+    {
+      "company": "DHT HOLDINGS INC",
+      "cusip": "Y2065G121",
+      "shares": 740265,
+      "value_k": 12236,
+      "shr_type": "SH",
+      "ticker": "DHT",
+      "pct_port": 0.31,
+      "value_usd": 12236000
+    },
+    {
+      "company": "ROIVANT SCIENCES LTD",
+      "cusip": "G76279101",
+      "shares": 337010,
+      "value_k": 11926,
+      "shr_type": "SH",
+      "ticker": "ROIV",
+      "pct_port": 0.31,
+      "value_usd": 11926000
+    },
+    {
+      "company": "BKV CORP",
+      "cusip": "05603J108",
+      "shares": 425040,
+      "value_k": 11629,
+      "shr_type": "SH",
+      "ticker": "BKV",
+      "pct_port": 0.3,
+      "value_usd": 11629000
+    },
+    {
+      "company": "COYA THERAPEUTICS INC",
+      "cusip": "22407B108",
+      "shares": 1946079,
+      "value_k": 11384,
+      "shr_type": "SH",
+      "ticker": "COYA",
+      "pct_port": 0.29,
+      "value_usd": 11384000
+    },
+    {
+      "company": "LAKEFRONT BIOTHERAPEUTICS NV",
+      "cusip": "36315X101",
+      "shares": 376063,
+      "value_k": 11274,
+      "shr_type": "SH",
+      "ticker": "GLPGF",
+      "pct_port": 0.29,
+      "value_usd": 11274000
+    },
+    {
+      "company": "VERSANT MEDIA GROUP INC",
+      "cusip": "925283103",
+      "shares": 293160,
+      "value_k": 10556,
+      "shr_type": "SH",
+      "ticker": "VSNT",
+      "pct_port": 0.27,
+      "value_usd": 10556000
+    },
+    {
+      "company": "PAYPAL HLDGS INC",
+      "cusip": "70450Y103",
+      "shares": 211530,
+      "value_k": 9133,
+      "shr_type": "SH",
+      "ticker": "PYPL",
+      "pct_port": 0.23,
+      "value_usd": 9133000
+    },
+    {
+      "company": "LIBERTY GLOBAL LTD",
+      "cusip": "G61188101",
+      "shares": 799190,
+      "value_k": 9086,
+      "shr_type": "SH",
+      "ticker": "LBTYK",
+      "pct_port": 0.23,
+      "value_usd": 9086000
+    },
+    {
+      "company": "FORTUNE BRANDS INNOVATIONS I",
+      "cusip": "34964C106",
+      "shares": 157230,
+      "value_k": 8631,
+      "shr_type": "SH",
+      "ticker": "FBIN",
+      "pct_port": 0.22,
+      "value_usd": 8631000
+    },
+    {
+      "company": "STUBHUB HLDGS INC",
+      "cusip": "86384P109",
+      "shares": 670570,
+      "value_k": 8630,
+      "shr_type": "SH",
+      "ticker": "STUB",
+      "pct_port": 0.22,
+      "value_usd": 8630000
+    },
+    {
+      "company": "BRIGHTHOUSE FINL INC",
+      "cusip": "10922N103",
+      "shares": 132112,
+      "value_k": 8362,
+      "shr_type": "SH",
+      "ticker": "BHFAP",
+      "pct_port": 0.21,
+      "value_usd": 8362000
+    },
+    {
+      "company": "DAUCH CORP",
+      "cusip": "024061103",
+      "shares": 1458800,
+      "value_k": 7906,
+      "shr_type": "SH",
+      "ticker": "DCH",
+      "pct_port": 0.2,
+      "value_usd": 7906000
+    },
+    {
+      "company": "CNH INDL N V",
+      "cusip": "N20944109",
+      "shares": 699250,
+      "value_k": 7852,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.2,
+      "value_usd": 7852000
+    },
+    {
+      "company": "SCHEIN HENRY INC",
+      "cusip": "806407102",
+      "shares": 93870,
+      "value_k": 7840,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.2,
+      "value_usd": 7840000
+    },
+    {
+      "company": "DECKERS OUTDOOR CORP",
+      "cusip": "243537107",
+      "shares": 78380,
+      "value_k": 7782,
+      "shr_type": "SH",
+      "ticker": "DECK",
+      "pct_port": 0.2,
+      "value_usd": 7782000
+    },
+    {
+      "company": "SOTERA HEALTH CO",
+      "cusip": "83601L102",
+      "shares": 430750,
+      "value_k": 7645,
+      "shr_type": "SH",
+      "ticker": "SHC",
+      "pct_port": 0.2,
+      "value_usd": 7645000
+    },
+    {
+      "company": "SPECTRUM BRANDS HOLDINGS INC",
+      "cusip": "84790A105",
+      "shares": 86964,
+      "value_k": 7457,
+      "shr_type": "SH",
+      "ticker": "SPB",
+      "pct_port": 0.19,
+      "value_usd": 7457000
+    },
+    {
+      "company": "FLUOR CORP",
+      "cusip": "343412102",
+      "shares": 141730,
+      "value_k": 7425,
+      "shr_type": "SH",
+      "ticker": "FLR",
+      "pct_port": 0.19,
+      "value_usd": 7425000
+    },
+    {
+      "company": "RESIDEO TECHNOLOGIES INC",
+      "cusip": "76118Y104",
+      "shares": 224296,
+      "value_k": 6975,
+      "shr_type": "SH",
+      "ticker": "REZI",
+      "pct_port": 0.18,
+      "value_usd": 6975000
+    },
+    {
+      "company": "PARAMOUNT SKYDANCE CORP",
+      "cusip": "69932A204",
+      "shares": 653290,
+      "value_k": 6441,
+      "shr_type": "SH",
+      "ticker": "PSKY",
+      "pct_port": 0.16,
+      "value_usd": 6441000
+    },
+    {
+      "company": "ANTERO RESOURCES CORP",
+      "cusip": "03674X106",
+      "shares": 179230,
+      "value_k": 6298,
+      "shr_type": "SH",
+      "ticker": "AR",
+      "pct_port": 0.16,
+      "value_usd": 6298000
+    },
+    {
+      "company": "ROIVANT SCIENCES LTD",
+      "cusip": "G76279101",
+      "shares": 170930,
+      "value_k": 6049,
+      "shr_type": "SH",
+      "ticker": "ROIV",
+      "pct_port": 0.15,
+      "value_usd": 6049000
+    },
+    {
+      "company": "GRAPHIC PACKAGING HLDG CO",
+      "cusip": "388689101",
+      "shares": 560070,
+      "value_k": 5919,
+      "shr_type": "SH",
+      "ticker": "GPK",
+      "pct_port": 0.15,
+      "value_usd": 5919000
+    },
+    {
+      "company": "PVH CORPORATION",
+      "cusip": "693656100",
+      "shares": 76980,
+      "value_k": 5716,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.15,
+      "value_usd": 5716000
+    },
+    {
+      "company": "SLIDE INS HLDGS INC",
+      "cusip": "831349105",
+      "shares": 277520,
+      "value_k": 5375,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.14,
+      "value_usd": 5375000
+    },
+    {
+      "company": "VIATRIS INC",
+      "cusip": "92556V106",
+      "shares": 269590,
+      "value_k": 4281,
+      "shr_type": "SH",
+      "ticker": "VTRS",
+      "pct_port": 0.11,
+      "value_usd": 4281000
+    },
+    {
+      "company": "FORTUNE BRANDS INNOVATIONS I",
+      "cusip": "34964C106",
+      "shares": 77850,
+      "value_k": 4273,
+      "shr_type": "SH",
+      "ticker": "FBIN",
+      "pct_port": 0.11,
+      "value_usd": 4273000
+    },
+    {
+      "company": "WARNER BROS DISCOVERY INC",
+      "cusip": "934423104",
+      "shares": 157840,
+      "value_k": 4208,
+      "shr_type": "SH",
+      "ticker": "WBD",
+      "pct_port": 0.11,
+      "value_usd": 4208000
+    },
+    {
+      "company": "PENN ENTERTAINMENT INC",
+      "cusip": "707569109",
+      "shares": 180677,
+      "value_k": 3859,
+      "shr_type": "SH",
+      "ticker": "PENN",
+      "pct_port": 0.1,
+      "value_usd": 3859000
+    },
+    {
+      "company": "THE CIGNA GROUP",
+      "cusip": "125523100",
+      "shares": 13300,
+      "value_k": 3666,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.09,
+      "value_usd": 3666000
+    },
+    {
+      "company": "LAKEFRONT BIOTHERAPEUTICS NV",
+      "cusip": "36315X101",
+      "shares": 106683,
+      "value_k": 3198,
+      "shr_type": "SH",
+      "ticker": "GLPGF",
+      "pct_port": 0.08,
+      "value_usd": 3198000
+    },
+    {
+      "company": "IMMUNOVANT INC",
+      "cusip": "45258J102",
+      "shares": 78610,
+      "value_k": 3028,
+      "shr_type": "SH",
+      "ticker": "IMVT",
+      "pct_port": 0.08,
+      "value_usd": 3028000
+    },
+    {
+      "company": "PRIMO BRANDS CORPORATION",
+      "cusip": "741623102",
+      "shares": 100360,
+      "value_k": 2452,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.06,
+      "value_usd": 2452000
+    },
+    {
+      "company": "COYA THERAPEUTICS INC",
+      "cusip": "22407B108",
+      "shares": 389461,
+      "value_k": 2278,
+      "shr_type": "SH",
+      "ticker": "COYA",
+      "pct_port": 0.06,
+      "value_usd": 2278000
+    },
+    {
+      "company": "GOPRO INC",
+      "cusip": "38268T103",
+      "shares": 1358990,
+      "value_k": 1057,
+      "shr_type": "SH",
+      "ticker": "GPRO",
+      "pct_port": 0.03,
+      "value_usd": 1057000
+    },
+    {
+      "company": "GAIN THERAPEUTICS INC",
+      "cusip": "36269B105",
+      "shares": 492130,
+      "value_k": 999,
+      "shr_type": "SH",
+      "ticker": "GANX",
+      "pct_port": 0.03,
+      "value_usd": 999000
+    },
+    {
+      "company": "IMMUNOVANT INC",
+      "cusip": "45258J102",
+      "shares": 14910,
+      "value_k": 574,
+      "shr_type": "SH",
+      "ticker": "IMVT",
+      "pct_port": 0.01,
+      "value_usd": 574000
+    },
+    {
+      "company": "GOPRO INC",
+      "cusip": "38268T103",
+      "shares": 334870,
+      "value_k": 260,
+      "shr_type": "SH",
+      "ticker": "GPRO",
+      "pct_port": 0.01,
+      "value_usd": 260000
+    },
+    {
+      "company": "NUVATION BIO INC",
+      "cusip": "67080N101",
+      "shares": 34995,
+      "value_k": 198,
+      "shr_type": "SH",
+      "ticker": "NUVB",
+      "pct_port": 0.01,
+      "value_usd": 198000
+    },
+    {
+      "company": "TRIPADVISOR INC",
+      "cusip": "896945201",
+      "shares": 12620,
+      "value_k": 173,
+      "shr_type": "SH",
+      "ticker": "TRIP",
+      "pct_port": 0.0,
+      "value_usd": 173000
+    },
+    {
+      "company": "GAIN THERAPEUTICS INC",
+      "cusip": "36269B105",
+      "shares": 74000,
+      "value_k": 150,
+      "shr_type": "SH",
+      "ticker": "GANX",
+      "pct_port": 0.0,
+      "value_usd": 150000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:40:44.931985+00:00"
+}

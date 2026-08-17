@@ -1,0 +1,911 @@
+{
+  "cik": "0001103804",
+  "name": "Viking Global",
+  "manager": "Andreas Halvorsen",
+  "style": "L/S Equity",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "VISA INC",
+      "cusip": "92826C839",
+      "shares": 6393604,
+      "value_k": 2193581,
+      "shr_type": "SH",
+      "ticker": "V",
+      "pct_port": 6.25,
+      "value_usd": 2193581000
+    },
+    {
+      "company": "TAIWAN SEMICONDUCTOR MANUFAC",
+      "cusip": "874039100",
+      "shares": 3168097,
+      "value_k": 1512988,
+      "shr_type": "SH",
+      "ticker": "TSMWF",
+      "pct_port": 4.31,
+      "value_usd": 1512988000
+    },
+    {
+      "company": "AIR PRODUCTS AND CHEMICALS I",
+      "cusip": "009158106",
+      "shares": 4740351,
+      "value_k": 1389776,
+      "shr_type": "SH",
+      "ticker": "APD",
+      "pct_port": 3.96,
+      "value_usd": 1389776000
+    },
+    {
+      "company": "SHERWIN WILLIAMS CO",
+      "cusip": "824348106",
+      "shares": 3875879,
+      "value_k": 1334542,
+      "shr_type": "SH",
+      "ticker": "SHW",
+      "pct_port": 3.8,
+      "value_usd": 1334542000
+    },
+    {
+      "company": "FORTIVE CORP",
+      "cusip": "34959J108",
+      "shares": 19934762,
+      "value_k": 1217814,
+      "shr_type": "SH",
+      "ticker": "FTV",
+      "pct_port": 3.47,
+      "value_usd": 1217814000
+    },
+    {
+      "company": "META PLATFORMS INC",
+      "cusip": "30303M102",
+      "shares": 1867619,
+      "value_k": 1052011,
+      "shr_type": "SH",
+      "ticker": "META",
+      "pct_port": 3.0,
+      "value_usd": 1052011000
+    },
+    {
+      "company": "SCHWAB CHARLES CORP",
+      "cusip": "808513105",
+      "shares": 10638869,
+      "value_k": 981648,
+      "shr_type": "SH",
+      "ticker": "SCHW-PJ",
+      "pct_port": 2.8,
+      "value_usd": 981648000
+    },
+    {
+      "company": "THERMO FISHER SCIENTIFIC INC",
+      "cusip": "883556102",
+      "shares": 1937415,
+      "value_k": 971342,
+      "shr_type": "SH",
+      "ticker": "TMO",
+      "pct_port": 2.77,
+      "value_usd": 971342000
+    },
+    {
+      "company": "JPMORGAN CHASE & CO",
+      "cusip": "46625H100",
+      "shares": 2899386,
+      "value_k": 949056,
+      "shr_type": "SH",
+      "ticker": "JPM-PM",
+      "pct_port": 2.71,
+      "value_usd": 949056000
+    },
+    {
+      "company": "LENNOX INTL INC",
+      "cusip": "526107107",
+      "shares": 1590959,
+      "value_k": 911539,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 2.6,
+      "value_usd": 911539000
+    },
+    {
+      "company": "AMAZON COM INC",
+      "cusip": "023135106",
+      "shares": 3700862,
+      "value_k": 882063,
+      "shr_type": "SH",
+      "ticker": "AMZN",
+      "pct_port": 2.51,
+      "value_usd": 882063000
+    },
+    {
+      "company": "FERRARI N V",
+      "cusip": "N3167Y103",
+      "shares": 2204309,
+      "value_k": 816922,
+      "shr_type": "SH",
+      "ticker": "RACE",
+      "pct_port": 2.33,
+      "value_usd": 816922000
+    },
+    {
+      "company": "CARVANA CO",
+      "cusip": "146869102",
+      "shares": 12322311,
+      "value_k": 811054,
+      "shr_type": "SH",
+      "ticker": "CVNA",
+      "pct_port": 2.31,
+      "value_usd": 811054000
+    },
+    {
+      "company": "MCDONALDS CORP",
+      "cusip": "580135101",
+      "shares": 2829158,
+      "value_k": 764749,
+      "shr_type": "SH",
+      "ticker": "MCD",
+      "pct_port": 2.18,
+      "value_usd": 764749000
+    },
+    {
+      "company": "BRIDGEBIO PHARMA INC",
+      "cusip": "10806X102",
+      "shares": 9949219,
+      "value_k": 741017,
+      "shr_type": "SH",
+      "ticker": "BBIO",
+      "pct_port": 2.11,
+      "value_usd": 741017000
+    },
+    {
+      "company": "BOEING CO",
+      "cusip": "097023105",
+      "shares": 3274825,
+      "value_k": 708901,
+      "shr_type": "SH",
+      "ticker": "BA-PA",
+      "pct_port": 2.02,
+      "value_usd": 708901000
+    },
+    {
+      "company": "MID-AMER APT CMNTYS INC",
+      "cusip": "59522J103",
+      "shares": 5043318,
+      "value_k": 700718,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 2.0,
+      "value_usd": 700718000
+    },
+    {
+      "company": "DISNEY WALT CO",
+      "cusip": "254687106",
+      "shares": 7158406,
+      "value_k": 688996,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.96,
+      "value_usd": 688996000
+    },
+    {
+      "company": "FEDEX CORP",
+      "cusip": "31428X106",
+      "shares": 2151983,
+      "value_k": 673850,
+      "shr_type": "SH",
+      "ticker": "FDX",
+      "pct_port": 1.92,
+      "value_usd": 673850000
+    },
+    {
+      "company": "MSCI INC",
+      "cusip": "55354G100",
+      "shares": 1160687,
+      "value_k": 650031,
+      "shr_type": "SH",
+      "ticker": "MSCI",
+      "pct_port": 1.85,
+      "value_usd": 650031000
+    },
+    {
+      "company": "ADAPTIVE BIOTECHNOLOGIES COR",
+      "cusip": "00650F109",
+      "shares": 29993708,
+      "value_k": 643365,
+      "shr_type": "SH",
+      "ticker": "ADPT",
+      "pct_port": 1.83,
+      "value_usd": 643365000
+    },
+    {
+      "company": "WATERS CORP",
+      "cusip": "941848103",
+      "shares": 1662140,
+      "value_k": 623368,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.78,
+      "value_usd": 623368000
+    },
+    {
+      "company": "JOHNSON CONTROLS INTERNATION",
+      "cusip": "G51502105",
+      "shares": 4202694,
+      "value_k": 614055,
+      "shr_type": "SH",
+      "ticker": "JCI",
+      "pct_port": 1.75,
+      "value_usd": 614055000
+    },
+    {
+      "company": "UNION PAC CORP",
+      "cusip": "907818108",
+      "shares": 2047332,
+      "value_k": 556874,
+      "shr_type": "SH",
+      "ticker": "UNP",
+      "pct_port": 1.59,
+      "value_usd": 556874000
+    },
+    {
+      "company": "MICROSOFT CORP",
+      "cusip": "594918104",
+      "shares": 1458618,
+      "value_k": 544093,
+      "shr_type": "SH",
+      "ticker": "MSFT",
+      "pct_port": 1.55,
+      "value_usd": 544093000
+    },
+    {
+      "company": "SEA LTD",
+      "cusip": "81141R100",
+      "shares": 5669877,
+      "value_k": 543344,
+      "shr_type": "SH",
+      "ticker": "SE",
+      "pct_port": 1.55,
+      "value_usd": 543344000
+    },
+    {
+      "company": "CAMDEN PPTY TR",
+      "cusip": "133131102",
+      "shares": 4513303,
+      "value_k": 516728,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.47,
+      "value_usd": 516728000
+    },
+    {
+      "company": "REGAL REXNORD CORPORATION",
+      "cusip": "758750103",
+      "shares": 2101759,
+      "value_k": 500617,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.43,
+      "value_usd": 500617000
+    },
+    {
+      "company": "BIOMARIN PHARMACEUTICAL INC",
+      "cusip": "09061G101",
+      "shares": 7616563,
+      "value_k": 435819,
+      "shr_type": "SH",
+      "ticker": "BMRN",
+      "pct_port": 1.24,
+      "value_usd": 435819000
+    },
+    {
+      "company": "INTERACTIVE BROKERS GROUP IN",
+      "cusip": "45841N107",
+      "shares": 4830748,
+      "value_k": 420468,
+      "shr_type": "SH",
+      "ticker": "IBKR",
+      "pct_port": 1.2,
+      "value_usd": 420468000
+    },
+    {
+      "company": "DIGITAL RLTY TR INC",
+      "cusip": "253868103",
+      "shares": 2310475,
+      "value_k": 414915,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.18,
+      "value_usd": 414915000
+    },
+    {
+      "company": "CARNIVAL CORP LTD",
+      "cusip": "G2004J103",
+      "shares": 14299953,
+      "value_k": 408549,
+      "shr_type": "SH",
+      "ticker": "CCL",
+      "pct_port": 1.16,
+      "value_usd": 408549000
+    },
+    {
+      "company": "GENERAL MTRS CO",
+      "cusip": "37045V100",
+      "shares": 5005833,
+      "value_k": 385849,
+      "shr_type": "SH",
+      "ticker": "GM",
+      "pct_port": 1.1,
+      "value_usd": 385849000
+    },
+    {
+      "company": "AON PLC",
+      "cusip": "G0403H108",
+      "shares": 1151269,
+      "value_k": 381864,
+      "shr_type": "SH",
+      "ticker": "AON",
+      "pct_port": 1.09,
+      "value_usd": 381864000
+    },
+    {
+      "company": "CVS HEALTH CORP",
+      "cusip": "126650100",
+      "shares": 3663361,
+      "value_k": 378974,
+      "shr_type": "SH",
+      "ticker": "CVS",
+      "pct_port": 1.08,
+      "value_usd": 378974000
+    },
+    {
+      "company": "FEDEX FGHT HLDG CO INC",
+      "cusip": "314352105",
+      "shares": 2366634,
+      "value_k": 357361,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 1.02,
+      "value_usd": 357361000
+    },
+    {
+      "company": "INTERCONTINENTAL EXCHANGE IN",
+      "cusip": "45866F104",
+      "shares": 2777138,
+      "value_k": 341893,
+      "shr_type": "SH",
+      "ticker": "ICE",
+      "pct_port": 0.97,
+      "value_usd": 341893000
+    },
+    {
+      "company": "MORGAN STANLEY",
+      "cusip": "617446448",
+      "shares": 1622593,
+      "value_k": 339186,
+      "shr_type": "SH",
+      "ticker": "MS-PA",
+      "pct_port": 0.97,
+      "value_usd": 339186000
+    },
+    {
+      "company": "HOME DEPOT INC",
+      "cusip": "437076102",
+      "shares": 920595,
+      "value_k": 324675,
+      "shr_type": "SH",
+      "ticker": "HD",
+      "pct_port": 0.93,
+      "value_usd": 324675000
+    },
+    {
+      "company": "TIC SOLUTIONS INC",
+      "cusip": "00510N102",
+      "shares": 35824562,
+      "value_k": 289820,
+      "shr_type": "SH",
+      "ticker": "TICAW",
+      "pct_port": 0.83,
+      "value_usd": 289820000
+    },
+    {
+      "company": "QUALCOMM INC",
+      "cusip": "747525103",
+      "shares": 1514185,
+      "value_k": 279806,
+      "shr_type": "SH",
+      "ticker": "QCOM",
+      "pct_port": 0.8,
+      "value_usd": 279806000
+    },
+    {
+      "company": "APTIV PLC",
+      "cusip": "G3265R107",
+      "shares": 4552887,
+      "value_k": 279456,
+      "shr_type": "SH",
+      "ticker": "APTV",
+      "pct_port": 0.8,
+      "value_usd": 279456000
+    },
+    {
+      "company": "REDDIT INC",
+      "cusip": "75734B100",
+      "shares": 1565518,
+      "value_k": 271742,
+      "shr_type": "SH",
+      "ticker": "RDDT",
+      "pct_port": 0.77,
+      "value_usd": 271742000
+    },
+    {
+      "company": "HASBRO INC",
+      "cusip": "418056107",
+      "shares": 3107195,
+      "value_k": 256623,
+      "shr_type": "SH",
+      "ticker": "HAS",
+      "pct_port": 0.73,
+      "value_usd": 256623000
+    },
+    {
+      "company": "AVALONBAY CMNTYS INC",
+      "cusip": "053484101",
+      "shares": 1339782,
+      "value_k": 252803,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.72,
+      "value_usd": 252803000
+    },
+    {
+      "company": "DICKS SPORTING GOODS INC",
+      "cusip": "253393102",
+      "shares": 1106134,
+      "value_k": 250882,
+      "shr_type": "SH",
+      "ticker": "DKS",
+      "pct_port": 0.72,
+      "value_usd": 250882000
+    },
+    {
+      "company": "SNOWFLAKE INC",
+      "cusip": "833445109",
+      "shares": 960138,
+      "value_k": 244355,
+      "shr_type": "SH",
+      "ticker": "SNOW",
+      "pct_port": 0.7,
+      "value_usd": 244355000
+    },
+    {
+      "company": "EQUITABLE HLDGS INC",
+      "cusip": "29452E101",
+      "shares": 5398896,
+      "value_k": 236903,
+      "shr_type": "SH",
+      "ticker": "EQH-PC",
+      "pct_port": 0.68,
+      "value_usd": 236903000
+    },
+    {
+      "company": "TAKE-TWO INTERACTIVE SOFTWAR",
+      "cusip": "874054109",
+      "shares": 940605,
+      "value_k": 235132,
+      "shr_type": "SH",
+      "ticker": "TTWO",
+      "pct_port": 0.67,
+      "value_usd": 235132000
+    },
+    {
+      "company": "TESLA INC",
+      "cusip": "88160R101",
+      "shares": 547816,
+      "value_k": 230411,
+      "shr_type": "SH",
+      "ticker": "TSLA",
+      "pct_port": 0.66,
+      "value_usd": 230411000
+    },
+    {
+      "company": "ATI INC",
+      "cusip": "01741R102",
+      "shares": 1153880,
+      "value_k": 227429,
+      "shr_type": "SH",
+      "ticker": "ATI",
+      "pct_port": 0.65,
+      "value_usd": 227429000
+    },
+    {
+      "company": "ROIVANT SCIENCES LTD",
+      "cusip": "G76279101",
+      "shares": 6271467,
+      "value_k": 221947,
+      "shr_type": "SH",
+      "ticker": "ROIV",
+      "pct_port": 0.63,
+      "value_usd": 221947000
+    },
+    {
+      "company": "SPACE EXPLORATION TECHN CORP",
+      "cusip": "84615Q103",
+      "shares": 1200000,
+      "value_k": 205032,
+      "shr_type": "SH",
+      "ticker": "SPCX",
+      "pct_port": 0.58,
+      "value_usd": 205032000
+    },
+    {
+      "company": "AMER SPORTS INC",
+      "cusip": "G0260P102",
+      "shares": 5954351,
+      "value_k": 201495,
+      "shr_type": "SH",
+      "ticker": "AS",
+      "pct_port": 0.57,
+      "value_usd": 201495000
+    },
+    {
+      "company": "VERADERMICS INC",
+      "cusip": "922967104",
+      "shares": 1561494,
+      "value_k": 191970,
+      "shr_type": "SH",
+      "ticker": "MANE",
+      "pct_port": 0.55,
+      "value_usd": 191970000
+    },
+    {
+      "company": "MEDLINE INC",
+      "cusip": "58507V107",
+      "shares": 4841080,
+      "value_k": 190932,
+      "shr_type": "SH",
+      "ticker": "MDLN",
+      "pct_port": 0.54,
+      "value_usd": 190932000
+    },
+    {
+      "company": "BCE INC",
+      "cusip": "05534B760",
+      "shares": 8383278,
+      "value_k": 180581,
+      "shr_type": "SH",
+      "ticker": "BCPPF",
+      "pct_port": 0.51,
+      "value_usd": 180581000
+    },
+    {
+      "company": "US FOODS HLDG CORP",
+      "cusip": "912008109",
+      "shares": 1734346,
+      "value_k": 177336,
+      "shr_type": "SH",
+      "ticker": "USFD",
+      "pct_port": 0.51,
+      "value_usd": 177336000
+    },
+    {
+      "company": "ORUKA THERAPEUTICS INC",
+      "cusip": "687604108",
+      "shares": 1503478,
+      "value_k": 143086,
+      "shr_type": "SH",
+      "ticker": "ORKA",
+      "pct_port": 0.41,
+      "value_usd": 143086000
+    },
+    {
+      "company": "NEWAMSTERDAM PHARMA COMPANY",
+      "cusip": "N62509109",
+      "shares": 4203567,
+      "value_k": 142458,
+      "shr_type": "SH",
+      "ticker": "NAMSW",
+      "pct_port": 0.41,
+      "value_usd": 142458000
+    },
+    {
+      "company": "SIONNA THERAPEUTICS INC",
+      "cusip": "829401108",
+      "shares": 3195181,
+      "value_k": 140556,
+      "shr_type": "SH",
+      "ticker": "SION",
+      "pct_port": 0.4,
+      "value_usd": 140556000
+    },
+    {
+      "company": "CHUBB LIMITED",
+      "cusip": "H1467J104",
+      "shares": 377312,
+      "value_k": 128565,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.37,
+      "value_usd": 128565000
+    },
+    {
+      "company": "PHARVARIS N V",
+      "cusip": "N69605108",
+      "shares": 3653310,
+      "value_k": 126331,
+      "shr_type": "SH",
+      "ticker": "PHVS",
+      "pct_port": 0.36,
+      "value_usd": 126331000
+    },
+    {
+      "company": "UBS GROUP AG",
+      "cusip": "H42097107",
+      "shares": 2435805,
+      "value_k": 120765,
+      "shr_type": "SH",
+      "ticker": "UBS",
+      "pct_port": 0.34,
+      "value_usd": 120765000
+    },
+    {
+      "company": "BRIGHTSPRING HEALTH SVCS INC",
+      "cusip": "10950A106",
+      "shares": 1618237,
+      "value_k": 112855,
+      "shr_type": "SH",
+      "ticker": "BTSGU",
+      "pct_port": 0.32,
+      "value_usd": 112855000
+    },
+    {
+      "company": "INHIBRX BIOSCIENCES INC",
+      "cusip": "45720N103",
+      "shares": 1123929,
+      "value_k": 106492,
+      "shr_type": "SH",
+      "ticker": "INBX",
+      "pct_port": 0.3,
+      "value_usd": 106492000
+    },
+    {
+      "company": "NATERA INC",
+      "cusip": "632307104",
+      "shares": 390694,
+      "value_k": 106053,
+      "shr_type": "SH",
+      "ticker": "NTRA",
+      "pct_port": 0.3,
+      "value_usd": 106053000
+    },
+    {
+      "company": "DEUTSCHE BK AG",
+      "cusip": "D18190898",
+      "shares": 2510554,
+      "value_k": 84981,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.24,
+      "value_usd": 84981000
+    },
+    {
+      "company": "CAPITAL ONE FINL CORP",
+      "cusip": "14040H105",
+      "shares": 387815,
+      "value_k": 77803,
+      "shr_type": "SH",
+      "ticker": "COF-PN",
+      "pct_port": 0.22,
+      "value_usd": 77803000
+    },
+    {
+      "company": "COREBRIDGE FINL INC",
+      "cusip": "21871X109",
+      "shares": 2679371,
+      "value_k": 76710,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.22,
+      "value_usd": 76710000
+    },
+    {
+      "company": "SOLAREDGE TECHNOLOGIES INC",
+      "cusip": "83417M104",
+      "shares": 1088469,
+      "value_k": 63610,
+      "shr_type": "SH",
+      "ticker": "SEDG",
+      "pct_port": 0.18,
+      "value_usd": 63610000
+    },
+    {
+      "company": "DAMORA THERAPEUTICS INC",
+      "cusip": "36322Q206",
+      "shares": 2311082,
+      "value_k": 60111,
+      "shr_type": "SH",
+      "ticker": "DMRA",
+      "pct_port": 0.17,
+      "value_usd": 60111000
+    },
+    {
+      "company": "ORIC PHARMACEUTICALS INC",
+      "cusip": "68622P109",
+      "shares": 5126762,
+      "value_k": 55522,
+      "shr_type": "SH",
+      "ticker": "ORIC",
+      "pct_port": 0.16,
+      "value_usd": 55522000
+    },
+    {
+      "company": "BRUKER CORP",
+      "cusip": "116794108",
+      "shares": 893491,
+      "value_k": 53770,
+      "shr_type": "SH",
+      "ticker": "BRKRP",
+      "pct_port": 0.15,
+      "value_usd": 53770000
+    },
+    {
+      "company": "STANDARD BIOTOOLS INC",
+      "cusip": "34385P108",
+      "shares": 58651170,
+      "value_k": 48252,
+      "shr_type": "SH",
+      "ticker": "LAB",
+      "pct_port": 0.14,
+      "value_usd": 48252000
+    },
+    {
+      "company": "GINKGO BIOWORKS HOLDINGS INC",
+      "cusip": "37611X209",
+      "shares": 3577128,
+      "value_k": 35449,
+      "shr_type": "SH",
+      "ticker": "DNABW",
+      "pct_port": 0.1,
+      "value_usd": 35449000
+    },
+    {
+      "company": "CME GROUP INC",
+      "cusip": "12572Q105",
+      "shares": 152980,
+      "value_k": 33782,
+      "shr_type": "SH",
+      "ticker": "CME",
+      "pct_port": 0.1,
+      "value_usd": 33782000
+    },
+    {
+      "company": "TRADEWEB MKTS INC",
+      "cusip": "892672106",
+      "shares": 314222,
+      "value_k": 31315,
+      "shr_type": "SH",
+      "ticker": "TW",
+      "pct_port": 0.09,
+      "value_usd": 31315000
+    },
+    {
+      "company": "TREVI THERAPEUTICS INC",
+      "cusip": "89532M101",
+      "shares": 1544644,
+      "value_k": 28807,
+      "shr_type": "SH",
+      "ticker": "TRVI",
+      "pct_port": 0.08,
+      "value_usd": 28807000
+    },
+    {
+      "company": "INFLEQTION INC",
+      "cusip": "45676K103",
+      "shares": 2032649,
+      "value_k": 27074,
+      "shr_type": "SH",
+      "ticker": "INFQ-WT",
+      "pct_port": 0.08,
+      "value_usd": 27074000
+    },
+    {
+      "company": "ARTIVA BIOTHERAPEUTICS INC",
+      "cusip": "04317A107",
+      "shares": 2604166,
+      "value_k": 25260,
+      "shr_type": "SH",
+      "ticker": "ARTV",
+      "pct_port": 0.07,
+      "value_usd": 25260000
+    },
+    {
+      "company": "QUANTINUUM INC",
+      "cusip": "74768A104",
+      "shares": 306123,
+      "value_k": 25022,
+      "shr_type": "SH",
+      "ticker": "QNT",
+      "pct_port": 0.07,
+      "value_usd": 25022000
+    },
+    {
+      "company": "FERVO ENERGY CO",
+      "cusip": "31556C106",
+      "shares": 750000,
+      "value_k": 21922,
+      "shr_type": "SH",
+      "ticker": "FRVO",
+      "pct_port": 0.06,
+      "value_usd": 21922000
+    },
+    {
+      "company": "ALTIMMUNE INC",
+      "cusip": "02155H200",
+      "shares": 6700000,
+      "value_k": 20368,
+      "shr_type": "SH",
+      "ticker": "ALT",
+      "pct_port": 0.06,
+      "value_usd": 20368000
+    },
+    {
+      "company": "TOLL BROTHERS INC",
+      "cusip": "889478103",
+      "shares": 109856,
+      "value_k": 18098,
+      "shr_type": "SH",
+      "ticker": "TOL",
+      "pct_port": 0.05,
+      "value_usd": 18098000
+    },
+    {
+      "company": "DPC HOLDINGS PLC",
+      "cusip": "G2R11M108",
+      "shares": 306123,
+      "value_k": 15018,
+      "shr_type": "SH",
+      "ticker": "DPC",
+      "pct_port": 0.04,
+      "value_usd": 15018000
+    },
+    {
+      "company": "X-ENERGY INC",
+      "cusip": "98386P102",
+      "shares": 714286,
+      "value_k": 13114,
+      "shr_type": "SH",
+      "ticker": "XE",
+      "pct_port": 0.04,
+      "value_usd": 13114000
+    },
+    {
+      "company": "AZUL S A",
+      "cusip": "05501U601",
+      "shares": 1349734,
+      "value_k": 12134,
+      "shr_type": "SH",
+      "ticker": "AZUXY",
+      "pct_port": 0.03,
+      "value_usd": 12134000
+    },
+    {
+      "company": "RALLYBIO CORP",
+      "cusip": "75120L209",
+      "shares": 524347,
+      "value_k": 8389,
+      "shr_type": "SH",
+      "ticker": "RLYB",
+      "pct_port": 0.02,
+      "value_usd": 8389000
+    },
+    {
+      "company": "PEPGEN INC",
+      "cusip": "713317105",
+      "shares": 3482434,
+      "value_k": 6268,
+      "shr_type": "SH",
+      "ticker": "PEPG",
+      "pct_port": 0.02,
+      "value_usd": 6268000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:28:46.559811+00:00"
+}

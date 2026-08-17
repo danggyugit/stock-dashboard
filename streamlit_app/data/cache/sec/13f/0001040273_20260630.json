@@ -1,0 +1,441 @@
+{
+  "cik": "0001040273",
+  "name": "Third Point",
+  "manager": "Dan Loeb",
+  "style": "Activist",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "WARNER BROS DISCOVERY INC",
+      "cusip": "934423104",
+      "shares": 20000000,
+      "value_k": 533200,
+      "shr_type": "SH",
+      "ticker": "WBD",
+      "pct_port": 11.39,
+      "value_usd": 533200000
+    },
+    {
+      "company": "AMAZON COM INC",
+      "cusip": "023135106",
+      "shares": 1750000,
+      "value_k": 417095,
+      "shr_type": "SH",
+      "ticker": "AMZN",
+      "pct_port": 8.91,
+      "value_usd": 417095000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K305",
+      "shares": 1025000,
+      "value_k": 366304,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 7.83,
+      "value_usd": 366304000
+    },
+    {
+      "company": "CRH PLC",
+      "cusip": "G25508105",
+      "shares": 2195000,
+      "value_k": 234865,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 5.02,
+      "value_usd": 234865000
+    },
+    {
+      "company": "TELEPHONE & DATA SYS INC",
+      "cusip": "879433829",
+      "shares": 6275000,
+      "value_k": 232237,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 4.96,
+      "value_usd": 232237000
+    },
+    {
+      "company": "TAIWAN SEMICONDUCTOR MANUFAC",
+      "cusip": "874039100",
+      "shares": 460000,
+      "value_k": 219682,
+      "shr_type": "SH",
+      "ticker": "TSMWF",
+      "pct_port": 4.69,
+      "value_usd": 219682000
+    },
+    {
+      "company": "LIVE NATION ENTERTAINMENT IN",
+      "cusip": "538034109",
+      "shares": 1135000,
+      "value_k": 207829,
+      "shr_type": "SH",
+      "ticker": "LYV",
+      "pct_port": 4.44,
+      "value_usd": 207829000
+    },
+    {
+      "company": "KEYSIGHT TECHNOLOGIES INC",
+      "cusip": "49338L103",
+      "shares": 585000,
+      "value_k": 204790,
+      "shr_type": "SH",
+      "ticker": "KEYS",
+      "pct_port": 4.38,
+      "value_usd": 204790000
+    },
+    {
+      "company": "SOMNIGROUP INTERNATIONAL INC",
+      "cusip": "88023U101",
+      "shares": 2570769,
+      "value_k": 201548,
+      "shr_type": "SH",
+      "ticker": "SGI",
+      "pct_port": 4.31,
+      "value_usd": 201548000
+    },
+    {
+      "company": "BLOCK INC",
+      "cusip": "852234103",
+      "shares": 2558943,
+      "value_k": 194479,
+      "shr_type": "SH",
+      "ticker": "BSQKZ",
+      "pct_port": 4.16,
+      "value_usd": 194479000
+    },
+    {
+      "company": "NORFOLK SOUTHN CORP",
+      "cusip": "655844108",
+      "shares": 600000,
+      "value_k": 188754,
+      "shr_type": "SH",
+      "ticker": "NSC",
+      "pct_port": 4.03,
+      "value_usd": 188754000
+    },
+    {
+      "company": "FLEX LTD",
+      "cusip": "Y2573F102",
+      "shares": 1030000,
+      "value_k": 166932,
+      "shr_type": "SH",
+      "ticker": "FLEX",
+      "pct_port": 3.57,
+      "value_usd": 166932000
+    },
+    {
+      "company": "CAPITAL ONE FINL CORP",
+      "cusip": "14040H105",
+      "shares": 825000,
+      "value_k": 165511,
+      "shr_type": "SH",
+      "ticker": "COF-PN",
+      "pct_port": 3.54,
+      "value_usd": 165511000
+    },
+    {
+      "company": "HUT 8 CORP",
+      "cusip": "44812J104",
+      "shares": 1315000,
+      "value_k": 151810,
+      "shr_type": "SH",
+      "ticker": "HUT",
+      "pct_port": 3.24,
+      "value_usd": 151810000
+    },
+    {
+      "company": "CARPENTER TECHNOLOGY CORP",
+      "cusip": "144285103",
+      "shares": 215000,
+      "value_k": 132620,
+      "shr_type": "SH",
+      "ticker": "CRS",
+      "pct_port": 2.83,
+      "value_usd": 132620000
+    },
+    {
+      "company": "API GROUP CORP",
+      "cusip": "00187Y100",
+      "shares": 2865000,
+      "value_k": 121332,
+      "shr_type": "SH",
+      "ticker": "APG",
+      "pct_port": 2.59,
+      "value_usd": 121332000
+    },
+    {
+      "company": "MASTEC INC",
+      "cusip": "576323109",
+      "shares": 290000,
+      "value_k": 120657,
+      "shr_type": "SH",
+      "ticker": "MTZ",
+      "pct_port": 2.58,
+      "value_usd": 120657000
+    },
+    {
+      "company": "TRANSDIGM GROUP INC",
+      "cusip": "893641100",
+      "shares": 79000,
+      "value_k": 105231,
+      "shr_type": "SH",
+      "ticker": "TDG",
+      "pct_port": 2.25,
+      "value_usd": 105231000
+    },
+    {
+      "company": "DANAHER CORP DEL",
+      "cusip": "235851102",
+      "shares": 540000,
+      "value_k": 102859,
+      "shr_type": "SH",
+      "ticker": "DHR",
+      "pct_port": 2.2,
+      "value_usd": 102859000
+    },
+    {
+      "company": "UNION PAC CORP",
+      "cusip": "907818108",
+      "shares": 350000,
+      "value_k": 95200,
+      "shr_type": "SH",
+      "ticker": "UNP",
+      "pct_port": 2.03,
+      "value_usd": 95200000
+    },
+    {
+      "company": "TTM TECHNOLOGIES INC",
+      "cusip": "87305R109",
+      "shares": 505000,
+      "value_k": 94445,
+      "shr_type": "SH",
+      "ticker": "TTMI",
+      "pct_port": 2.02,
+      "value_usd": 94445000
+    },
+    {
+      "company": "PERFORMANCE FOOD GROUP CO",
+      "cusip": "71377A103",
+      "shares": 675000,
+      "value_k": 75458,
+      "shr_type": "SH",
+      "ticker": "PFGC",
+      "pct_port": 1.61,
+      "value_usd": 75458000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K404",
+      "shares": 1300000,
+      "value_k": 66157,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 1.41,
+      "value_usd": 66157000
+    },
+    {
+      "company": "ASML HLDG NV",
+      "cusip": "N07059210",
+      "shares": 30000,
+      "value_k": 59606,
+      "shr_type": "SH",
+      "ticker": "ASMLF",
+      "pct_port": 1.27,
+      "value_usd": 59606000
+    },
+    {
+      "company": "SYSCO CORP",
+      "cusip": "871829107",
+      "shares": 580000,
+      "value_k": 48157,
+      "shr_type": "SH",
+      "ticker": "SYY",
+      "pct_port": 1.03,
+      "value_usd": 48157000
+    },
+    {
+      "company": "ARES MANAGEMENT CORPORATION",
+      "cusip": "03990B101",
+      "shares": 375000,
+      "value_k": 41741,
+      "shr_type": "SH",
+      "ticker": "ARES-PB",
+      "pct_port": 0.89,
+      "value_usd": 41741000
+    },
+    {
+      "company": "SPACE EXPLORATION TECHN CORP",
+      "cusip": "84615Q103",
+      "shares": 180415,
+      "value_k": 30825,
+      "shr_type": "SH",
+      "ticker": "SPCX",
+      "pct_port": 0.66,
+      "value_usd": 30825000
+    },
+    {
+      "company": "STATE STR SPDR S&P 500 ETF T",
+      "cusip": "78462F103",
+      "shares": 40000,
+      "value_k": 28800,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.62,
+      "value_usd": 28800000
+    },
+    {
+      "company": "STRATA CRITICAL MEDICAL INC",
+      "cusip": "092667104",
+      "shares": 5000000,
+      "value_k": 26350,
+      "shr_type": "SH",
+      "ticker": "SRTA",
+      "pct_port": 0.56,
+      "value_usd": 26350000
+    },
+    {
+      "company": "ALPHABET INC",
+      "cusip": "02079K602",
+      "shares": 200000,
+      "value_k": 10060,
+      "shr_type": "SH",
+      "ticker": "GOOGN",
+      "pct_port": 0.21,
+      "value_usd": 10060000
+    },
+    {
+      "company": "ARS PHARMACEUTICALS INC",
+      "cusip": "82835W108",
+      "shares": 1000000,
+      "value_k": 8010,
+      "shr_type": "SH",
+      "ticker": "SPRY",
+      "pct_port": 0.17,
+      "value_usd": 8010000
+    },
+    {
+      "company": "AURORA INNOVATION INC",
+      "cusip": "051774107",
+      "shares": 1032463,
+      "value_k": 7041,
+      "shr_type": "SH",
+      "ticker": "AUROW",
+      "pct_port": 0.15,
+      "value_usd": 7041000
+    },
+    {
+      "company": "RIOT PLATFORMS INC",
+      "cusip": "767292AB1",
+      "shares": 3500000,
+      "value_k": 7033,
+      "shr_type": "PRN",
+      "ticker": "RIOT",
+      "pct_port": 0.15,
+      "value_usd": 7033000
+    },
+    {
+      "company": "HERTZ GLOBAL HLDGS INC",
+      "cusip": "42806J148",
+      "shares": 3970000,
+      "value_k": 4327,
+      "shr_type": "SH",
+      "ticker": "HTZWW",
+      "pct_port": 0.09,
+      "value_usd": 4327000
+    },
+    {
+      "company": "FLYEXCLUSIVE INC",
+      "cusip": "343928107",
+      "shares": 1022000,
+      "value_k": 2044,
+      "shr_type": "SH",
+      "ticker": "FLYX-WT",
+      "pct_port": 0.04,
+      "value_usd": 2044000
+    },
+    {
+      "company": "BAUSCH PLUS LOMB CORP",
+      "cusip": "071705107",
+      "shares": 85000,
+      "value_k": 1407,
+      "shr_type": "SH",
+      "ticker": "BLCO",
+      "pct_port": 0.03,
+      "value_usd": 1407000
+    },
+    {
+      "company": "CORE SCIENTIFIC INC NEW",
+      "cusip": "21874A106",
+      "shares": 54000,
+      "value_k": 1381,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.03,
+      "value_usd": 1381000
+    },
+    {
+      "company": "EROCK INC",
+      "cusip": "296013105",
+      "shares": 83030,
+      "value_k": 1203,
+      "shr_type": "SH",
+      "ticker": "EROC",
+      "pct_port": 0.03,
+      "value_usd": 1203000
+    },
+    {
+      "company": "APPLIED DIGITAL CORP",
+      "cusip": "038169207",
+      "shares": 22000,
+      "value_k": 820,
+      "shr_type": "SH",
+      "ticker": "APLD",
+      "pct_port": 0.02,
+      "value_usd": 820000
+    },
+    {
+      "company": "LITHIUM ARGENTINA AG",
+      "cusip": "53680QAA6",
+      "shares": 625000,
+      "value_k": 611,
+      "shr_type": "PRN",
+      "ticker": "LAR",
+      "pct_port": 0.01,
+      "value_usd": 611000
+    },
+    {
+      "company": "AURORA INNOVATION INC",
+      "cusip": "051774115",
+      "shares": 1835000,
+      "value_k": 587,
+      "shr_type": "SH",
+      "ticker": "AUROW",
+      "pct_port": 0.01,
+      "value_usd": 587000
+    },
+    {
+      "company": "WOLFSPEED INC",
+      "cusip": "97785W106",
+      "shares": 10000,
+      "value_k": 482,
+      "shr_type": "SH",
+      "ticker": "WOLF",
+      "pct_port": 0.01,
+      "value_usd": 482000
+    },
+    {
+      "company": "FLYEXCLUSIVE INC",
+      "cusip": "343928115",
+      "shares": 367499,
+      "value_k": 77,
+      "shr_type": "SH",
+      "ticker": "FLYX-WT",
+      "pct_port": 0.0,
+      "value_usd": 77000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:28:33.874757+00:00"
+}

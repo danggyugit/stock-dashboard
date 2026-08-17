@@ -1,0 +1,161 @@
+{
+  "cik": "0002026053",
+  "name": "Pershing Square Holdco",
+  "manager": "Bill Ackman",
+  "style": "Activist",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "UBER TECHNOLOGIES INC",
+      "cusip": "90353T100",
+      "shares": 34326200,
+      "value_k": 2476978,
+      "shr_type": "SH",
+      "ticker": "UBER",
+      "pct_port": 12.72,
+      "value_usd": 2476978000
+    },
+    {
+      "company": "BROOKFIELD CORP",
+      "cusip": "11271J107",
+      "shares": 57481047,
+      "value_k": 2448117,
+      "shr_type": "SH",
+      "ticker": "BXDIF",
+      "pct_port": 12.58,
+      "value_usd": 2448117000
+    },
+    {
+      "company": "MICROSOFT CORP",
+      "cusip": "594918104",
+      "shares": 6206730,
+      "value_k": 2315234,
+      "shr_type": "SH",
+      "ticker": "MSFT",
+      "pct_port": 11.89,
+      "value_usd": 2315234000
+    },
+    {
+      "company": "AMAZON COM INC",
+      "cusip": "023135106",
+      "shares": 8563857,
+      "value_k": 2041109,
+      "shr_type": "SH",
+      "ticker": "AMZN",
+      "pct_port": 10.49,
+      "value_usd": 2041109000
+    },
+    {
+      "company": "RESTAURANT BRANDS INTL INC",
+      "cusip": "76131D103",
+      "shares": 25821284,
+      "value_k": 1872301,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 9.62,
+      "value_usd": 1872301000
+    },
+    {
+      "company": "META PLATFORMS INC",
+      "cusip": "30303M102",
+      "shares": 3196062,
+      "value_k": 1800309,
+      "shr_type": "SH",
+      "ticker": "META",
+      "pct_port": 9.25,
+      "value_usd": 1800309000
+    },
+    {
+      "company": "HOWARD HUGHES HOLDINGS INC",
+      "cusip": "44267T102",
+      "shares": 18852064,
+      "value_k": 1347734,
+      "shr_type": "SH",
+      "ticker": "HHH",
+      "pct_port": 6.92,
+      "value_usd": 1347734000
+    },
+    {
+      "company": "VISA INC",
+      "cusip": "92826C839",
+      "shares": 3270470,
+      "value_k": 1122065,
+      "shr_type": "SH",
+      "ticker": "V",
+      "pct_port": 5.76,
+      "value_usd": 1122065000
+    },
+    {
+      "company": "MASTERCARD INCORPORATED",
+      "cusip": "57636Q104",
+      "shares": 2124646,
+      "value_k": 1091218,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 5.61,
+      "value_usd": 1091218000
+    },
+    {
+      "company": "S&P GLOBAL INC",
+      "cusip": "78409V104",
+      "shares": 2593155,
+      "value_k": 1056088,
+      "shr_type": "SH",
+      "ticker": "SPGI",
+      "pct_port": 5.43,
+      "value_usd": 1056088000
+    },
+    {
+      "company": "NETFLIX INC.",
+      "cusip": "64110L106",
+      "shares": 13081465,
+      "value_k": 934016,
+      "shr_type": "SH",
+      "ticker": "NFLX",
+      "pct_port": 4.8,
+      "value_usd": 934016000
+    },
+    {
+      "company": "HOWARD HUGHES HOLDINGS INC",
+      "cusip": "44267T102",
+      "shares": 9000000,
+      "value_k": 643410,
+      "shr_type": "SH",
+      "ticker": "HHH",
+      "pct_port": 3.31,
+      "value_usd": 643410000
+    },
+    {
+      "company": "PERSHING SQUARE USA LTD",
+      "cusip": "71531T105",
+      "shares": 4000000,
+      "value_k": 149520,
+      "shr_type": "SH",
+      "ticker": "PSUS",
+      "pct_port": 0.77,
+      "value_usd": 149520000
+    },
+    {
+      "company": "SEAPORT ENTMT GROUP INC",
+      "cusip": "812215200",
+      "shares": 5023780,
+      "value_k": 133632,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.69,
+      "value_usd": 133632000
+    },
+    {
+      "company": "HERTZ GLOBAL HLDGS INC",
+      "cusip": "42806J700",
+      "shares": 14991599,
+      "value_k": 33955,
+      "shr_type": "SH",
+      "ticker": "HTZWW",
+      "pct_port": 0.17,
+      "value_usd": 33955000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:40:39.308536+00:00"
+}

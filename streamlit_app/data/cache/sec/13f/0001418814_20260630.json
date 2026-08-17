@@ -1,0 +1,191 @@
+{
+  "cik": "0001418814",
+  "name": "ValueAct Holdings",
+  "manager": "Jeffrey Ubben",
+  "style": "Activist",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "VISA INC",
+      "cusip": "92826C839",
+      "shares": 2316250,
+      "value_k": 794682,
+      "shr_type": "SH",
+      "ticker": "V",
+      "pct_port": 14.1,
+      "value_usd": 794682000
+    },
+    {
+      "company": "AMAZON COM INC",
+      "cusip": "023135106",
+      "shares": 2941700,
+      "value_k": 701124,
+      "shr_type": "SH",
+      "ticker": "AMZN",
+      "pct_port": 12.44,
+      "value_usd": 701124000
+    },
+    {
+      "company": "ROCKET COS INC",
+      "cusip": "77311W101",
+      "shares": 41668774,
+      "value_k": 656283,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 11.65,
+      "value_usd": 656283000
+    },
+    {
+      "company": "BLACKROCK INC",
+      "cusip": "09290D101",
+      "shares": 581700,
+      "value_k": 559339,
+      "shr_type": "SH",
+      "ticker": "BLK",
+      "pct_port": 9.93,
+      "value_usd": 559339000
+    },
+    {
+      "company": "META PLATFORMS INC",
+      "cusip": "30303M102",
+      "shares": 915674,
+      "value_k": 515790,
+      "shr_type": "SH",
+      "ticker": "META",
+      "pct_port": 9.15,
+      "value_usd": 515790000
+    },
+    {
+      "company": "SALESFORCE INC",
+      "cusip": "79466L302",
+      "shares": 2994509,
+      "value_k": 469119,
+      "shr_type": "SH",
+      "ticker": "CRM",
+      "pct_port": 8.33,
+      "value_usd": 469119000
+    },
+    {
+      "company": "TOAST INC",
+      "cusip": "888787108",
+      "shares": 14134038,
+      "value_k": 393208,
+      "shr_type": "SH",
+      "ticker": "TOST",
+      "pct_port": 6.98,
+      "value_usd": 393208000
+    },
+    {
+      "company": "KKR & CO INC",
+      "cusip": "48251W104",
+      "shares": 3558200,
+      "value_k": 326571,
+      "shr_type": "SH",
+      "ticker": "KKRS",
+      "pct_port": 5.8,
+      "value_usd": 326571000
+    },
+    {
+      "company": "SPOTIFY TECHNOLOGY S A",
+      "cusip": "L8681T102",
+      "shares": 526800,
+      "value_k": 241869,
+      "shr_type": "SH",
+      "ticker": "SPOT",
+      "pct_port": 4.29,
+      "value_usd": 241869000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909308",
+      "shares": 2172388,
+      "value_k": 229491,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 4.07,
+      "value_usd": 229491000
+    },
+    {
+      "company": "SIMPSON MFG INC",
+      "cusip": "829073105",
+      "shares": 830642,
+      "value_k": 173894,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 3.09,
+      "value_usd": 173894000
+    },
+    {
+      "company": "ROBLOX CORP",
+      "cusip": "771049103",
+      "shares": 3147421,
+      "value_k": 171156,
+      "shr_type": "SH",
+      "ticker": "RBLX",
+      "pct_port": 3.04,
+      "value_usd": 171156000
+    },
+    {
+      "company": "CBRE GROUP INC",
+      "cusip": "12504L109",
+      "shares": 992391,
+      "value_k": 133665,
+      "shr_type": "SH",
+      "ticker": "CBRE",
+      "pct_port": 2.37,
+      "value_usd": 133665000
+    },
+    {
+      "company": "LIBERTY LIVE HOLDINGS INC",
+      "cusip": "530909100",
+      "shares": 785119,
+      "value_k": 79501,
+      "shr_type": "SH",
+      "ticker": "LLYVK",
+      "pct_port": 1.41,
+      "value_usd": 79501000
+    },
+    {
+      "company": "MONGODB INC",
+      "cusip": "60937P106",
+      "shares": 165700,
+      "value_k": 55658,
+      "shr_type": "SH",
+      "ticker": "MDB",
+      "pct_port": 0.99,
+      "value_usd": 55658000
+    },
+    {
+      "company": "LIVE NATION ENTERTAINMENT IN",
+      "cusip": "538034109",
+      "shares": 302066,
+      "value_k": 55311,
+      "shr_type": "SH",
+      "ticker": "LYV",
+      "pct_port": 0.98,
+      "value_usd": 55311000
+    },
+    {
+      "company": "WIX COM LTD",
+      "cusip": "M98068105",
+      "shares": 1099370,
+      "value_k": 47384,
+      "shr_type": "SH",
+      "ticker": "WIX",
+      "pct_port": 0.84,
+      "value_usd": 47384000
+    },
+    {
+      "company": "PAYPAY CORP",
+      "cusip": "70450C101",
+      "shares": 2154800,
+      "value_k": 30878,
+      "shr_type": "SH",
+      "ticker": "PAYP",
+      "pct_port": 0.55,
+      "value_usd": 30878000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:44:44.948362+00:00"
+}

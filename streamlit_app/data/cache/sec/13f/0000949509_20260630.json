@@ -1,0 +1,1461 @@
+{
+  "cik": "0000949509",
+  "name": "Oaktree Capital Mgmt",
+  "manager": "Howard Marks",
+  "style": "Credit/Value",
+  "period": "2026-06-30",
+  "filed_date": "2026-08-14",
+  "holdings": [
+    {
+      "company": "STATE STREET CORP",
+      "cusip": "78462F103",
+      "shares": 1355000,
+      "value_k": 1011873,
+      "shr_type": "SH",
+      "ticker": "STT-PG",
+      "pct_port": 14.04,
+      "value_usd": 1011873000
+    },
+    {
+      "company": "INVESCO QQQ TRUST SERIES 1",
+      "cusip": "46090E103",
+      "shares": 885000,
+      "value_k": 651714,
+      "shr_type": "SH",
+      "ticker": "QQQ",
+      "pct_port": 9.04,
+      "value_usd": 651714000
+    },
+    {
+      "company": "TORM PLC",
+      "cusip": "G89479102",
+      "shares": 20329874,
+      "value_k": 524260,
+      "shr_type": "SH",
+      "ticker": "TRMD",
+      "pct_port": 7.28,
+      "value_usd": 524260000
+    },
+    {
+      "company": "EXPAND ENERGY CORP",
+      "cusip": "165167735",
+      "shares": 5237477,
+      "value_k": 477605,
+      "shr_type": "SH",
+      "ticker": "EXE",
+      "pct_port": 6.63,
+      "value_usd": 477605000
+    },
+    {
+      "company": "GARRETT MOTION INC",
+      "cusip": "366505105",
+      "shares": 7594816,
+      "value_k": 275160,
+      "shr_type": "SH",
+      "ticker": "GTX",
+      "pct_port": 3.82,
+      "value_usd": 275160000
+    },
+    {
+      "company": "ANGLOGOLD ASHANTI PLC",
+      "cusip": "G0378L100",
+      "shares": 3179092,
+      "value_k": 257156,
+      "shr_type": "SH",
+      "ticker": "AU",
+      "pct_port": 3.57,
+      "value_usd": 257156000
+    },
+    {
+      "company": "INDIVIOR PHARMACEUTICALS INC",
+      "cusip": "45579U109",
+      "shares": 6127212,
+      "value_k": 251399,
+      "shr_type": "SH",
+      "ticker": "INDV",
+      "pct_port": 3.49,
+      "value_usd": 251399000
+    },
+    {
+      "company": "TELEPHONE AND DATA SYSTEMS INC",
+      "cusip": "879433829",
+      "shares": 5282905,
+      "value_k": 195520,
+      "shr_type": "SH",
+      "ticker": "TDS-PV",
+      "pct_port": 2.71,
+      "value_usd": 195520000
+    },
+    {
+      "company": "VIPER ENERGY INC",
+      "cusip": "64361Q101",
+      "shares": 3791432,
+      "value_k": 160756,
+      "shr_type": "SH",
+      "ticker": "VNOM",
+      "pct_port": 2.23,
+      "value_usd": 160756000
+    },
+    {
+      "company": "CORE SCIENTIFIC INC",
+      "cusip": "21874A106",
+      "shares": 5000000,
+      "value_k": 127950,
+      "shr_type": "SH",
+      "ticker": "CORZR",
+      "pct_port": 1.78,
+      "value_usd": 127950000
+    },
+    {
+      "company": "CORE SCIENTIFIC INC",
+      "cusip": "21874A106",
+      "shares": 4993708,
+      "value_k": 127788,
+      "shr_type": "SH",
+      "ticker": "CORZR",
+      "pct_port": 1.77,
+      "value_usd": 127788000
+    },
+    {
+      "company": "TALEN ENERGY CORP",
+      "cusip": "87422Q109",
+      "shares": 331117,
+      "value_k": 127235,
+      "shr_type": "SH",
+      "ticker": "TLN",
+      "pct_port": 1.77,
+      "value_usd": 127235000
+    },
+    {
+      "company": "BARRICK MINING CORP",
+      "cusip": "06849F108",
+      "shares": 3206087,
+      "value_k": 117759,
+      "shr_type": "SH",
+      "ticker": "B",
+      "pct_port": 1.63,
+      "value_usd": 117759000
+    },
+    {
+      "company": "ITAU UNIBANCO HOLDING SA",
+      "cusip": "465562106",
+      "shares": 11977665,
+      "value_k": 97857,
+      "shr_type": "SH",
+      "ticker": "ITUB",
+      "pct_port": 1.36,
+      "value_usd": 97857000
+    },
+    {
+      "company": "LIBERTY GLOBAL LTD",
+      "cusip": "G61188101",
+      "shares": 8551191,
+      "value_k": 97227,
+      "shr_type": "SH",
+      "ticker": "LBTYK",
+      "pct_port": 1.35,
+      "value_usd": 97227000
+    },
+    {
+      "company": "OAKTREE SPECIALTY LENDING CORP",
+      "cusip": "67401P405",
+      "shares": 7872199,
+      "value_k": 93994,
+      "shr_type": "SH",
+      "ticker": "OCSL",
+      "pct_port": 1.3,
+      "value_usd": 93994000
+    },
+    {
+      "company": "FREEPORT-MCMORAN INC",
+      "cusip": "35671D857",
+      "shares": 1201122,
+      "value_k": 75538,
+      "shr_type": "SH",
+      "ticker": "FCX",
+      "pct_port": 1.05,
+      "value_usd": 75538000
+    },
+    {
+      "company": "GRUPO AEROMEXICO SAB DE CV",
+      "cusip": "40054J109",
+      "shares": 3968686,
+      "value_k": 71436,
+      "shr_type": "SH",
+      "ticker": "AERO",
+      "pct_port": 0.99,
+      "value_usd": 71436000
+    },
+    {
+      "company": "KILROY REALTY CORP",
+      "cusip": "49427F108",
+      "shares": 1850011,
+      "value_k": 69319,
+      "shr_type": "SH",
+      "ticker": "KRC",
+      "pct_port": 0.96,
+      "value_usd": 69319000
+    },
+    {
+      "company": "PEBBLEBROOK HOTEL TRUST",
+      "cusip": "70509VAA8",
+      "shares": 63534000,
+      "value_k": 63095,
+      "shr_type": "PRN",
+      "ticker": "PEB-PG",
+      "pct_port": 0.88,
+      "value_usd": 63095000
+    },
+    {
+      "company": "BIOMARIN PHARMACEUTICAL INC",
+      "cusip": "09061GAK7",
+      "shares": 64025000,
+      "value_k": 62373,
+      "shr_type": "PRN",
+      "ticker": "BMRN",
+      "pct_port": 0.87,
+      "value_usd": 62373000
+    },
+    {
+      "company": "SEA LTD",
+      "cusip": "81141RAG5",
+      "shares": 62567000,
+      "value_k": 62060,
+      "shr_type": "PRN",
+      "ticker": "SE",
+      "pct_port": 0.86,
+      "value_usd": 62060000
+    },
+    {
+      "company": "ETSY INC",
+      "cusip": "29786AAN6",
+      "shares": 66836000,
+      "value_k": 61161,
+      "shr_type": "PRN",
+      "ticker": "ETSY",
+      "pct_port": 0.85,
+      "value_usd": 61161000
+    },
+    {
+      "company": "SEA LTD",
+      "cusip": "81141R100",
+      "shares": 635443,
+      "value_k": 60894,
+      "shr_type": "SH",
+      "ticker": "SE",
+      "pct_port": 0.85,
+      "value_usd": 60894000
+    },
+    {
+      "company": "LIBERTY LATIN AMERICA LTD",
+      "cusip": "G9001E128",
+      "shares": 7559083,
+      "value_k": 58885,
+      "shr_type": "SH",
+      "ticker": "LILAP",
+      "pct_port": 0.82,
+      "value_usd": 58885000
+    },
+    {
+      "company": "ENPHASE ENERGY INC",
+      "cusip": "29355AAK3",
+      "shares": 61820000,
+      "value_k": 57609,
+      "shr_type": "PRN",
+      "ticker": "ENPH",
+      "pct_port": 0.8,
+      "value_usd": 57609000
+    },
+    {
+      "company": "DEXCOM INC",
+      "cusip": "252131AM9",
+      "shares": 61148000,
+      "value_k": 57096,
+      "shr_type": "PRN",
+      "ticker": "DXCM",
+      "pct_port": 0.79,
+      "value_usd": 57096000
+    },
+    {
+      "company": "BAUSCH LOMB CORP",
+      "cusip": "071705107",
+      "shares": 3441042,
+      "value_k": 56983,
+      "shr_type": "SH",
+      "ticker": "BLCO",
+      "pct_port": 0.79,
+      "value_usd": 56983000
+    },
+    {
+      "company": "VIASAT INC",
+      "cusip": "92552V100",
+      "shares": 630280,
+      "value_k": 56605,
+      "shr_type": "SH",
+      "ticker": "VSAT",
+      "pct_port": 0.79,
+      "value_usd": 56605000
+    },
+    {
+      "company": "ECHOSTAR CORP",
+      "cusip": "278768AB2",
+      "shares": 18000001,
+      "value_k": 56250,
+      "shr_type": "PRN",
+      "ticker": "ECHO",
+      "pct_port": 0.78,
+      "value_usd": 56250000
+    },
+    {
+      "company": "MARRIOTT VACATIONS WORLDWIDE CORP",
+      "cusip": "57164YAF4",
+      "shares": 56893000,
+      "value_k": 55954,
+      "shr_type": "PRN",
+      "ticker": "VAC",
+      "pct_port": 0.78,
+      "value_usd": 55954000
+    },
+    {
+      "company": "DRAFTKINGS INC",
+      "cusip": "26142RAB0",
+      "shares": 58501000,
+      "value_k": 54482,
+      "shr_type": "PRN",
+      "ticker": "DKNG",
+      "pct_port": 0.76,
+      "value_usd": 54482000
+    },
+    {
+      "company": "CONMED CORP",
+      "cusip": "207410AH4",
+      "shares": 53645000,
+      "value_k": 52464,
+      "shr_type": "PRN",
+      "ticker": "CNMD",
+      "pct_port": 0.73,
+      "value_usd": 52464000
+    },
+    {
+      "company": "MAKEMYTRIP LTD",
+      "cusip": "V5633W109",
+      "shares": 983068,
+      "value_k": 52387,
+      "shr_type": "SH",
+      "ticker": "MMYT",
+      "pct_port": 0.73,
+      "value_usd": 52387000
+    },
+    {
+      "company": "RIOT PLATFORMS INC",
+      "cusip": "767292AB1",
+      "shares": 26000000,
+      "value_k": 52278,
+      "shr_type": "PRN",
+      "ticker": "RIOT",
+      "pct_port": 0.73,
+      "value_usd": 52278000
+    },
+    {
+      "company": "TELADOC HEALTH INC",
+      "cusip": "87918AAF2",
+      "shares": 53624000,
+      "value_k": 52256,
+      "shr_type": "PRN",
+      "ticker": "TDOC",
+      "pct_port": 0.73,
+      "value_usd": 52256000
+    },
+    {
+      "company": "BENTLEY SYSTEMS INC",
+      "cusip": "08265TAD1",
+      "shares": 54264000,
+      "value_k": 52163,
+      "shr_type": "PRN",
+      "ticker": "BSY",
+      "pct_port": 0.72,
+      "value_usd": 52163000
+    },
+    {
+      "company": "MATTHEWS INTERNATIONAL CORP",
+      "cusip": "577128101",
+      "shares": 1925992,
+      "value_k": 51847,
+      "shr_type": "SH",
+      "ticker": "MATW",
+      "pct_port": 0.72,
+      "value_usd": 51847000
+    },
+    {
+      "company": "XP INC",
+      "cusip": "G98239109",
+      "shares": 3116809,
+      "value_k": 50679,
+      "shr_type": "SH",
+      "ticker": "XP",
+      "pct_port": 0.7,
+      "value_usd": 50679000
+    },
+    {
+      "company": "UNITY SOFTWARE INC",
+      "cusip": "91332UAB7",
+      "shares": 49426000,
+      "value_k": 48635,
+      "shr_type": "PRN",
+      "ticker": "U",
+      "pct_port": 0.67,
+      "value_usd": 48635000
+    },
+    {
+      "company": "FIVE9 INC",
+      "cusip": "338307AF8",
+      "shares": 53306000,
+      "value_k": 47423,
+      "shr_type": "PRN",
+      "ticker": "FIVN",
+      "pct_port": 0.66,
+      "value_usd": 47423000
+    },
+    {
+      "company": "LYONDELLBASELL INDUSTRIES NV",
+      "cusip": "N53745100",
+      "shares": 900000,
+      "value_k": 47385,
+      "shr_type": "SH",
+      "ticker": "LYB",
+      "pct_port": 0.66,
+      "value_usd": 47385000
+    },
+    {
+      "company": "SHIFT4 PAYMENTS INC",
+      "cusip": "82452JAD1",
+      "shares": 48444000,
+      "value_k": 46264,
+      "shr_type": "PRN",
+      "ticker": "FOUR-PA",
+      "pct_port": 0.64,
+      "value_usd": 46264000
+    },
+    {
+      "company": "YPF SA",
+      "cusip": "984245100",
+      "shares": 991346,
+      "value_k": 45076,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.63,
+      "value_usd": 45076000
+    },
+    {
+      "company": "TRANSALTA CORP",
+      "cusip": "89346D107",
+      "shares": 3000000,
+      "value_k": 41487,
+      "shr_type": "SH",
+      "ticker": "TRNTF",
+      "pct_port": 0.58,
+      "value_usd": 41487000
+    },
+    {
+      "company": "VISTEON CORP",
+      "cusip": "92839U206",
+      "shares": 400000,
+      "value_k": 39684,
+      "shr_type": "SH",
+      "ticker": "VC",
+      "pct_port": 0.55,
+      "value_usd": 39684000
+    },
+    {
+      "company": "RUNWAY GROWTH FINANCE CORP",
+      "cusip": "78163D100",
+      "shares": 7029667,
+      "value_k": 39436,
+      "shr_type": "SH",
+      "ticker": "RWAYI",
+      "pct_port": 0.55,
+      "value_usd": 39436000
+    },
+    {
+      "company": "ENOVIS CORP",
+      "cusip": "194014AB2",
+      "shares": 39207000,
+      "value_k": 37793,
+      "shr_type": "PRN",
+      "ticker": "ENOV",
+      "pct_port": 0.52,
+      "value_usd": 37793000
+    },
+    {
+      "company": "AMPHASTAR PHARMACEUTICALS INC",
+      "cusip": "03209RAB9",
+      "shares": 40880000,
+      "value_k": 37200,
+      "shr_type": "PRN",
+      "ticker": "AMPH",
+      "pct_port": 0.52,
+      "value_usd": 37200000
+    },
+    {
+      "company": "AFFIRM HOLDINGS INC",
+      "cusip": "00827BAB2",
+      "shares": 34815000,
+      "value_k": 34292,
+      "shr_type": "PRN",
+      "ticker": "AFRM",
+      "pct_port": 0.48,
+      "value_usd": 34292000
+    },
+    {
+      "company": "ARRAY TECHNOLOGIES INC",
+      "cusip": "04271TAB6",
+      "shares": 33985000,
+      "value_k": 31624,
+      "shr_type": "PRN",
+      "ticker": "ARRY",
+      "pct_port": 0.44,
+      "value_usd": 31624000
+    },
+    {
+      "company": "EMBRAER SA",
+      "cusip": "29082A107",
+      "shares": 439706,
+      "value_k": 28053,
+      "shr_type": "SH",
+      "ticker": "EMBJ",
+      "pct_port": 0.39,
+      "value_usd": 28053000
+    },
+    {
+      "company": "SNAP INC",
+      "cusip": "83304AAF3",
+      "shares": 28018000,
+      "value_k": 26687,
+      "shr_type": "PRN",
+      "ticker": "SNAP",
+      "pct_port": 0.37,
+      "value_usd": 26687000
+    },
+    {
+      "company": "ARRAY DIGITAL INFRASTRUCTURE INC",
+      "cusip": "911684108",
+      "shares": 696858,
+      "value_k": 25268,
+      "shr_type": "SH",
+      "ticker": "UZF",
+      "pct_port": 0.35,
+      "value_usd": 25268000
+    },
+    {
+      "company": "RICE ACQUISITION CORP 3",
+      "cusip": "G7553X106",
+      "shares": 2400000,
+      "value_k": 25200,
+      "shr_type": "SH",
+      "ticker": "KRSP-UN",
+      "pct_port": 0.35,
+      "value_usd": 25200000
+    },
+    {
+      "company": "SHARONAI HOLDINGS INC",
+      "cusip": "778920306",
+      "shares": 289456,
+      "value_k": 24505,
+      "shr_type": "SH",
+      "ticker": "SHAZW",
+      "pct_port": 0.34,
+      "value_usd": 24505000
+    },
+    {
+      "company": "SPECTRUM BRANDS HOLDINGS INC",
+      "cusip": "84762LAZ8",
+      "shares": 23452000,
+      "value_k": 24500,
+      "shr_type": "PRN",
+      "ticker": "SPB",
+      "pct_port": 0.34,
+      "value_usd": 24500000
+    },
+    {
+      "company": "TERNIUM SA",
+      "cusip": "880890108",
+      "shares": 572324,
+      "value_k": 24438,
+      "shr_type": "SH",
+      "ticker": "TX",
+      "pct_port": 0.34,
+      "value_usd": 24438000
+    },
+    {
+      "company": "QUANTUM CORP",
+      "cusip": "747906600",
+      "shares": 2011678,
+      "value_k": 22128,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.31,
+      "value_usd": 22128000
+    },
+    {
+      "company": "WINNEBAGO INDUSTRIES INC",
+      "cusip": "974637AF7",
+      "shares": 20074000,
+      "value_k": 18719,
+      "shr_type": "PRN",
+      "ticker": "WGO",
+      "pct_port": 0.26,
+      "value_usd": 18719000
+    },
+    {
+      "company": "BLOCK INC",
+      "cusip": "852234AK9",
+      "shares": 17983000,
+      "value_k": 17070,
+      "shr_type": "PRN",
+      "ticker": "BSQKZ",
+      "pct_port": 0.24,
+      "value_usd": 17070000
+    },
+    {
+      "company": "SNAP INC",
+      "cusip": "83304AAH9",
+      "shares": 17474000,
+      "value_k": 16098,
+      "shr_type": "PRN",
+      "ticker": "SNAP",
+      "pct_port": 0.22,
+      "value_usd": 16098000
+    },
+    {
+      "company": "SIMPLY GOOD FOODS CO/THE",
+      "cusip": "82900L102",
+      "shares": 1203889,
+      "value_k": 15987,
+      "shr_type": "SH",
+      "ticker": "SMPL",
+      "pct_port": 0.22,
+      "value_usd": 15987000
+    },
+    {
+      "company": "COGENT BIOSCIENCES INC",
+      "cusip": "19240QAA0",
+      "shares": 11890000,
+      "value_k": 14758,
+      "shr_type": "PRN",
+      "ticker": "COGT",
+      "pct_port": 0.2,
+      "value_usd": 14758000
+    },
+    {
+      "company": "SURGERY PARTNERS INC",
+      "cusip": "86881A100",
+      "shares": 862588,
+      "value_k": 14491,
+      "shr_type": "SH",
+      "ticker": "SGRY",
+      "pct_port": 0.2,
+      "value_usd": 14491000
+    },
+    {
+      "company": "BLACKSTONE MORTGAGE TRUST INC",
+      "cusip": "09257WAE0",
+      "shares": 14064000,
+      "value_k": 14064,
+      "shr_type": "PRN",
+      "ticker": "BXMT",
+      "pct_port": 0.2,
+      "value_usd": 14064000
+    },
+    {
+      "company": "UPWORK INC",
+      "cusip": "91688FAB0",
+      "shares": 14154000,
+      "value_k": 14047,
+      "shr_type": "PRN",
+      "ticker": "UPWK",
+      "pct_port": 0.19,
+      "value_usd": 14047000
+    },
+    {
+      "company": "WORKIVA INC",
+      "cusip": "98139AAD7",
+      "shares": 14970000,
+      "value_k": 14030,
+      "shr_type": "PRN",
+      "ticker": "WK",
+      "pct_port": 0.19,
+      "value_usd": 14030000
+    },
+    {
+      "company": "ETSY INC",
+      "cusip": "29786AAQ9",
+      "shares": 11974000,
+      "value_k": 13910,
+      "shr_type": "PRN",
+      "ticker": "ETSY",
+      "pct_port": 0.19,
+      "value_usd": 13910000
+    },
+    {
+      "company": "REDFIN CORP",
+      "cusip": "75737FAE8",
+      "shares": 14041000,
+      "value_k": 13549,
+      "shr_type": "PRN",
+      "ticker": "",
+      "pct_port": 0.19,
+      "value_usd": 13549000
+    },
+    {
+      "company": "STARWOOD PROPERTY TRUST INC",
+      "cusip": "85571BBA2",
+      "shares": 11894933,
+      "value_k": 12070,
+      "shr_type": "PRN",
+      "ticker": "STWD",
+      "pct_port": 0.17,
+      "value_usd": 12070000
+    },
+    {
+      "company": "BITDEER TECHNOLOGIES GROUP",
+      "cusip": "G11448100",
+      "shares": 750000,
+      "value_k": 11902,
+      "shr_type": "SH",
+      "ticker": "BTDR",
+      "pct_port": 0.17,
+      "value_usd": 11902000
+    },
+    {
+      "company": "SNOWFLAKE INC",
+      "cusip": "833445AB5",
+      "shares": 7147000,
+      "value_k": 11895,
+      "shr_type": "PRN",
+      "ticker": "SNOW",
+      "pct_port": 0.17,
+      "value_usd": 11895000
+    },
+    {
+      "company": "NABORS INDUSTRIES LTD",
+      "cusip": "62957HAL9",
+      "shares": 11880000,
+      "value_k": 11291,
+      "shr_type": "PRN",
+      "ticker": "NBR",
+      "pct_port": 0.16,
+      "value_usd": 11291000
+    },
+    {
+      "company": "AEROVIRONMENT INC",
+      "cusip": "008073AA6",
+      "shares": 11799000,
+      "value_k": 11278,
+      "shr_type": "PRN",
+      "ticker": "AVAV",
+      "pct_port": 0.16,
+      "value_usd": 11278000
+    },
+    {
+      "company": "ITRON INC",
+      "cusip": "465741AQ9",
+      "shares": 11216000,
+      "value_k": 11198,
+      "shr_type": "PRN",
+      "ticker": "ITRI",
+      "pct_port": 0.16,
+      "value_usd": 11198000
+    },
+    {
+      "company": "ZIFF DAVIS INC",
+      "cusip": "48123VAE2",
+      "shares": 11230000,
+      "value_k": 11132,
+      "shr_type": "PRN",
+      "ticker": "ZD",
+      "pct_port": 0.15,
+      "value_usd": 11132000
+    },
+    {
+      "company": "MAYFAIR GOLD CORP",
+      "cusip": "57808L305",
+      "shares": 4500000,
+      "value_k": 11069,
+      "shr_type": "SH",
+      "ticker": "MINE",
+      "pct_port": 0.15,
+      "value_usd": 11069000
+    },
+    {
+      "company": "ARROWHEAD PHARMACEUTICALS INC",
+      "cusip": "04280AAC4",
+      "shares": 9146000,
+      "value_k": 10951,
+      "shr_type": "PRN",
+      "ticker": "ARWR",
+      "pct_port": 0.15,
+      "value_usd": 10951000
+    },
+    {
+      "company": "BLUE MOON METALS INC",
+      "cusip": "09570Q509",
+      "shares": 1685000,
+      "value_k": 10688,
+      "shr_type": "SH",
+      "ticker": "BMM",
+      "pct_port": 0.15,
+      "value_usd": 10688000
+    },
+    {
+      "company": "ENVISTA HOLDINGS CORP",
+      "cusip": "29415FAD6",
+      "shares": 10206000,
+      "value_k": 10250,
+      "shr_type": "PRN",
+      "ticker": "NVST",
+      "pct_port": 0.14,
+      "value_usd": 10250000
+    },
+    {
+      "company": "CLOUDFLARE INC",
+      "cusip": "18915MAF4",
+      "shares": 8050000,
+      "value_k": 10199,
+      "shr_type": "PRN",
+      "ticker": "NET",
+      "pct_port": 0.14,
+      "value_usd": 10199000
+    },
+    {
+      "company": "RAPID7 INC",
+      "cusip": "753422AF1",
+      "shares": 10061000,
+      "value_k": 9708,
+      "shr_type": "PRN",
+      "ticker": "RPD",
+      "pct_port": 0.13,
+      "value_usd": 9708000
+    },
+    {
+      "company": "FRESHPET INC",
+      "cusip": "358039AB1",
+      "shares": 7913000,
+      "value_k": 9198,
+      "shr_type": "PRN",
+      "ticker": "FRPT",
+      "pct_port": 0.13,
+      "value_usd": 9198000
+    },
+    {
+      "company": "ALPHATEC HOLDINGS INC",
+      "cusip": "02081GAB8",
+      "shares": 9177000,
+      "value_k": 9144,
+      "shr_type": "PRN",
+      "ticker": "ATEC",
+      "pct_port": 0.13,
+      "value_usd": 9144000
+    },
+    {
+      "company": "SMARTRENT INC",
+      "cusip": "83193G107",
+      "shares": 7505294,
+      "value_k": 8931,
+      "shr_type": "SH",
+      "ticker": "SMRT",
+      "pct_port": 0.12,
+      "value_usd": 8931000
+    },
+    {
+      "company": "UPSTART HOLDINGS INC",
+      "cusip": "91680MAB3",
+      "shares": 8312000,
+      "value_k": 8275,
+      "shr_type": "PRN",
+      "ticker": "UPST",
+      "pct_port": 0.11,
+      "value_usd": 8275000
+    },
+    {
+      "company": "SITIME CORP",
+      "cusip": "82982TAA4",
+      "shares": 7300000,
+      "value_k": 8099,
+      "shr_type": "PRN",
+      "ticker": "SITM",
+      "pct_port": 0.11,
+      "value_usd": 8099000
+    },
+    {
+      "company": "REDWOOD TRUST INC",
+      "cusip": "758075AF2",
+      "shares": 7881000,
+      "value_k": 7999,
+      "shr_type": "PRN",
+      "ticker": "RWTS",
+      "pct_port": 0.11,
+      "value_usd": 7999000
+    },
+    {
+      "company": "DOORDASH INC",
+      "cusip": "25809KAB1",
+      "shares": 8089000,
+      "value_k": 7977,
+      "shr_type": "PRN",
+      "ticker": "DASH",
+      "pct_port": 0.11,
+      "value_usd": 7977000
+    },
+    {
+      "company": "JD.COM INC",
+      "cusip": "47215PAJ5",
+      "shares": 8065000,
+      "value_k": 7931,
+      "shr_type": "PRN",
+      "ticker": "JDCMF",
+      "pct_port": 0.11,
+      "value_usd": 7931000
+    },
+    {
+      "company": "ALARM.COM HOLDINGS INC",
+      "cusip": "011642AD7",
+      "shares": 8171000,
+      "value_k": 7773,
+      "shr_type": "PRN",
+      "ticker": "ALRM",
+      "pct_port": 0.11,
+      "value_usd": 7773000
+    },
+    {
+      "company": "PENNYMAC MORTGAGE INVESTMENT TRUST",
+      "cusip": "70932AAH6",
+      "shares": 7101000,
+      "value_k": 7266,
+      "shr_type": "PRN",
+      "ticker": "PMT-PC",
+      "pct_port": 0.1,
+      "value_usd": 7266000
+    },
+    {
+      "company": "CERENCE INC",
+      "cusip": "156727AD1",
+      "shares": 7887000,
+      "value_k": 7237,
+      "shr_type": "PRN",
+      "ticker": "CRNC",
+      "pct_port": 0.1,
+      "value_usd": 7237000
+    },
+    {
+      "company": "CELCUITY INC",
+      "cusip": "15102KAB6",
+      "shares": 6250000,
+      "value_k": 7133,
+      "shr_type": "PRN",
+      "ticker": "CELC",
+      "pct_port": 0.1,
+      "value_usd": 7133000
+    },
+    {
+      "company": "MAGNACHIP SEMICONDUCTOR CORP",
+      "cusip": "55933J203",
+      "shares": 1500000,
+      "value_k": 7095,
+      "shr_type": "SH",
+      "ticker": "MX",
+      "pct_port": 0.1,
+      "value_usd": 7095000
+    },
+    {
+      "company": "WORKIVA INC",
+      "cusip": "98139AAB1",
+      "shares": 7100000,
+      "value_k": 7064,
+      "shr_type": "PRN",
+      "ticker": "WK",
+      "pct_port": 0.1,
+      "value_usd": 7064000
+    },
+    {
+      "company": "CRACKER BARREL OLD COUNTRY STORE INC",
+      "cusip": "22410JAD8",
+      "shares": 6708000,
+      "value_k": 6873,
+      "shr_type": "PRN",
+      "ticker": "CBRL",
+      "pct_port": 0.1,
+      "value_usd": 6873000
+    },
+    {
+      "company": "ETSY INC",
+      "cusip": "29786AAL0",
+      "shares": 7233000,
+      "value_k": 6858,
+      "shr_type": "PRN",
+      "ticker": "ETSY",
+      "pct_port": 0.1,
+      "value_usd": 6858000
+    },
+    {
+      "company": "PAGERDUTY INC",
+      "cusip": "69553PAD2",
+      "shares": 7125000,
+      "value_k": 6693,
+      "shr_type": "PRN",
+      "ticker": "PD",
+      "pct_port": 0.09,
+      "value_usd": 6693000
+    },
+    {
+      "company": "LIBERTY LATIN AMERICA LTD",
+      "cusip": "G9001E102",
+      "shares": 839020,
+      "value_k": 6577,
+      "shr_type": "SH",
+      "ticker": "LILAP",
+      "pct_port": 0.09,
+      "value_usd": 6577000
+    },
+    {
+      "company": "SAREPTA THERAPEUTICS INC",
+      "cusip": "803607AD2",
+      "shares": 6709000,
+      "value_k": 6344,
+      "shr_type": "PRN",
+      "ticker": "SRPT",
+      "pct_port": 0.09,
+      "value_usd": 6344000
+    },
+    {
+      "company": "LCI INDUSTRIES",
+      "cusip": "501812AD3",
+      "shares": 5650000,
+      "value_k": 6335,
+      "shr_type": "PRN",
+      "ticker": "LCII",
+      "pct_port": 0.09,
+      "value_usd": 6335000
+    },
+    {
+      "company": "UBER TECHNOLOGIES INC",
+      "cusip": "90353TAS9",
+      "shares": 5400000,
+      "value_k": 6246,
+      "shr_type": "PRN",
+      "ticker": "UBER",
+      "pct_port": 0.09,
+      "value_usd": 6246000
+    },
+    {
+      "company": "BILL HOLDINGS INC",
+      "cusip": "090043AD2",
+      "shares": 6330000,
+      "value_k": 6128,
+      "shr_type": "PRN",
+      "ticker": "BILL",
+      "pct_port": 0.09,
+      "value_usd": 6128000
+    },
+    {
+      "company": "GREEN PLAINS INC",
+      "cusip": "393222AK0",
+      "shares": 4998000,
+      "value_k": 4948,
+      "shr_type": "PRN",
+      "ticker": "GPRE",
+      "pct_port": 0.07,
+      "value_usd": 4948000
+    },
+    {
+      "company": "GLADSTONE CAPITAL CORP",
+      "cusip": "376535AG5",
+      "shares": 4999000,
+      "value_k": 4824,
+      "shr_type": "PRN",
+      "ticker": "GLAD",
+      "pct_port": 0.07,
+      "value_usd": 4824000
+    },
+    {
+      "company": "MAGNACHIP SEMICONDUCTOR CORP",
+      "cusip": "55933J203",
+      "shares": 1000000,
+      "value_k": 4730,
+      "shr_type": "SH",
+      "ticker": "MX",
+      "pct_port": 0.07,
+      "value_usd": 4730000
+    },
+    {
+      "company": "STRATEGY INC",
+      "cusip": "594972AS0",
+      "shares": 5451000,
+      "value_k": 4711,
+      "shr_type": "PRN",
+      "ticker": "STRD",
+      "pct_port": 0.07,
+      "value_usd": 4711000
+    },
+    {
+      "company": "FIRSTENERGY CORP",
+      "cusip": "337932AT4",
+      "shares": 4280000,
+      "value_k": 4676,
+      "shr_type": "PRN",
+      "ticker": "FE",
+      "pct_port": 0.06,
+      "value_usd": 4676000
+    },
+    {
+      "company": "RUBRIK INC",
+      "cusip": "781154AD1",
+      "shares": 4504000,
+      "value_k": 4609,
+      "shr_type": "PRN",
+      "ticker": "RBRK",
+      "pct_port": 0.06,
+      "value_usd": 4609000
+    },
+    {
+      "company": "NORTHERN OIL & GAS INC",
+      "cusip": "665531AJ8",
+      "shares": 4614000,
+      "value_k": 4432,
+      "shr_type": "PRN",
+      "ticker": "NOG",
+      "pct_port": 0.06,
+      "value_usd": 4432000
+    },
+    {
+      "company": "BATTALION OIL CORP",
+      "cusip": "07134L107",
+      "shares": 3009912,
+      "value_k": 3942,
+      "shr_type": "SH",
+      "ticker": "BATL",
+      "pct_port": 0.05,
+      "value_usd": 3942000
+    },
+    {
+      "company": "DPC HOLDINGS LTD",
+      "cusip": "G2R11M108",
+      "shares": 75000,
+      "value_k": 3679,
+      "shr_type": "SH",
+      "ticker": "DPC",
+      "pct_port": 0.05,
+      "value_usd": 3679000
+    },
+    {
+      "company": "RIVIAN AUTOMOTIVE INC",
+      "cusip": "76954AAD5",
+      "shares": 3400000,
+      "value_k": 3630,
+      "shr_type": "PRN",
+      "ticker": "RIVN",
+      "pct_port": 0.05,
+      "value_usd": 3630000
+    },
+    {
+      "company": "ZIFF DAVIS INC",
+      "cusip": "48123VAH5",
+      "shares": 3496000,
+      "value_k": 3496,
+      "shr_type": "PRN",
+      "ticker": "ZD",
+      "pct_port": 0.05,
+      "value_usd": 3496000
+    },
+    {
+      "company": "TRANSMEDICS GROUP INC",
+      "cusip": "89377MAB5",
+      "shares": 3131000,
+      "value_k": 3396,
+      "shr_type": "PRN",
+      "ticker": "TMDX",
+      "pct_port": 0.05,
+      "value_usd": 3396000
+    },
+    {
+      "company": "SERVICE PROPERTIES TRUST",
+      "cusip": "81761L102",
+      "shares": 1988382,
+      "value_k": 3360,
+      "shr_type": "SH",
+      "ticker": "SVC",
+      "pct_port": 0.05,
+      "value_usd": 3360000
+    },
+    {
+      "company": "WEC ENERGY GROUP INC",
+      "cusip": "92939UAT3",
+      "shares": 3214000,
+      "value_k": 3340,
+      "shr_type": "PRN",
+      "ticker": "WEC",
+      "pct_port": 0.05,
+      "value_usd": 3340000
+    },
+    {
+      "company": "AKAMAI TECHNOLOGIES INC",
+      "cusip": "00971TAN1",
+      "shares": 2631000,
+      "value_k": 3135,
+      "shr_type": "PRN",
+      "ticker": "AKAM",
+      "pct_port": 0.04,
+      "value_usd": 3135000
+    },
+    {
+      "company": "NORWEGIAN CRUISE LINE HOLDINGS LTD",
+      "cusip": "62886HBD2",
+      "shares": 2874000,
+      "value_k": 2849,
+      "shr_type": "PRN",
+      "ticker": "NCLH",
+      "pct_port": 0.04,
+      "value_usd": 2849000
+    },
+    {
+      "company": "NUTANIX INC",
+      "cusip": "67059NAH1",
+      "shares": 2200000,
+      "value_k": 2484,
+      "shr_type": "PRN",
+      "ticker": "NTNX",
+      "pct_port": 0.03,
+      "value_usd": 2484000
+    },
+    {
+      "company": "MGP INGREDIENTS INC",
+      "cusip": "55303JAB2",
+      "shares": 2515000,
+      "value_k": 2450,
+      "shr_type": "PRN",
+      "ticker": "MGPI",
+      "pct_port": 0.03,
+      "value_usd": 2450000
+    },
+    {
+      "company": "UBER TECHNOLOGIES INC",
+      "cusip": "90353TAM2",
+      "shares": 2000000,
+      "value_k": 2396,
+      "shr_type": "PRN",
+      "ticker": "UBER",
+      "pct_port": 0.03,
+      "value_usd": 2396000
+    },
+    {
+      "company": "LIVE NATION ENTERTAINMENT INC",
+      "cusip": "538034BC2",
+      "shares": 1813000,
+      "value_k": 2168,
+      "shr_type": "PRN",
+      "ticker": "LYV",
+      "pct_port": 0.03,
+      "value_usd": 2168000
+    },
+    {
+      "company": "HAEMONETICS CORP",
+      "cusip": "405024AD2",
+      "shares": 2090000,
+      "value_k": 2123,
+      "shr_type": "PRN",
+      "ticker": "HAE",
+      "pct_port": 0.03,
+      "value_usd": 2123000
+    },
+    {
+      "company": "DATADOG INC",
+      "cusip": "23804LAD5",
+      "shares": 1400000,
+      "value_k": 1993,
+      "shr_type": "PRN",
+      "ticker": "DDOG",
+      "pct_port": 0.03,
+      "value_usd": 1993000
+    },
+    {
+      "company": "BIOXCEL THERAPEUTICS INC",
+      "cusip": "09075P204",
+      "shares": 1380248,
+      "value_k": 1946,
+      "shr_type": "SH",
+      "ticker": "BTAI",
+      "pct_port": 0.03,
+      "value_usd": 1946000
+    },
+    {
+      "company": "NN INC",
+      "cusip": "629337106",
+      "shares": 510943,
+      "value_k": 1834,
+      "shr_type": "SH",
+      "ticker": "NNBR",
+      "pct_port": 0.03,
+      "value_usd": 1834000
+    },
+    {
+      "company": "FLUOR CORP",
+      "cusip": "343412AJ1",
+      "shares": 1271000,
+      "value_k": 1686,
+      "shr_type": "PRN",
+      "ticker": "FLR",
+      "pct_port": 0.02,
+      "value_usd": 1686000
+    },
+    {
+      "company": "GROUPON INC",
+      "cusip": "399473AK3",
+      "shares": 1677000,
+      "value_k": 1657,
+      "shr_type": "PRN",
+      "ticker": "GRPN",
+      "pct_port": 0.02,
+      "value_usd": 1657000
+    },
+    {
+      "company": "ON SEMICONDUCTOR CORP",
+      "cusip": "682189AU9",
+      "shares": 1250000,
+      "value_k": 1509,
+      "shr_type": "PRN",
+      "ticker": "ON",
+      "pct_port": 0.02,
+      "value_usd": 1509000
+    },
+    {
+      "company": "TELECOM ARGENTINA SA",
+      "cusip": "879273209",
+      "shares": 116105,
+      "value_k": 1509,
+      "shr_type": "SH",
+      "ticker": "TCMFF",
+      "pct_port": 0.02,
+      "value_usd": 1509000
+    },
+    {
+      "company": "REVOLUTION MEDICINES INC",
+      "cusip": "76155XAA8",
+      "shares": 1150000,
+      "value_k": 1442,
+      "shr_type": "PRN",
+      "ticker": "RVMDW",
+      "pct_port": 0.02,
+      "value_usd": 1442000
+    },
+    {
+      "company": "CEMEX SAB DE CV",
+      "cusip": "151290889",
+      "shares": 100000,
+      "value_k": 1200,
+      "shr_type": "SH",
+      "ticker": "CXMSF",
+      "pct_port": 0.02,
+      "value_usd": 1200000
+    },
+    {
+      "company": "ALVOTECH SA",
+      "cusip": "L01800116",
+      "shares": 4666667,
+      "value_k": 1073,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.01,
+      "value_usd": 1073000
+    },
+    {
+      "company": "NEOGENOMICS INC",
+      "cusip": "64049MAB6",
+      "shares": 1045000,
+      "value_k": 979,
+      "shr_type": "PRN",
+      "ticker": "NEO",
+      "pct_port": 0.01,
+      "value_usd": 979000
+    },
+    {
+      "company": "ALIBABA GROUP HOLDING LTD",
+      "cusip": "01609WBG6",
+      "shares": 750000,
+      "value_k": 885,
+      "shr_type": "PRN",
+      "ticker": "BBAAY",
+      "pct_port": 0.01,
+      "value_usd": 885000
+    },
+    {
+      "company": "SNAP INC",
+      "cusip": "83304AAB2",
+      "shares": 877000,
+      "value_k": 873,
+      "shr_type": "PRN",
+      "ticker": "SNAP",
+      "pct_port": 0.01,
+      "value_usd": 873000
+    },
+    {
+      "company": "IMMUNOCORE HOLDINGS PLC",
+      "cusip": "45258DAB1",
+      "shares": 833000,
+      "value_k": 766,
+      "shr_type": "PRN",
+      "ticker": "IMCR",
+      "pct_port": 0.01,
+      "value_usd": 766000
+    },
+    {
+      "company": "SUNOPTA INC",
+      "cusip": "8676EP108",
+      "shares": 74314,
+      "value_k": 406,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.01,
+      "value_usd": 406000
+    },
+    {
+      "company": "RICE ACQUISITION CORP 3",
+      "cusip": "G7553X114",
+      "shares": 399999,
+      "value_k": 395,
+      "shr_type": "SH",
+      "ticker": "KRSP-UN",
+      "pct_port": 0.01,
+      "value_usd": 395000
+    },
+    {
+      "company": "ALVOTECH SA",
+      "cusip": "L01800108",
+      "shares": 97982,
+      "value_k": 361,
+      "shr_type": "SH",
+      "ticker": "",
+      "pct_port": 0.01,
+      "value_usd": 361000
+    },
+    {
+      "company": "SHAKE SHACK INC",
+      "cusip": "819047AB7",
+      "shares": 270000,
+      "value_k": 252,
+      "shr_type": "PRN",
+      "ticker": "SHAK",
+      "pct_port": 0.0,
+      "value_usd": 252000
+    },
+    {
+      "company": "OFFICE PROPERTIES INCOME TRUST/MD",
+      "cusip": "67623C307",
+      "shares": 10851,
+      "value_k": 184,
+      "shr_type": "SH",
+      "ticker": "OPI",
+      "pct_port": 0.0,
+      "value_usd": 184000
+    }
+  ],
+  "fetched_at": "2026-08-17T11:44:48.579124+00:00"
+}
