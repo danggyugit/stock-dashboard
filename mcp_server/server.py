@@ -1107,6 +1107,76 @@ def get_whale_holdings(manager: str, top_n: int = 15) -> dict:
     })
 
 
+_STOCKLAB_BASE = "https://aiquantlab-stocklab.pages.dev"
+
+
+@mcp.tool()
+def list_stock_reports() -> dict:
+    """List tickers that have an in-depth Stock Lab investment report available.
+
+    Stock Lab reports are 12-agent deep-dive analyses (financials, valuation
+    weights by sector, growth scenarios, risk assessment, PM verdict) published
+    as web pages. Use get_stock_report(ticker) to read one.
+    """
+    import re as _re
+    import requests as _rq
+    try:
+        r = _rq.get(_STOCKLAB_BASE + "/", timeout=10)
+        r.raise_for_status()
+        slugs = sorted(set(_re.findall(r"([a-z]+)_investment_report_2026", r.text)))
+        return {"count": len(slugs), "tickers": [s.upper() for s in slugs],
+                "site": _STOCKLAB_BASE}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@mcp.tool()
+def get_stock_report(ticker: str, max_chars: int = 15000) -> dict:
+    """Read the full Stock Lab in-depth investment report for a ticker.
+
+    These are 12-agent pipeline reports: financial statement analysis,
+    sector-weighted valuation (DCF/PER/EV-EBITDA/PEG/EV-Sales), growth
+    scenarios, bull/bear risk assessment, and a PM verdict with target price.
+    Much deeper than the quick-lookup tools — use for "심층 분석" requests.
+
+    Args:
+        ticker: Stock symbol (check list_stock_reports for availability).
+        max_chars: Max text length to return (default 15000).
+
+    Returns:
+        {ticker, url, text, truncated} — text is the tag-stripped report body.
+    """
+    import re as _re
+    import requests as _rq
+
+    slug = f"{ticker.lower().strip()}_investment_report_2026"
+    url = f"{_STOCKLAB_BASE}/{slug}"
+    try:
+        r = _rq.get(url, timeout=15)
+        if r.status_code == 404:
+            avail = list_stock_reports()
+            return {"error": f"No report for {ticker.upper()}.",
+                    "available": avail.get("tickers", [])}
+        r.raise_for_status()
+        r.encoding = "utf-8"
+        html = r.text
+    except Exception as e:
+        return {"error": str(e)}
+
+    txt = _re.sub(r"<script.*?</script>|<style.*?</style>", " ", html, flags=_re.S)
+    txt = _re.sub(r"<[^>]+>", " ", txt)
+    txt = _re.sub(r"\s+", " ", txt).strip()
+    truncated = len(txt) > max_chars
+
+    return {
+        "ticker": ticker.upper(),
+        "url": url,
+        "chars": len(txt),
+        "truncated": truncated,
+        "text": txt[:max_chars],
+    }
+
+
 @mcp.tool()
 def get_insider_trades(ticker: str, days: int = 180) -> dict:
     """Get recent insider (officer/director) trades for a ticker from SEC
