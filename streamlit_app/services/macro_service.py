@@ -209,8 +209,11 @@ def get_net_liquidity() -> pd.DataFrame:
     spx = _yf_close("^GSPC", period="5y")
     if not spx.empty:
         spx = spx.rename(columns={"value": "spx"}).sort_values("date")
-        spx["date"] = pd.to_datetime(spx["date"]).dt.tz_localize(None)
-        df["date"] = pd.to_datetime(df["date"])
+        # normalize BOTH sides to tz-naive datetime64[ns] — yfinance may return
+        # [s]-resolution timestamps depending on version/host
+        spx["date"] = (pd.to_datetime(spx["date"]).dt.tz_localize(None)
+                       .astype("datetime64[ns]"))
+        df["date"] = pd.to_datetime(df["date"]).astype("datetime64[ns]")
         df = pd.merge_asof(df, spx, on="date", direction="backward")
 
     return df.reset_index(drop=True)
