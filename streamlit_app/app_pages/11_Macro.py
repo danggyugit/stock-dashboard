@@ -136,6 +136,12 @@ with liq_r1c1:
         fig.update_layout(**_CHART_LAYOUT, height=220, showlegend=False,
                           yaxis_tickprefix="$", yaxis_ticksuffix="T")
         st.plotly_chart(fig, use_container_width=True)
+        _rrp_b = _rrp_df["value"].iloc[-1] * 1000
+        st.caption(
+            f"현재 **${_rrp_b:,.1f}B** ({_rrp_df['date'].iloc[-1]:%m/%d}) — "
+            "피크 $2.5T 대비 사실상 소진. 0 부근이라 차트에선 바닥선으로 보임 "
+            "(쿠션 소진 = 이후 유동성은 QT·TGA에 직접 좌우)"
+        )
     else:
         st.caption("RRP data unavailable")
 with liq_r1c2:
