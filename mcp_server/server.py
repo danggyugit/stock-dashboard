@@ -1138,7 +1138,9 @@ def _turso_queue():
 @mcp.tool()
 def request_stock_report(ticker: str) -> dict:
     """Request generation of a NEW Stock Lab in-depth report for a ticker
-    that doesn't have one yet.
+    that doesn't have one yet. (Korean triggers: "정식/심층 리포트 생성 요청",
+    "리포트 등록", "Stock Lab에 리포트 만들어줘" — prefer THIS over writing
+    an ad-hoc report yourself when the user wants it published to the site.)
 
     Generation runs on the owner's home workstation (12-agent Claude Code
     pipeline, ~20-40 min) — this tool only queues the request. A watcher on
@@ -1228,6 +1230,11 @@ def list_stock_reports() -> dict:
 @mcp.tool()
 def get_stock_report(ticker: str, max_chars: int = 15000) -> dict:
     """Read the full Stock Lab in-depth investment report for a ticker.
+
+    USE THIS whenever the user mentions 심층 리포트 / 정식 리포트 / Stock Lab
+    리포트 / 투자 분석 리포트 for a ticker — do NOT write your own report or
+    launch web research first; fetch this existing report and summarize it.
+    If it doesn't exist, offer request_stock_report instead.
 
     These are 12-agent pipeline reports: financial statement analysis,
     sector-weighted valuation (DCF/PER/EV-EBITDA/PEG/EV-Sales), growth
