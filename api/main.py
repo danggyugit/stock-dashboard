@@ -1,0 +1,123 @@
+"""AI Quant Lab API — on-demand backtest execution.
+
+FastAPI service that wraps the Streamlit AI Quant Lab backtest engine so it
+can be called from the Next.js web app (`aiquantlab-web`).
+
+Endpoints:
+  GET  /              → basic status
+  GET  /health        → health check (used by Render)
+  POST /backtest      → run a backtest with user-provided config
+
+Deployment: Render.com blueprint (see repo-root `render.yaml`).
+"""
+
+from __future__ import annotations
+
+import logging
+import os
+from datetime import datetime
+from typing import Literal
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+
+from lab_bridge import prepare_shared_data, run_backtest, serialize_results
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
+
+
+app = FastAPI(
+    title="AI Quant Lab API",
+    version="0.1.0",
+    description="On-demand backtest execution for aiquantlab-web",
+)
+
+# CORS: allow the web app to call this API from the browser.
+# Configure via env var so dev (localhost) and prod (vercel) both work.
+_allowed_origins = os.environ.get(
+    "CORS_ALLOW_ORIGINS",
+    "http://localhost:3000,https://aiquantlab-web.vercel.app",
+).split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in _allowed_origins if o.strip()],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+
+# ── Request/response models ───────────────────────────────────────
+
+
+class BacktestRequest(BaseModel):
+    """User-supplied backtest configuration. Matches the JSON produced by
+    `aiquantlab-web`'s config form (which itself mirrors the Streamlit form)."""
+
+    cap_tiers: list[str] = Field(default_factory=lambda: ["Large Cap"])
+    sectors: list[str] = Field(default_factory=lambda: ["Information Technology"])
+    rebal_m: int = Field(default=1, ge=1, le=12)
+    rolling_w: int = Field(default=12, ge=2, le=24)
+    n_stocks: int = Field(default=5, ge=1, le=20)
+    tc_pct: float = Field(default=0.3, ge=0, le=5)
+    min_dollar_vol: int = Field(default=10_000_000, ge=0)
+    use_next_open: bool = True
+    use_surv_fix: bool = True
+    use_ensemble: bool = False
+    use_mom_filter: bool = False
+    use_turnover_buffer: bool = True
+    start: str = "2023-01-01T00:00:00"
+    end: str = "2026-08-20T00:00:00"
+    min_test: int = 5
+    use_inv_vol_weight: bool = False
+    use_momentum_weight: bool = False
+    cash_strategy: Literal["none", "vol_target", "regime", "combined"] = "none"
+
+
+# ── Endpoints ────────────────────────────────────────────────────
+
+
+@app.get("/")
+def root():
+    return {
+        "service": "aiquantlab-api",
+        "version": "0.1.0",
+        "endpoints": ["/health", "POST /backtest"],
+    }
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
+@app.post("/backtest")
+def run_backtest_endpoint(req: BacktestRequest):
+    """Run a full backtest. Cold-start requests can take 5-10 min while data
+    is prefetched from yfinance; subsequent requests reuse the in-memory cache."""
+    try:
+        cfg = req.model_dump()
+        # Parse ISO strings back to datetimes for the underlying engine.
+        cfg["start"] = datetime.fromisoformat(cfg["start"])
+        cfg["end"] = datetime.fromisoformat(cfg["end"])
+
+        logger.info("Received backtest request: %s", cfg)
+
+        logger.info("Preparing shared data...")
+        shared = prepare_shared_data(cfg)
+
+        logger.info("Running backtest engine...")
+        results = run_backtest(cfg, shared)
+
+        logger.info("Serializing results...")
+        # Re-serialize cfg back to ISO for the response
+        cfg_out = dict(cfg)
+        return serialize_results(results, cfg_out)
+    except Exception as e:
+        logger.exception("Backtest failed")
+        raise HTTPException(status_code=500, detail=f"Backtest failed: {e}")

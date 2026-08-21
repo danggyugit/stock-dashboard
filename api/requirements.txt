@@ -1,0 +1,18 @@
+# FastAPI + ASGI server
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+pydantic==2.9.2
+
+# Match streamlit_app deps that factor_backtest reuses
+yfinance>=0.2.40
+pandas>=2.0
+numpy>=1.24
+scipy>=1.10
+scikit-learn>=1.3
+xgboost>=2.0
+lightgbm>=4.0
+hmmlearn>=0.3
+requests>=2.31
+
+# Data providers used by the AI Quant Lab page
+fredapi>=0.5
