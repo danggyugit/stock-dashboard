@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import logging
 import os
+import traceback
 from datetime import datetime
 from typing import Literal
 
@@ -100,24 +101,38 @@ def health():
 def run_backtest_endpoint(req: BacktestRequest):
     """Run a full backtest. Cold-start requests can take 5-10 min while data
     is prefetched from yfinance; subsequent requests reuse the in-memory cache."""
+    stage = "init"
     try:
         cfg = req.model_dump()
-        # Parse ISO strings back to datetimes for the underlying engine.
         cfg["start"] = datetime.fromisoformat(cfg["start"])
         cfg["end"] = datetime.fromisoformat(cfg["end"])
-
         logger.info("Received backtest request: %s", cfg)
 
-        logger.info("Preparing shared data...")
+        stage = "prepare_shared_data"
+        logger.info("[%s] starting", stage)
         shared = prepare_shared_data(cfg)
+        logger.info("[%s] done — rebal_dates=%d, price_data=%d",
+                    stage, len(shared.get("rebal_dates") or []),
+                    len(shared.get("price_data") or {}))
 
-        logger.info("Running backtest engine...")
+        stage = "run_backtest"
+        logger.info("[%s] starting", stage)
         results = run_backtest(cfg, shared)
+        logger.info("[%s] done", stage)
 
-        logger.info("Serializing results...")
-        # Re-serialize cfg back to ISO for the response
-        cfg_out = dict(cfg)
-        return serialize_results(results, cfg_out)
+        stage = "serialize_results"
+        results_out = serialize_results(results, dict(cfg))
+        logger.info("[%s] done", stage)
+        return results_out
     except Exception as e:
-        logger.exception("Backtest failed")
-        raise HTTPException(status_code=500, detail=f"Backtest failed: {e}")
+        tb = traceback.format_exc()
+        logger.exception("Backtest failed at stage=%s", stage)
+        # Return the type + repr so cryptic errors like "3" become
+        # "KeyError: 3" and traceback tail for quick debugging.
+        detail = {
+            "stage": stage,
+            "type": type(e).__name__,
+            "message": repr(e),
+            "traceback": tb.splitlines()[-15:],  # last 15 lines
+        }
+        raise HTTPException(status_code=500, detail=detail)
