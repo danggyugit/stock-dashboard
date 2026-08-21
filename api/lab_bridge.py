@@ -23,9 +23,10 @@ import numpy as np
 import pandas as pd
 
 # Prevent 2_AI_Quant_Lab.main() auto-run at module load time.
-# Must be set BEFORE the module is imported (module reads env at end-of-file).
-# Same pattern as streamlit_app/scripts/run_preset_backtests.py:32.
-os.environ.setdefault("QUANT_LAB_BATCH", "1")
+# Must be set BEFORE the module is imported (page reads env at end-of-file
+# with `if not os.environ.get("QUANT_LAB_BATCH"): main()`).
+# Direct assignment (not setdefault) — Render may inject env vars we can't see.
+os.environ["QUANT_LAB_BATCH"] = "1"
 
 logger = logging.getLogger(__name__)
 
@@ -175,10 +176,16 @@ def load_lab():
     if _lab_module is not None:
         return _lab_module
 
+    # Defensive re-set — the page checks this env var at module bottom to
+    # decide whether main() auto-runs. Set both at import time AND here so
+    # a mis-timed clear can't re-trigger the UI-mode auto-run.
+    os.environ["QUANT_LAB_BATCH"] = "1"
+
     _install_streamlit_stub()
     _install_dashboard_stubs()
 
-    logger.info("Loading AI Quant Lab module from %s", _PAGE_PATH)
+    logger.info("Loading AI Quant Lab module (QUANT_LAB_BATCH=%s) from %s",
+                os.environ.get("QUANT_LAB_BATCH"), _PAGE_PATH)
     spec = importlib.util.spec_from_file_location("_quant_lab_api", _PAGE_PATH)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"Cannot load module spec for {_PAGE_PATH}")
