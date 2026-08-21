@@ -22,6 +22,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+# Prevent 2_AI_Quant_Lab.main() auto-run at module load time.
+# Must be set BEFORE the module is imported (module reads env at end-of-file).
+# Same pattern as streamlit_app/scripts/run_preset_backtests.py:32.
+os.environ.setdefault("QUANT_LAB_BATCH", "1")
+
 logger = logging.getLogger(__name__)
 
 # ── Paths (relative to repo root) ─────────────────────────────────
