@@ -97,6 +97,17 @@ def health():
     return {"status": "ok"}
 
 
+@app.get("/cache/manifest")
+def cache_manifest():
+    """Returns _manifest.json — useful to verify what data the API sees.
+    404 if cache hasn't been generated yet."""
+    try:
+        import cache_loader
+        return cache_loader.load_manifest()
+    except cache_loader.CacheMissing as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
 @app.post("/backtest")
 def run_backtest_endpoint(req: BacktestRequest):
     """Run a full backtest. Cold-start requests can take 5-10 min while data

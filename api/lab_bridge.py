@@ -200,22 +200,37 @@ def load_lab():
 
 
 def prepare_shared_data(cfg: dict) -> dict:
-    """Fetch all market data needed for a backtest (universe → prices → PIT
-    financials → technicals → benchmarks). Slow on cold cache (minutes)."""
-    import yfinance as yf
+    """Assemble the `shared` dict expected by lab.run_backtest, loading
+    all market data from disk cache (Windows PC populates via
+    streamlit_app/scripts/cache_backtest_data.py, git-committed daily).
+
+    We never call yfinance here — Yahoo blocks datacenter IPs from Render
+    with 'Invalid Crumb' errors. Cache loads take ~seconds, so prefetch
+    goes from 5-10 min to under 30 sec.
+    """
+    import cache_loader
+
     lab = load_lab()
 
-    sp1500_df, _ = lab.get_sp1500_info()
-    cap_filter = sp1500_df[sp1500_df["cap_tier"].isin(cfg["cap_tiers"])]
-    universe = cap_filter[cap_filter["sector"].isin(cfg["sectors"])]["ticker"].tolist()
-    logger.info("Universe: %d tickers", len(universe))
+    # 1. Universe from cached metadata (filter to cfg sectors + cap tiers)
+    all_meta = cache_loader.load_metadata()
+    tickers = cache_loader.filter_universe(cfg)
+    logger.info("Universe: %d tickers (from cache)", len(tickers))
 
+    if not tickers:
+        raise RuntimeError(
+            f"No cached tickers match universe: sectors={cfg['sectors']}, "
+            f"cap_tiers={cfg['cap_tiers']}. Verify the sector name matches "
+            "cache_backtest_data.py's TARGET_SECTORS."
+        )
+
+    # 2. Survivorship fix — extend universe with historical S&P 500 removals
     sp500_changes = None
     current_sp500 = None
-    extra_tickers = []
+    extra_tickers: list[str] = []
     if cfg.get("use_surv_fix"):
-        sp500_changes = lab.get_sp500_changes()
-        current_sp500 = sp1500_df[sp1500_df["cap_tier"] == "Large Cap"]["ticker"].tolist()
+        sp500_changes = cache_loader.load_sp500_changes()
+        current_sp500 = all_meta[all_meta["cap_tier"] == "Large Cap"]["ticker"].tolist()
         if sp500_changes is not None and not sp500_changes.empty:
             bt_start = pd.Timestamp(cfg["start"])
             removed = sp500_changes[
@@ -224,58 +239,35 @@ def prepare_shared_data(cfg: dict) -> dict:
             ]["removed_ticker"].unique().tolist()
             sel = set(cfg["sectors"])
             for t in removed:
-                m = sp1500_df[sp1500_df["ticker"] == t]
+                m = all_meta[all_meta["ticker"] == t]
                 if not m.empty and m.iloc[0].get("sector", "") in sel:
                     extra_tickers.append(t)
-            extra_tickers = [t for t in extra_tickers if t not in universe]
+            extra_tickers = [t for t in extra_tickers if t not in tickers]
 
-    all_tickers = list(set(universe + extra_tickers))
-    logger.info("Universe including historical: %d", len(all_tickers))
+    all_tickers = list(set(tickers + extra_tickers))
 
-    data_start = cfg["start"] - timedelta(days=400)
-    price_data = lab.download_price_data(
-        tuple(all_tickers),
-        data_start.strftime("%Y-%m-%d"),
-        cfg["end"].strftime("%Y-%m-%d"),
-    )
-    available = list(price_data.keys())
-    logger.info("Prices: %d tickers", len(price_data))
+    # 3. Price data — filter cached prices to universe
+    all_prices = cache_loader.load_all_prices()
+    price_data = {t: all_prices[t] for t in all_tickers if t in all_prices}
+    logger.info("Prices: %d tickers (from cache)", len(price_data))
 
-    fund_map = lab.get_fundamental_yf(tuple(available))
-    pit_map = lab.get_pit_financials(tuple(available))
+    # 4. Fundamentals + PIT financials (from cache)
+    all_fund = cache_loader.load_fundamentals()
+    fund_map = {t: all_fund.get(t, {}) for t in price_data}
 
-    # SPY / VIX benchmarks
-    spy_close = None
-    vix_close = None
-    try:
-        spy_df = yf.download(
-            "SPY",
-            start=data_start.strftime("%Y-%m-%d"),
-            end=cfg["end"].strftime("%Y-%m-%d"),
-            auto_adjust=True,
-            progress=False,
-        )
-        if not spy_df.empty:
-            spy_close = spy_df["Close"].squeeze()
-    except Exception as e:
-        logger.warning("SPY fetch failed: %s", e)
-    try:
-        vix_df = yf.download(
-            "^VIX",
-            start=data_start.strftime("%Y-%m-%d"),
-            end=cfg["end"].strftime("%Y-%m-%d"),
-            auto_adjust=True,
-            progress=False,
-        )
-        if not vix_df.empty:
-            vix_close = vix_df["Close"].squeeze()
-    except Exception as e:
-        logger.warning("VIX fetch failed: %s", e)
+    all_pit = cache_loader.load_pit()
+    pit_map = {t: all_pit.get(t, {}) for t in price_data}
 
-    sector_map = {
-        row["ticker"]: row.get("sector", "Unknown") for _, row in sp1500_df.iterrows()
-    }
+    # 5. Benchmarks (SPY, VIX) — from cache
+    benchmarks = cache_loader.load_benchmarks()
+    spy_close = benchmarks.get("SPY")
+    vix_close = benchmarks.get("VIX")
 
+    # 6. Sector map (full universe, not filtered — engine uses for lookups)
+    sector_map = cache_loader.build_sector_map()
+
+    # 7. Technical indicators — computed on the fly from cached prices
+    #    (fast — this is just pandas arithmetic on already-loaded data)
     tech_map = {}
     for t, ohlcv in price_data.items():
         try:
@@ -283,6 +275,7 @@ def prepare_shared_data(cfg: dict) -> dict:
         except Exception:
             pass
 
+    # 8. Rebalance date grid
     rebal_dates = lab.generate_rebalance_dates(cfg["start"], cfg["end"], cfg["rebal_m"])
 
     return {
