@@ -13,6 +13,9 @@ xgboost>=2.0
 lightgbm>=4.0
 hmmlearn>=0.3
 requests>=2.31
+# Streamlit page imports plotly at top-level (chart rendering).
+# Even though we stub st.plotly_chart to a no-op, the module import must succeed.
+plotly>=5.20
 
 # Data providers used by the AI Quant Lab page
 fredapi>=0.5
