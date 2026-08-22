@@ -29,6 +29,7 @@ from factor_backtest import (
     list_strategies,
     run_factor_backtest,
 )
+import finnhub_proxy
 
 logging.basicConfig(
     level=logging.INFO,
@@ -238,3 +239,58 @@ def run_factor_backtest_endpoint(req: FactorBacktestRequest):
             "message": repr(e),
             "traceback": tb.splitlines()[-15:],
         })
+
+
+# ─────── Finnhub proxy (key stays on server) ───────
+
+
+def _finnhub_call(fn, *args, **kwargs):
+    """Common error wrapper so the browser gets a clean 4xx/5xx JSON."""
+    try:
+        return fn(*args, **kwargs)
+    except RuntimeError as e:
+        msg = str(e)
+        # Missing key → 503 so the client can render a "not configured" state
+        # distinctly from an actual server error.
+        if "not configured" in msg:
+            raise HTTPException(status_code=503, detail=msg)
+        raise HTTPException(status_code=502, detail=msg)
+    except Exception as e:
+        logger.exception("Finnhub proxy call failed")
+        raise HTTPException(status_code=500, detail=repr(e))
+
+
+@app.get("/finnhub/earnings-calendar")
+def finnhub_earnings(from_date: str, to_date: str, symbol: str | None = None):
+    """Earnings calendar. ISO dates (YYYY-MM-DD), max ~1 month range."""
+    return _finnhub_call(finnhub_proxy.earnings_calendar, from_date, to_date, symbol)
+
+
+@app.get("/finnhub/economic-calendar")
+def finnhub_economic(from_date: str, to_date: str):
+    """Macro events (CPI, FOMC, NFP, etc.)."""
+    return _finnhub_call(finnhub_proxy.economic_calendar, from_date, to_date)
+
+
+@app.get("/finnhub/company-news")
+def finnhub_company_news(symbol: str, from_date: str, to_date: str):
+    """Per-ticker news."""
+    return _finnhub_call(finnhub_proxy.company_news, symbol, from_date, to_date)
+
+
+@app.get("/finnhub/market-news")
+def finnhub_market_news(category: str = "general"):
+    """General market news."""
+    return _finnhub_call(finnhub_proxy.market_news, category)
+
+
+@app.get("/finnhub/recommendation")
+def finnhub_recommendation(symbol: str):
+    """Analyst rating trend for a ticker."""
+    return _finnhub_call(finnhub_proxy.recommendation_trend, symbol)
+
+
+@app.get("/finnhub/price-target")
+def finnhub_price_target(symbol: str):
+    """Analyst consensus price target."""
+    return _finnhub_call(finnhub_proxy.price_target, symbol)
