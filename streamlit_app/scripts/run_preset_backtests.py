@@ -220,13 +220,14 @@ logger.info("AI Quant Lab module loaded (batch mode)")
 # ════════════════════════════════════════════════════════════
 
 def _common_config() -> dict:
-    """Common settings shared across the 3 presets."""
+    """Settings shared across ALL presets. `sectors` is filled in per-loop
+    because each preset targets a single sector (10-sector matrix)."""
     today = date.today()
     end_dt = today - timedelta(days=1)           # yesterday
     start_dt = date(2023, 1, 1)
     return {
         "cap_tiers": ["Large Cap"],
-        "sectors": ["Information Technology"],
+        # sectors set per-sector iteration in main()
         "rebal_m": 1,
         "rolling_w": 12,
         "n_stocks": 5,
@@ -243,54 +244,68 @@ def _common_config() -> dict:
     }
 
 
-PRESETS = {
-    "it_invvol": {
-        "name": "IT Inverse-Vol (No Cash)",
-        "description": "IT 섹터, Inverse-Vol 가중, 현금 없음",
-        "overrides": {
-            "use_inv_vol_weight": True,
-            "use_momentum_weight": False,
-            "cash_strategy": "none",
-        },
-    },
-    "it_equal": {
-        "name": "IT Equal-Weight (No Cash)",
-        "description": "IT 섹터, 균등 가중, 현금 없음",
-        "overrides": {
-            "use_inv_vol_weight": False,
-            "use_momentum_weight": False,
-            "cash_strategy": "none",
-        },
-    },
-    "it_invvol_regime": {
-        "name": "IT Inverse-Vol + Regime Cash",
-        "description": "IT 섹터, Inverse-Vol 가중, HMM 레짐 현금 전략",
-        "overrides": {
-            "use_inv_vol_weight": True,
-            "use_momentum_weight": False,
-            "cash_strategy": "combined",
-        },
-    },
-    "it_momentum": {
-        "name": "IT Momentum-Weight (No Cash)",
-        "description": "IT 섹터, 모멘텀 비례 가중, 현금 없음",
-        "overrides": {
-            "use_inv_vol_weight": False,
-            "use_momentum_weight": True,
-            "cash_strategy": "none",
-        },
-    },
-    "it_ensemble": {
-        "name": "IT Ensemble + Inv-Vol (No Cash)",
-        "description": "IT 섹터, 앙상블 모델 선별, Inverse-Vol 가중, 현금 없음",
-        "overrides": {
-            "use_ensemble": True,
-            "use_inv_vol_weight": True,
-            "use_momentum_weight": False,
-            "cash_strategy": "none",
-        },
-    },
-}
+# ── 10 sectors × 5 strategies = 50 preset matrix ──────────────
+#
+# Sector key + short label + full SPDR sector name (used in cache filter).
+# Order roughly follows S&P 500 market-cap weight.
+SECTORS = [
+    ("it",       "IT",             "Information Technology"),
+    ("hc",       "Health Care",    "Health Care"),
+    ("fin",      "Financials",     "Financials"),
+    ("cd",       "Consumer Disc.", "Consumer Discretionary"),
+    ("cs",       "Comm. Services", "Communication Services"),
+    ("ind",      "Industrials",    "Industrials"),
+    ("staples",  "Consumer Stap.", "Consumer Staples"),
+    ("en",       "Energy",         "Energy"),
+    ("mat",      "Materials",      "Materials"),
+    ("re",       "Real Estate",    "Real Estate"),
+]
+
+# Strategy key + short name + Korean desc + factor_backtest overrides.
+STRATEGIES = [
+    ("equal", "Equal Weight (No Cash)", "균등 가중, 현금 없음", {
+        "use_ensemble": False,
+        "use_inv_vol_weight": False,
+        "use_momentum_weight": False,
+        "cash_strategy": "none",
+    }),
+    ("momentum", "Momentum-Weight (No Cash)", "모멘텀 비례 가중, 현금 없음", {
+        "use_ensemble": False,
+        "use_inv_vol_weight": False,
+        "use_momentum_weight": True,
+        "cash_strategy": "none",
+    }),
+    ("invvol", "Inverse-Vol (No Cash)", "Inverse-Vol 가중, 현금 없음", {
+        "use_ensemble": False,
+        "use_inv_vol_weight": True,
+        "use_momentum_weight": False,
+        "cash_strategy": "none",
+    }),
+    ("ensemble", "Ensemble ML + Inv-Vol", "3-모델 앙상블 + Inverse-Vol, 현금 없음", {
+        "use_ensemble": True,
+        "use_inv_vol_weight": True,
+        "use_momentum_weight": False,
+        "cash_strategy": "none",
+    }),
+    ("regime", "Inv-Vol + Regime Cash", "Inverse-Vol 가중 + HMM 레짐 현금 전략", {
+        "use_ensemble": False,
+        "use_inv_vol_weight": True,
+        "use_momentum_weight": False,
+        "cash_strategy": "combined",
+    }),
+]
+
+# Build the 50-preset dict programmatically. Each preset carries the target
+# sector so the main loop can group by sector and share one prefetch per group.
+PRESETS: dict[str, dict] = {}
+for _sec_key, _sec_short, _sec_full in SECTORS:
+    for _strat_key, _strat_name, _strat_desc, _overrides in STRATEGIES:
+        PRESETS[f"{_sec_key}_{_strat_key}"] = {
+            "name": f"{_sec_short} {_strat_name}",
+            "description": f"{_sec_full} 섹터, {_strat_desc}",
+            "sectors": [_sec_full],
+            "overrides": _overrides,
+        }
 
 
 # ════════════════════════════════════════════════════════════
@@ -915,51 +930,79 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
 # ════════════════════════════════════════════════════════════
 
 def main() -> int:
+    from collections import defaultdict
+
     cache_dir = _APP_DIR / "data" / "cache" / "backtests"
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    common = _common_config()
+    common_base = _common_config()
     logger.info(
-        "Period: %s → %s (rebal=%dm, rolling=%d)",
-        common["start"].date(), common["end"].date(),
-        common["rebal_m"], common["rolling_w"],
+        "Period: %s → %s (rebal=%dm, rolling=%d) | %d presets over %d sectors",
+        common_base["start"].date(), common_base["end"].date(),
+        common_base["rebal_m"], common_base["rolling_w"],
+        len(PRESETS), len(SECTORS),
     )
 
-    # Shared data (1 fetch used by 3 presets)
-    try:
-        shared = prepare_shared_data(common)
-    except Exception as e:
-        logger.exception("Data prep failed: %s", e)
-        return 1
+    # Group presets by target sector so we prefetch each universe ONCE
+    # and re-use it for all 5 strategies in that sector.
+    by_sector: dict[tuple, list] = defaultdict(list)
+    for pid, preset in PRESETS.items():
+        by_sector[tuple(preset["sectors"])].append((pid, preset))
 
     results_by_id: dict[str, dict] = {}
     failures: list[str] = []
+    sector_num = 0
 
-    for pid, preset in PRESETS.items():
+    for sector_tuple, presets_for_sector in by_sector.items():
+        sector_num += 1
+        common = dict(common_base)
+        common["sectors"] = list(sector_tuple)
+        logger.info(
+            "=" * 70,
+        )
+        logger.info(
+            "[Sector %d/%d] %s — %d strategies",
+            sector_num, len(by_sector), sector_tuple[0], len(presets_for_sector),
+        )
+        logger.info("=" * 70)
+
         try:
-            r = run_single_preset(pid, preset, common, shared)
-            out_path = cache_dir / f"{pid}.json"
-            out_path.write_text(
-                json.dumps(r, ensure_ascii=False, indent=2, default=str),
-                encoding="utf-8",
-            )
-            logger.info("Saved %s", out_path.name)
-            results_by_id[pid] = r
+            shared = prepare_shared_data(common)
         except Exception as e:
-            logger.exception("Preset %s failed: %s", pid, e)
-            failures.append(pid)
+            logger.exception("Sector prefetch failed (%s): %s", sector_tuple, e)
+            for pid, _ in presets_for_sector:
+                failures.append(pid)
+            continue
 
-    # Metadata
+        for pid, preset in presets_for_sector:
+            try:
+                r = run_single_preset(pid, preset, common, shared)
+                out_path = cache_dir / f"{pid}.json"
+                out_path.write_text(
+                    json.dumps(r, ensure_ascii=False, indent=2, default=str),
+                    encoding="utf-8",
+                )
+                logger.info("Saved %s", out_path.name)
+                results_by_id[pid] = r
+            except Exception as e:
+                logger.exception("Preset %s failed: %s", pid, e)
+                failures.append(pid)
+
+    # Metadata (common config with sectors removed since it's per-sector now)
+    common_meta = {k: v for k, v in common_base.items() if k != "sectors"}
     meta = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "common_config": {
             k: (v.isoformat() if isinstance(v, (datetime, date)) else v)
-            for k, v in common.items()
+            for k, v in common_meta.items()
         },
+        "sectors": [s[2] for s in SECTORS],  # full sector names
+        "strategies": [s[0] for s in STRATEGIES],  # strategy keys
         "presets": {
             pid: {
                 "name": p["name"],
                 "description": p["description"],
+                "sectors": p["sectors"],
                 "success": pid in results_by_id,
                 "updated_at": results_by_id.get(pid, {}).get("updated_at"),
             }
