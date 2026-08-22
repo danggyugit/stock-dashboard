@@ -244,6 +244,11 @@ def _common_config() -> dict:
     }
 
 
+# Module-level cache for prepare_shared_data — populated once per process,
+# reused across the 10 sector loops.
+_CACHE: dict | None = None
+
+
 # ── 10 sectors × 5 strategies = 50 preset matrix ──────────────
 #
 # Sector key + short label + full SPDR sector name (used in cache filter).
@@ -313,23 +318,59 @@ for _sec_key, _sec_short, _sec_full in SECTORS:
 # ════════════════════════════════════════════════════════════
 
 def prepare_shared_data(cfg: dict):
-    """Fetch all market data once, reused by the 3 preset backtests."""
-    logger.info("=== Preparing shared data ===")
-    import pandas as pd
-    import yfinance as yf
+    """Load market data from the pre-cached backtest_data/ directory
+    (populated by cache_backtest_data.py, git-committed daily). This lets
+    the preset generator skip the slow yfinance/SEC calls entirely — a
+    full sector prefetch drops from 5-7 hours to ~30 seconds.
 
-    # Universe from S&P 1500 filtered by IT + Large Cap
-    sp1500_df, _ = _lab.get_sp1500_info()
+    First call loads all cache files into module-level memory; subsequent
+    per-sector calls just filter the pre-loaded dicts."""
+    logger.info("=== Preparing shared data (from cache) ===")
+    import gzip
+    import json
+    import pickle
+    import pandas as pd
+
+    # Module-level cache — populated once per process, reused across sectors.
+    global _CACHE
+    if "_CACHE" not in globals() or _CACHE is None:
+        cache_dir = _APP_DIR / "data" / "cache" / "backtest_data"
+        if not cache_dir.exists():
+            raise RuntimeError(
+                f"Cache dir missing: {cache_dir}. Run "
+                "`python streamlit_app/scripts/cache_backtest_data.py` first."
+            )
+
+        def _pkl(name):
+            with gzip.open(cache_dir / name, "rb") as f:
+                return pickle.load(f)
+
+        _CACHE = {
+            "prices": _pkl("prices.pkl.gz"),
+            "fund": _pkl("fundamentals.pkl.gz"),
+            "pit": _pkl("pit.pkl.gz"),
+            "benchmarks": _pkl("benchmarks.pkl.gz"),
+            "sp500_changes": _pkl("sp500_changes.pkl.gz"),
+            "metadata": pd.DataFrame(
+                json.loads((cache_dir / "metadata.json").read_text(encoding="utf-8"))
+            ),
+        }
+        logger.info(
+            "Loaded backtest_data cache: %d tickers, %d PIT tickers",
+            len(_CACHE["prices"]), len(_CACHE["pit"]),
+        )
+
+    sp1500_df = _CACHE["metadata"]
     cap_filter = sp1500_df[sp1500_df["cap_tier"].isin(cfg["cap_tiers"])]
     universe = cap_filter[cap_filter["sector"].isin(cfg["sectors"])]["ticker"].tolist()
     logger.info("Universe: %d tickers", len(universe))
 
-    # Survivorship bias fix → S&P 500 change history + historical removals
+    # Survivorship bias fix (from cached sp500_changes)
     sp500_changes = None
     current_sp500 = None
     extra_tickers = []
     if cfg.get("use_surv_fix"):
-        sp500_changes = _lab.get_sp500_changes()
+        sp500_changes = _CACHE["sp500_changes"]
         current_sp500 = sp1500_df[sp1500_df["cap_tier"] == "Large Cap"]["ticker"].tolist()
         if sp500_changes is not None and not sp500_changes.empty:
             bt_start = pd.Timestamp(cfg["start"])
@@ -346,52 +387,28 @@ def prepare_shared_data(cfg: dict):
     all_tickers = list(set(universe + extra_tickers))
     logger.info("All tickers incl. historical: %d", len(all_tickers))
 
-    # Price data (warm-up 400 days)
-    data_start = cfg["start"] - timedelta(days=400)
-    price_data = _lab.download_price_data(
-        tuple(all_tickers),
-        data_start.strftime("%Y-%m-%d"),
-        cfg["end"].strftime("%Y-%m-%d"),
-    )
-    logger.info("Prices: %d tickers", len(price_data))
+    # Filter cached prices/fundamentals/PIT to this sector's universe
+    all_prices = _CACHE["prices"]
+    price_data = {t: all_prices[t] for t in all_tickers if t in all_prices}
+    logger.info("Prices: %d tickers (from cache)", len(price_data))
     available = list(price_data.keys())
 
-    # Fundamentals + PIT financials
-    fund_map = _lab.get_fundamental_yf(tuple(available))
+    fund_map = {t: _CACHE["fund"].get(t, {}) for t in available}
     logger.info("Fundamentals: %d tickers", sum(1 for v in fund_map.values() if v))
-    pit_map = _lab.get_pit_financials(tuple(available))
+    pit_map = {t: _CACHE["pit"].get(t, {}) for t in available}
     logger.info("PIT: %d tickers", sum(1 for v in pit_map.values()
                                          if not v.get("income", pd.DataFrame()).empty))
 
-    # SPY + VIX
-    spy_close = None
-    vix_close = None
-    try:
-        spy_df = yf.download(
-            "SPY", start=data_start.strftime("%Y-%m-%d"),
-            end=cfg["end"].strftime("%Y-%m-%d"),
-            auto_adjust=True, progress=False,
-        )
-        if not spy_df.empty:
-            spy_close = spy_df["Close"].squeeze()
-    except Exception as e:
-        logger.warning("SPY fetch failed: %s", e)
-    try:
-        vix_df = yf.download(
-            "^VIX", start=data_start.strftime("%Y-%m-%d"),
-            end=cfg["end"].strftime("%Y-%m-%d"),
-            auto_adjust=True, progress=False,
-        )
-        if not vix_df.empty:
-            vix_close = vix_df["Close"].squeeze()
-    except Exception as e:
-        logger.warning("VIX fetch failed: %s", e)
+    # SPY + VIX benchmarks
+    benchmarks = _CACHE["benchmarks"]
+    spy_close = benchmarks.get("SPY") if isinstance(benchmarks, dict) else None
+    vix_close = benchmarks.get("VIX") if isinstance(benchmarks, dict) else None
 
-    # Sector map
+    # Sector map (full metadata for engine lookups)
     sector_map = {row["ticker"]: row.get("sector", "Unknown")
                   for _, row in sp1500_df.iterrows()}
 
-    # Technical indicators
+    # Technical indicators — computed on the fly (fast, from cached prices)
     tech_map = {}
     for t, ohlcv in price_data.items():
         try:
