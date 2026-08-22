@@ -102,7 +102,7 @@ def build_market_snapshot() -> dict:
     if sectors:
         snap["sectors"] = sorted(sectors, key=lambda x: x["ret_1m_pct"], reverse=True)
 
-    # Breadth — SPY vs 200DMA
+    # Breadth — SPY vs 200DMA (+ 90d SPY history for the home mini chart)
     spy = _close("SPY")
     if len(spy) >= 200:
         sma200 = float(spy.rolling(200).mean().iloc[-1])
@@ -110,6 +110,8 @@ def build_market_snapshot() -> dict:
         snap["breadth"] = {
             "spy_close": round(cur, 2), "sma200": round(sma200, 2),
             "above_pct": round((cur / sma200 - 1) * 100, 2),
+            "history": [{"date": d.strftime("%Y-%m-%d"), "close": round(float(v), 2)}
+                        for d, v in spy.tail(90).items()],
         }
 
     # Risk on/off — XLY/XLP ratio
@@ -118,13 +120,18 @@ def build_market_snapshot() -> dict:
         ratio = (xly / xlp).dropna()
         snap["risk_on_off"] = _trend_stats(ratio, 60)
 
-    # Commodities / DXY
+    # Commodities / DXY (with 90d history for the home mini charts)
     comms = {}
     for key, tkr, label in [("dxy", "DX-Y.NYB", "DXY"), ("gold", "GC=F", "Gold"),
                             ("oil_wti", "CL=F", "WTI Oil")]:
         c = _close(tkr)
         if not c.empty:
-            comms[key] = {"label": label, **_trend_stats(c, 30)}
+            comms[key] = {
+                "label": label,
+                **_trend_stats(c, 30),
+                "history": [{"date": d.strftime("%Y-%m-%d"), "close": round(float(v), 2)}
+                            for d, v in c.tail(90).items()],
+            }
     if comms:
         snap["commodities"] = comms
 
