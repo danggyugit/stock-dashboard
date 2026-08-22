@@ -46,3 +46,4 @@ streamlit_app/data/cache/portfolio_alert_state.json
 
 # Claude Code agent worktrees
 .claude/worktrees/
+.venv-cache/

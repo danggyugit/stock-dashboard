@@ -157,6 +157,34 @@ _i18n_reg = types.ModuleType("app_pages._quant_lab_i18n")
 sys.modules["app_pages._quant_lab_i18n"] = _i18n_reg
 
 
+# ── Stub ML libs (only needed for run_backtest, not for data caching) ──
+# Prevents needing xgboost/lightgbm/hmmlearn to be fully working on the
+# machine that only caches data. Even if the packages are installed, they
+# may fail to load native libs (e.g. xgboost needs libomp on Mac).
+# We only need them to satisfy top-level `from xgboost import XGBRegressor`
+# imports in 2_AI_Quant_Lab.py; the actual model classes are never called
+# during caching.
+
+for _mod_name, _class_names in [
+    ("xgboost", ["XGBRegressor", "XGBClassifier"]),
+    ("lightgbm", ["LGBMRegressor", "LGBMClassifier"]),
+    ("hmmlearn", []),
+    ("hmmlearn.hmm", ["GaussianHMM"]),
+]:
+    real_load_failed = False
+    try:
+        __import__(_mod_name)
+    except Exception:
+        real_load_failed = True
+
+    if real_load_failed or _mod_name not in sys.modules:
+        _fake = types.ModuleType(_mod_name)
+        for _cn in _class_names:
+            setattr(_fake, _cn, type(_cn, (), {"__init__": lambda self, *a, **k: None}))
+        sys.modules[_mod_name] = _fake
+        logger.info("Stubbed module (native load failed or missing): %s", _mod_name)
+
+
 # ── Load AI Quant Lab (batch mode) ──────────────────────────────
 
 _PAGE_PATH = _APP_DIR / "app_pages" / "2_AI_Quant_Lab.py"
