@@ -1,0 +1,136 @@
+{
+  "cached_at": "2026-08-22T14:30:55.457814+00:00",
+  "start": "2021-01-01",
+  "series": {
+    "walcl": {
+      "series_id": "WALCL",
+      "freq": "W",
+      "points": 294,
+      "latest": {
+        "date": "2026-08-19",
+        "value": 6745699.0
+      }
+    },
+    "rrp": {
+      "series_id": "RRPONTSYD",
+      "freq": "D",
+      "points": 1407,
+      "latest": {
+        "date": "2026-08-21",
+        "value": 0.2
+      }
+    },
+    "tga": {
+      "series_id": "WTREGEN",
+      "freq": "W",
+      "points": 294,
+      "latest": {
+        "date": "2026-08-19",
+        "value": 953612.0
+      }
+    },
+    "reserves": {
+      "series_id": "WRESBAL",
+      "freq": "W",
+      "points": 294,
+      "latest": {
+        "date": "2026-08-19",
+        "value": 2935287.0
+      }
+    },
+    "hy_oas": {
+      "series_id": "BAMLH0A0HYM2",
+      "freq": "D",
+      "points": 787,
+      "latest": {
+        "date": "2026-08-20",
+        "value": 2.75
+      }
+    },
+    "m1": {
+      "series_id": "M1SL",
+      "freq": "M",
+      "points": 66,
+      "latest": {
+        "date": "2026-06-01",
+        "value": 19831.5
+      }
+    },
+    "m2": {
+      "series_id": "M2SL",
+      "freq": "M",
+      "points": 66,
+      "latest": {
+        "date": "2026-06-01",
+        "value": 23155.2
+      }
+    },
+    "fed_funds": {
+      "series_id": "FEDFUNDS",
+      "freq": "M",
+      "points": 67,
+      "latest": {
+        "date": "2026-07-01",
+        "value": 3.63
+      }
+    },
+    "dgs2": {
+      "series_id": "DGS2",
+      "freq": "D",
+      "points": 1409,
+      "latest": {
+        "date": "2026-08-20",
+        "value": 4.19
+      }
+    },
+    "dgs10": {
+      "series_id": "DGS10",
+      "freq": "D",
+      "points": 1409,
+      "latest": {
+        "date": "2026-08-20",
+        "value": 4.69
+      }
+    },
+    "cpi": {
+      "series_id": "CPIAUCSL",
+      "freq": "M",
+      "points": 66,
+      "latest": {
+        "date": "2026-07-01",
+        "value": 332.813
+      }
+    },
+    "core_pce": {
+      "series_id": "PCEPILFE",
+      "freq": "M",
+      "points": 66,
+      "latest": {
+        "date": "2026-06-01",
+        "value": 130.266
+      }
+    },
+    "dxy": {
+      "series_id": "DTWEXBGS",
+      "freq": "D",
+      "points": 1405,
+      "latest": {
+        "date": "2026-08-14",
+        "value": 118.9028
+      }
+    },
+    "gold": {
+      "series_id": "GOLDPMGBD228NLBM",
+      "error": "Error tokenizing data. C error: Expected 1 fields in line 6, saw 2\n"
+    },
+    "wti": {
+      "series_id": "DCOILWTICO",
+      "freq": "D",
+      "points": 1405,
+      "latest": {
+        "date": "2026-08-18",
+        "value": 86.48
+      }
+    }
+  }
+}
