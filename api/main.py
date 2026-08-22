@@ -24,6 +24,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from lab_bridge import prepare_shared_data, run_backtest, serialize_results
+from factor_backtest import (
+    FactorBacktestConfig,
+    list_strategies,
+    run_factor_backtest,
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -173,3 +178,63 @@ def run_backtest_endpoint(req: BacktestRequest):
             "traceback": tb.splitlines()[-15:],  # last 15 lines
         }
         raise HTTPException(status_code=500, detail=detail)
+
+
+# ─────── Factor Lab (rule-based) — much lighter than AI Quant Lab ───────
+
+
+class FactorBacktestRequest(BaseModel):
+    """Config for rule-based factor backtest (mirrors Streamlit Factor Lab form)."""
+    strategy_key: str
+    start_date: str                       # "YYYY-MM-DD"
+    end_date: str                         # "YYYY-MM-DD"
+    rebalance_months: int = 3
+    n_stocks: int = 20
+    tc_pct: float = 0.3
+    sector: str | None = None             # None = all sectors
+    cap_tier: str | None = None            # None = all tiers
+
+
+@app.get("/factor-backtest/strategies")
+def factor_strategies():
+    """List all registered factor strategies (for the UI dropdown)."""
+    return list_strategies()
+
+
+@app.post("/factor-backtest")
+def run_factor_backtest_endpoint(req: FactorBacktestRequest):
+    """Run a rule-based factor backtest. Much lighter than AI Quant Lab
+    (no ML training loop). Typical runtime: 5-15 seconds."""
+    try:
+        cfg = FactorBacktestConfig(
+            strategy_key=req.strategy_key,
+            start_date=datetime.fromisoformat(req.start_date).date(),
+            end_date=datetime.fromisoformat(req.end_date).date(),
+            rebalance_months=req.rebalance_months,
+            n_stocks=req.n_stocks,
+            tc_pct=req.tc_pct,
+            sector=req.sector,
+            cap_tier=req.cap_tier,
+        )
+        logger.info("Factor backtest: %s (%s)", req.strategy_key, req.sector or "all sectors")
+        result = run_factor_backtest(cfg)
+        return {
+            "strategy_name": result.strategy_name,
+            "strategy_category": result.strategy_category,
+            "equity_curve": result.equity_curve,
+            "rebalance_history": result.rebalance_history,
+            "metrics": result.metrics,
+            "benchmark_metrics": result.benchmark_metrics,
+            "universe_size": result.universe_size,
+            "final_picks": result.final_picks,
+            "final_picks_date": result.final_picks_date,
+            "warnings": result.warnings,
+        }
+    except Exception as e:
+        tb = traceback.format_exc()
+        logger.exception("Factor backtest failed")
+        raise HTTPException(status_code=500, detail={
+            "type": type(e).__name__,
+            "message": repr(e),
+            "traceback": tb.splitlines()[-15:],
+        })
