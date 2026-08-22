@@ -101,11 +101,37 @@ def health():
 def cache_manifest():
     """Returns _manifest.json — useful to verify what data the API sees.
     404 if cache hasn't been generated yet."""
+    import cache_loader
     try:
-        import cache_loader
         return cache_loader.load_manifest()
     except cache_loader.CacheMissing as e:
         raise HTTPException(status_code=404, detail=str(e))
+
+
+@app.get("/debug/paths")
+def debug_paths():
+    """Diagnostic: what does the API service actually see on disk?
+    Helps confirm whether Render cloned the whole repo or only api/."""
+    import os
+    from pathlib import Path
+    from cache_loader import CACHE_DIR
+
+    here = Path(__file__).resolve()
+    root = here.parent.parent
+    return {
+        "cwd": os.getcwd(),
+        "__file__": str(here),
+        "computed_repo_root": str(root),
+        "cache_dir": str(CACHE_DIR),
+        "cache_dir_exists": CACHE_DIR.exists(),
+        "cache_dir_contents": (
+            [str(p.relative_to(CACHE_DIR)) for p in CACHE_DIR.iterdir()]
+            if CACHE_DIR.exists() else []
+        ),
+        "repo_root_top_level": sorted([p.name for p in root.iterdir()]) if root.exists() else [],
+        "streamlit_app_exists": (root / "streamlit_app").exists(),
+        "streamlit_app_data_exists": (root / "streamlit_app" / "data").exists(),
+    }
 
 
 @app.post("/backtest")
