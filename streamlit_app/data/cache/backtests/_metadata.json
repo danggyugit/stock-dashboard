@@ -1,11 +1,8 @@
 {
-  "updated_at": "2026-08-21T03:49:38.875225+00:00",
+  "updated_at": "2026-08-22T18:35:20.384432+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
-    ],
-    "sectors": [
-      "Information Technology"
     ],
     "rebal_m": 1,
     "rolling_w": 12,
@@ -18,39 +15,478 @@
     "use_mom_filter": false,
     "use_turnover_buffer": true,
     "start": "2023-01-01T00:00:00",
-    "end": "2026-08-20T00:00:00",
+    "end": "2026-08-21T00:00:00",
     "min_test": 5
   },
+  "sectors": [
+    "Information Technology",
+    "Health Care",
+    "Financials",
+    "Consumer Discretionary",
+    "Communication Services",
+    "Industrials",
+    "Consumer Staples",
+    "Energy",
+    "Materials",
+    "Real Estate"
+  ],
+  "strategies": [
+    "equal",
+    "momentum",
+    "invvol",
+    "ensemble",
+    "regime"
+  ],
   "presets": {
-    "it_invvol": {
-      "name": "IT Inverse-Vol (No Cash)",
-      "description": "IT 섹터, Inverse-Vol 가중, 현금 없음",
-      "success": true,
-      "updated_at": "2026-08-21T03:17:16.778806+00:00"
-    },
     "it_equal": {
-      "name": "IT Equal-Weight (No Cash)",
-      "description": "IT 섹터, 균등 가중, 현금 없음",
+      "name": "IT Equal Weight (No Cash)",
+      "description": "Information Technology 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Information Technology"
+      ],
       "success": true,
-      "updated_at": "2026-08-21T03:25:13.170105+00:00"
-    },
-    "it_invvol_regime": {
-      "name": "IT Inverse-Vol + Regime Cash",
-      "description": "IT 섹터, Inverse-Vol 가중, HMM 레짐 현금 전략",
-      "success": true,
-      "updated_at": "2026-08-21T03:33:13.297080+00:00"
+      "updated_at": "2026-08-22T14:00:48.788988+00:00"
     },
     "it_momentum": {
       "name": "IT Momentum-Weight (No Cash)",
-      "description": "IT 섹터, 모멘텀 비례 가중, 현금 없음",
+      "description": "Information Technology 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Information Technology"
+      ],
       "success": true,
-      "updated_at": "2026-08-21T03:41:25.584983+00:00"
+      "updated_at": "2026-08-22T14:07:18.862250+00:00"
+    },
+    "it_invvol": {
+      "name": "IT Inverse-Vol (No Cash)",
+      "description": "Information Technology 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Information Technology"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T14:13:22.414654+00:00"
     },
     "it_ensemble": {
-      "name": "IT Ensemble + Inv-Vol (No Cash)",
-      "description": "IT 섹터, 앙상블 모델 선별, Inverse-Vol 가중, 현금 없음",
+      "name": "IT Ensemble ML + Inv-Vol",
+      "description": "Information Technology 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Information Technology"
+      ],
       "success": true,
-      "updated_at": "2026-08-21T03:49:38.860617+00:00"
+      "updated_at": "2026-08-22T14:20:09.624986+00:00"
+    },
+    "it_regime": {
+      "name": "IT Inv-Vol + Regime Cash",
+      "description": "Information Technology 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Information Technology"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T14:26:18.968229+00:00"
+    },
+    "hc_equal": {
+      "name": "Health Care Equal Weight (No Cash)",
+      "description": "Health Care 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Health Care"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T14:31:06.852106+00:00"
+    },
+    "hc_momentum": {
+      "name": "Health Care Momentum-Weight (No Cash)",
+      "description": "Health Care 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Health Care"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T14:36:29.042391+00:00"
+    },
+    "hc_invvol": {
+      "name": "Health Care Inverse-Vol (No Cash)",
+      "description": "Health Care 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Health Care"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T14:42:59.724936+00:00"
+    },
+    "hc_ensemble": {
+      "name": "Health Care Ensemble ML + Inv-Vol",
+      "description": "Health Care 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Health Care"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T14:52:04.051695+00:00"
+    },
+    "hc_regime": {
+      "name": "Health Care Inv-Vol + Regime Cash",
+      "description": "Health Care 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Health Care"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T15:01:15.972829+00:00"
+    },
+    "fin_equal": {
+      "name": "Financials Equal Weight (No Cash)",
+      "description": "Financials 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Financials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T15:13:18.624758+00:00"
+    },
+    "fin_momentum": {
+      "name": "Financials Momentum-Weight (No Cash)",
+      "description": "Financials 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Financials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T15:24:25.718156+00:00"
+    },
+    "fin_invvol": {
+      "name": "Financials Inverse-Vol (No Cash)",
+      "description": "Financials 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Financials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T15:35:06.209756+00:00"
+    },
+    "fin_ensemble": {
+      "name": "Financials Ensemble ML + Inv-Vol",
+      "description": "Financials 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Financials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T15:41:56.927158+00:00"
+    },
+    "fin_regime": {
+      "name": "Financials Inv-Vol + Regime Cash",
+      "description": "Financials 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Financials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T15:51:02.766843+00:00"
+    },
+    "cd_equal": {
+      "name": "Consumer Disc. Equal Weight (No Cash)",
+      "description": "Consumer Discretionary 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Consumer Discretionary"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T15:55:42.636651+00:00"
+    },
+    "cd_momentum": {
+      "name": "Consumer Disc. Momentum-Weight (No Cash)",
+      "description": "Consumer Discretionary 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Consumer Discretionary"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:00:04.276042+00:00"
+    },
+    "cd_invvol": {
+      "name": "Consumer Disc. Inverse-Vol (No Cash)",
+      "description": "Consumer Discretionary 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Consumer Discretionary"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:04:15.743249+00:00"
+    },
+    "cd_ensemble": {
+      "name": "Consumer Disc. Ensemble ML + Inv-Vol",
+      "description": "Consumer Discretionary 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Consumer Discretionary"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:08:27.974615+00:00"
+    },
+    "cd_regime": {
+      "name": "Consumer Disc. Inv-Vol + Regime Cash",
+      "description": "Consumer Discretionary 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Consumer Discretionary"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:13:42.972334+00:00"
+    },
+    "cs_equal": {
+      "name": "Comm. Services Equal Weight (No Cash)",
+      "description": "Communication Services 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Communication Services"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:16:02.473758+00:00"
+    },
+    "cs_momentum": {
+      "name": "Comm. Services Momentum-Weight (No Cash)",
+      "description": "Communication Services 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Communication Services"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:18:13.527047+00:00"
+    },
+    "cs_invvol": {
+      "name": "Comm. Services Inverse-Vol (No Cash)",
+      "description": "Communication Services 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Communication Services"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:20:29.097919+00:00"
+    },
+    "cs_ensemble": {
+      "name": "Comm. Services Ensemble ML + Inv-Vol",
+      "description": "Communication Services 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Communication Services"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:22:47.855119+00:00"
+    },
+    "cs_regime": {
+      "name": "Comm. Services Inv-Vol + Regime Cash",
+      "description": "Communication Services 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Communication Services"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:25:05.723994+00:00"
+    },
+    "ind_equal": {
+      "name": "Industrials Equal Weight (No Cash)",
+      "description": "Industrials 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Industrials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:32:46.537961+00:00"
+    },
+    "ind_momentum": {
+      "name": "Industrials Momentum-Weight (No Cash)",
+      "description": "Industrials 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Industrials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:40:33.018754+00:00"
+    },
+    "ind_invvol": {
+      "name": "Industrials Inverse-Vol (No Cash)",
+      "description": "Industrials 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Industrials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:48:02.050859+00:00"
+    },
+    "ind_ensemble": {
+      "name": "Industrials Ensemble ML + Inv-Vol",
+      "description": "Industrials 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Industrials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T16:56:56.922546+00:00"
+    },
+    "ind_regime": {
+      "name": "Industrials Inv-Vol + Regime Cash",
+      "description": "Industrials 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Industrials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:10:38.604551+00:00"
+    },
+    "staples_equal": {
+      "name": "Consumer Stap. Equal Weight (No Cash)",
+      "description": "Consumer Staples 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Consumer Staples"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:15:19.447201+00:00"
+    },
+    "staples_momentum": {
+      "name": "Consumer Stap. Momentum-Weight (No Cash)",
+      "description": "Consumer Staples 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Consumer Staples"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:20:25.989999+00:00"
+    },
+    "staples_invvol": {
+      "name": "Consumer Stap. Inverse-Vol (No Cash)",
+      "description": "Consumer Staples 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Consumer Staples"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:25:55.117059+00:00"
+    },
+    "staples_ensemble": {
+      "name": "Consumer Stap. Ensemble ML + Inv-Vol",
+      "description": "Consumer Staples 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Consumer Staples"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:30:35.360568+00:00"
+    },
+    "staples_regime": {
+      "name": "Consumer Stap. Inv-Vol + Regime Cash",
+      "description": "Consumer Staples 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Consumer Staples"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:35:28.310305+00:00"
+    },
+    "en_equal": {
+      "name": "Energy Equal Weight (No Cash)",
+      "description": "Energy 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Energy"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:38:16.183908+00:00"
+    },
+    "en_momentum": {
+      "name": "Energy Momentum-Weight (No Cash)",
+      "description": "Energy 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Energy"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:41:02.569229+00:00"
+    },
+    "en_invvol": {
+      "name": "Energy Inverse-Vol (No Cash)",
+      "description": "Energy 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Energy"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:43:59.644659+00:00"
+    },
+    "en_ensemble": {
+      "name": "Energy Ensemble ML + Inv-Vol",
+      "description": "Energy 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Energy"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:47:04.558738+00:00"
+    },
+    "en_regime": {
+      "name": "Energy Inv-Vol + Regime Cash",
+      "description": "Energy 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Energy"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:50:13.609308+00:00"
+    },
+    "mat_equal": {
+      "name": "Materials Equal Weight (No Cash)",
+      "description": "Materials 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Materials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:53:25.486760+00:00"
+    },
+    "mat_momentum": {
+      "name": "Materials Momentum-Weight (No Cash)",
+      "description": "Materials 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Materials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T17:57:31.761852+00:00"
+    },
+    "mat_invvol": {
+      "name": "Materials Inverse-Vol (No Cash)",
+      "description": "Materials 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Materials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T18:01:02.964493+00:00"
+    },
+    "mat_ensemble": {
+      "name": "Materials Ensemble ML + Inv-Vol",
+      "description": "Materials 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Materials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T18:04:45.905336+00:00"
+    },
+    "mat_regime": {
+      "name": "Materials Inv-Vol + Regime Cash",
+      "description": "Materials 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Materials"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T18:09:56.045818+00:00"
+    },
+    "re_equal": {
+      "name": "Real Estate Equal Weight (No Cash)",
+      "description": "Real Estate 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Real Estate"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T18:15:33.836868+00:00"
+    },
+    "re_momentum": {
+      "name": "Real Estate Momentum-Weight (No Cash)",
+      "description": "Real Estate 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Real Estate"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T18:20:44.784002+00:00"
+    },
+    "re_invvol": {
+      "name": "Real Estate Inverse-Vol (No Cash)",
+      "description": "Real Estate 섹터, Inverse-Vol 가중, 현금 없음",
+      "sectors": [
+        "Real Estate"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T18:25:36.304109+00:00"
+    },
+    "re_ensemble": {
+      "name": "Real Estate Ensemble ML + Inv-Vol",
+      "description": "Real Estate 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Real Estate"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T18:30:19.512694+00:00"
+    },
+    "re_regime": {
+      "name": "Real Estate Inv-Vol + Regime Cash",
+      "description": "Real Estate 섹터, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "sectors": [
+        "Real Estate"
+      ],
+      "success": true,
+      "updated_at": "2026-08-22T18:35:20.305528+00:00"
     }
   },
   "failures": []
