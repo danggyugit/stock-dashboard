@@ -564,18 +564,45 @@ def main() -> int:
             prices = fetch_batch_prices(tickers)
             caps = fetch_market_caps(tickers)
 
+            # yfinance fast_info is aggressively rate-limited when called ~1500
+            # times in a row — a run can succeed for prices but return caps for
+            # only 20-30 tickers. Fall back to the previous heatmap's caps for
+            # missing tickers so cells don't disappear (caps don't move much
+            # day-to-day, so a 1-day stale cap is much better than none).
+            prior_caps: dict[str, int] = {}
+            try:
+                prior_path = CACHE_DIR / "heatmap.json"
+                if prior_path.exists():
+                    prior = json.loads(prior_path.read_text(encoding="utf-8"))
+                    for t, row in (prior.get("tickers") or {}).items():
+                        c = row.get("market_cap")
+                        if c:
+                            prior_caps[t] = c
+            except Exception:
+                prior_caps = {}
+
+            merged_caps = 0
             heatmap = {
                 "updated_at": now_iso,
                 "tickers": {},
             }
             for ticker in tickers:
                 row = stocks_df[stocks_df["ticker"] == ticker].iloc[0]
+                cap = caps.get(ticker)
+                if not cap and ticker in prior_caps:
+                    cap = prior_caps[ticker]
+                    merged_caps += 1
                 heatmap["tickers"][ticker] = {
                     "name": row["name"],
                     "sector": row["sector"],
-                    "market_cap": caps.get(ticker),
+                    "market_cap": cap,
                     "prices": prices.get(ticker, []),
                 }
+            if merged_caps:
+                logger.info(
+                    "Filled %d/%d market caps from prior cache (yfinance rate-limited)",
+                    merged_caps, len(tickers),
+                )
             write_json("heatmap.json", heatmap)
 
             # Market snapshot for the remote MCP server (VIX/sectors/breadth/...)
