@@ -407,7 +407,9 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
     # 4. Backtest loop
     portfolio_equity = 1.0
     rebal_hist: list[dict] = []
-    equity_daily: dict[pd.Timestamp, float] = {}
+    # Seed with 1.0 at the first rebalance date so the equity curve starts
+    # at parity with SPY (which is normalized to 1.0 at the same point).
+    equity_daily: dict[pd.Timestamp, float] = {rebal_dates[0]: 1.0}
     last_picks: list[str] = []
 
     tc_rate = cfg.tc_pct / 100.0
@@ -468,7 +470,8 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
             "picks": picks,
             "n_picks": len(picks),
         })
-        equity_daily[r_date] = portfolio_equity
+        # Record the equity at the END of this holding period only. Overwriting
+        # r_date here would erase the seeded 1.0 start point.
         equity_daily[next_date] = portfolio_equity
 
     # 5. Build equity curve DataFrame
