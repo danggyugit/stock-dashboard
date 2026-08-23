@@ -57,10 +57,13 @@ SERIES: list[tuple[str, str, str]] = [
     ("m1",          "M1SL",          "M"),   # M1 Money Supply
     ("m2",          "M2SL",          "M"),   # M2 Money Supply
 
-    # Interest Rates
+    # Interest Rates — full curve for slope + spread analysis
     ("fed_funds",   "FEDFUNDS",      "M"),   # Effective Fed Funds
+    ("dgs3mo",      "DGS3MO",        "D"),   # 3M Treasury
     ("dgs2",        "DGS2",          "D"),   # 2Y Treasury
+    ("dgs5",        "DGS5",          "D"),   # 5Y Treasury
     ("dgs10",       "DGS10",         "D"),   # 10Y Treasury
+    ("dgs30",       "DGS30",         "D"),   # 30Y Treasury
 
     # Inflation (YoY % computed by consumer of cache)
     ("cpi",         "CPIAUCSL",      "M"),   # Headline CPI (index)
@@ -70,6 +73,8 @@ SERIES: list[tuple[str, str, str]] = [
     ("dxy",         "DTWEXBGS",      "D"),   # Trade-Weighted USD Index
     ("gold",        "GOLDPMGBD228NLBM", "D"), # LBMA Gold PM Fix
     ("wti",         "DCOILWTICO",    "D"),   # WTI Crude Oil
+    ("copper",      "PCOPPUSDM",     "M"),   # Copper (Dr. Copper — 경기 선행)
+    ("natgas",      "DHHNGSP",       "D"),   # Henry Hub Natural Gas
 ]
 
 START = "2021-01-01"

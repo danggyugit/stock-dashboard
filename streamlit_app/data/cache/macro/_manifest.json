@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-08-22T22:15:03.536386+00:00",
+  "cached_at": "2026-08-23T14:21:16.121824+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -74,6 +74,15 @@
         "value": 3.63
       }
     },
+    "dgs3mo": {
+      "series_id": "DGS3MO",
+      "freq": "D",
+      "points": 1409,
+      "latest": {
+        "date": "2026-08-20",
+        "value": 3.87
+      }
+    },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
@@ -83,6 +92,15 @@
         "value": 4.19
       }
     },
+    "dgs5": {
+      "series_id": "DGS5",
+      "freq": "D",
+      "points": 1409,
+      "latest": {
+        "date": "2026-08-20",
+        "value": 4.39
+      }
+    },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
@@ -90,6 +108,15 @@
       "latest": {
         "date": "2026-08-20",
         "value": 4.69
+      }
+    },
+    "dgs30": {
+      "series_id": "DGS30",
+      "freq": "D",
+      "points": 1409,
+      "latest": {
+        "date": "2026-08-20",
+        "value": 5.23
       }
     },
     "cpi": {
@@ -130,6 +157,24 @@
       "latest": {
         "date": "2026-08-18",
         "value": 86.48
+      }
+    },
+    "copper": {
+      "series_id": "PCOPPUSDM",
+      "freq": "M",
+      "points": 67,
+      "latest": {
+        "date": "2026-07-01",
+        "value": 13542.82086956522
+      }
+    },
+    "natgas": {
+      "series_id": "DHHNGSP",
+      "freq": "D",
+      "points": 1405,
+      "latest": {
+        "date": "2026-08-18",
+        "value": 2.82
       }
     }
   }

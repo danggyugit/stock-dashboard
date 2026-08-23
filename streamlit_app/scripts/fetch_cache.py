@@ -69,7 +69,16 @@ def build_market_snapshot() -> dict:
     """
     snap: dict = {"updated_at": datetime.now(timezone.utc).isoformat()}
 
-    tickers = ["^VIX", "SPY", "XLY", "XLP", "DX-Y.NYB", "GC=F", "CL=F"] + list(_SECTOR_ETFS)
+    tickers = (
+        ["^VIX", "SPY", "QQQ", "XLY", "XLP", "DX-Y.NYB", "GC=F", "CL=F"]
+        # Global indices (major economies)
+        + ["^N225", "^HSI", "^GDAXI", "^FTSE", "^KS11", "^STOXX50E"]
+        # Major FX pairs (relevant to USD flows / KR investors)
+        + ["KRW=X", "JPY=X", "EURUSD=X", "GBPUSD=X", "CNY=X"]
+        # Copper futures — leading indicator for cyclicals
+        + ["HG=F"]
+        + list(_SECTOR_ETFS)
+    )
     data = yf.download(tickers, period="1y", auto_adjust=True,
                        group_by="ticker", progress=False, threads=True)
 
@@ -155,7 +164,7 @@ def build_market_snapshot() -> dict:
     # Commodities / DXY (with 90d history for the home mini charts)
     comms = {}
     for key, tkr, label in [("dxy", "DX-Y.NYB", "DXY"), ("gold", "GC=F", "Gold"),
-                            ("oil_wti", "CL=F", "WTI Oil")]:
+                            ("oil_wti", "CL=F", "WTI Oil"), ("copper", "HG=F", "Copper")]:
         c = _close(tkr)
         if not c.empty:
             comms[key] = {
@@ -166,6 +175,51 @@ def build_market_snapshot() -> dict:
             }
     if comms:
         snap["commodities"] = comms
+
+    # Global indices — key markets we want on the Home / Macro view
+    _INDICES = [
+        ("nikkei",   "^N225",     "Nikkei 225"),
+        ("hsi",      "^HSI",      "Hang Seng"),
+        ("dax",      "^GDAXI",    "DAX"),
+        ("ftse",     "^FTSE",     "FTSE 100"),
+        ("kospi",    "^KS11",     "KOSPI"),
+        ("stoxx50", "^STOXX50E",  "Euro Stoxx 50"),
+        ("qqq",     "QQQ",        "Nasdaq 100 (QQQ)"),
+    ]
+    global_idx = {}
+    for key, tkr, label in _INDICES:
+        c = _close(tkr)
+        if not c.empty:
+            global_idx[key] = {
+                "label": label,
+                **_trend_stats(c, 30),
+                "history": [{"date": d.strftime("%Y-%m-%d"), "close": round(float(v), 2)}
+                            for d, v in c.tail(90).items()],
+            }
+    if global_idx:
+        snap["global_indices"] = global_idx
+
+    # Major FX pairs. Naming: dictionary key is the "quote currency" — a KR
+    # user's mental model — while `label` is the standard "USD/XXX" form.
+    _FX = [
+        ("krw",     "KRW=X",     "USD/KRW"),
+        ("jpy",     "JPY=X",     "USD/JPY"),
+        ("eur",     "EURUSD=X",  "EUR/USD"),
+        ("gbp",     "GBPUSD=X",  "GBP/USD"),
+        ("cny",     "CNY=X",     "USD/CNY"),
+    ]
+    fx = {}
+    for key, tkr, label in _FX:
+        c = _close(tkr)
+        if not c.empty:
+            fx[key] = {
+                "label": label,
+                **_trend_stats(c, 30),
+                "history": [{"date": d.strftime("%Y-%m-%d"), "close": round(float(v), 4)}
+                            for d, v in c.tail(90).items()],
+            }
+    if fx:
+        snap["fx"] = fx
 
     # Fear & Greed Index — inlined (streamlit_app/services/sentiment_service.py
     # depends on the streamlit runtime, which we can't import from the API venv).
