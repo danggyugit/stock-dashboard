@@ -20,7 +20,7 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.impute import SimpleImputer
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, TimeSeriesSplit
 from scipy.stats import spearmanr
 from xgboost import XGBRegressor
 from lightgbm import LGBMRegressor
@@ -208,6 +208,7 @@ FEATURE_META = {
     "RS_Market_1m":      {"name": "시장대비 상대강도(1M)", "group": "모멘텀"},
     "RS_Market_3m":      {"name": "시장대비 상대강도(3M)", "group": "모멘텀"},
     "RS_Market_6m":      {"name": "시장대비 상대강도(6M)", "group": "모멘텀"},
+    "RS_Market_12m":     {"name": "시장대비 상대강도(12M)","group": "모멘텀"},
     # ── 기술지표 ─────────────────────────────────────────────
     "RSI_14":            {"name": "RSI(14)",            "group": "기술지표"},
     "MACD_Hist":         {"name": "MACD 히스토그램",   "group": "기술지표"},
@@ -273,6 +274,8 @@ FEATURE_META = {
     # ── Sector Relative Strength ───────────────────────────
     "RS_Sector_1m":      {"name": "섹터대비 상대강도(1M)","group": "섹터상대"},
     "RS_Sector_3m":      {"name": "섹터대비 상대강도(3M)","group": "섹터상대"},
+    "RS_Sector_6m":      {"name": "섹터대비 상대강도(6M)","group": "섹터상대"},
+    "RS_Sector_12m":     {"name": "섹터대비 상대강도(12M)","group": "섹터상대"},
 }
 
 FEAT_COLS  = list(FEATURE_META.keys())
@@ -752,16 +755,19 @@ def calc_all_technical(ohlcv: pd.DataFrame, spy_close: pd.Series = None) -> pd.D
     # ── 상대강도 (종목 수익률 - SPY 수익률) ───────────────
     if spy_close is not None:
         spy_a = spy_close.reindex(c.index, method="ffill")
-        spy_1m = spy_a.pct_change(21)
-        spy_3m = spy_a.pct_change(63)
-        spy_6m = spy_a.pct_change(126)
-        df["RS_Market_1m"] = df["Mom_1m"] - spy_1m
-        df["RS_Market_3m"] = df["Mom_3m"] - spy_3m
-        df["RS_Market_6m"] = df["Mom_6m"] - spy_6m
+        spy_1m  = spy_a.pct_change(21)
+        spy_3m  = spy_a.pct_change(63)
+        spy_6m  = spy_a.pct_change(126)
+        spy_12m = spy_a.pct_change(252)
+        df["RS_Market_1m"]  = df["Mom_1m"]  - spy_1m
+        df["RS_Market_3m"]  = df["Mom_3m"]  - spy_3m
+        df["RS_Market_6m"]  = df["Mom_6m"]  - spy_6m
+        df["RS_Market_12m"] = df["Mom_12m"] - spy_12m
     else:
-        df["RS_Market_1m"] = np.nan
-        df["RS_Market_3m"] = np.nan
-        df["RS_Market_6m"] = np.nan
+        df["RS_Market_1m"]  = np.nan
+        df["RS_Market_3m"]  = np.nan
+        df["RS_Market_6m"]  = np.nan
+        df["RS_Market_12m"] = np.nan
 
     # Trend (WilliamsR_14만 제거 — Stoch_K와 수학적 동치)
     df["RSI_14"]    = _rsi(c)
@@ -1308,9 +1314,17 @@ def enrich_snapshot(
         snap["VIX_Level"] = np.nan
 
     # ── Sector Relative Strength (종목 수익률 - 섹터 평균 수익률) ──
+    # 여러 기간 모두 계산: 짧은 기간(1M/3M)은 최근 상대 강세를 잡고,
+    # 긴 기간(6M/12M)은 섹터 내 지속 리더십을 잡음.
+    _rs_pairs = [
+        ("Mom_1m",  "RS_Sector_1m"),
+        ("Mom_3m",  "RS_Sector_3m"),
+        ("Mom_6m",  "RS_Sector_6m"),
+        ("Mom_12m", "RS_Sector_12m"),
+    ]
     if sector_map:
         snap["_sector"] = snap.index.map(lambda t: sector_map.get(t, "Unknown"))
-        for ret_col, dst_col in [("Mom_1m", "RS_Sector_1m"), ("Mom_3m", "RS_Sector_3m")]:
+        for ret_col, dst_col in _rs_pairs:
             if ret_col in snap.columns:
                 sector_avg = snap.groupby("_sector")[ret_col].transform("mean")
                 snap[dst_col] = snap[ret_col] - sector_avg
@@ -1318,8 +1332,8 @@ def enrich_snapshot(
                 snap[dst_col] = np.nan
         snap.drop(columns=["_sector"], inplace=True)
     else:
-        snap["RS_Sector_1m"] = np.nan
-        snap["RS_Sector_3m"] = np.nan
+        for _, dst_col in _rs_pairs:
+            snap[dst_col] = np.nan
 
     return snap
 
@@ -1735,11 +1749,19 @@ def run_backtest(
         X_imp = X_imp_df.values
 
         # ── Ver4.2: RF 하이퍼파라미터 자동 튜닝 ──────────
+        # Ver4.4: cv=3 (random KFold) → TimeSeriesSplit. 학습 데이터가 여러
+        # 리밸런싱 스냅샷을 시간 순서로 concat한 것이라, 랜덤 KFold는
+        # "미래 스냅샷으로 훈련 → 과거 검증" 상황을 유발해 리크됨.
+        # 외부 EMBARGO_DAYS 필터가 예측일 인근을 이미 제거하기 때문에,
+        # 내부 CV에 시간 순서만 강제하면 충분히 안전.
         param_grid = {"max_depth": [3, 5, 7], "min_samples_leaf": [5, 10, 20]}
         base_rf = RandomForestRegressor(
             n_estimators=100, random_state=42, n_jobs=1,
         )
-        gcv = GridSearchCV(base_rf, param_grid, cv=3, scoring="neg_mean_squared_error",
+        n_train = len(y_train)
+        cv_splitter = TimeSeriesSplit(n_splits=3) if n_train >= 20 else 3
+        gcv = GridSearchCV(base_rf, param_grid, cv=cv_splitter,
+                           scoring="neg_mean_squared_error",
                            n_jobs=1, refit=True)
         gcv.fit(X_imp, y_train)
         model_rf = gcv.best_estimator_
