@@ -103,3 +103,28 @@ def recommendation_trend(symbol: str) -> list[dict]:
 def price_target(symbol: str) -> dict:
     """Analyst price target consensus (target{Low,Mean,Median,High})."""
     return _cached_get("/stock/price-target", {"symbol": symbol}, ttl=3600) or {}
+
+
+def earnings_surprise(symbol: str) -> list[dict]:
+    """Last 4 quarters of actual vs estimate EPS with surprise%.
+    Response items: {actual, estimate, period, quarter, surprise, surprisePercent, symbol, year}.
+    """
+    data = _cached_get("/stock/earnings", {"symbol": symbol}, ttl=3600)
+    # Finnhub returns a bare list here (unlike calendar endpoints)
+    if isinstance(data, list):
+        return data
+    return []
+
+
+def insider_transactions(symbol: str, from_date: str | None = None, to_date: str | None = None) -> list[dict]:
+    """SEC Form 4 insider transactions for a ticker (default: last 6 months)."""
+    params: dict[str, Any] = {"symbol": symbol}
+    if from_date:
+        params["from"] = from_date
+    if to_date:
+        params["to"] = to_date
+    data = _cached_get("/stock/insider-transactions", params, ttl=1800)
+    # Finnhub returns {data: [...], symbol}
+    if isinstance(data, dict):
+        return data.get("data") or []
+    return []

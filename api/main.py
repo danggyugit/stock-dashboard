@@ -30,6 +30,7 @@ from factor_backtest import (
     run_factor_backtest,
 )
 import finnhub_proxy
+import llm_proxy
 
 logging.basicConfig(
     level=logging.INFO,
@@ -294,3 +295,48 @@ def finnhub_recommendation(symbol: str):
 def finnhub_price_target(symbol: str):
     """Analyst consensus price target."""
     return _finnhub_call(finnhub_proxy.price_target, symbol)
+
+
+@app.get("/finnhub/earnings-surprise")
+def finnhub_earnings_surprise(symbol: str):
+    """Last 4 quarters of actual vs estimate EPS with surprise%."""
+    return _finnhub_call(finnhub_proxy.earnings_surprise, symbol)
+
+
+@app.get("/finnhub/insider-transactions")
+def finnhub_insider_transactions(symbol: str, from_date: str | None = None, to_date: str | None = None):
+    """SEC Form 4 insider transactions (default: last 6 months)."""
+    return _finnhub_call(finnhub_proxy.insider_transactions, symbol, from_date, to_date)
+
+
+# ─────── LLM (Gemini) proxy ───────
+
+
+class EarningsSummaryRequest(BaseModel):
+    symbol: str
+    name: str = ""
+    price: float | None = None
+    market_cap: float | None = None
+    pe: float | None = None
+    sector: str | None = None
+    forward_eps: float | None = None
+    revenue_growth_yoy: float | None = None
+    gross_margin: float | None = None
+    analyst_target_mean: float | None = None
+    earnings_history: list[dict] | None = None
+
+
+@app.post("/llm/earnings-summary")
+def llm_earnings_summary(req: EarningsSummaryRequest):
+    """AI-generated 5-section earnings summary in Korean markdown (Gemini 2.5 Flash)."""
+    try:
+        text = llm_proxy.earnings_summary(req.symbol, req.model_dump())
+        return {"summary_md": text, "model": "gemini-2.5-flash"}
+    except RuntimeError as e:
+        msg = str(e)
+        if "not configured" in msg:
+            raise HTTPException(status_code=503, detail=msg)
+        raise HTTPException(status_code=502, detail=msg)
+    except Exception as e:
+        logger.exception("LLM earnings summary failed")
+        raise HTTPException(status_code=500, detail=repr(e))
