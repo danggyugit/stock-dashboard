@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-23T16:23:22.876633+00:00",
+  "updated_at": "2026-08-23T18:02:54.070905+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -487,6 +487,24 @@
       ],
       "success": true,
       "updated_at": "2026-08-22T18:35:20.305528+00:00"
+    },
+    "all_ensemble": {
+      "name": "Cross-Sector Ensemble ML + Inv-Vol",
+      "description": "전 섹터 라지캡 통합 유니버스, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Information Technology",
+        "Health Care",
+        "Financials",
+        "Consumer Discretionary",
+        "Communication Services",
+        "Industrials",
+        "Consumer Staples",
+        "Energy",
+        "Materials",
+        "Real Estate"
+      ],
+      "success": true,
+      "updated_at": "2026-08-23T18:02:54.044549+00:00"
     }
   },
   "failures": []
