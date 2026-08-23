@@ -48,21 +48,30 @@ def _cached_generate(prompt: str, cache_key: str) -> str:
         "contents": [{"parts": [{"text": prompt}]}],
         "generationConfig": {
             "temperature": 0.3,
-            "maxOutputTokens": 800,
+            # Korean burns ~2-3× tokens per character vs English. 800 tokens
+            # cut off after section 1; 3000 comfortably fits the full 5-section
+            # ~350-word Korean summary with room for structured headings.
+            "maxOutputTokens": 3000,
         },
     }
     resp = requests.post(
         f"{GEMINI_ENDPOINT}?key={api_key}",
         headers={"Content-Type": "application/json"},
         data=json.dumps(body),
-        timeout=30,
+        timeout=60,
     )
     if resp.status_code != 200:
         raise RuntimeError(f"Gemini returned {resp.status_code}: {resp.text[:300]}")
 
     payload = resp.json()
     try:
-        text = payload["candidates"][0]["content"]["parts"][0]["text"]
+        cand = payload["candidates"][0]
+        text = cand["content"]["parts"][0]["text"]
+        finish = cand.get("finishReason", "STOP")
+        if finish != "STOP":
+            # MAX_TOKENS, SAFETY, RECITATION, OTHER — surface it so the user
+            # sees why the answer might look truncated.
+            logger.warning("Gemini finished with reason=%s (may be truncated)", finish)
     except (KeyError, IndexError, TypeError) as e:
         raise RuntimeError(f"Unexpected Gemini response shape: {e} · {str(payload)[:300]}")
 
