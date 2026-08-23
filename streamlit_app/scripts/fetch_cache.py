@@ -134,6 +134,18 @@ def build_market_snapshot() -> dict:
                         for d, v in spy.tail(90).items()],
         }
 
+    # SPY per-period returns — RS screener needs these to compute excess-vs-SPY.
+    if len(spy) >= 22:
+        snap["spy_returns"] = {
+            "1d":  _pct_change(spy, 1),
+            "1w":  _pct_change(spy, 5),
+            "1m":  _pct_change(spy, 21),
+            "3m":  _pct_change(spy, 63),
+            "6m":  _pct_change(spy, 126),
+            "ytd": _ytd_return(spy),
+            "1y":  _pct_change(spy, 252) or _pct_change(spy, len(spy) - 1),
+        }
+
     # Risk on/off — XLY/XLP ratio
     xly, xlp = _close("XLY"), _close("XLP")
     if not xly.empty and not xlp.empty:
