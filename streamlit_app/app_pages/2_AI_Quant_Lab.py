@@ -18,12 +18,12 @@ import yfinance as yf
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import GridSearchCV, TimeSeriesSplit
 from scipy.stats import spearmanr
-from xgboost import XGBRegressor
-from lightgbm import LGBMRegressor
+from xgboost import XGBClassifier, XGBRegressor
+from lightgbm import LGBMClassifier, LGBMRegressor
 import requests
 from io import StringIO
 import warnings
@@ -1579,6 +1579,38 @@ def _calc_cash_ratio(regime_info: dict, realized_vol: float) -> float:
     return round(cash_ratio, 4)
 
 
+LABEL_KINDS = ("raw", "vol_adj", "classification")
+
+
+def _make_labels(snap: pd.DataFrame, label_kind: str) -> pd.Series:
+    """Transform ``_fwd_return`` into the target the model actually trains on.
+
+    - ``raw``            : forward return as-is (default; original behaviour).
+    - ``vol_adj``        : ``fwd_return / max(Volatility_30d, 0.05)`` — collapses
+      vol-regime noise so high-vol names stop dominating the tails.
+    - ``classification`` : per-snapshot top-quintile flag. Matches the actual
+      "pick top-N per rebalance" decision instead of regressing all returns.
+    """
+    y = snap["_fwd_return"].copy()
+    if label_kind == "vol_adj":
+        if "Volatility_30d" in snap.columns:
+            vol = snap["Volatility_30d"].clip(lower=0.05)
+            y = y / vol
+    elif label_kind == "classification":
+        thr = y.quantile(0.80)
+        y = (y >= thr).astype(int)
+    return y
+
+
+def _model_score(model, X):
+    """Ranking score for a fitted model — probability for classifiers,
+    raw ``predict`` for regressors. Higher = better in both cases.
+    Lets prediction code stay agnostic to ``label_kind``."""
+    if hasattr(model, "predict_proba"):
+        return model.predict_proba(X)[:, 1]
+    return model.predict(X)
+
+
 def run_backtest(
     price_data:   dict,
     fund_map:     dict,
@@ -1604,6 +1636,7 @@ def run_backtest(
     use_momentum_weight: bool = False,
     cash_strategy:       str = "none",  # "none" | "vol_target" | "regime" | "combined"
     rf_annual:           float = 0.04,  # annual risk-free rate for cash return
+    label_kind:          str = "raw",   # "raw" | "vol_adj" | "classification"
 ) -> dict:
     """메인 백테스트 엔진.
     Ver4.3: + HMM Regime-Based Cash Allocation + Volatility Targeting.
@@ -1714,10 +1747,16 @@ def run_backtest(
             if snap is None or snap.empty or "_fwd_return" not in snap.columns:
                 continue
             cols = [c for c in feature_cols if c in snap.columns]
-            sub  = snap[cols + ["_fwd_return"]].dropna(subset=["_fwd_return"])
+            # For vol_adj we also need Volatility_30d in the working frame;
+            # for classification the transform is done per-snapshot so the
+            # top-quintile threshold is computed on that day's population.
+            keep_cols = cols + ["_fwd_return"]
+            if label_kind == "vol_adj" and "Volatility_30d" in snap.columns and "Volatility_30d" not in keep_cols:
+                keep_cols = keep_cols + ["Volatility_30d"]
+            sub = snap[keep_cols].dropna(subset=["_fwd_return"])
             if len(sub) >= 5:
                 X_list.append(sub[cols])
-                y_list.append(sub["_fwd_return"])
+                y_list.append(_make_labels(sub, label_kind))
 
         if not X_list:
             continue
@@ -1755,13 +1794,21 @@ def run_backtest(
         # 외부 EMBARGO_DAYS 필터가 예측일 인근을 이미 제거하기 때문에,
         # 내부 CV에 시간 순서만 강제하면 충분히 안전.
         param_grid = {"max_depth": [3, 5, 7], "min_samples_leaf": [5, 10, 20]}
-        base_rf = RandomForestRegressor(
-            n_estimators=100, random_state=42, n_jobs=1,
-        )
+        is_cls = (label_kind == "classification")
+        if is_cls:
+            base_rf = RandomForestClassifier(
+                n_estimators=100, random_state=42, n_jobs=1,
+            )
+            gcv_scoring = "roc_auc"
+        else:
+            base_rf = RandomForestRegressor(
+                n_estimators=100, random_state=42, n_jobs=1,
+            )
+            gcv_scoring = "neg_mean_squared_error"
         n_train = len(y_train)
         cv_splitter = TimeSeriesSplit(n_splits=3) if n_train >= 20 else 3
         gcv = GridSearchCV(base_rf, param_grid, cv=cv_splitter,
-                           scoring="neg_mean_squared_error",
+                           scoring=gcv_scoring,
                            n_jobs=1, refit=True)
         gcv.fit(X_imp, y_train)
         model_rf = gcv.best_estimator_
@@ -1770,18 +1817,33 @@ def run_backtest(
         model_xgb = None
         model_lgbm = None
         if use_ensemble:
-            model_xgb = XGBRegressor(
-                n_estimators=100, max_depth=4, learning_rate=0.1,
-                subsample=0.8, colsample_bytree=0.8,
-                random_state=42, n_jobs=1, verbosity=0,
-            )
+            if is_cls:
+                model_xgb = XGBClassifier(
+                    n_estimators=100, max_depth=4, learning_rate=0.1,
+                    subsample=0.8, colsample_bytree=0.8,
+                    random_state=42, n_jobs=1, verbosity=0,
+                    eval_metric="logloss",
+                )
+            else:
+                model_xgb = XGBRegressor(
+                    n_estimators=100, max_depth=4, learning_rate=0.1,
+                    subsample=0.8, colsample_bytree=0.8,
+                    random_state=42, n_jobs=1, verbosity=0,
+                )
             model_xgb.fit(X_imp, y_train)
 
-            model_lgbm = LGBMRegressor(
-                n_estimators=100, max_depth=4, learning_rate=0.1,
-                subsample=0.8, colsample_bytree=0.8,
-                random_state=42, n_jobs=1, verbose=-1,
-            )
+            if is_cls:
+                model_lgbm = LGBMClassifier(
+                    n_estimators=100, max_depth=4, learning_rate=0.1,
+                    subsample=0.8, colsample_bytree=0.8,
+                    random_state=42, n_jobs=1, verbose=-1,
+                )
+            else:
+                model_lgbm = LGBMRegressor(
+                    n_estimators=100, max_depth=4, learning_rate=0.1,
+                    subsample=0.8, colsample_bytree=0.8,
+                    random_state=42, n_jobs=1, verbose=-1,
+                )
             model_lgbm.fit(X_imp, y_train)
 
         # 중요도: 모델별 개별 저장 (raw) + 앙상블 평균 (정규화 후)
@@ -1841,10 +1903,12 @@ def run_backtest(
         X_pred_imp = X_pred_imp_df.values
 
         # 앙상블 예측: Rank Average (각 모델 예측 → 순위 변환 → 순위 평균)
-        pred_rf_s = pd.Series(model_rf.predict(X_pred_imp), index=cur_snap.index)
+        # _model_score → classifier면 predict_proba[:,1] (positive-class 확률),
+        # regressor면 predict(). 두 경우 모두 "높을수록 좋은 종목" 스케일.
+        pred_rf_s = pd.Series(_model_score(model_rf, X_pred_imp), index=cur_snap.index)
         if use_ensemble:
-            pred_xgb_s  = pd.Series(model_xgb.predict(X_pred_imp),  index=cur_snap.index)
-            pred_lgbm_s = pd.Series(model_lgbm.predict(X_pred_imp), index=cur_snap.index)
+            pred_xgb_s  = pd.Series(_model_score(model_xgb,  X_pred_imp), index=cur_snap.index)
+            pred_lgbm_s = pd.Series(_model_score(model_lgbm, X_pred_imp), index=cur_snap.index)
             # rank: ascending=False → 예측 수익률 높을수록 1등 (낮은 rank = 좋은 종목)
             rank_rf   = pred_rf_s.rank(ascending=False)
             rank_xgb  = pred_xgb_s.rank(ascending=False)
@@ -2121,6 +2185,7 @@ def run_backtest(
         "rebal_m":          rolling_win,   # tab_ic 연간 턴오버 계산용
         "cash_history":     cash_history,
         "cash_strategy":    cash_strategy,
+        "label_kind":       label_kind,
         "last_full_ranking_df": last_full_ranking_df,
     }
 

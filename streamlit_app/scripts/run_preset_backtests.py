@@ -597,6 +597,7 @@ def _serialize_full_results(results: dict, cfg: dict) -> dict:
         "use_ensemble": bool(cfg.get("use_ensemble", False)),
         "rebal_m": int(cfg.get("rebal_m", 1)),
         "cash_strategy": cfg.get("cash_strategy", "none"),
+        "label_kind": cfg.get("label_kind", "raw"),
     }
 
 
@@ -636,6 +637,7 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
         use_inv_vol_weight=cfg["use_inv_vol_weight"],
         use_momentum_weight=cfg.get("use_momentum_weight", False),
         cash_strategy=cfg["cash_strategy"],
+        label_kind=cfg.get("label_kind", "raw"),
     )
 
     # ── Build summary metrics ────────────────────────────────
@@ -887,13 +889,15 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
     # Predict (ensemble or single) — keep individual predictions so we can
     # surface per-model output, mean, dispersion, and consensus rank instead
     # of collapsing everything into a single opaque "composite_score".
-    pred_rf_s = pd.Series(model_rf.predict(X_imp), index=snap.index)
+    # _model_score → classifier면 predict_proba[:,1], regressor면 predict().
+    _score = _lab._model_score
+    pred_rf_s = pd.Series(_score(model_rf, X_imp), index=snap.index)
     is_ensemble = bool(cfg.get("use_ensemble", False))
     model_xgb = results.get("last_model_xgb")
     model_lgbm = results.get("last_model_lgbm")
     if is_ensemble and model_xgb is not None and model_lgbm is not None:
-        pred_xgb_s = pd.Series(model_xgb.predict(X_imp), index=snap.index)
-        pred_lgbm_s = pd.Series(model_lgbm.predict(X_imp), index=snap.index)
+        pred_xgb_s = pd.Series(_score(model_xgb, X_imp), index=snap.index)
+        pred_lgbm_s = pd.Series(_score(model_lgbm, X_imp), index=snap.index)
         # Rank ensemble — robust to outliers; used for the actual pick decision
         rk = (pred_rf_s.rank(ascending=False) +
               pred_xgb_s.rank(ascending=False) +
