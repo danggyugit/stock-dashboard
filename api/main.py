@@ -327,10 +327,14 @@ class EarningsSummaryRequest(BaseModel):
 
 
 @app.post("/llm/earnings-summary")
-def llm_earnings_summary(req: EarningsSummaryRequest):
-    """AI-generated 5-section earnings summary in Korean markdown (Gemini 2.5 Flash)."""
+def llm_earnings_summary(req: EarningsSummaryRequest, fresh: bool = False):
+    """AI-generated 5-section earnings summary in Korean markdown (Gemini 2.5 Flash).
+
+    `?fresh=true` bypasses the 6-hour server cache (used by the regenerate
+    button on the frontend).
+    """
     try:
-        text = llm_proxy.earnings_summary(req.symbol, req.model_dump())
+        text = llm_proxy.earnings_summary(req.symbol, req.model_dump(), force_fresh=fresh)
         return {"summary_md": text, "model": "gemini-2.5-flash"}
     except RuntimeError as e:
         msg = str(e)

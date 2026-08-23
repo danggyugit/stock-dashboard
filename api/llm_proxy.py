@@ -83,18 +83,22 @@ def _cached_generate(prompt: str, cache_key: str) -> str:
 # ── Public wrappers ───────────────────────────────────────────────
 
 
-def earnings_summary(symbol: str, context: dict) -> str:
+def earnings_summary(symbol: str, context: dict, force_fresh: bool = False) -> str:
     """Generate a structured earnings summary in Korean-friendly markdown.
 
     `context` should include: ticker, name, price, market_cap, pe, sector,
     forward_eps, revenue_growth_yoy, gross_margin, analyst_target_mean,
     earnings_history (list of {period, actual, estimate, surprisePercent}).
+
+    `force_fresh=True` bypasses the cache (used by the frontend regenerate btn).
     """
-    # Cache key: symbol + hash of earnings history + latest quarter (so a new
-    # quarter's earnings release busts the cache)
+    # Cache key includes a version bump (v2) so old truncated responses from
+    # the pre-maxOutputTokens-fix era can't leak back to users.
     hist = context.get("earnings_history") or []
     latest = hist[0].get("period") if hist else "no-earnings"
-    cache_key = f"earnings_summary:{symbol}:{latest}:{len(hist)}"
+    cache_key = f"earnings_summary_v2:{symbol}:{latest}:{len(hist)}"
+    if force_fresh:
+        _CACHE.pop(("prompt", cache_key), None)
 
     prompt = f"""You are a concise financial analyst. Analyze the following earnings data for {symbol} ({context.get('name', '')}) and respond IN KOREAN with a structured markdown summary.
 
