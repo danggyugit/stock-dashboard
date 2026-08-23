@@ -1034,6 +1034,52 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
 # 6. Main
 # ════════════════════════════════════════════════════════════
 
+def _append_forward_test_log(preset_id: str, result: dict) -> None:
+    """Append today's picks + top-of-ranking to a JSONL log so a downstream
+    joiner can compute forward returns (T+21, T+63) against SPY.
+
+    File layout: ``data/cache/forward_test/log_YYYY.jsonl`` — one JSON object
+    per line. Multiple lines per (picks_at, preset_id) are allowed; the
+    joiner takes the last one wins. Compact schema — enough to compute IC,
+    decile spread, and alpha vs SPY without re-fetching model artifacts.
+    """
+    picks_at = result.get("today_picks_at")
+    if not picks_at:
+        return  # no forward-testable snapshot for this preset today
+
+    # Slim down the ranking to top-50 to keep the log light (JSONL is diffed
+    # in git). Keeps enough breadth for decile analysis on typical sector
+    # universes (~50-100 tickers).
+    def _slim(rows: list[dict], keep: int) -> list[dict]:
+        out = []
+        for r in rows[:keep]:
+            out.append({
+                "ticker": r.get("ticker"),
+                "pred_mean": r.get("pred_mean"),
+                "composite_score": r.get("composite_score"),
+                "consensus_rank": r.get("consensus_rank"),
+            })
+        return out
+
+    entry = {
+        "picks_at": picks_at[:10] if isinstance(picks_at, str) else str(picks_at)[:10],
+        "preset_id": preset_id,
+        "picks": _slim(result.get("today_picks") or [], keep=20),
+        "ranking_top50": _slim(result.get("today_full_ranking") or [], keep=50),
+        "regime": result.get("today_regime"),
+        "cash_ratio_pct": result.get("today_cash_ratio_pct"),
+        "use_ensemble": bool(result.get("full", {}).get("use_ensemble", False)),
+        "logged_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    log_dir = _APP_DIR / "data" / "cache" / "forward_test"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    year = entry["picks_at"][:4]
+    log_path = log_dir / f"log_{year}.jsonl"
+    with log_path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False, default=str) + "\n")
+
+
 def main() -> int:
     from collections import defaultdict
 
@@ -1089,6 +1135,13 @@ def main() -> int:
                 )
                 logger.info("Saved %s", out_path.name)
                 results_by_id[pid] = r
+                # Forward-test log — a compact append per (preset, day) so a
+                # downstream joiner can compute out-of-sample IC + decile
+                # spread on the actual picks the app served users.
+                try:
+                    _append_forward_test_log(pid, r)
+                except Exception as log_e:
+                    logger.warning("Forward log append failed (%s): %s", pid, log_e)
             except Exception as e:
                 logger.exception("Preset %s failed: %s", pid, e)
                 failures.append(pid)
@@ -1178,15 +1231,14 @@ def main() -> int:
     try:
         import subprocess as _sp
         _repo = Path(__file__).resolve().parents[2]
-        _files = [
-            "streamlit_app/data/cache/backtests/_metadata.json",
-            "streamlit_app/data/cache/backtests/it_invvol.json",
-            "streamlit_app/data/cache/backtests/it_equal.json",
-            "streamlit_app/data/cache/backtests/it_invvol_regime.json",
-            "streamlit_app/data/cache/backtests/it_momentum.json",
-            "streamlit_app/data/cache/backtests/it_ensemble.json",
+        # Add entire cache directories — captures all 50 preset files, the
+        # metadata, and the forward_test JSONL log without a hard-coded list
+        # that goes stale every time we add a preset or a year rolls over.
+        _paths = [
+            "streamlit_app/data/cache/backtests",
+            "streamlit_app/data/cache/forward_test",
         ]
-        _sp.run(["git", "add"] + _files, cwd=_repo, check=True)
+        _sp.run(["git", "add"] + _paths, cwd=_repo, check=True)
         _sp.run(
             ["git", "commit", "-m",
              f"chore: refresh preset backtest cache [skip ci] ({kst_now} KST)"],
