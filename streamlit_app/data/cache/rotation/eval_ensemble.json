@@ -9367,5 +9367,193 @@
       ]
     }
   },
-  "updated_at": "2026-08-23T16:55:43.479219+00:00"
+  "today_recommendation": {
+    "mom_1m": [
+      {
+        "sector": "hc",
+        "score": 0.08611856201764878,
+        "today_picks": [
+          "MRNA",
+          "DVA",
+          "PODD",
+          "TECH",
+          "VTRS"
+        ],
+        "picks_at": "2026-08-22T00:00:00"
+      },
+      {
+        "sector": "fin",
+        "score": 0.07855115596843953,
+        "today_picks": [
+          "CFG",
+          "PFG",
+          "STT",
+          "C",
+          "BEN"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "cd",
+        "score": 0.06186889173658283,
+        "today_picks": [
+          "TSLA",
+          "F",
+          "NCLH",
+          "DECK",
+          "PHM"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "re",
+        "score": 0.05033260436886433,
+        "today_picks": [
+          "SPG",
+          "HST",
+          "FRT",
+          "VTR",
+          "EQIX"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "ind",
+        "score": 0.02849382632973163,
+        "today_picks": [
+          "FIX",
+          "CAT",
+          "GEV",
+          "GNRC",
+          "BLDR"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      }
+    ],
+    "mom_3m": [
+      {
+        "sector": "it",
+        "score": 0.5873785978139299,
+        "today_picks": [
+          "MU",
+          "DELL",
+          "INTC",
+          "WDC",
+          "SNDK"
+        ],
+        "picks_at": "2026-08-24T00:00:00"
+      },
+      {
+        "sector": "ind",
+        "score": 0.24167630377931282,
+        "today_picks": [
+          "FIX",
+          "CAT",
+          "GEV",
+          "GNRC",
+          "BLDR"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "fin",
+        "score": 0.22685495666702904,
+        "today_picks": [
+          "CFG",
+          "PFG",
+          "STT",
+          "C",
+          "BEN"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "cs",
+        "score": 0.12292539128911928,
+        "today_picks": [
+          "GOOG",
+          "GOOGL",
+          "ECHO",
+          "RDDT",
+          "APP"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "cd",
+        "score": 0.12289673622589259,
+        "today_picks": [
+          "TSLA",
+          "F",
+          "NCLH",
+          "DECK",
+          "PHM"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      }
+    ],
+    "conf": [
+      {
+        "sector": "cd",
+        "score": 0.8,
+        "today_picks": [
+          "TSLA",
+          "F",
+          "NCLH",
+          "DECK",
+          "PHM"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "cs",
+        "score": 0.8,
+        "today_picks": [
+          "GOOG",
+          "GOOGL",
+          "ECHO",
+          "RDDT",
+          "APP"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "fin",
+        "score": 0.6,
+        "today_picks": [
+          "CFG",
+          "PFG",
+          "STT",
+          "C",
+          "BEN"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "en",
+        "score": 0.6,
+        "today_picks": [
+          "TPL",
+          "HAL",
+          "BKR",
+          "KMI",
+          "WMB"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "re",
+        "score": 0.6,
+        "today_picks": [
+          "SPG",
+          "HST",
+          "FRT",
+          "VTR",
+          "EQIX"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      }
+    ]
+  },
+  "updated_at": "2026-08-23T17:04:18.777838+00:00"
 }

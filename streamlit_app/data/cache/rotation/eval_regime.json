@@ -9367,5 +9367,193 @@
       ]
     }
   },
-  "updated_at": "2026-08-23T16:55:43.599363+00:00"
+  "today_recommendation": {
+    "mom_1m": [
+      {
+        "sector": "fin",
+        "score": 0.07655997776455181,
+        "today_picks": [
+          "STT",
+          "BNY",
+          "IVZ",
+          "CFG",
+          "NTRS"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "hc",
+        "score": 0.05612037663044456,
+        "today_picks": [
+          "MRNA",
+          "CNC",
+          "PODD",
+          "CRL",
+          "DVA"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "re",
+        "score": 0.05591862566780881,
+        "today_picks": [
+          "HST",
+          "FRT",
+          "DOC",
+          "SPG",
+          "KIM"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "ind",
+        "score": 0.042619884488622306,
+        "today_picks": [
+          "FIX",
+          "GEV",
+          "GNRC",
+          "BLDR",
+          "VRT"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "staples",
+        "score": 0.015678535710811126,
+        "today_picks": [
+          "BG",
+          "ADM",
+          "CLX",
+          "DLTR",
+          "BF-B"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      }
+    ],
+    "mom_3m": [
+      {
+        "sector": "hc",
+        "score": 0.27129840434515184,
+        "today_picks": [
+          "MRNA",
+          "CNC",
+          "PODD",
+          "CRL",
+          "DVA"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "re",
+        "score": 0.2016989711698307,
+        "today_picks": [
+          "HST",
+          "FRT",
+          "DOC",
+          "SPG",
+          "KIM"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "it",
+        "score": 0.16010138530516382,
+        "today_picks": [
+          "MU",
+          "DELL",
+          "MRVL",
+          "HPE",
+          "SNDK"
+        ],
+        "picks_at": "2026-08-24T00:00:00"
+      },
+      {
+        "sector": "fin",
+        "score": 0.13156434467790756,
+        "today_picks": [
+          "STT",
+          "BNY",
+          "IVZ",
+          "CFG",
+          "NTRS"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "staples",
+        "score": 0.12449948816633793,
+        "today_picks": [
+          "BG",
+          "ADM",
+          "CLX",
+          "DLTR",
+          "BF-B"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      }
+    ],
+    "conf": [
+      {
+        "sector": "fin",
+        "score": 0.6,
+        "today_picks": [
+          "STT",
+          "BNY",
+          "IVZ",
+          "CFG",
+          "NTRS"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "cs",
+        "score": 0.6,
+        "today_picks": [
+          "GOOG",
+          "GOOGL",
+          "RDDT",
+          "ECHO",
+          "APP"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "en",
+        "score": 0.6,
+        "today_picks": [
+          "HAL",
+          "EXE",
+          "KMI",
+          "EQT",
+          "TPL"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "re",
+        "score": 0.6,
+        "today_picks": [
+          "HST",
+          "FRT",
+          "DOC",
+          "SPG",
+          "KIM"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      },
+      {
+        "sector": "hc",
+        "score": 0.4,
+        "today_picks": [
+          "MRNA",
+          "CNC",
+          "PODD",
+          "CRL",
+          "DVA"
+        ],
+        "picks_at": "2026-08-23T00:00:00"
+      }
+    ]
+  },
+  "updated_at": "2026-08-23T17:04:18.917030+00:00"
 }

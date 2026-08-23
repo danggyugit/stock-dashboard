@@ -282,6 +282,44 @@ def _summarise(sim: dict, benchmark_series: list[dict] | None) -> dict:
     return out
 
 
+# ── Today's live recommendation ────────────────────────────────────
+
+def _today_recommendation(presets: dict[str, dict], dates: list[str],
+                          matrix: dict[str, dict[str, dict]]) -> dict:
+    """For each rule, compute the sector ranking as-of the latest historical
+    rebalance PLUS attach each preset's today_picks so the frontend can render
+    "오늘의 추천: rotate to X, buy Y/Z" in one hop.
+
+    Note: this uses the latest historical rebalance's score as a proxy for
+    "today's decision". A stricter version would recompute scores on today's
+    live snapshot, but the sector's model already refreshes daily via the
+    batch, so the latest historical rebalance is essentially yesterday's
+    decision — good enough for a home-page badge.
+    """
+    if not dates:
+        return {}
+    last_idx = len(dates) - 1
+    per_rule: dict[str, dict] = {}
+    for rule in RULES:
+        scores: list[tuple[str, float]] = []
+        for sk in matrix[dates[last_idx]].keys():
+            s = _score_sector_at(sk, last_idx, dates, matrix, rule)
+            if s is not None:
+                scores.append((sk, s))
+        scores.sort(key=lambda x: -x[1])
+        ranked = []
+        for sk, sc in scores[:5]:  # keep top-5 for user context
+            p = presets.get(sk, {})
+            ranked.append({
+                "sector": sk,
+                "score": sc,
+                "today_picks": [x.get("ticker") for x in (p.get("today_picks") or [])],
+                "picks_at": p.get("today_picks_at"),
+            })
+        per_rule[rule] = ranked
+    return per_rule
+
+
 # ── Main ───────────────────────────────────────────────────────────
 
 def main() -> int:
@@ -330,6 +368,8 @@ def main() -> int:
         if not variants:
             continue
 
+        today_reco = _today_recommendation(presets, dates, matrix)
+
         out_path = _OUT_DIR / f"eval_{strategy}.json"
         out_path.write_text(
             json.dumps(
@@ -340,6 +380,7 @@ def main() -> int:
                     "date_range": [dates[0], dates[-1]],
                     "benchmark_series": bench,
                     "variants": variants,
+                    "today_recommendation": today_reco,
                     "updated_at": datetime.now(timezone.utc).isoformat(),
                 },
                 ensure_ascii=False, indent=2, default=str,
