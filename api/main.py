@@ -309,6 +309,30 @@ def finnhub_insider_transactions(symbol: str, from_date: str | None = None, to_d
     return _finnhub_call(finnhub_proxy.insider_transactions, symbol, from_date, to_date)
 
 
+@app.get("/finnhub/metric")
+def finnhub_metric(symbol: str):
+    """Comprehensive per-ticker metric snapshot (growth rates, margins, valuation, dividend info)."""
+    return _finnhub_call(finnhub_proxy.basic_metrics, symbol)
+
+
+@app.get("/finnhub/financials-reported")
+def finnhub_financials_reported(symbol: str, freq: str = "quarterly"):
+    """SEC-reported financial statements (Income/Balance/CashFlow) — quarterly or annual."""
+    return _finnhub_call(finnhub_proxy.financials_reported, symbol, freq)
+
+
+@app.get("/finnhub/dividend-history")
+def finnhub_dividend_history(symbol: str, from_date: str, to_date: str):
+    """Historical dividend payments."""
+    return _finnhub_call(finnhub_proxy.dividend_history, symbol, from_date, to_date)
+
+
+@app.get("/finnhub/eps-estimate")
+def finnhub_eps_estimate(symbol: str, freq: str = "quarterly"):
+    """Analyst EPS estimates (past + upcoming quarters — revision trend)."""
+    return _finnhub_call(finnhub_proxy.eps_estimate, symbol, freq)
+
+
 # ─────── LLM (Gemini) proxy ───────
 
 

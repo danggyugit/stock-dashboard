@@ -128,3 +128,58 @@ def insider_transactions(symbol: str, from_date: str | None = None, to_date: str
     if isinstance(data, dict):
         return data.get("data") or []
     return []
+
+
+def basic_metrics(symbol: str) -> dict:
+    """Comprehensive metric snapshot — growth rates, margins, valuation multiples,
+    dividend info, all in one call. Cache 6h since the metrics move slowly."""
+    data = _cached_get("/stock/metric", {"symbol": symbol, "metric": "all"}, ttl=6 * 3600)
+    if isinstance(data, dict):
+        return data.get("metric") or {}
+    return {}
+
+
+def financials_reported(symbol: str, freq: str = "quarterly") -> list[dict]:
+    """SEC-reported financial statements (Income/Balance/CashFlow).
+
+    freq = "quarterly" | "annual". Returns list of filings (most recent first),
+    each with `report` = {ic, bs, cf} where each sub-object is a list of
+    {concept, value, unit, label} line items.
+    """
+    data = _cached_get(
+        "/stock/financials-reported",
+        {"symbol": symbol, "freq": freq},
+        ttl=6 * 3600,
+    )
+    if isinstance(data, dict):
+        return data.get("data") or []
+    return []
+
+
+def dividend_history(symbol: str, from_date: str, to_date: str) -> list[dict]:
+    """Historical dividend payments between two ISO dates."""
+    data = _cached_get(
+        "/stock/dividend",
+        {"symbol": symbol, "from": from_date, "to": to_date},
+        ttl=6 * 3600,
+    )
+    if isinstance(data, list):
+        return data
+    return []
+
+
+def eps_estimate(symbol: str, freq: str = "quarterly") -> list[dict]:
+    """Analyst EPS estimates (past + upcoming quarters).
+
+    freq = "quarterly" | "annual". Each row: {period, epsAvg, epsHigh, epsLow,
+    numberAnalysts}. Comparing past periods' estimates to actuals shows
+    "revision trend" (analysts revising up = strong signal).
+    """
+    data = _cached_get(
+        "/stock/eps-estimate",
+        {"symbol": symbol, "freq": freq},
+        ttl=3600,
+    )
+    if isinstance(data, dict):
+        return data.get("data") or []
+    return []
