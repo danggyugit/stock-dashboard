@@ -691,6 +691,25 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
             else (999 if gains > 0 else 0)
         )
 
+        # Turnover — how much of the portfolio rotates each rebalance.
+        # Two-way turnover: entries + exits divided by portfolio size.
+        # Annualised at monthly rebal → multiply by (12 / rebal_m).
+        turnovers: list[float] = []
+        prev_set: set[str] | None = None
+        for h in rebal_hist:
+            picks = set(h.get("selected") or [])
+            if prev_set is not None and picks:
+                changed = len(picks.symmetric_difference(prev_set))
+                # Two-way turnover normalised by portfolio size
+                to = changed / (2 * len(picks))
+                turnovers.append(to)
+            prev_set = picks
+        if turnovers:
+            avg_to = float(np.mean(turnovers))
+            rebal_m = cfg.get("rebal_m", 1) or 1
+            summary["avg_turnover_pct"] = round(avg_to * 100, 1)
+            summary["annual_turnover_pct"] = round(avg_to * 100 * (12 / rebal_m), 0)
+
         # Cash allocation stats
         cash_hist = results.get("cash_history") or []
         if cash_hist and cfg["cash_strategy"] != "none":
@@ -704,6 +723,32 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
             summary["bear_regime_pct"] = round(
                 sum(1 for r in regimes if r == "Bear") / len(regimes) * 100, 1
             )
+
+    # ── Benchmark comparison (SPY over the same window) ──────
+    # Normalises SPY to 1.0 at backtest start so it overlays cleanly on the
+    # portfolio equity curve. Alpha = portfolio CAGR − SPY CAGR (annualised).
+    benchmark_series: list[dict] = []
+    try:
+        spy_close = shared.get("spy_close")
+        if spy_close is not None and len(port_dates) >= 2 and not spy_close.empty:
+            start_dt = pd.Timestamp(port_dates[0])
+            end_dt = pd.Timestamp(port_dates[-1])
+            spy_slice = spy_close[(spy_close.index >= start_dt) & (spy_close.index <= end_dt)]
+            if len(spy_slice) >= 2:
+                spy_norm = spy_slice / float(spy_slice.iloc[0])
+                benchmark_series = [
+                    {"date": d.strftime("%Y-%m-%d"), "value": round(float(v), 4)}
+                    for d, v in spy_norm.items()
+                ]
+                spy_total_ret = float(spy_norm.iloc[-1]) - 1.0
+                port_total_ret = (port_values[-1] / port_values[0]) - 1.0
+                years = max((end_dt - start_dt).days / 365.25, 1e-6)
+                spy_cagr = (1 + spy_total_ret) ** (1 / years) - 1 if spy_total_ret > -1 else -1
+                port_cagr = (1 + port_total_ret) ** (1 / years) - 1 if port_total_ret > -1 else -1
+                summary["spy_cagr_pct"] = round(spy_cagr * 100, 2)
+                summary["alpha_annual_pct"] = round((port_cagr - spy_cagr) * 100, 2)
+    except Exception as e:
+        logger.warning("Benchmark calc failed: %s", e)
 
     # ── Latest AI picks (last rebalance) ─────────────────────
     latest_picks = []
@@ -742,6 +787,9 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
     # ── Full backtest data (for AI Quant Lab preset loading) ─
     try:
         full_data = _serialize_full_results(results, cfg)
+        # Attach SPY overlay so the frontend can render it on the equity curve
+        # without another network round-trip.
+        full_data["benchmark_series"] = benchmark_series
     except Exception as e:
         logger.warning("Full serialization failed for %s: %s", preset_id, e)
         full_data = {}
@@ -836,7 +884,9 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
     X_pred = X_pred.reindex(columns=last_all_cols)
     X_imp = last_imputer.transform(X_pred)
 
-    # Predict (ensemble or single)
+    # Predict (ensemble or single) — keep individual predictions so we can
+    # surface per-model output, mean, dispersion, and consensus rank instead
+    # of collapsing everything into a single opaque "composite_score".
     pred_rf_s = pd.Series(model_rf.predict(X_imp), index=snap.index)
     is_ensemble = bool(cfg.get("use_ensemble", False))
     model_xgb = results.get("last_model_xgb")
@@ -844,12 +894,21 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
     if is_ensemble and model_xgb is not None and model_lgbm is not None:
         pred_xgb_s = pd.Series(model_xgb.predict(X_imp), index=snap.index)
         pred_lgbm_s = pd.Series(model_lgbm.predict(X_imp), index=snap.index)
+        # Rank ensemble — robust to outliers; used for the actual pick decision
         rk = (pred_rf_s.rank(ascending=False) +
               pred_xgb_s.rank(ascending=False) +
               pred_lgbm_s.rank(ascending=False)) / 3
         composite = -rk
+        # But ALSO expose mean + std of raw predictions so users see the
+        # magnitude and disagreement (rank throws away that information).
+        pred_mean_s = (pred_rf_s + pred_xgb_s + pred_lgbm_s) / 3
+        pred_std_s = pd.concat([pred_rf_s, pred_xgb_s, pred_lgbm_s], axis=1).std(axis=1)
     else:
+        pred_xgb_s = None
+        pred_lgbm_s = None
         composite = pred_rf_s
+        pred_mean_s = pred_rf_s
+        pred_std_s = pd.Series(0.0, index=snap.index)
 
     # Mom filter
     if cfg.get("use_mom_filter", False) and "Mom_1m" in snap.columns:
@@ -888,12 +947,36 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
         except Exception:
             return None
 
+    def _model_row(t) -> dict:
+        """Attach per-model predictions + mean + std + agreement to one ticker row."""
+        row = {}
+        if pred_rf_s is not None and t in pred_rf_s.index:
+            row["pred_rf"] = _safe(pred_rf_s[t])
+        if pred_xgb_s is not None and t in pred_xgb_s.index:
+            row["pred_xgb"] = _safe(pred_xgb_s[t])
+        if pred_lgbm_s is not None and t in pred_lgbm_s.index:
+            row["pred_lgbm"] = _safe(pred_lgbm_s[t])
+        row["pred_mean"] = _safe(pred_mean_s[t]) if t in pred_mean_s.index else None
+        row["pred_std"] = _safe(pred_std_s[t]) if t in pred_std_s.index else None
+        # Agreement = how many models predict positive (0..3 for ensemble, 0..1 for RF-only)
+        if is_ensemble and pred_xgb_s is not None and pred_lgbm_s is not None:
+            preds = [pred_rf_s.get(t), pred_xgb_s.get(t), pred_lgbm_s.get(t)]
+            pos = sum(1 for p in preds if isinstance(p, (int, float)) and p > 0)
+            total = sum(1 for p in preds if isinstance(p, (int, float)) and not pd.isna(p))
+            row["model_agreement"] = f"{pos}/{total}" if total > 0 else None
+        else:
+            v = pred_rf_s.get(t)
+            row["model_agreement"] = "1/1" if isinstance(v, (int, float)) and v > 0 else "0/1"
+        return row
+
     picks = []
-    for t in top.index:
+    for rank_idx, t in enumerate(top.index, start=1):
         row = {
             "ticker": str(t),
             "weight": float(weights.get(t, 0.0)),
             "composite_score": _safe(composite[t]),
+            "consensus_rank": rank_idx,
+            **_model_row(t),
         }
         for col in ("Mom_1m", "Mom_3m", "Mom_6m", "Mom_12m", "Volatility_30d"):
             if col in snap.columns:
@@ -903,8 +986,13 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
 
     # Full universe ranking
     ranking = []
-    for t, s in composite.sort_values(ascending=False).items():
-        row = {"ticker": str(t), "composite_score": _safe(s)}
+    for rank_idx, (t, s) in enumerate(composite.sort_values(ascending=False).items(), start=1):
+        row = {
+            "ticker": str(t),
+            "composite_score": _safe(s),
+            "consensus_rank": rank_idx,
+            **_model_row(t),
+        }
         for col in ("Mom_1m", "Mom_3m", "Mom_6m", "Mom_12m", "Volatility_30d"):
             if col in snap.columns:
                 row[col] = _safe(snap.loc[t, col])
