@@ -300,7 +300,19 @@ STRATEGIES = [
     }),
 ]
 
-# Build the 50-preset dict programmatically. Each preset carries the target
+# Optional sector filter via env var — comma-separated sector KEYS (not full
+# names). Used to iterate a subset quickly, e.g. testing a code change on
+# just IT before committing 4-5h of full-matrix compute.
+#   PRESET_SECTOR_FILTER=it python run_preset_backtests.py
+#   PRESET_SECTOR_FILTER=it,hc python run_preset_backtests.py
+_sector_filter = os.environ.get("PRESET_SECTOR_FILTER", "").strip()
+if _sector_filter:
+    _wanted = {s.strip() for s in _sector_filter.split(",") if s.strip()}
+    SECTORS = [s for s in SECTORS if s[0] in _wanted]
+    logger.info("SECTOR filter active — running %d sector(s): %s",
+                len(SECTORS), [s[0] for s in SECTORS])
+
+# Build the preset dict programmatically. Each preset carries the target
 # sector so the main loop can group by sector and share one prefetch per group.
 PRESETS: dict[str, dict] = {}
 for _sec_key, _sec_short, _sec_full in SECTORS:
@@ -1150,29 +1162,45 @@ def main() -> int:
                 logger.exception("Preset %s failed: %s", pid, e)
                 failures.append(pid)
 
-    # Metadata (common config with sectors removed since it's per-sector now)
+    # Metadata (common config with sectors removed since it's per-sector now).
+    # If a sector filter is active, MERGE into the existing _metadata.json so
+    # the 45 sectors we didn't touch keep their entries. Otherwise the site
+    # would think they were removed.
     common_meta = {k: v for k, v in common_base.items() if k != "sectors"}
+    new_presets = {
+        pid: {
+            "name": p["name"],
+            "description": p["description"],
+            "sectors": p["sectors"],
+            "success": pid in results_by_id,
+            "updated_at": results_by_id.get(pid, {}).get("updated_at"),
+        }
+        for pid, p in PRESETS.items()
+    }
+    meta_path = cache_dir / "_metadata.json"
+    existing_meta = {}
+    if _sector_filter and meta_path.exists():
+        try:
+            existing_meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            logger.warning("Could not read existing metadata for merge: %s", e)
+            existing_meta = {}
+    merged_presets = dict(existing_meta.get("presets", {}))
+    merged_presets.update(new_presets)
     meta = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "common_config": {
             k: (v.isoformat() if isinstance(v, (datetime, date)) else v)
             for k, v in common_meta.items()
         },
-        "sectors": [s[2] for s in SECTORS],  # full sector names
-        "strategies": [s[0] for s in STRATEGIES],  # strategy keys
-        "presets": {
-            pid: {
-                "name": p["name"],
-                "description": p["description"],
-                "sectors": p["sectors"],
-                "success": pid in results_by_id,
-                "updated_at": results_by_id.get(pid, {}).get("updated_at"),
-            }
-            for pid, p in PRESETS.items()
-        },
+        # Sector/strategy lists mirror the FULL matrix so the site always
+        # shows all 10 sectors × 5 strategies in dropdowns.
+        "sectors": existing_meta.get("sectors") or [s[2] for s in SECTORS],
+        "strategies": existing_meta.get("strategies") or [s[0] for s in STRATEGIES],
+        "presets": merged_presets,
         "failures": failures,
     }
-    (cache_dir / "_metadata.json").write_text(
+    meta_path.write_text(
         json.dumps(meta, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
