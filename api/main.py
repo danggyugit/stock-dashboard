@@ -323,6 +323,9 @@ class EarningsSummaryRequest(BaseModel):
     revenue_growth_yoy: float | None = None
     gross_margin: float | None = None
     analyst_target_mean: float | None = None
+    # NEW: recommendation distribution from Finnhub free tier
+    # (strongBuy/buy/hold/sell/strongSell counts + period)
+    analyst_recommendation: dict | None = None
     earnings_history: list[dict] | None = None
 
 

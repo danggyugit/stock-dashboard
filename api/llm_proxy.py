@@ -92,11 +92,12 @@ def earnings_summary(symbol: str, context: dict, force_fresh: bool = False) -> s
 
     `force_fresh=True` bypasses the cache (used by the frontend regenerate btn).
     """
-    # Cache key includes a version bump (v2) so old truncated responses from
-    # the pre-maxOutputTokens-fix era can't leak back to users.
+    # Cache key v3 — bumped because the prompt now includes analyst
+    # recommendation distribution (older v2 caches omitted it and said
+    # "데이터 부족" in section 4).
     hist = context.get("earnings_history") or []
     latest = hist[0].get("period") if hist else "no-earnings"
-    cache_key = f"earnings_summary_v2:{symbol}:{latest}:{len(hist)}"
+    cache_key = f"earnings_summary_v3:{symbol}:{latest}:{len(hist)}"
     if force_fresh:
         _CACHE.pop(("prompt", cache_key), None)
 
@@ -117,7 +118,10 @@ Produce these five sections, using markdown headings (## ...). Keep the ENTIRE r
 2-3 bullet. 데이터의 리스크나 약점.
 
 ## 4. 애널리스트 컨센서스
-1-2 문장. 현재가 vs 애널리스트 목표가.
+1-2 문장. 다음 두 정보를 결합해 종합 판단:
+- `analyst_target_mean` (있다면): 현재가 대비 상승/하락 여력 %
+- `analyst_recommendation` (있다면): strongBuy/buy/hold/sell/strongSell 분포에서 매수/보유/매도 비율 도출 후 "N명 중 X명 매수 우세" 형식으로 서술
+둘 다 없을 때만 "데이터 부족"이라 표기.
 
 ## 5. 종합 판정
 1 문장. 실적 품질 총평.
