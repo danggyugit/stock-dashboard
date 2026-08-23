@@ -88,7 +88,22 @@ def build_market_snapshot() -> dict:
                         for d, v in vix.tail(90).items()],
         }
 
-    # Sector ETF returns (1w / 1m)
+    # Sector ETF returns — 1d / 1w / 1m / 3m / 6m / ytd / 1y
+    # (drives the /heatmap page's period selector — must cover every UI option)
+    def _pct_change(series: pd.Series, n_bars_back: int) -> float | None:
+        if len(series) <= n_bars_back:
+            return None
+        return round((float(series.iloc[-1]) / float(series.iloc[-1 - n_bars_back]) - 1) * 100, 2)
+
+    def _ytd_return(series: pd.Series) -> float | None:
+        # First trading day of the current calendar year (fall back to first available).
+        this_year = series.index[-1].year
+        year_slice = series[series.index.year == this_year]
+        if year_slice.empty:
+            return None
+        first = year_slice.iloc[0]
+        return round((float(series.iloc[-1]) / float(first) - 1) * 100, 2)
+
     sectors = []
     for etf, name in _SECTOR_ETFS.items():
         c = _close(etf)
@@ -96,8 +111,13 @@ def build_market_snapshot() -> dict:
             continue
         sectors.append({
             "ticker": etf, "sector": name,
-            "ret_1w_pct": round((float(c.iloc[-1]) / float(c.iloc[-6]) - 1) * 100, 2),
-            "ret_1m_pct": round((float(c.iloc[-1]) / float(c.iloc[-22]) - 1) * 100, 2),
+            "ret_1d_pct":  _pct_change(c, 1),
+            "ret_1w_pct":  _pct_change(c, 5),
+            "ret_1m_pct":  _pct_change(c, 21),
+            "ret_3m_pct":  _pct_change(c, 63),
+            "ret_6m_pct":  _pct_change(c, 126),
+            "ret_ytd_pct": _ytd_return(c),
+            "ret_1y_pct":  _pct_change(c, 252) or _pct_change(c, len(c) - 1),
         })
     if sectors:
         snap["sectors"] = sorted(sectors, key=lambda x: x["ret_1m_pct"], reverse=True)
@@ -219,36 +239,71 @@ def fetch_sp1500_list() -> pd.DataFrame:
     return combined
 
 
-def fetch_batch_prices(tickers: list[str]) -> dict[str, list[dict]]:
-    """Fetch 5d daily prices for all tickers."""
-    logger.info("Fetching batch prices for %d tickers...", len(tickers))
-    result: dict[str, list[dict]] = {}
+def fetch_batch_prices_and_returns(
+    tickers: list[str],
+) -> tuple[dict[str, list[dict]], dict[str, dict]]:
+    """Download 1y daily prices for all tickers.
+
+    Returns two dicts:
+      (a) prices — last 5 days per ticker (for the mini sparkline / current
+          price / prev-close change fields — matches the pre-existing schema)
+      (b) returns — per-period % change: 1d / 1w / 1m / 3m / 6m / ytd / 1y.
+          Feeds the /heatmap page's period selector so the map recolors
+          without requiring a fresh fetch per period.
+    """
+    logger.info("Fetching batch prices+returns (1y) for %d tickers...", len(tickers))
+    prices_out: dict[str, list[dict]] = {}
+    returns_out: dict[str, dict] = {}
+
     try:
         data = yf.download(
-            tickers, period="5d",
+            tickers, period="1y",
             group_by="ticker", auto_adjust=True, threads=True,
             progress=False,
         )
         if data.empty:
-            return result
+            return prices_out, returns_out
+
+        def _ret(series, n_bars_back):
+            if len(series) <= n_bars_back:
+                return None
+            base = series.iloc[-1 - n_bars_back]
+            if pd.isna(base) or base == 0:
+                return None
+            return round((float(series.iloc[-1]) / float(base) - 1) * 100, 2)
+
+        def _ytd(series):
+            this_year = series.index[-1].year
+            year_slice = series[series.index.year == this_year]
+            if year_slice.empty:
+                return None
+            first = year_slice.iloc[0]
+            if pd.isna(first) or first == 0:
+                return None
+            return round((float(series.iloc[-1]) / float(first) - 1) * 100, 2)
 
         for ticker in tickers:
             try:
                 if data.columns.nlevels > 1:
                     if ticker in data.columns.get_level_values(0):
-                        df = data[ticker].reset_index()
+                        df = data[ticker]
                     else:
                         continue
                 else:
-                    df = data.reset_index()
+                    df = data
 
                 if df.empty or df.dropna(how="all").empty:
                     continue
 
-                date_col = "Date" if "Date" in df.columns else "Datetime"
-                df = df.dropna(subset=["Close"])
+                close = df["Close"].dropna()
+                if close.empty:
+                    continue
+
+                # Recent 5 trading days for the price array
+                tail = df.dropna(subset=["Close"]).tail(5).reset_index()
+                date_col = "Date" if "Date" in tail.columns else "Datetime"
                 rows = []
-                for _, row in df.iterrows():
+                for _, row in tail.iterrows():
                     rows.append({
                         "date": pd.to_datetime(row[date_col]).strftime("%Y-%m-%d"),
                         "open": float(row["Open"]) if pd.notna(row["Open"]) else None,
@@ -258,13 +313,33 @@ def fetch_batch_prices(tickers: list[str]) -> dict[str, list[dict]]:
                         "volume": int(row["Volume"]) if pd.notna(row["Volume"]) else 0,
                     })
                 if rows:
-                    result[ticker] = rows
+                    prices_out[ticker] = rows
+
+                returns_out[ticker] = {
+                    "1d":  _ret(close, 1),
+                    "1w":  _ret(close, 5),
+                    "1m":  _ret(close, 21),
+                    "3m":  _ret(close, 63),
+                    "6m":  _ret(close, 126),
+                    "ytd": _ytd(close),
+                    "1y":  _ret(close, 252) or _ret(close, len(close) - 1),
+                }
             except (KeyError, TypeError):
                 continue
     except Exception:
-        logger.exception("Batch prices fetch failed.")
-    logger.info("Got prices for %d/%d tickers.", len(result), len(tickers))
-    return result
+        logger.exception("Batch prices+returns fetch failed.")
+
+    logger.info(
+        "Got prices for %d/%d, returns for %d/%d tickers.",
+        len(prices_out), len(tickers), len(returns_out), len(tickers),
+    )
+    return prices_out, returns_out
+
+
+def fetch_batch_prices(tickers: list[str]) -> dict[str, list[dict]]:
+    """Backwards-compat shim — old callers only wanted prices."""
+    prices, _ = fetch_batch_prices_and_returns(tickers)
+    return prices
 
 
 def fetch_market_caps(tickers: list[str]) -> dict[str, int]:
@@ -560,8 +635,8 @@ def main() -> int:
             stocks_data = stocks_df.to_dict(orient="records")
             write_json("stocks.json", stocks_data)
 
-            # 2. Heatmap (prices + caps)
-            prices = fetch_batch_prices(tickers)
+            # 2. Heatmap (prices + returns + caps)
+            prices, returns = fetch_batch_prices_and_returns(tickers)
             caps = fetch_market_caps(tickers)
 
             # yfinance fast_info is aggressively rate-limited when called ~1500
@@ -597,6 +672,7 @@ def main() -> int:
                     "sector": row["sector"],
                     "market_cap": cap,
                     "prices": prices.get(ticker, []),
+                    "returns": returns.get(ticker),  # {1d, 1w, 1m, 3m, 6m, ytd, 1y}
                 }
             if merged_caps:
                 logger.info(
