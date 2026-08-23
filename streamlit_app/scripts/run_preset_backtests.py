@@ -300,16 +300,22 @@ STRATEGIES = [
     }),
 ]
 
+# Full list captured BEFORE the sector filter is applied — cross-sector
+# universe always spans all 10 sectors even when we filter for a subset.
+_ALL_SECTORS_FULL = [s[2] for s in SECTORS]
+
 # Optional sector filter via env var — comma-separated sector KEYS (not full
 # names). Used to iterate a subset quickly, e.g. testing a code change on
 # just IT before committing 4-5h of full-matrix compute.
 #   PRESET_SECTOR_FILTER=it python run_preset_backtests.py
 #   PRESET_SECTOR_FILTER=it,hc python run_preset_backtests.py
+#   PRESET_SECTOR_FILTER=all python run_preset_backtests.py   # cross-sector only
 _sector_filter = os.environ.get("PRESET_SECTOR_FILTER", "").strip()
+_wanted: set[str] = set()
 if _sector_filter:
     _wanted = {s.strip() for s in _sector_filter.split(",") if s.strip()}
     SECTORS = [s for s in SECTORS if s[0] in _wanted]
-    logger.info("SECTOR filter active — running %d sector(s): %s",
+    logger.info("SECTOR filter active — running %d single-sector(s): %s",
                 len(SECTORS), [s[0] for s in SECTORS])
 
 # Build the preset dict programmatically. Each preset carries the target
@@ -323,6 +329,32 @@ for _sec_key, _sec_short, _sec_full in SECTORS:
             "sectors": [_sec_full],
             "overrides": _overrides,
         }
+
+# ── Cross-sector variants (all 10 sectors as one universe) ──────
+# Sector rotation and mega-cap concentration effects the sector-locked
+# presets can't capture. Runs a single model over ~500 large-cap tickers
+# per rebalance, picks top-N regardless of sector. Included when no
+# filter is set OR when "all" is explicitly requested.
+_include_cross = (not _sector_filter) or ("all" in _wanted)
+if _include_cross:
+    for _strat_key, _strat_name, _strat_desc, _overrides in STRATEGIES:
+        PRESETS[f"all_{_strat_key}"] = {
+            "name": f"Cross-Sector {_strat_name}",
+            "description": f"전 섹터 라지캡 통합 유니버스, {_strat_desc}",
+            "sectors": list(_ALL_SECTORS_FULL),
+            "overrides": _overrides,
+        }
+    logger.info("Cross-sector presets included (%d strategies)", len(STRATEGIES))
+
+# Optional strategy filter — same idea, comma-separated strategy KEYS.
+# Useful for kicking off just cross-sector ensemble in a hurry:
+#   PRESET_SECTOR_FILTER=all PRESET_STRATEGY_FILTER=ensemble python ...
+_strategy_filter = os.environ.get("PRESET_STRATEGY_FILTER", "").strip()
+if _strategy_filter:
+    _wanted_strats = {s.strip() for s in _strategy_filter.split(",") if s.strip()}
+    PRESETS = {pid: p for pid, p in PRESETS.items()
+               if pid.rsplit("_", 1)[-1] in _wanted_strats}
+    logger.info("STRATEGY filter active — %d preset(s) remain", len(PRESETS))
 
 
 # ════════════════════════════════════════════════════════════
