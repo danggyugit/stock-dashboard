@@ -92,12 +92,22 @@ def earnings_summary(symbol: str, context: dict, force_fresh: bool = False) -> s
 
     `force_fresh=True` bypasses the cache (used by the frontend regenerate btn).
     """
-    # Cache key v3 — bumped because the prompt now includes analyst
-    # recommendation distribution (older v2 caches omitted it and said
-    # "데이터 부족" in section 4).
+    # Cache key v4 — includes presence flags for the "optional" enrichment
+    # fields (target price, recommendation, forward_eps) so that a first
+    # request without recommendation can't poison the cache for later
+    # requests that DO have it. Bumping the version alone isn't enough;
+    # the key itself must reflect what was in the payload.
     hist = context.get("earnings_history") or []
     latest = hist[0].get("period") if hist else "no-earnings"
-    cache_key = f"earnings_summary_v3:{symbol}:{latest}:{len(hist)}"
+    rec = context.get("analyst_recommendation") or {}
+    rec_total = (
+        (rec.get("strongBuy") or 0) + (rec.get("buy") or 0) + (rec.get("hold") or 0)
+        + (rec.get("sell") or 0) + (rec.get("strongSell") or 0)
+    ) if rec else 0
+    has_tgt = 1 if context.get("analyst_target_mean") is not None else 0
+    cache_key = (
+        f"earnings_summary_v4:{symbol}:{latest}:{len(hist)}:rec{rec_total}:tgt{has_tgt}"
+    )
     if force_fresh:
         _CACHE.pop(("prompt", cache_key), None)
 
@@ -118,10 +128,15 @@ Produce these five sections, using markdown headings (## ...). Keep the ENTIRE r
 2-3 bullet. 데이터의 리스크나 약점.
 
 ## 4. 애널리스트 컨센서스
-1-2 문장. 다음 두 정보를 결합해 종합 판단:
-- `analyst_target_mean` (있다면): 현재가 대비 상승/하락 여력 %
-- `analyst_recommendation` (있다면): strongBuy/buy/hold/sell/strongSell 분포에서 매수/보유/매도 비율 도출 후 "N명 중 X명 매수 우세" 형식으로 서술
-둘 다 없을 때만 "데이터 부족"이라 표기.
+1-2 문장. 다음 규칙에 따라 서술:
+- `analyst_recommendation`이 있으면 (strongBuy+buy+hold+sell+strongSell 합 > 0):
+  → "총 N명 중 X명 매수 우세 (매수 Y% · 보유 Z% · 매도 W%)" 형식으로 서술.
+  → 목표주가가 없다는 언급은 하지 말 것. 있는 데이터만으로 판단.
+- `analyst_target_mean`이 있으면: 현재가 대비 상승/하락 여력 %도 덧붙임.
+- 둘 다 있으면 두 정보 결합.
+- 둘 다 없을 때만 "애널리스트 데이터 부족"이라 표기.
+
+핵심 원칙: **있는 데이터만 언급하고, 없는 데이터에 대한 부정문은 넣지 말 것**. 사용자는 UI에서 목표가 없음을 이미 알고 있음.
 
 ## 5. 종합 판정
 1 문장. 실적 품질 총평.
