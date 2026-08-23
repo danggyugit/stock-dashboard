@@ -155,15 +155,68 @@ def build_market_snapshot() -> dict:
     if comms:
         snap["commodities"] = comms
 
-    # Fear & Greed — reuse the app's own calculation (streamlit installed locally)
+    # Fear & Greed Index — inlined (streamlit_app/services/sentiment_service.py
+    # depends on the streamlit runtime, which we can't import from the API venv).
+    # Uses the same formulas: VIX score + momentum vs 125d MA + up/down volume ratio.
     try:
-        _app_dir = Path(__file__).resolve().parent.parent
-        if str(_app_dir) not in sys.path:
-            sys.path.insert(0, str(_app_dir))
-        from services.sentiment_service import get_fear_greed
-        fg = get_fear_greed()
-        if fg:
-            snap["fear_greed"] = fg
+        vix_series = _close("^VIX")
+        spy_series = _close("SPY")
+        spy_full = data["SPY"] if data.columns.nlevels > 1 and "SPY" in data.columns.get_level_values(0) else None
+
+        def _vix_score(v: float) -> float:
+            return max(0.0, min(100.0, ((40.0 - v) / 28.0) * 100.0))
+
+        def _momentum_score(close: pd.Series) -> float | None:
+            if len(close) < 20:
+                return None
+            ma_window = min(125, len(close))
+            ma = float(close.tail(ma_window).mean())
+            if ma == 0:
+                return 50.0
+            pct = ((float(close.iloc[-1]) - ma) / ma) * 100.0
+            return max(0.0, min(100.0, 50.0 + pct * 5.0))
+
+        def _volume_score(spy_df) -> float | None:
+            if spy_df is None or spy_df.empty:
+                return None
+            recent = spy_df.tail(63)  # ~3 months
+            close = pd.to_numeric(recent["Close"], errors="coerce")
+            vol = pd.to_numeric(recent["Volume"], errors="coerce")
+            changes = close.diff()
+            up_vol = float(vol[changes > 0].sum())
+            down_vol = float(vol[changes < 0].sum())
+            if down_vol == 0:
+                return 80.0
+            if up_vol == 0:
+                return 20.0
+            ratio = up_vol / down_vol
+            return max(0.0, min(100.0, (ratio - 0.5) * 100.0))
+
+        vix_s = _vix_score(float(vix_series.iloc[-1])) if not vix_series.empty else None
+        mom_s = _momentum_score(spy_series) if not spy_series.empty else None
+        vol_s = _volume_score(spy_full)
+
+        components = [s for s in (vix_s, mom_s, vol_s) if s is not None]
+        if components:
+            overall = round(sum(components) / len(components), 1)
+            if overall >= 75:
+                label = "Extreme Greed"
+            elif overall >= 55:
+                label = "Greed"
+            elif overall >= 45:
+                label = "Neutral"
+            elif overall >= 25:
+                label = "Fear"
+            else:
+                label = "Extreme Fear"
+            snap["fear_greed"] = {
+                "score": overall,
+                "label": label,
+                "vix_score": round(vix_s, 1) if vix_s is not None else None,
+                "momentum_score": round(mom_s, 1) if mom_s is not None else None,
+                "volume_score": round(vol_s, 1) if vol_s is not None else None,
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+            }
     except Exception as e:
         logger.warning("Fear&Greed snapshot failed: %s", e)
 
