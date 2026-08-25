@@ -65,6 +65,18 @@ def _cached_get(endpoint: str, params: dict[str, Any], ttl: int = _CACHE_TTL_SEC
 # ── Public wrappers ───────────────────────────────────────────────
 
 
+def quote(symbol: str) -> dict:
+    """Real-time-ish quote (15-min delayed on free tier).
+
+    Returns {c: current, d: change, dp: percent change, h: high,
+    l: low, o: open, pc: prev close, t: unix timestamp}.
+
+    Cached 25s — matches typical 30s poll interval, keeps us well
+    under the 60 req/min free-tier limit even with several symbols.
+    """
+    return _cached_get("/quote", {"symbol": symbol}, ttl=25)
+
+
 def earnings_calendar(from_date: str, to_date: str, symbol: str | None = None) -> list[dict]:
     """Upcoming earnings between two ISO dates (max ~1 month window)."""
     params: dict[str, Any] = {"from": from_date, "to": to_date}

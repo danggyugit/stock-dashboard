@@ -261,6 +261,13 @@ def _finnhub_call(fn, *args, **kwargs):
         raise HTTPException(status_code=500, detail=repr(e))
 
 
+@app.get("/finnhub/quote")
+def finnhub_quote(symbol: str):
+    """Real-time-ish quote (15-min delayed on free tier).
+    Powers the home page's polling hero tiles."""
+    return _finnhub_call(finnhub_proxy.quote, symbol)
+
+
 @app.get("/finnhub/earnings-calendar")
 def finnhub_earnings(from_date: str, to_date: str, symbol: str | None = None):
     """Earnings calendar. ISO dates (YYYY-MM-DD), max ~1 month range."""
