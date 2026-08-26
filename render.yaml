@@ -1,8 +1,10 @@
-# Render blueprint — remote MCP server (stock-dashboard tools for Claude).
+# Render blueprint — deploys two services from this repo:
+#   1. aiquantlab-mcp: remote MCP server for Claude Desktop
+#   2. aiquantlab-api: FastAPI backtest engine for the web app
+#
 # Deploy: Render dashboard → New → Blueprint → connect this repo.
-# After deploy, add "https://<service>.onrender.com$MCP_PATH" as a custom
-# connector in Claude (Settings → Connectors → Add custom connector).
 services:
+  # ── MCP server ──────────────────────────────────────────────────
   - type: web
     name: aiquantlab-mcp
     runtime: python
@@ -19,5 +21,24 @@ services:
         value: /mcp
       - key: FINNHUB_API_KEY
         sync: false   # set in Render dashboard (optional — news/calendar tools)
+      - key: PYTHON_VERSION
+        value: 3.12.0
+
+  # ── AI Quant Lab API (backtest engine) ─────────────────────────
+  # Requires Starter plan minimum. Free tier's 512MB RAM cannot fit
+  # sklearn + xgboost + lightgbm loaded together, and cold-start dumps
+  # the in-memory data cache (making every request pay 5-10 min prefetch).
+  - type: web
+    name: aiquantlab-api
+    runtime: python
+    plan: starter
+    rootDir: api
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: CORS_ALLOW_ORIGINS
+        # Comma-separated; add your Vercel domain here
+        value: "http://localhost:3000,https://aiquantlab-web.vercel.app"
       - key: PYTHON_VERSION
         value: 3.12.0

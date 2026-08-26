@@ -1,0 +1,146 @@
+"""LLM proxy for AI-generated stock summaries.
+
+Uses Gemini 2.5 Flash via REST (no google-genai SDK dependency needed).
+Key stays on the server; the browser calls our proxy, we call Gemini.
+
+Free tier is 10 RPM / 250 RPD — plenty for on-demand summaries with our
+5-minute per-symbol cache.
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+import os
+import time
+from typing import Any
+
+import requests
+
+logger = logging.getLogger(__name__)
+
+GEMINI_ENDPOINT = (
+    "https://generativelanguage.googleapis.com/v1beta/models/"
+    "gemini-2.5-flash:generateContent"
+)
+
+# Cache: (symbol, cache_key) -> (fetched_at, text)
+_CACHE: dict[tuple[str, str], tuple[float, str]] = {}
+_CACHE_TTL_SECONDS = 3600 * 6  # 6 hours — earnings context doesn't change intraday
+
+
+def _key() -> str:
+    return os.environ.get("GEMINI_API_KEY", "").strip()
+
+
+def _cached_generate(prompt: str, cache_key: str) -> str:
+    """POST to Gemini, cache by cache_key. Raises RuntimeError on failure."""
+    api_key = _key()
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY not configured on the server.")
+
+    now = time.time()
+    hit = _CACHE.get((cache_key, "")) if False else _CACHE.get(("prompt", cache_key))
+    if hit and (now - hit[0]) < _CACHE_TTL_SECONDS:
+        return hit[1]
+
+    body: dict[str, Any] = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {
+            "temperature": 0.3,
+            # Korean burns ~2-3× tokens per character vs English. 800 tokens
+            # cut off after section 1; 3000 comfortably fits the full 5-section
+            # ~350-word Korean summary with room for structured headings.
+            "maxOutputTokens": 3000,
+        },
+    }
+    resp = requests.post(
+        f"{GEMINI_ENDPOINT}?key={api_key}",
+        headers={"Content-Type": "application/json"},
+        data=json.dumps(body),
+        timeout=60,
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"Gemini returned {resp.status_code}: {resp.text[:300]}")
+
+    payload = resp.json()
+    try:
+        cand = payload["candidates"][0]
+        text = cand["content"]["parts"][0]["text"]
+        finish = cand.get("finishReason", "STOP")
+        if finish != "STOP":
+            # MAX_TOKENS, SAFETY, RECITATION, OTHER — surface it so the user
+            # sees why the answer might look truncated.
+            logger.warning("Gemini finished with reason=%s (may be truncated)", finish)
+    except (KeyError, IndexError, TypeError) as e:
+        raise RuntimeError(f"Unexpected Gemini response shape: {e} · {str(payload)[:300]}")
+
+    text = text.strip()
+    _CACHE[("prompt", cache_key)] = (now, text)
+    return text
+
+
+# ── Public wrappers ───────────────────────────────────────────────
+
+
+def earnings_summary(symbol: str, context: dict, force_fresh: bool = False) -> str:
+    """Generate a structured earnings summary in Korean-friendly markdown.
+
+    `context` should include: ticker, name, price, market_cap, pe, sector,
+    forward_eps, revenue_growth_yoy, gross_margin, analyst_target_mean,
+    earnings_history (list of {period, actual, estimate, surprisePercent}).
+
+    `force_fresh=True` bypasses the cache (used by the frontend regenerate btn).
+    """
+    # Cache key v4 — includes presence flags for the "optional" enrichment
+    # fields (target price, recommendation, forward_eps) so that a first
+    # request without recommendation can't poison the cache for later
+    # requests that DO have it. Bumping the version alone isn't enough;
+    # the key itself must reflect what was in the payload.
+    hist = context.get("earnings_history") or []
+    latest = hist[0].get("period") if hist else "no-earnings"
+    rec = context.get("analyst_recommendation") or {}
+    rec_total = (
+        (rec.get("strongBuy") or 0) + (rec.get("buy") or 0) + (rec.get("hold") or 0)
+        + (rec.get("sell") or 0) + (rec.get("strongSell") or 0)
+    ) if rec else 0
+    has_tgt = 1 if context.get("analyst_target_mean") is not None else 0
+    cache_key = (
+        f"earnings_summary_v4:{symbol}:{latest}:{len(hist)}:rec{rec_total}:tgt{has_tgt}"
+    )
+    if force_fresh:
+        _CACHE.pop(("prompt", cache_key), None)
+
+    prompt = f"""You are a concise financial analyst. Analyze the following earnings data for {symbol} ({context.get('name', '')}) and respond IN KOREAN with a structured markdown summary.
+
+Data:
+{json.dumps(context, ensure_ascii=False, indent=2, default=str)}
+
+Produce these five sections, using markdown headings (## ...). Keep the ENTIRE response under 350 words.
+
+## 1. 실적 품질
+2-3 문장. 최근 4분기 Beat/Miss 추세, EPS 궤적, 일관성.
+
+## 2. 주요 강점
+2-3 bullet. 데이터에서 확인되는 잘 되고 있는 점.
+
+## 3. 주요 우려
+2-3 bullet. 데이터의 리스크나 약점.
+
+## 4. 애널리스트 컨센서스
+1-2 문장. 다음 규칙에 따라 서술:
+- `analyst_recommendation`이 있으면 (strongBuy+buy+hold+sell+strongSell 합 > 0):
+  → "총 N명 중 X명 매수 우세 (매수 Y% · 보유 Z% · 매도 W%)" 형식으로 서술.
+  → 목표주가가 없다는 언급은 하지 말 것. 있는 데이터만으로 판단.
+- `analyst_target_mean`이 있으면: 현재가 대비 상승/하락 여력 %도 덧붙임.
+- 둘 다 있으면 두 정보 결합.
+- 둘 다 없을 때만 "애널리스트 데이터 부족"이라 표기.
+
+핵심 원칙: **있는 데이터만 언급하고, 없는 데이터에 대한 부정문은 넣지 말 것**. 사용자는 UI에서 목표가 없음을 이미 알고 있음.
+
+## 5. 종합 판정
+1 문장. 실적 품질 총평.
+
+Base ALL claims on the numbers provided — no speculation. If a metric is missing, say "데이터 부족" rather than guessing.
+"""
+    return _cached_generate(prompt, cache_key)

@@ -4,9 +4,6 @@
     "cap_tiers": [
       "Large Cap"
     ],
-    "sectors": [
-      "Information Technology"
-    ],
     "rebal_m": 1,
     "rolling_w": 12,
     "n_stocks": 5,
@@ -21,6 +18,25 @@
     "end": "2026-08-25T00:00:00",
     "min_test": 5
   },
+  "sectors": [
+    "Information Technology",
+    "Health Care",
+    "Financials",
+    "Consumer Discretionary",
+    "Communication Services",
+    "Industrials",
+    "Consumer Staples",
+    "Energy",
+    "Materials",
+    "Real Estate"
+  ],
+  "strategies": [
+    "equal",
+    "momentum",
+    "invvol",
+    "ensemble",
+    "regime"
+  ],
   "presets": {
     "it_invvol": {
       "name": "IT Inverse-Vol (No Cash)",
@@ -29,8 +45,11 @@
       "updated_at": "2026-08-26T02:10:29.098630+00:00"
     },
     "it_equal": {
-      "name": "IT Equal-Weight (No Cash)",
-      "description": "IT 섹터, 균등 가중, 현금 없음",
+      "name": "IT Equal Weight (No Cash)",
+      "description": "Information Technology 섹터, 균등 가중, 현금 없음",
+      "sectors": [
+        "Information Technology"
+      ],
       "success": true,
       "updated_at": "2026-08-26T02:19:10.692234+00:00"
     },
@@ -42,13 +61,19 @@
     },
     "it_momentum": {
       "name": "IT Momentum-Weight (No Cash)",
-      "description": "IT 섹터, 모멘텀 비례 가중, 현금 없음",
+      "description": "Information Technology 섹터, 모멘텀 비례 가중, 현금 없음",
+      "sectors": [
+        "Information Technology"
+      ],
       "success": true,
       "updated_at": "2026-08-26T02:35:02.217601+00:00"
     },
     "it_ensemble": {
-      "name": "IT Ensemble + Inv-Vol (No Cash)",
-      "description": "IT 섹터, 앙상블 모델 선별, Inverse-Vol 가중, 현금 없음",
+      "name": "IT Ensemble ML + Inv-Vol",
+      "description": "Information Technology 섹터, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "sectors": [
+        "Information Technology"
+      ],
       "success": true,
       "updated_at": "2026-08-26T02:43:05.091306+00:00"
     }

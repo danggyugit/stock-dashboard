@@ -69,7 +69,16 @@ def build_market_snapshot() -> dict:
     """
     snap: dict = {"updated_at": datetime.now(timezone.utc).isoformat()}
 
-    tickers = ["^VIX", "SPY", "XLY", "XLP", "DX-Y.NYB", "GC=F", "CL=F"] + list(_SECTOR_ETFS)
+    tickers = (
+        ["^VIX", "SPY", "QQQ", "XLY", "XLP", "DX-Y.NYB", "GC=F", "CL=F"]
+        # Global indices (major economies)
+        + ["^N225", "^HSI", "^GDAXI", "^FTSE", "^KS11", "^STOXX50E"]
+        # Major FX pairs (relevant to USD flows / KR investors)
+        + ["KRW=X", "JPY=X", "EURUSD=X", "GBPUSD=X", "CNY=X"]
+        # Copper futures — leading indicator for cyclicals
+        + ["HG=F"]
+        + list(_SECTOR_ETFS)
+    )
     data = yf.download(tickers, period="1y", auto_adjust=True,
                        group_by="ticker", progress=False, threads=True)
 
@@ -88,7 +97,22 @@ def build_market_snapshot() -> dict:
                         for d, v in vix.tail(90).items()],
         }
 
-    # Sector ETF returns (1w / 1m)
+    # Sector ETF returns — 1d / 1w / 1m / 3m / 6m / ytd / 1y
+    # (drives the /heatmap page's period selector — must cover every UI option)
+    def _pct_change(series: pd.Series, n_bars_back: int) -> float | None:
+        if len(series) <= n_bars_back:
+            return None
+        return round((float(series.iloc[-1]) / float(series.iloc[-1 - n_bars_back]) - 1) * 100, 2)
+
+    def _ytd_return(series: pd.Series) -> float | None:
+        # First trading day of the current calendar year (fall back to first available).
+        this_year = series.index[-1].year
+        year_slice = series[series.index.year == this_year]
+        if year_slice.empty:
+            return None
+        first = year_slice.iloc[0]
+        return round((float(series.iloc[-1]) / float(first) - 1) * 100, 2)
+
     sectors = []
     for etf, name in _SECTOR_ETFS.items():
         c = _close(etf)
@@ -96,13 +120,18 @@ def build_market_snapshot() -> dict:
             continue
         sectors.append({
             "ticker": etf, "sector": name,
-            "ret_1w_pct": round((float(c.iloc[-1]) / float(c.iloc[-6]) - 1) * 100, 2),
-            "ret_1m_pct": round((float(c.iloc[-1]) / float(c.iloc[-22]) - 1) * 100, 2),
+            "ret_1d_pct":  _pct_change(c, 1),
+            "ret_1w_pct":  _pct_change(c, 5),
+            "ret_1m_pct":  _pct_change(c, 21),
+            "ret_3m_pct":  _pct_change(c, 63),
+            "ret_6m_pct":  _pct_change(c, 126),
+            "ret_ytd_pct": _ytd_return(c),
+            "ret_1y_pct":  _pct_change(c, 252) or _pct_change(c, len(c) - 1),
         })
     if sectors:
         snap["sectors"] = sorted(sectors, key=lambda x: x["ret_1m_pct"], reverse=True)
 
-    # Breadth — SPY vs 200DMA
+    # Breadth — SPY vs 200DMA (+ 90d SPY history for the home mini chart)
     spy = _close("SPY")
     if len(spy) >= 200:
         sma200 = float(spy.rolling(200).mean().iloc[-1])
@@ -110,6 +139,20 @@ def build_market_snapshot() -> dict:
         snap["breadth"] = {
             "spy_close": round(cur, 2), "sma200": round(sma200, 2),
             "above_pct": round((cur / sma200 - 1) * 100, 2),
+            "history": [{"date": d.strftime("%Y-%m-%d"), "close": round(float(v), 2)}
+                        for d, v in spy.tail(90).items()],
+        }
+
+    # SPY per-period returns — RS screener needs these to compute excess-vs-SPY.
+    if len(spy) >= 22:
+        snap["spy_returns"] = {
+            "1d":  _pct_change(spy, 1),
+            "1w":  _pct_change(spy, 5),
+            "1m":  _pct_change(spy, 21),
+            "3m":  _pct_change(spy, 63),
+            "6m":  _pct_change(spy, 126),
+            "ytd": _ytd_return(spy),
+            "1y":  _pct_change(spy, 252) or _pct_change(spy, len(spy) - 1),
         }
 
     # Risk on/off — XLY/XLP ratio
@@ -118,25 +161,128 @@ def build_market_snapshot() -> dict:
         ratio = (xly / xlp).dropna()
         snap["risk_on_off"] = _trend_stats(ratio, 60)
 
-    # Commodities / DXY
+    # Commodities / DXY (with 90d history for the home mini charts)
     comms = {}
     for key, tkr, label in [("dxy", "DX-Y.NYB", "DXY"), ("gold", "GC=F", "Gold"),
-                            ("oil_wti", "CL=F", "WTI Oil")]:
+                            ("oil_wti", "CL=F", "WTI Oil"), ("copper", "HG=F", "Copper")]:
         c = _close(tkr)
         if not c.empty:
-            comms[key] = {"label": label, **_trend_stats(c, 30)}
+            comms[key] = {
+                "label": label,
+                **_trend_stats(c, 30),
+                "history": [{"date": d.strftime("%Y-%m-%d"), "close": round(float(v), 2)}
+                            for d, v in c.tail(90).items()],
+            }
     if comms:
         snap["commodities"] = comms
 
-    # Fear & Greed — reuse the app's own calculation (streamlit installed locally)
+    # Global indices — key markets we want on the Home / Macro view
+    _INDICES = [
+        ("nikkei",   "^N225",     "Nikkei 225"),
+        ("hsi",      "^HSI",      "Hang Seng"),
+        ("dax",      "^GDAXI",    "DAX"),
+        ("ftse",     "^FTSE",     "FTSE 100"),
+        ("kospi",    "^KS11",     "KOSPI"),
+        ("stoxx50", "^STOXX50E",  "Euro Stoxx 50"),
+        ("qqq",     "QQQ",        "Nasdaq 100 (QQQ)"),
+    ]
+    global_idx = {}
+    for key, tkr, label in _INDICES:
+        c = _close(tkr)
+        if not c.empty:
+            global_idx[key] = {
+                "label": label,
+                **_trend_stats(c, 30),
+                "history": [{"date": d.strftime("%Y-%m-%d"), "close": round(float(v), 2)}
+                            for d, v in c.tail(90).items()],
+            }
+    if global_idx:
+        snap["global_indices"] = global_idx
+
+    # Major FX pairs. Naming: dictionary key is the "quote currency" — a KR
+    # user's mental model — while `label` is the standard "USD/XXX" form.
+    _FX = [
+        ("krw",     "KRW=X",     "USD/KRW"),
+        ("jpy",     "JPY=X",     "USD/JPY"),
+        ("eur",     "EURUSD=X",  "EUR/USD"),
+        ("gbp",     "GBPUSD=X",  "GBP/USD"),
+        ("cny",     "CNY=X",     "USD/CNY"),
+    ]
+    fx = {}
+    for key, tkr, label in _FX:
+        c = _close(tkr)
+        if not c.empty:
+            fx[key] = {
+                "label": label,
+                **_trend_stats(c, 30),
+                "history": [{"date": d.strftime("%Y-%m-%d"), "close": round(float(v), 4)}
+                            for d, v in c.tail(90).items()],
+            }
+    if fx:
+        snap["fx"] = fx
+
+    # Fear & Greed Index — inlined (streamlit_app/services/sentiment_service.py
+    # depends on the streamlit runtime, which we can't import from the API venv).
+    # Uses the same formulas: VIX score + momentum vs 125d MA + up/down volume ratio.
     try:
-        _app_dir = Path(__file__).resolve().parent.parent
-        if str(_app_dir) not in sys.path:
-            sys.path.insert(0, str(_app_dir))
-        from services.sentiment_service import get_fear_greed
-        fg = get_fear_greed()
-        if fg:
-            snap["fear_greed"] = fg
+        vix_series = _close("^VIX")
+        spy_series = _close("SPY")
+        spy_full = data["SPY"] if data.columns.nlevels > 1 and "SPY" in data.columns.get_level_values(0) else None
+
+        def _vix_score(v: float) -> float:
+            return max(0.0, min(100.0, ((40.0 - v) / 28.0) * 100.0))
+
+        def _momentum_score(close: pd.Series) -> float | None:
+            if len(close) < 20:
+                return None
+            ma_window = min(125, len(close))
+            ma = float(close.tail(ma_window).mean())
+            if ma == 0:
+                return 50.0
+            pct = ((float(close.iloc[-1]) - ma) / ma) * 100.0
+            return max(0.0, min(100.0, 50.0 + pct * 5.0))
+
+        def _volume_score(spy_df) -> float | None:
+            if spy_df is None or spy_df.empty:
+                return None
+            recent = spy_df.tail(63)  # ~3 months
+            close = pd.to_numeric(recent["Close"], errors="coerce")
+            vol = pd.to_numeric(recent["Volume"], errors="coerce")
+            changes = close.diff()
+            up_vol = float(vol[changes > 0].sum())
+            down_vol = float(vol[changes < 0].sum())
+            if down_vol == 0:
+                return 80.0
+            if up_vol == 0:
+                return 20.0
+            ratio = up_vol / down_vol
+            return max(0.0, min(100.0, (ratio - 0.5) * 100.0))
+
+        vix_s = _vix_score(float(vix_series.iloc[-1])) if not vix_series.empty else None
+        mom_s = _momentum_score(spy_series) if not spy_series.empty else None
+        vol_s = _volume_score(spy_full)
+
+        components = [s for s in (vix_s, mom_s, vol_s) if s is not None]
+        if components:
+            overall = round(sum(components) / len(components), 1)
+            if overall >= 75:
+                label = "Extreme Greed"
+            elif overall >= 55:
+                label = "Greed"
+            elif overall >= 45:
+                label = "Neutral"
+            elif overall >= 25:
+                label = "Fear"
+            else:
+                label = "Extreme Fear"
+            snap["fear_greed"] = {
+                "score": overall,
+                "label": label,
+                "vix_score": round(vix_s, 1) if vix_s is not None else None,
+                "momentum_score": round(mom_s, 1) if mom_s is not None else None,
+                "volume_score": round(vol_s, 1) if vol_s is not None else None,
+                "updated_at": datetime.now(timezone.utc).isoformat(),
+            }
     except Exception as e:
         logger.warning("Fear&Greed snapshot failed: %s", e)
 
@@ -212,36 +358,71 @@ def fetch_sp1500_list() -> pd.DataFrame:
     return combined
 
 
-def fetch_batch_prices(tickers: list[str]) -> dict[str, list[dict]]:
-    """Fetch 5d daily prices for all tickers."""
-    logger.info("Fetching batch prices for %d tickers...", len(tickers))
-    result: dict[str, list[dict]] = {}
+def fetch_batch_prices_and_returns(
+    tickers: list[str],
+) -> tuple[dict[str, list[dict]], dict[str, dict]]:
+    """Download 1y daily prices for all tickers.
+
+    Returns two dicts:
+      (a) prices — last 5 days per ticker (for the mini sparkline / current
+          price / prev-close change fields — matches the pre-existing schema)
+      (b) returns — per-period % change: 1d / 1w / 1m / 3m / 6m / ytd / 1y.
+          Feeds the /heatmap page's period selector so the map recolors
+          without requiring a fresh fetch per period.
+    """
+    logger.info("Fetching batch prices+returns (1y) for %d tickers...", len(tickers))
+    prices_out: dict[str, list[dict]] = {}
+    returns_out: dict[str, dict] = {}
+
     try:
         data = yf.download(
-            tickers, period="5d",
+            tickers, period="1y",
             group_by="ticker", auto_adjust=True, threads=True,
             progress=False,
         )
         if data.empty:
-            return result
+            return prices_out, returns_out
+
+        def _ret(series, n_bars_back):
+            if len(series) <= n_bars_back:
+                return None
+            base = series.iloc[-1 - n_bars_back]
+            if pd.isna(base) or base == 0:
+                return None
+            return round((float(series.iloc[-1]) / float(base) - 1) * 100, 2)
+
+        def _ytd(series):
+            this_year = series.index[-1].year
+            year_slice = series[series.index.year == this_year]
+            if year_slice.empty:
+                return None
+            first = year_slice.iloc[0]
+            if pd.isna(first) or first == 0:
+                return None
+            return round((float(series.iloc[-1]) / float(first) - 1) * 100, 2)
 
         for ticker in tickers:
             try:
                 if data.columns.nlevels > 1:
                     if ticker in data.columns.get_level_values(0):
-                        df = data[ticker].reset_index()
+                        df = data[ticker]
                     else:
                         continue
                 else:
-                    df = data.reset_index()
+                    df = data
 
                 if df.empty or df.dropna(how="all").empty:
                     continue
 
-                date_col = "Date" if "Date" in df.columns else "Datetime"
-                df = df.dropna(subset=["Close"])
+                close = df["Close"].dropna()
+                if close.empty:
+                    continue
+
+                # Recent 5 trading days for the price array
+                tail = df.dropna(subset=["Close"]).tail(5).reset_index()
+                date_col = "Date" if "Date" in tail.columns else "Datetime"
                 rows = []
-                for _, row in df.iterrows():
+                for _, row in tail.iterrows():
                     rows.append({
                         "date": pd.to_datetime(row[date_col]).strftime("%Y-%m-%d"),
                         "open": float(row["Open"]) if pd.notna(row["Open"]) else None,
@@ -251,13 +432,33 @@ def fetch_batch_prices(tickers: list[str]) -> dict[str, list[dict]]:
                         "volume": int(row["Volume"]) if pd.notna(row["Volume"]) else 0,
                     })
                 if rows:
-                    result[ticker] = rows
+                    prices_out[ticker] = rows
+
+                returns_out[ticker] = {
+                    "1d":  _ret(close, 1),
+                    "1w":  _ret(close, 5),
+                    "1m":  _ret(close, 21),
+                    "3m":  _ret(close, 63),
+                    "6m":  _ret(close, 126),
+                    "ytd": _ytd(close),
+                    "1y":  _ret(close, 252) or _ret(close, len(close) - 1),
+                }
             except (KeyError, TypeError):
                 continue
     except Exception:
-        logger.exception("Batch prices fetch failed.")
-    logger.info("Got prices for %d/%d tickers.", len(result), len(tickers))
-    return result
+        logger.exception("Batch prices+returns fetch failed.")
+
+    logger.info(
+        "Got prices for %d/%d, returns for %d/%d tickers.",
+        len(prices_out), len(tickers), len(returns_out), len(tickers),
+    )
+    return prices_out, returns_out
+
+
+def fetch_batch_prices(tickers: list[str]) -> dict[str, list[dict]]:
+    """Backwards-compat shim — old callers only wanted prices."""
+    prices, _ = fetch_batch_prices_and_returns(tickers)
+    return prices
 
 
 def fetch_market_caps(tickers: list[str]) -> dict[str, int]:
@@ -553,22 +754,50 @@ def main() -> int:
             stocks_data = stocks_df.to_dict(orient="records")
             write_json("stocks.json", stocks_data)
 
-            # 2. Heatmap (prices + caps)
-            prices = fetch_batch_prices(tickers)
+            # 2. Heatmap (prices + returns + caps)
+            prices, returns = fetch_batch_prices_and_returns(tickers)
             caps = fetch_market_caps(tickers)
 
+            # yfinance fast_info is aggressively rate-limited when called ~1500
+            # times in a row — a run can succeed for prices but return caps for
+            # only 20-30 tickers. Fall back to the previous heatmap's caps for
+            # missing tickers so cells don't disappear (caps don't move much
+            # day-to-day, so a 1-day stale cap is much better than none).
+            prior_caps: dict[str, int] = {}
+            try:
+                prior_path = CACHE_DIR / "heatmap.json"
+                if prior_path.exists():
+                    prior = json.loads(prior_path.read_text(encoding="utf-8"))
+                    for t, row in (prior.get("tickers") or {}).items():
+                        c = row.get("market_cap")
+                        if c:
+                            prior_caps[t] = c
+            except Exception:
+                prior_caps = {}
+
+            merged_caps = 0
             heatmap = {
                 "updated_at": now_iso,
                 "tickers": {},
             }
             for ticker in tickers:
                 row = stocks_df[stocks_df["ticker"] == ticker].iloc[0]
+                cap = caps.get(ticker)
+                if not cap and ticker in prior_caps:
+                    cap = prior_caps[ticker]
+                    merged_caps += 1
                 heatmap["tickers"][ticker] = {
                     "name": row["name"],
                     "sector": row["sector"],
-                    "market_cap": caps.get(ticker),
+                    "market_cap": cap,
                     "prices": prices.get(ticker, []),
+                    "returns": returns.get(ticker),  # {1d, 1w, 1m, 3m, 6m, ytd, 1y}
                 }
+            if merged_caps:
+                logger.info(
+                    "Filled %d/%d market caps from prior cache (yfinance rate-limited)",
+                    merged_caps, len(tickers),
+                )
             write_json("heatmap.json", heatmap)
 
             # Market snapshot for the remote MCP server (VIX/sectors/breadth/...)

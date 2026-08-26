@@ -220,13 +220,14 @@ logger.info("AI Quant Lab module loaded (batch mode)")
 # ════════════════════════════════════════════════════════════
 
 def _common_config() -> dict:
-    """Common settings shared across the 3 presets."""
+    """Settings shared across ALL presets. `sectors` is filled in per-loop
+    because each preset targets a single sector (10-sector matrix)."""
     today = date.today()
     end_dt = today - timedelta(days=1)           # yesterday
     start_dt = date(2023, 1, 1)
     return {
         "cap_tiers": ["Large Cap"],
-        "sectors": ["Information Technology"],
+        # sectors set per-sector iteration in main()
         "rebal_m": 1,
         "rolling_w": 12,
         "n_stocks": 5,
@@ -243,54 +244,117 @@ def _common_config() -> dict:
     }
 
 
-PRESETS = {
-    "it_invvol": {
-        "name": "IT Inverse-Vol (No Cash)",
-        "description": "IT 섹터, Inverse-Vol 가중, 현금 없음",
-        "overrides": {
-            "use_inv_vol_weight": True,
-            "use_momentum_weight": False,
-            "cash_strategy": "none",
-        },
-    },
-    "it_equal": {
-        "name": "IT Equal-Weight (No Cash)",
-        "description": "IT 섹터, 균등 가중, 현금 없음",
-        "overrides": {
-            "use_inv_vol_weight": False,
-            "use_momentum_weight": False,
-            "cash_strategy": "none",
-        },
-    },
-    "it_invvol_regime": {
-        "name": "IT Inverse-Vol + Regime Cash",
-        "description": "IT 섹터, Inverse-Vol 가중, HMM 레짐 현금 전략",
-        "overrides": {
-            "use_inv_vol_weight": True,
-            "use_momentum_weight": False,
-            "cash_strategy": "combined",
-        },
-    },
-    "it_momentum": {
-        "name": "IT Momentum-Weight (No Cash)",
-        "description": "IT 섹터, 모멘텀 비례 가중, 현금 없음",
-        "overrides": {
-            "use_inv_vol_weight": False,
-            "use_momentum_weight": True,
-            "cash_strategy": "none",
-        },
-    },
-    "it_ensemble": {
-        "name": "IT Ensemble + Inv-Vol (No Cash)",
-        "description": "IT 섹터, 앙상블 모델 선별, Inverse-Vol 가중, 현금 없음",
-        "overrides": {
-            "use_ensemble": True,
-            "use_inv_vol_weight": True,
-            "use_momentum_weight": False,
-            "cash_strategy": "none",
-        },
-    },
-}
+# Module-level cache for prepare_shared_data — populated once per process,
+# reused across the 10 sector loops.
+_CACHE: dict | None = None
+
+
+# ── 10 sectors × 5 strategies = 50 preset matrix ──────────────
+#
+# Sector key + short label + full SPDR sector name (used in cache filter).
+# Order roughly follows S&P 500 market-cap weight.
+SECTORS = [
+    ("it",       "IT",             "Information Technology"),
+    ("hc",       "Health Care",    "Health Care"),
+    ("fin",      "Financials",     "Financials"),
+    ("cd",       "Consumer Disc.", "Consumer Discretionary"),
+    ("cs",       "Comm. Services", "Communication Services"),
+    ("ind",      "Industrials",    "Industrials"),
+    ("staples",  "Consumer Stap.", "Consumer Staples"),
+    ("en",       "Energy",         "Energy"),
+    ("mat",      "Materials",      "Materials"),
+    ("re",       "Real Estate",    "Real Estate"),
+]
+
+# Strategy key + short name + Korean desc + factor_backtest overrides.
+STRATEGIES = [
+    ("equal", "Equal Weight (No Cash)", "균등 가중, 현금 없음", {
+        "use_ensemble": False,
+        "use_inv_vol_weight": False,
+        "use_momentum_weight": False,
+        "cash_strategy": "none",
+    }),
+    ("momentum", "Momentum-Weight (No Cash)", "모멘텀 비례 가중, 현금 없음", {
+        "use_ensemble": False,
+        "use_inv_vol_weight": False,
+        "use_momentum_weight": True,
+        "cash_strategy": "none",
+    }),
+    ("invvol", "Inverse-Vol (No Cash)", "Inverse-Vol 가중, 현금 없음", {
+        "use_ensemble": False,
+        "use_inv_vol_weight": True,
+        "use_momentum_weight": False,
+        "cash_strategy": "none",
+    }),
+    ("ensemble", "Ensemble ML + Inv-Vol", "3-모델 앙상블 + Inverse-Vol, 현금 없음", {
+        "use_ensemble": True,
+        "use_inv_vol_weight": True,
+        "use_momentum_weight": False,
+        "cash_strategy": "none",
+    }),
+    ("regime", "Inv-Vol + Regime Cash", "Inverse-Vol 가중 + HMM 레짐 현금 전략", {
+        "use_ensemble": False,
+        "use_inv_vol_weight": True,
+        "use_momentum_weight": False,
+        "cash_strategy": "combined",
+    }),
+]
+
+# Full list captured BEFORE the sector filter is applied — cross-sector
+# universe always spans all 10 sectors even when we filter for a subset.
+_ALL_SECTORS_FULL = [s[2] for s in SECTORS]
+
+# Optional sector filter via env var — comma-separated sector KEYS (not full
+# names). Used to iterate a subset quickly, e.g. testing a code change on
+# just IT before committing 4-5h of full-matrix compute.
+#   PRESET_SECTOR_FILTER=it python run_preset_backtests.py
+#   PRESET_SECTOR_FILTER=it,hc python run_preset_backtests.py
+#   PRESET_SECTOR_FILTER=all python run_preset_backtests.py   # cross-sector only
+_sector_filter = os.environ.get("PRESET_SECTOR_FILTER", "").strip()
+_wanted: set[str] = set()
+if _sector_filter:
+    _wanted = {s.strip() for s in _sector_filter.split(",") if s.strip()}
+    SECTORS = [s for s in SECTORS if s[0] in _wanted]
+    logger.info("SECTOR filter active — running %d single-sector(s): %s",
+                len(SECTORS), [s[0] for s in SECTORS])
+
+# Build the preset dict programmatically. Each preset carries the target
+# sector so the main loop can group by sector and share one prefetch per group.
+PRESETS: dict[str, dict] = {}
+for _sec_key, _sec_short, _sec_full in SECTORS:
+    for _strat_key, _strat_name, _strat_desc, _overrides in STRATEGIES:
+        PRESETS[f"{_sec_key}_{_strat_key}"] = {
+            "name": f"{_sec_short} {_strat_name}",
+            "description": f"{_sec_full} 섹터, {_strat_desc}",
+            "sectors": [_sec_full],
+            "overrides": _overrides,
+        }
+
+# ── Cross-sector variants (all 10 sectors as one universe) ──────
+# Sector rotation and mega-cap concentration effects the sector-locked
+# presets can't capture. Runs a single model over ~500 large-cap tickers
+# per rebalance, picks top-N regardless of sector. Included when no
+# filter is set OR when "all" is explicitly requested.
+_include_cross = (not _sector_filter) or ("all" in _wanted)
+if _include_cross:
+    for _strat_key, _strat_name, _strat_desc, _overrides in STRATEGIES:
+        PRESETS[f"all_{_strat_key}"] = {
+            "name": f"Cross-Sector {_strat_name}",
+            "description": f"전 섹터 라지캡 통합 유니버스, {_strat_desc}",
+            "sectors": list(_ALL_SECTORS_FULL),
+            "overrides": _overrides,
+        }
+    logger.info("Cross-sector presets included (%d strategies)", len(STRATEGIES))
+
+# Optional strategy filter — same idea, comma-separated strategy KEYS.
+# Useful for kicking off just cross-sector ensemble in a hurry:
+#   PRESET_SECTOR_FILTER=all PRESET_STRATEGY_FILTER=ensemble python ...
+_strategy_filter = os.environ.get("PRESET_STRATEGY_FILTER", "").strip()
+if _strategy_filter:
+    _wanted_strats = {s.strip() for s in _strategy_filter.split(",") if s.strip()}
+    PRESETS = {pid: p for pid, p in PRESETS.items()
+               if pid.rsplit("_", 1)[-1] in _wanted_strats}
+    logger.info("STRATEGY filter active — %d preset(s) remain", len(PRESETS))
 
 
 # ════════════════════════════════════════════════════════════
@@ -298,23 +362,59 @@ PRESETS = {
 # ════════════════════════════════════════════════════════════
 
 def prepare_shared_data(cfg: dict):
-    """Fetch all market data once, reused by the 3 preset backtests."""
-    logger.info("=== Preparing shared data ===")
-    import pandas as pd
-    import yfinance as yf
+    """Load market data from the pre-cached backtest_data/ directory
+    (populated by cache_backtest_data.py, git-committed daily). This lets
+    the preset generator skip the slow yfinance/SEC calls entirely — a
+    full sector prefetch drops from 5-7 hours to ~30 seconds.
 
-    # Universe from S&P 1500 filtered by IT + Large Cap
-    sp1500_df, _ = _lab.get_sp1500_info()
+    First call loads all cache files into module-level memory; subsequent
+    per-sector calls just filter the pre-loaded dicts."""
+    logger.info("=== Preparing shared data (from cache) ===")
+    import gzip
+    import json
+    import pickle
+    import pandas as pd
+
+    # Module-level cache — populated once per process, reused across sectors.
+    global _CACHE
+    if "_CACHE" not in globals() or _CACHE is None:
+        cache_dir = _APP_DIR / "data" / "cache" / "backtest_data"
+        if not cache_dir.exists():
+            raise RuntimeError(
+                f"Cache dir missing: {cache_dir}. Run "
+                "`python streamlit_app/scripts/cache_backtest_data.py` first."
+            )
+
+        def _pkl(name):
+            with gzip.open(cache_dir / name, "rb") as f:
+                return pickle.load(f)
+
+        _CACHE = {
+            "prices": _pkl("prices.pkl.gz"),
+            "fund": _pkl("fundamentals.pkl.gz"),
+            "pit": _pkl("pit.pkl.gz"),
+            "benchmarks": _pkl("benchmarks.pkl.gz"),
+            "sp500_changes": _pkl("sp500_changes.pkl.gz"),
+            "metadata": pd.DataFrame(
+                json.loads((cache_dir / "metadata.json").read_text(encoding="utf-8"))
+            ),
+        }
+        logger.info(
+            "Loaded backtest_data cache: %d tickers, %d PIT tickers",
+            len(_CACHE["prices"]), len(_CACHE["pit"]),
+        )
+
+    sp1500_df = _CACHE["metadata"]
     cap_filter = sp1500_df[sp1500_df["cap_tier"].isin(cfg["cap_tiers"])]
     universe = cap_filter[cap_filter["sector"].isin(cfg["sectors"])]["ticker"].tolist()
     logger.info("Universe: %d tickers", len(universe))
 
-    # Survivorship bias fix → S&P 500 change history + historical removals
+    # Survivorship bias fix (from cached sp500_changes)
     sp500_changes = None
     current_sp500 = None
     extra_tickers = []
     if cfg.get("use_surv_fix"):
-        sp500_changes = _lab.get_sp500_changes()
+        sp500_changes = _CACHE["sp500_changes"]
         current_sp500 = sp1500_df[sp1500_df["cap_tier"] == "Large Cap"]["ticker"].tolist()
         if sp500_changes is not None and not sp500_changes.empty:
             bt_start = pd.Timestamp(cfg["start"])
@@ -331,52 +431,28 @@ def prepare_shared_data(cfg: dict):
     all_tickers = list(set(universe + extra_tickers))
     logger.info("All tickers incl. historical: %d", len(all_tickers))
 
-    # Price data (warm-up 400 days)
-    data_start = cfg["start"] - timedelta(days=400)
-    price_data = _lab.download_price_data(
-        tuple(all_tickers),
-        data_start.strftime("%Y-%m-%d"),
-        cfg["end"].strftime("%Y-%m-%d"),
-    )
-    logger.info("Prices: %d tickers", len(price_data))
+    # Filter cached prices/fundamentals/PIT to this sector's universe
+    all_prices = _CACHE["prices"]
+    price_data = {t: all_prices[t] for t in all_tickers if t in all_prices}
+    logger.info("Prices: %d tickers (from cache)", len(price_data))
     available = list(price_data.keys())
 
-    # Fundamentals + PIT financials
-    fund_map = _lab.get_fundamental_yf(tuple(available))
+    fund_map = {t: _CACHE["fund"].get(t, {}) for t in available}
     logger.info("Fundamentals: %d tickers", sum(1 for v in fund_map.values() if v))
-    pit_map = _lab.get_pit_financials(tuple(available))
+    pit_map = {t: _CACHE["pit"].get(t, {}) for t in available}
     logger.info("PIT: %d tickers", sum(1 for v in pit_map.values()
                                          if not v.get("income", pd.DataFrame()).empty))
 
-    # SPY + VIX
-    spy_close = None
-    vix_close = None
-    try:
-        spy_df = yf.download(
-            "SPY", start=data_start.strftime("%Y-%m-%d"),
-            end=cfg["end"].strftime("%Y-%m-%d"),
-            auto_adjust=True, progress=False,
-        )
-        if not spy_df.empty:
-            spy_close = spy_df["Close"].squeeze()
-    except Exception as e:
-        logger.warning("SPY fetch failed: %s", e)
-    try:
-        vix_df = yf.download(
-            "^VIX", start=data_start.strftime("%Y-%m-%d"),
-            end=cfg["end"].strftime("%Y-%m-%d"),
-            auto_adjust=True, progress=False,
-        )
-        if not vix_df.empty:
-            vix_close = vix_df["Close"].squeeze()
-    except Exception as e:
-        logger.warning("VIX fetch failed: %s", e)
+    # SPY + VIX benchmarks
+    benchmarks = _CACHE["benchmarks"]
+    spy_close = benchmarks.get("SPY") if isinstance(benchmarks, dict) else None
+    vix_close = benchmarks.get("VIX") if isinstance(benchmarks, dict) else None
 
-    # Sector map
+    # Sector map (full metadata for engine lookups)
     sector_map = {row["ticker"]: row.get("sector", "Unknown")
                   for _, row in sp1500_df.iterrows()}
 
-    # Technical indicators
+    # Technical indicators — computed on the fly (fast, from cached prices)
     tech_map = {}
     for t, ohlcv in price_data.items():
         try:
@@ -565,6 +641,7 @@ def _serialize_full_results(results: dict, cfg: dict) -> dict:
         "use_ensemble": bool(cfg.get("use_ensemble", False)),
         "rebal_m": int(cfg.get("rebal_m", 1)),
         "cash_strategy": cfg.get("cash_strategy", "none"),
+        "label_kind": cfg.get("label_kind", "raw"),
     }
 
 
@@ -604,6 +681,7 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
         use_inv_vol_weight=cfg["use_inv_vol_weight"],
         use_momentum_weight=cfg.get("use_momentum_weight", False),
         cash_strategy=cfg["cash_strategy"],
+        label_kind=cfg.get("label_kind", "raw"),
     )
 
     # ── Build summary metrics ────────────────────────────────
@@ -659,6 +737,25 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
             else (999 if gains > 0 else 0)
         )
 
+        # Turnover — how much of the portfolio rotates each rebalance.
+        # Two-way turnover: entries + exits divided by portfolio size.
+        # Annualised at monthly rebal → multiply by (12 / rebal_m).
+        turnovers: list[float] = []
+        prev_set: set[str] | None = None
+        for h in rebal_hist:
+            picks = set(h.get("selected") or [])
+            if prev_set is not None and picks:
+                changed = len(picks.symmetric_difference(prev_set))
+                # Two-way turnover normalised by portfolio size
+                to = changed / (2 * len(picks))
+                turnovers.append(to)
+            prev_set = picks
+        if turnovers:
+            avg_to = float(np.mean(turnovers))
+            rebal_m = cfg.get("rebal_m", 1) or 1
+            summary["avg_turnover_pct"] = round(avg_to * 100, 1)
+            summary["annual_turnover_pct"] = round(avg_to * 100 * (12 / rebal_m), 0)
+
         # Cash allocation stats
         cash_hist = results.get("cash_history") or []
         if cash_hist and cfg["cash_strategy"] != "none":
@@ -672,6 +769,32 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
             summary["bear_regime_pct"] = round(
                 sum(1 for r in regimes if r == "Bear") / len(regimes) * 100, 1
             )
+
+    # ── Benchmark comparison (SPY over the same window) ──────
+    # Normalises SPY to 1.0 at backtest start so it overlays cleanly on the
+    # portfolio equity curve. Alpha = portfolio CAGR − SPY CAGR (annualised).
+    benchmark_series: list[dict] = []
+    try:
+        spy_close = shared.get("spy_close")
+        if spy_close is not None and len(port_dates) >= 2 and not spy_close.empty:
+            start_dt = pd.Timestamp(port_dates[0])
+            end_dt = pd.Timestamp(port_dates[-1])
+            spy_slice = spy_close[(spy_close.index >= start_dt) & (spy_close.index <= end_dt)]
+            if len(spy_slice) >= 2:
+                spy_norm = spy_slice / float(spy_slice.iloc[0])
+                benchmark_series = [
+                    {"date": d.strftime("%Y-%m-%d"), "value": round(float(v), 4)}
+                    for d, v in spy_norm.items()
+                ]
+                spy_total_ret = float(spy_norm.iloc[-1]) - 1.0
+                port_total_ret = (port_values[-1] / port_values[0]) - 1.0
+                years = max((end_dt - start_dt).days / 365.25, 1e-6)
+                spy_cagr = (1 + spy_total_ret) ** (1 / years) - 1 if spy_total_ret > -1 else -1
+                port_cagr = (1 + port_total_ret) ** (1 / years) - 1 if port_total_ret > -1 else -1
+                summary["spy_cagr_pct"] = round(spy_cagr * 100, 2)
+                summary["alpha_annual_pct"] = round((port_cagr - spy_cagr) * 100, 2)
+    except Exception as e:
+        logger.warning("Benchmark calc failed: %s", e)
 
     # ── Latest AI picks (last rebalance) ─────────────────────
     latest_picks = []
@@ -710,6 +833,9 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
     # ── Full backtest data (for AI Quant Lab preset loading) ─
     try:
         full_data = _serialize_full_results(results, cfg)
+        # Attach SPY overlay so the frontend can render it on the equity curve
+        # without another network round-trip.
+        full_data["benchmark_series"] = benchmark_series
     except Exception as e:
         logger.warning("Full serialization failed for %s: %s", preset_id, e)
         full_data = {}
@@ -804,20 +930,33 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
     X_pred = X_pred.reindex(columns=last_all_cols)
     X_imp = last_imputer.transform(X_pred)
 
-    # Predict (ensemble or single)
-    pred_rf_s = pd.Series(model_rf.predict(X_imp), index=snap.index)
+    # Predict (ensemble or single) — keep individual predictions so we can
+    # surface per-model output, mean, dispersion, and consensus rank instead
+    # of collapsing everything into a single opaque "composite_score".
+    # _model_score → classifier면 predict_proba[:,1], regressor면 predict().
+    _score = _lab._model_score
+    pred_rf_s = pd.Series(_score(model_rf, X_imp), index=snap.index)
     is_ensemble = bool(cfg.get("use_ensemble", False))
     model_xgb = results.get("last_model_xgb")
     model_lgbm = results.get("last_model_lgbm")
     if is_ensemble and model_xgb is not None and model_lgbm is not None:
-        pred_xgb_s = pd.Series(model_xgb.predict(X_imp), index=snap.index)
-        pred_lgbm_s = pd.Series(model_lgbm.predict(X_imp), index=snap.index)
+        pred_xgb_s = pd.Series(_score(model_xgb, X_imp), index=snap.index)
+        pred_lgbm_s = pd.Series(_score(model_lgbm, X_imp), index=snap.index)
+        # Rank ensemble — robust to outliers; used for the actual pick decision
         rk = (pred_rf_s.rank(ascending=False) +
               pred_xgb_s.rank(ascending=False) +
               pred_lgbm_s.rank(ascending=False)) / 3
         composite = -rk
+        # But ALSO expose mean + std of raw predictions so users see the
+        # magnitude and disagreement (rank throws away that information).
+        pred_mean_s = (pred_rf_s + pred_xgb_s + pred_lgbm_s) / 3
+        pred_std_s = pd.concat([pred_rf_s, pred_xgb_s, pred_lgbm_s], axis=1).std(axis=1)
     else:
+        pred_xgb_s = None
+        pred_lgbm_s = None
         composite = pred_rf_s
+        pred_mean_s = pred_rf_s
+        pred_std_s = pd.Series(0.0, index=snap.index)
 
     # Mom filter
     if cfg.get("use_mom_filter", False) and "Mom_1m" in snap.columns:
@@ -856,12 +995,36 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
         except Exception:
             return None
 
+    def _model_row(t) -> dict:
+        """Attach per-model predictions + mean + std + agreement to one ticker row."""
+        row = {}
+        if pred_rf_s is not None and t in pred_rf_s.index:
+            row["pred_rf"] = _safe(pred_rf_s[t])
+        if pred_xgb_s is not None and t in pred_xgb_s.index:
+            row["pred_xgb"] = _safe(pred_xgb_s[t])
+        if pred_lgbm_s is not None and t in pred_lgbm_s.index:
+            row["pred_lgbm"] = _safe(pred_lgbm_s[t])
+        row["pred_mean"] = _safe(pred_mean_s[t]) if t in pred_mean_s.index else None
+        row["pred_std"] = _safe(pred_std_s[t]) if t in pred_std_s.index else None
+        # Agreement = how many models predict positive (0..3 for ensemble, 0..1 for RF-only)
+        if is_ensemble and pred_xgb_s is not None and pred_lgbm_s is not None:
+            preds = [pred_rf_s.get(t), pred_xgb_s.get(t), pred_lgbm_s.get(t)]
+            pos = sum(1 for p in preds if isinstance(p, (int, float)) and p > 0)
+            total = sum(1 for p in preds if isinstance(p, (int, float)) and not pd.isna(p))
+            row["model_agreement"] = f"{pos}/{total}" if total > 0 else None
+        else:
+            v = pred_rf_s.get(t)
+            row["model_agreement"] = "1/1" if isinstance(v, (int, float)) and v > 0 else "0/1"
+        return row
+
     picks = []
-    for t in top.index:
+    for rank_idx, t in enumerate(top.index, start=1):
         row = {
             "ticker": str(t),
             "weight": float(weights.get(t, 0.0)),
             "composite_score": _safe(composite[t]),
+            "consensus_rank": rank_idx,
+            **_model_row(t),
         }
         for col in ("Mom_1m", "Mom_3m", "Mom_6m", "Mom_12m", "Volatility_30d"):
             if col in snap.columns:
@@ -871,8 +1034,13 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
 
     # Full universe ranking
     ranking = []
-    for t, s in composite.sort_values(ascending=False).items():
-        row = {"ticker": str(t), "composite_score": _safe(s)}
+    for rank_idx, (t, s) in enumerate(composite.sort_values(ascending=False).items(), start=1):
+        row = {
+            "ticker": str(t),
+            "composite_score": _safe(s),
+            "consensus_rank": rank_idx,
+            **_model_row(t),
+        }
         for col in ("Mom_1m", "Mom_3m", "Mom_6m", "Mom_12m", "Volatility_30d"):
             if col in snap.columns:
                 row[col] = _safe(snap.loc[t, col])
@@ -914,60 +1082,157 @@ def _predict_today(results: dict, shared: dict, cfg: dict, n_stocks: int,
 # 6. Main
 # ════════════════════════════════════════════════════════════
 
+def _append_forward_test_log(preset_id: str, result: dict) -> None:
+    """Append today's picks + top-of-ranking to a JSONL log so a downstream
+    joiner can compute forward returns (T+21, T+63) against SPY.
+
+    File layout: ``data/cache/forward_test/log_YYYY.jsonl`` — one JSON object
+    per line. Multiple lines per (picks_at, preset_id) are allowed; the
+    joiner takes the last one wins. Compact schema — enough to compute IC,
+    decile spread, and alpha vs SPY without re-fetching model artifacts.
+    """
+    picks_at = result.get("today_picks_at")
+    if not picks_at:
+        return  # no forward-testable snapshot for this preset today
+
+    # Slim down the ranking to top-50 to keep the log light (JSONL is diffed
+    # in git). Keeps enough breadth for decile analysis on typical sector
+    # universes (~50-100 tickers).
+    def _slim(rows: list[dict], keep: int) -> list[dict]:
+        out = []
+        for r in rows[:keep]:
+            out.append({
+                "ticker": r.get("ticker"),
+                "pred_mean": r.get("pred_mean"),
+                "composite_score": r.get("composite_score"),
+                "consensus_rank": r.get("consensus_rank"),
+            })
+        return out
+
+    entry = {
+        "picks_at": picks_at[:10] if isinstance(picks_at, str) else str(picks_at)[:10],
+        "preset_id": preset_id,
+        "picks": _slim(result.get("today_picks") or [], keep=20),
+        "ranking_top50": _slim(result.get("today_full_ranking") or [], keep=50),
+        "regime": result.get("today_regime"),
+        "cash_ratio_pct": result.get("today_cash_ratio_pct"),
+        "use_ensemble": bool(result.get("full", {}).get("use_ensemble", False)),
+        "logged_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    log_dir = _APP_DIR / "data" / "cache" / "forward_test"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    year = entry["picks_at"][:4]
+    log_path = log_dir / f"log_{year}.jsonl"
+    with log_path.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False, default=str) + "\n")
+
+
 def main() -> int:
+    from collections import defaultdict
+
     cache_dir = _APP_DIR / "data" / "cache" / "backtests"
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    common = _common_config()
+    common_base = _common_config()
     logger.info(
-        "Period: %s → %s (rebal=%dm, rolling=%d)",
-        common["start"].date(), common["end"].date(),
-        common["rebal_m"], common["rolling_w"],
+        "Period: %s → %s (rebal=%dm, rolling=%d) | %d presets over %d sectors",
+        common_base["start"].date(), common_base["end"].date(),
+        common_base["rebal_m"], common_base["rolling_w"],
+        len(PRESETS), len(SECTORS),
     )
 
-    # Shared data (1 fetch used by 3 presets)
-    try:
-        shared = prepare_shared_data(common)
-    except Exception as e:
-        logger.exception("Data prep failed: %s", e)
-        return 1
+    # Group presets by target sector so we prefetch each universe ONCE
+    # and re-use it for all 5 strategies in that sector.
+    by_sector: dict[tuple, list] = defaultdict(list)
+    for pid, preset in PRESETS.items():
+        by_sector[tuple(preset["sectors"])].append((pid, preset))
 
     results_by_id: dict[str, dict] = {}
     failures: list[str] = []
+    sector_num = 0
 
-    for pid, preset in PRESETS.items():
+    for sector_tuple, presets_for_sector in by_sector.items():
+        sector_num += 1
+        common = dict(common_base)
+        common["sectors"] = list(sector_tuple)
+        logger.info(
+            "=" * 70,
+        )
+        logger.info(
+            "[Sector %d/%d] %s — %d strategies",
+            sector_num, len(by_sector), sector_tuple[0], len(presets_for_sector),
+        )
+        logger.info("=" * 70)
+
         try:
-            r = run_single_preset(pid, preset, common, shared)
-            out_path = cache_dir / f"{pid}.json"
-            out_path.write_text(
-                json.dumps(r, ensure_ascii=False, indent=2, default=str),
-                encoding="utf-8",
-            )
-            logger.info("Saved %s", out_path.name)
-            results_by_id[pid] = r
+            shared = prepare_shared_data(common)
         except Exception as e:
-            logger.exception("Preset %s failed: %s", pid, e)
-            failures.append(pid)
+            logger.exception("Sector prefetch failed (%s): %s", sector_tuple, e)
+            for pid, _ in presets_for_sector:
+                failures.append(pid)
+            continue
 
-    # Metadata
+        for pid, preset in presets_for_sector:
+            try:
+                r = run_single_preset(pid, preset, common, shared)
+                out_path = cache_dir / f"{pid}.json"
+                out_path.write_text(
+                    json.dumps(r, ensure_ascii=False, indent=2, default=str),
+                    encoding="utf-8",
+                )
+                logger.info("Saved %s", out_path.name)
+                results_by_id[pid] = r
+                # Forward-test log — a compact append per (preset, day) so a
+                # downstream joiner can compute out-of-sample IC + decile
+                # spread on the actual picks the app served users.
+                try:
+                    _append_forward_test_log(pid, r)
+                except Exception as log_e:
+                    logger.warning("Forward log append failed (%s): %s", pid, log_e)
+            except Exception as e:
+                logger.exception("Preset %s failed: %s", pid, e)
+                failures.append(pid)
+
+    # Metadata (common config with sectors removed since it's per-sector now).
+    # If a sector filter is active, MERGE into the existing _metadata.json so
+    # the 45 sectors we didn't touch keep their entries. Otherwise the site
+    # would think they were removed.
+    common_meta = {k: v for k, v in common_base.items() if k != "sectors"}
+    new_presets = {
+        pid: {
+            "name": p["name"],
+            "description": p["description"],
+            "sectors": p["sectors"],
+            "success": pid in results_by_id,
+            "updated_at": results_by_id.get(pid, {}).get("updated_at"),
+        }
+        for pid, p in PRESETS.items()
+    }
+    meta_path = cache_dir / "_metadata.json"
+    existing_meta = {}
+    if _sector_filter and meta_path.exists():
+        try:
+            existing_meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            logger.warning("Could not read existing metadata for merge: %s", e)
+            existing_meta = {}
+    merged_presets = dict(existing_meta.get("presets", {}))
+    merged_presets.update(new_presets)
     meta = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "common_config": {
             k: (v.isoformat() if isinstance(v, (datetime, date)) else v)
-            for k, v in common.items()
+            for k, v in common_meta.items()
         },
-        "presets": {
-            pid: {
-                "name": p["name"],
-                "description": p["description"],
-                "success": pid in results_by_id,
-                "updated_at": results_by_id.get(pid, {}).get("updated_at"),
-            }
-            for pid, p in PRESETS.items()
-        },
+        # Sector/strategy lists mirror the FULL matrix so the site always
+        # shows all 10 sectors × 5 strategies in dropdowns.
+        "sectors": existing_meta.get("sectors") or [s[2] for s in SECTORS],
+        "strategies": existing_meta.get("strategies") or [s[0] for s in STRATEGIES],
+        "presets": merged_presets,
         "failures": failures,
     }
-    (cache_dir / "_metadata.json").write_text(
+    meta_path.write_text(
         json.dumps(meta, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
@@ -1030,15 +1295,14 @@ def main() -> int:
     try:
         import subprocess as _sp
         _repo = Path(__file__).resolve().parents[2]
-        _files = [
-            "streamlit_app/data/cache/backtests/_metadata.json",
-            "streamlit_app/data/cache/backtests/it_invvol.json",
-            "streamlit_app/data/cache/backtests/it_equal.json",
-            "streamlit_app/data/cache/backtests/it_invvol_regime.json",
-            "streamlit_app/data/cache/backtests/it_momentum.json",
-            "streamlit_app/data/cache/backtests/it_ensemble.json",
+        # Add entire cache directories — captures all 50 preset files, the
+        # metadata, and the forward_test JSONL log without a hard-coded list
+        # that goes stale every time we add a preset or a year rolls over.
+        _paths = [
+            "streamlit_app/data/cache/backtests",
+            "streamlit_app/data/cache/forward_test",
         ]
-        _sp.run(["git", "add"] + _files, cwd=_repo, check=True)
+        _sp.run(["git", "add"] + _paths, cwd=_repo, check=True)
         _sp.run(
             ["git", "commit", "-m",
              f"chore: refresh preset backtest cache [skip ci] ({kst_now} KST)"],
