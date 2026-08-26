@@ -38,6 +38,12 @@
     "regime"
   ],
   "presets": {
+    "it_invvol": {
+      "name": "IT Inverse-Vol (No Cash)",
+      "description": "IT 섹터, Inverse-Vol 가중, 현금 없음",
+      "success": true,
+      "updated_at": "2026-08-26T02:10:29.098630+00:00"
+    },
     "it_equal": {
       "name": "IT Equal Weight (No Cash)",
       "description": "Information Technology 섹터, 균등 가중, 현금 없음",
