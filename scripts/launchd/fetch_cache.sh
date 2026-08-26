@@ -8,4 +8,5 @@ run_and_commit \
   streamlit_app/data/cache/heatmap.json \
   streamlit_app/data/cache/market_snapshot.json \
   streamlit_app/data/cache/stocks.json \
-  streamlit_app/data/cache/meta.json
+  streamlit_app/data/cache/meta.json \
+  streamlit_app/data/cache/market_caps_persistent.json
