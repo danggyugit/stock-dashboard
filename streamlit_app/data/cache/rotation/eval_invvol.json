@@ -3697,6 +3697,7 @@
               "port_return": 0.20977539807679343,
               "picks": [
                 "PLTR",
+                "INTC",
                 "MRVL",
                 "AMD",
                 "TER",
@@ -4318,6 +4319,7 @@
               "port_return": 0.20977539807679343,
               "picks": [
                 "PLTR",
+                "INTC",
                 "MRVL",
                 "AMD",
                 "TER",
@@ -5308,10 +5310,11 @@
               "port_return": 0.07047049830471913,
               "picks": [
                 "WDC",
-                "COHR",
-                "LITE",
+                "LRCX",
                 "CIEN",
-                "FSLR"
+                "COHR",
+                "WDC",
+                "STX"
               ]
             }
           ]
@@ -6033,10 +6036,11 @@
               "port_return": 0.07047049830471913,
               "picks": [
                 "WDC",
-                "COHR",
-                "LITE",
+                "LRCX",
                 "CIEN",
-                "FSLR"
+                "COHR",
+                "WDC",
+                "STX"
               ]
             }
           ]
@@ -7118,10 +7122,11 @@
               "port_return": 0.07047049830471913,
               "picks": [
                 "WDC",
-                "COHR",
-                "LITE",
+                "LRCX",
                 "CIEN",
-                "FSLR"
+                "COHR",
+                "WDC",
+                "STX"
               ]
             },
             {
@@ -8126,6 +8131,7 @@
               "port_return": 0.20977539807679343,
               "picks": [
                 "PLTR",
+                "INTC",
                 "MRVL",
                 "AMD",
                 "TER",
@@ -9092,10 +9098,11 @@
               "port_return": 0.07047049830471913,
               "picks": [
                 "WDC",
-                "COHR",
-                "LITE",
+                "LRCX",
                 "CIEN",
-                "FSLR"
+                "COHR",
+                "WDC",
+                "STX"
               ]
             },
             {
@@ -9555,5 +9562,5 @@
       }
     ]
   },
-  "updated_at": "2026-08-26T01:30:01.386795+00:00"
+  "updated_at": "2026-08-27T01:31:27.358714+00:00"
 }

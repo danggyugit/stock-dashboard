@@ -760,20 +760,57 @@ def main() -> int:
 
             # yfinance fast_info is aggressively rate-limited when called ~1500
             # times in a row — a run can succeed for prices but return caps for
-            # only 20-30 tickers. Fall back to the previous heatmap's caps for
-            # missing tickers so cells don't disappear (caps don't move much
-            # day-to-day, so a 1-day stale cap is much better than none).
+            # only 20-30 tickers. Two-tier fallback so caps never permanently
+            # disappear once we've fetched them:
+            #   (1) persistent snapshot — never loses a cap, only accumulates
+            #       new ones. Prevents the "cascade of Nones" bug where a bad
+            #       run overwrites the prior heatmap, then next run's prior
+            #       fallback is also empty.
+            #   (2) previous heatmap — belt-and-suspenders (backward compat).
             prior_caps: dict[str, int] = {}
+            persistent_path = CACHE_DIR / "market_caps_persistent.json"
+            try:
+                if persistent_path.exists():
+                    persistent = json.loads(persistent_path.read_text(encoding="utf-8"))
+                    for t, c in (persistent.get("caps") or {}).items():
+                        if c:
+                            prior_caps[t] = int(c)
+            except Exception:
+                pass
             try:
                 prior_path = CACHE_DIR / "heatmap.json"
                 if prior_path.exists():
                     prior = json.loads(prior_path.read_text(encoding="utf-8"))
                     for t, row in (prior.get("tickers") or {}).items():
                         c = row.get("market_cap")
-                        if c:
+                        if c and t not in prior_caps:
                             prior_caps[t] = c
             except Exception:
-                prior_caps = {}
+                pass
+
+            # Update the persistent snapshot with any fresh caps we got today.
+            # This is the "sticky" store — once a ticker's cap is here, it
+            # survives even if every future fetch fails.
+            persistent_caps = dict(prior_caps)  # start with everything known
+            for t, c in caps.items():
+                if c:
+                    persistent_caps[t] = c
+            try:
+                persistent_path.write_text(
+                    json.dumps(
+                        {
+                            "updated_at": now_iso,
+                            "count": len(persistent_caps),
+                            "caps": persistent_caps,
+                        },
+                        separators=(",", ":"),
+                    ),
+                    encoding="utf-8",
+                )
+                logger.info("Persistent market_caps snapshot: %d tickers",
+                            len(persistent_caps))
+            except Exception as e:
+                logger.warning("Persistent caps snapshot write failed: %s", e)
 
             merged_caps = 0
             heatmap = {
