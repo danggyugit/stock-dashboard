@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-08-28T22:29:01.305091+00:00",
+  "cached_at": "2026-08-29T22:30:27.523408+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -67,7 +67,12 @@
     },
     "fed_funds": {
       "series_id": "FEDFUNDS",
-      "error": "curl exit 28: curl: (28) Operation timed out after 985433 milliseconds with 0 bytes received\n"
+      "freq": "M",
+      "points": 67,
+      "latest": {
+        "date": "2026-07-01",
+        "value": 3.63
+      }
     },
     "dgs3mo": {
       "series_id": "DGS3MO",
@@ -89,12 +94,7 @@
     },
     "dgs5": {
       "series_id": "DGS5",
-      "freq": "D",
-      "points": 1414,
-      "latest": {
-        "date": "2026-08-27",
-        "value": 4.38
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 1007821 milliseconds with 0 bytes received\n"
     },
     "dgs10": {
       "series_id": "DGS10",
@@ -134,11 +134,16 @@
     },
     "dxy": {
       "series_id": "DTWEXBGS",
-      "error": "curl exit 28: curl: (28) Operation timed out after 1044165 milliseconds with 0 bytes received\n"
+      "freq": "D",
+      "points": 1410,
+      "latest": {
+        "date": "2026-08-21",
+        "value": 118.0628
+      }
     },
     "gold": {
       "series_id": "GOLDPMGBD228NLBM",
-      "error": "Error tokenizing data. C error: Expected 1 fields in line 6, saw 2\n"
+      "error": "curl exit 28: curl: (28) Operation timed out after 484056 milliseconds with 0 bytes received\n"
     },
     "wti": {
       "series_id": "DCOILWTICO",
