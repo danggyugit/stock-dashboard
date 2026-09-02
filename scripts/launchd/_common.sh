@@ -11,6 +11,16 @@
 
 set -o pipefail
 
+# ── File descriptor limit ────────────────────────────────────────
+# macOS launchd starts processes with soft ulimit -n = 256, which is
+# not enough for yfinance's per-ticker SQLite cache when downloading
+# ~1500 tickers concurrently. Symptoms without this raise:
+#   - OSError: [Errno 24] Too many open files (pickle save)
+#   - OperationalError('unable to open database file') (yfinance)
+# Raising to 8192 is well within macOS hard limit (65536) and gives
+# comfortable headroom.
+ulimit -n 8192 2>/dev/null || true
+
 # ── PATH: Homebrew (gh, python3) + system (git) ──────────────────
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 export LANG="en_US.UTF-8"
