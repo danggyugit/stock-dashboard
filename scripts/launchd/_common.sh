@@ -50,13 +50,30 @@ _commit_and_push() {
   fi
   # [skip ci] so GitHub Actions doesn't re-trigger for cache-only commits
   git commit -m "${subject} [skip ci]" >> "$LOG" 2>&1
-  # Retry-safe push (single attempt; if it fails, next run will pick up the diff)
-  if git push origin main >> "$LOG" 2>&1; then
-    log_line INFO "pushed"
-  else
-    log_line ERROR "git push failed (leaving commit locally for next run to catch up)"
-    return 1
-  fi
+  # Push with fetch+rebase retry — batches often collide with each other
+  # (fetch_cache, cache_macro, valuation cache all racing). Without this
+  # every conflict left commits stranded locally and the "next run will
+  # catch up" hope silently broke when the next run's Python failed too.
+  for attempt in 1 2 3; do
+    if git push origin main >> "$LOG" 2>&1; then
+      log_line INFO "pushed on attempt $attempt"
+      return 0
+    fi
+    log_line WARN "push failed (attempt $attempt) — fetching + rebasing"
+    if ! git fetch origin main >> "$LOG" 2>&1; then
+      log_line ERROR "git fetch failed"
+      break
+    fi
+    # rebase our single commit on top of what came in. Cache dirs are the
+    # only things we touch so rebase conflicts are extremely rare.
+    if ! git rebase origin/main >> "$LOG" 2>&1; then
+      log_line ERROR "rebase conflict — aborting rebase, leaving commit local"
+      git rebase --abort >> "$LOG" 2>&1
+      break
+    fi
+  done
+  log_line ERROR "git push failed after retries (commit stays local)"
+  return 1
 }
 
 run_and_commit() {

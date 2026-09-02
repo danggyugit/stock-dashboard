@@ -32,6 +32,7 @@ from pathlib import Path
 _APP_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_APP_DIR))
 
+(_APP_DIR / "data" / "logs").mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
