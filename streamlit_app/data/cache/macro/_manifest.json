@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-09-06T22:29:17.131526+00:00",
+  "cached_at": "2026-09-07T22:16:43.424564+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -67,7 +67,12 @@
     },
     "fed_funds": {
       "series_id": "FEDFUNDS",
-      "error": "curl exit 28: curl: (28) Operation timed out after 901420 milliseconds with 0 bytes received\n"
+      "freq": "M",
+      "points": 68,
+      "latest": {
+        "date": "2026-08-01",
+        "value": 3.63
+      }
     },
     "dgs3mo": {
       "series_id": "DGS3MO",
@@ -125,7 +130,12 @@
     },
     "core_pce": {
       "series_id": "PCEPILFE",
-      "error": "curl exit 28: curl: (28) Operation timed out after 1047344 milliseconds with 0 bytes received\n"
+      "freq": "M",
+      "points": 67,
+      "latest": {
+        "date": "2026-07-01",
+        "value": 130.658
+      }
     },
     "dxy": {
       "series_id": "DTWEXBGS",
