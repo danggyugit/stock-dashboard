@@ -64,13 +64,28 @@ _commit_and_push() {
       log_line ERROR "git fetch failed"
       break
     fi
-    # rebase our single commit on top of what came in. Cache dirs are the
+    # Rebase our commit on top of what came in. Cache dirs are the
     # only things we touch so rebase conflicts are extremely rare.
+    # Any unstaged files (from a stray concurrent run or a partial
+    # write) get stashed so rebase doesn't refuse — then popped back
+    # so the next commit-and-push cycle catches them.
+    local stashed=0
+    if ! git diff --quiet || ! git diff --cached --quiet 2>/dev/null; then
+      if git stash push -u -m "auto-stash before rebase (${jobname})" >> "$LOG" 2>&1; then
+        stashed=1
+        log_line INFO "auto-stashed unstaged changes for rebase"
+      fi
+    fi
+    local rebase_ok=1
     if ! git rebase origin/main >> "$LOG" 2>&1; then
       log_line ERROR "rebase conflict — aborting rebase, leaving commit local"
       git rebase --abort >> "$LOG" 2>&1
-      break
+      rebase_ok=0
     fi
+    if [ "$stashed" = "1" ]; then
+      git stash pop >> "$LOG" 2>&1 || log_line WARN "stash pop had conflicts (files kept in stash)"
+    fi
+    [ "$rebase_ok" = "0" ] && break
   done
   log_line ERROR "git push failed after retries (commit stays local)"
   return 1
@@ -84,6 +99,28 @@ run_and_commit() {
   local jobname="$1"; shift
   local script="$1"; shift
   local subject="$1"; shift
+
+  # ── Concurrency guard (PID file) ──────────────────────────────
+  # macOS launchd will happily start a second copy of a job while the
+  # previous is still running. When multiple batches (preset_backtests
+  # especially — often 5-8h+) overlap, they race on the same cache
+  # files and produce corrupt half-written JSONs. If the existing PID
+  # in the pidfile is still alive, skip this launch and let the next
+  # scheduled run try again with a clean slate.
+  local pidfile="$LOGDIR/${jobname}.pid"
+  if [ -f "$pidfile" ]; then
+    local existing_pid=$(cat "$pidfile" 2>/dev/null)
+    if [ -n "$existing_pid" ] && kill -0 "$existing_pid" 2>/dev/null; then
+      local stamp="$(date +%Y%m%d-%H%M%S)"
+      LOG="$LOGDIR/${jobname}-${stamp}.log"
+      log_line WARN "another ${jobname} instance (PID $existing_pid) is running — skipping this launch"
+      exit 0
+    fi
+  fi
+  echo $$ > "$pidfile"
+  # Best-effort cleanup — if the process dies without hitting the end,
+  # a stale pidfile is fine because kill -0 will report it dead.
+  trap "rm -f '$pidfile'" EXIT
 
   local stamp="$(date +%Y%m%d-%H%M%S)"
   LOG="$LOGDIR/${jobname}-${stamp}.log"
