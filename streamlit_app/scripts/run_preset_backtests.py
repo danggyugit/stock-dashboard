@@ -1128,6 +1128,34 @@ def _append_forward_test_log(preset_id: str, result: dict) -> None:
         f.write(json.dumps(entry, ensure_ascii=False, default=str) + "\n")
 
 
+def _acquire_singleton_lock() -> "object | None":
+    """Refuse to start if another copy of this script is already running.
+
+    A full matrix takes 5-10 hours, so overlapping runs are guaranteed
+    whenever a scheduler fires before the previous one finished. Two
+    copies race on the same cache JSONs, produce half-written files,
+    and spam contradictory Telegram alerts.
+
+    The lock lives in the script's own process (flock on a lockfile),
+    so it protects EVERY launch path — macOS launchd, Windows Task
+    Scheduler, and manual runs alike. Returns the held file handle
+    (caller must keep the reference alive) or None when busy.
+    """
+    import fcntl
+
+    lock_dir = _APP_DIR / "data" / "logs"
+    lock_dir.mkdir(parents=True, exist_ok=True)
+    handle = (lock_dir / "run_preset_backtests.lock").open("w")
+    try:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except (OSError, BlockingIOError):
+        handle.close()
+        return None
+    handle.write(f"{os.getpid()}\n")
+    handle.flush()
+    return handle
+
+
 def main() -> int:
     from collections import defaultdict
 
@@ -1240,11 +1268,24 @@ def main() -> int:
 
     # ── Telegram 결과 알림 ──────────────────────────────────
     kst_now = datetime.now().strftime("%m/%d %H:%M")
-    if failures:
+    if failures and not results_by_id:
+        # EVERY preset failed → this is an environment problem (missing or
+        # unreadable backtest_data cache), not 55 separate bugs. Listing all
+        # 55 ids is pure noise, so send one short diagnostic line instead.
+        # Most common cause: the script ran on a machine whose checkout has
+        # no data/cache/backtest_data/ pickles.
+        _notify_telegram(
+            f"🛑 *프리셋 백테스트 전체 실패* ({kst_now} KST)\n"
+            f"55개 프리셋 전부 실패 — 개별 버그가 아니라 환경 문제입니다.\n"
+            f"주 원인: `data/cache/backtest_data/` 캐시 누락/손상.\n"
+            f"`cache_backtest_data.py`를 먼저 실행했는지 확인하세요."
+        )
+    elif failures:
         _notify_telegram(
             f"⚠️ *프리셋 백테스트 일부 실패* ({kst_now} KST)\n"
-            f"❌ 실패: `{'`, `'.join(failures)}`\n"
-            f"✅ 성공: `{'`, `'.join(results_by_id.keys()) or '없음'}`\n"
+            f"❌ 실패 {len(failures)}개: `{'`, `'.join(failures[:10])}`"
+            f"{' 외 ' + str(len(failures) - 10) + '개' if len(failures) > 10 else ''}\n"
+            f"✅ 성공: {len(results_by_id)}개\n"
             f"로그를 확인하세요."
         )
     else:
@@ -1325,6 +1366,18 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    # Singleton guard — keep the handle alive for the process lifetime so
+    # the OS releases the lock only when this process exits (including on
+    # kill -9, unlike a PID file that can go stale).
+    _LOCK = _acquire_singleton_lock()
+    if _LOCK is None:
+        logger.warning(
+            "Another run_preset_backtests.py is already running — exiting "
+            "without touching the cache. (This is the expected outcome when "
+            "a scheduler fires while the previous multi-hour run is still "
+            "in progress; no Telegram alert is sent.)"
+        )
+        sys.exit(0)
     try:
         sys.exit(main())
     except Exception:
