@@ -5052,6 +5052,12 @@
     "cap_tier": "Mid Cap"
   },
   {
+    "ticker": "SUI",
+    "name": "Sun Communities",
+    "sector": "Real Estate",
+    "cap_tier": "Mid Cap"
+  },
+  {
     "ticker": "SWX",
     "name": "Southwest Gas Corp",
     "sector": "Utilities",
@@ -5294,12 +5300,6 @@
   {
     "ticker": "WAL",
     "name": "Western Alliance Bancorporation",
-    "sector": "Financials",
-    "cap_tier": "Mid Cap"
-  },
-  {
-    "ticker": "WBS",
-    "name": "Webster Bank",
     "sector": "Financials",
     "cap_tier": "Mid Cap"
   },
