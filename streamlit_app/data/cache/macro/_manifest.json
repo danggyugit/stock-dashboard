@@ -1,50 +1,50 @@
 {
-  "cached_at": "2026-09-09T22:15:05.692324+00:00",
+  "cached_at": "2026-09-10T22:18:10.421239+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
       "series_id": "WALCL",
       "freq": "W",
-      "points": 296,
+      "points": 297,
       "latest": {
-        "date": "2026-09-02",
-        "value": 6737204.0
+        "date": "2026-09-09",
+        "value": 6740619.0
       }
     },
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1419,
+      "points": 1420,
       "latest": {
-        "date": "2026-09-09",
-        "value": 0.432
+        "date": "2026-09-10",
+        "value": 4.736
       }
     },
     "tga": {
       "series_id": "WTREGEN",
       "freq": "W",
-      "points": 296,
+      "points": 297,
       "latest": {
-        "date": "2026-09-02",
-        "value": 967935.0
+        "date": "2026-09-09",
+        "value": 883335.0
       }
     },
     "reserves": {
       "series_id": "WRESBAL",
       "freq": "W",
-      "points": 296,
+      "points": 297,
       "latest": {
-        "date": "2026-09-02",
-        "value": 2894531.0
+        "date": "2026-09-09",
+        "value": 2991310.0
       }
     },
     "hy_oas": {
       "series_id": "BAMLH0A0HYM2",
       "freq": "D",
-      "points": 786,
+      "points": 787,
       "latest": {
-        "date": "2026-09-08",
-        "value": 2.67
+        "date": "2026-09-09",
+        "value": 2.71
       }
     },
     "m1": {
@@ -76,47 +76,42 @@
     },
     "dgs3mo": {
       "series_id": "DGS3MO",
-      "freq": "D",
-      "points": 1421,
-      "latest": {
-        "date": "2026-09-08",
-        "value": 3.94
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 981477 milliseconds with 0 bytes received\n"
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1421,
+      "points": 1422,
       "latest": {
-        "date": "2026-09-08",
-        "value": 4.39
+        "date": "2026-09-09",
+        "value": 4.43
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1421,
+      "points": 1422,
       "latest": {
-        "date": "2026-09-08",
-        "value": 4.57
+        "date": "2026-09-09",
+        "value": 4.61
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1421,
+      "points": 1422,
       "latest": {
-        "date": "2026-09-08",
-        "value": 4.8
+        "date": "2026-09-09",
+        "value": 4.83
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1421,
+      "points": 1422,
       "latest": {
-        "date": "2026-09-08",
-        "value": 5.25
+        "date": "2026-09-09",
+        "value": 5.28
       }
     },
     "cpi": {
@@ -153,10 +148,10 @@
     "wti": {
       "series_id": "DCOILWTICO",
       "freq": "D",
-      "points": 1415,
+      "points": 1420,
       "latest": {
-        "date": "2026-09-01",
-        "value": 91.48
+        "date": "2026-09-09",
+        "value": 97.26
       }
     },
     "copper": {
@@ -171,10 +166,10 @@
     "natgas": {
       "series_id": "DHHNGSP",
       "freq": "D",
-      "points": 1415,
+      "points": 1420,
       "latest": {
-        "date": "2026-09-01",
-        "value": 2.9
+        "date": "2026-09-09",
+        "value": 2.81
       }
     }
   }
