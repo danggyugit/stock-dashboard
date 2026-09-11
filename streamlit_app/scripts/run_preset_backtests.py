@@ -1333,6 +1333,20 @@ def main() -> int:
         )
 
     # ── Git push (서버 동기화) ─────────────────────────────
+    # Skip entirely when nothing succeeded. A total failure means the input
+    # cache was unreadable, so the only thing we'd be committing is a
+    # _metadata.json that marks all 55 presets as failed — which overwrites
+    # the last good run's metadata and makes the site look broken. Leave the
+    # previous good state on the remote and let the next run fix it.
+    if not results_by_id:
+        logger.error(
+            "All %d presets failed — skipping git push so the previous good "
+            "cache stays on the remote. Check that backtest_data pickles are "
+            "readable (a concurrent cache_backtest_data write is the usual "
+            "cause).", len(failures),
+        )
+        return 1
+
     try:
         import subprocess as _sp
         _repo = Path(__file__).resolve().parents[2]

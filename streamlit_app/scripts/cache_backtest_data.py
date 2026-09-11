@@ -225,15 +225,37 @@ DATA_START = date(2023, 1, 1) - timedelta(days=400)
 
 
 def save_pickle_gz(obj, path: Path) -> None:
-    """Pickle + gzip. Used for complex nested structures with DataFrames."""
-    with gzip.open(path, "wb") as f:
-        pickle.dump(obj, f, protocol=pickle.HIGHEST_PROTOCOL)
+    """Pickle + gzip, written atomically.
+
+    This job takes hours, and run_preset_backtests.py reads these same
+    files on its own schedule. A plain open-and-write leaves the file
+    truncated for the whole write window, so an overlapping reader hits
+    `EOFError: Compressed file ended before the end-of-stream marker was
+    reached` and every preset fails. Write to a temp file in the same
+    directory, then os.replace() — atomic on POSIX, so readers always
+    see either the old complete file or the new complete file.
+    """
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    try:
+        with gzip.open(tmp, "wb") as f:
+            pickle.dump(obj, f, protocol=pickle.HIGHEST_PROTOCOL)
+        os.replace(tmp, path)
+    except Exception:
+        tmp.unlink(missing_ok=True)
+        raise
     size_mb = path.stat().st_size / 1_000_000
     logger.info("Saved %s (%.2f MB)", path.name, size_mb)
 
 
 def save_json(obj, path: Path) -> None:
-    path.write_text(json.dumps(obj, indent=2, default=str), encoding="utf-8")
+    """Atomic JSON write — same rationale as save_pickle_gz."""
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    try:
+        tmp.write_text(json.dumps(obj, indent=2, default=str), encoding="utf-8")
+        os.replace(tmp, path)
+    except Exception:
+        tmp.unlink(missing_ok=True)
+        raise
     size_kb = path.stat().st_size / 1_000
     logger.info("Saved %s (%.1f KB)", path.name, size_kb)
 
