@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11T11:53:46.820908+00:00",
+  "updated_at": "2026-09-11T12:04:02.502022+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -72,7 +72,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-09-11T11:45:21.572083+00:00"
+      "updated_at": "2026-09-11T12:04:02.481167+00:00"
     },
     "it_regime": {
       "name": "IT Inv-Vol + Regime Cash",
