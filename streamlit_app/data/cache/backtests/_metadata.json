@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-10T17:44:52.788624+00:00",
+  "updated_at": "2026-09-11T11:53:46.820908+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -44,8 +44,8 @@
       "sectors": [
         "Information Technology"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-09-11T07:23:53.727014+00:00"
     },
     "it_momentum": {
       "name": "IT Momentum-Weight (No Cash)",
@@ -53,8 +53,8 @@
       "sectors": [
         "Information Technology"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-09-11T07:33:27.320801+00:00"
     },
     "it_invvol": {
       "name": "IT Inverse-Vol (No Cash)",
@@ -62,8 +62,8 @@
       "sectors": [
         "Information Technology"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-09-11T08:16:44.817542+00:00"
     },
     "it_ensemble": {
       "name": "IT Ensemble ML + Inv-Vol",
@@ -71,8 +71,8 @@
       "sectors": [
         "Information Technology"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-09-11T11:45:21.572083+00:00"
     },
     "it_regime": {
       "name": "IT Inv-Vol + Regime Cash",
@@ -80,8 +80,8 @@
       "sectors": [
         "Information Technology"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-09-11T11:53:46.788914+00:00"
     },
     "hc_equal": {
       "name": "Health Care Equal Weight (No Cash)",
@@ -579,61 +579,5 @@
       "updated_at": null
     }
   },
-  "failures": [
-    "it_equal",
-    "it_momentum",
-    "it_invvol",
-    "it_ensemble",
-    "it_regime",
-    "hc_equal",
-    "hc_momentum",
-    "hc_invvol",
-    "hc_ensemble",
-    "hc_regime",
-    "fin_equal",
-    "fin_momentum",
-    "fin_invvol",
-    "fin_ensemble",
-    "fin_regime",
-    "cd_equal",
-    "cd_momentum",
-    "cd_invvol",
-    "cd_ensemble",
-    "cd_regime",
-    "cs_equal",
-    "cs_momentum",
-    "cs_invvol",
-    "cs_ensemble",
-    "cs_regime",
-    "ind_equal",
-    "ind_momentum",
-    "ind_invvol",
-    "ind_ensemble",
-    "ind_regime",
-    "staples_equal",
-    "staples_momentum",
-    "staples_invvol",
-    "staples_ensemble",
-    "staples_regime",
-    "en_equal",
-    "en_momentum",
-    "en_invvol",
-    "en_ensemble",
-    "en_regime",
-    "mat_equal",
-    "mat_momentum",
-    "mat_invvol",
-    "mat_ensemble",
-    "mat_regime",
-    "re_equal",
-    "re_momentum",
-    "re_invvol",
-    "re_ensemble",
-    "re_regime",
-    "all_equal",
-    "all_momentum",
-    "all_invvol",
-    "all_ensemble",
-    "all_regime"
-  ]
+  "failures": []
 }
