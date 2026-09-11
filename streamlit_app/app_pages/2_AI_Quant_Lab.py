@@ -195,6 +195,22 @@ ANNUAL_REPORT_LAG  = 75  # 연간 재무보고 지연일 (60~90일 중간값)
 
 BENCHMARKS = {"SPY": "S&P 500", "QQQ": "Nasdaq 100", "TQQQ": "3x Nasdaq"}
 
+# ── ML parallelism ──────────────────────────────────────────────
+# The nightly preset batch is the only thing on the machine, so it gets
+# every core. The interactive Streamlit app stays at 2 so one user's
+# backtest can't starve the server for everyone else.
+#
+# Where the cores go matters as much as how many. GridSearchCV fits
+# 9 param combos × 3 CV folds = 27 models per rebalance; parallelising
+# *across* those fits load-balances far better than parallelising tree
+# construction *inside* each fit. So the grid search takes all cores
+# while its inner estimator stays single-threaded — nesting both would
+# oversubscribe (8 × 8 threads on 8 cores) and run slower than serial.
+# Standalone fits (the refit RF, XGB, LightGBM) have no outer loop
+# competing with them, so they take all cores directly.
+_IS_BATCH = os.environ.get("QUANT_LAB_BATCH") == "1"
+N_JOBS = -1 if _IS_BATCH else 2
+
 FEATURE_META = {
     # ── 모멘텀 ──────────────────────────────────────────────
     "Mom_1w":            {"name": "1주 수익률",        "group": "모멘텀"},
@@ -1637,6 +1653,7 @@ def run_backtest(
     cash_strategy:       str = "none",  # "none" | "vol_target" | "regime" | "combined"
     rf_annual:           float = 0.04,  # annual risk-free rate for cash return
     label_kind:          str = "raw",   # "raw" | "vol_adj" | "classification"
+    precomputed_snapshots: dict | None = None,
 ) -> dict:
     """메인 백테스트 엔진.
     Ver4.3: + HMM Regime-Based Cash Allocation + Volatility Targeting.
@@ -1648,10 +1665,18 @@ def run_backtest(
     _FUND_GROUPS = {"밸류에이션", "수익성", "성장성", "재무안정성", "효율성", "규모"}
 
     # ── Step 1: 모든 리밸런싱 날짜의 스냅샷 + 실제 수익률 계산 ──
+    #
+    # Snapshots depend only on the universe, price/fundamental/PIT data and
+    # the rebalance dates — never on the strategy knobs (use_ensemble,
+    # use_inv_vol_weight, use_momentum_weight, cash_strategy). A caller that
+    # runs several strategies over the same sector can therefore build them
+    # once and pass them back in, which is what the preset batch does: it
+    # cuts 5 identical rebuilds per sector down to 1. Every consumer below
+    # reads these frames without mutating them, so sharing is safe.
     progress(0.05, tr("prog.snapshot_init"))
     snapshots: dict = {}  # date → pd.DataFrame (includes forward_return)
 
-    for i, date in enumerate(rebal_dates[:-1]):
+    for i, date in enumerate(rebal_dates[:-1] if precomputed_snapshots is None else []):
         next_date = rebal_dates[i + 1]
 
         # ── 생존자 편향 보정: 해당 날짜의 역사적 유니버스 ──
@@ -1695,6 +1720,10 @@ def run_backtest(
         snapshots[date] = snap
         progress(0.05 + 0.25 * (i / max(n_dates - 2, 1)),
                  tr("prog.snapshot", i=i+1, total=n_dates-1))
+
+    if precomputed_snapshots is not None:
+        snapshots = precomputed_snapshots
+        progress(0.30, "♻️ Reusing snapshots from this sector's first preset")
 
     # ── Step 1b: HMM Regime 준비 (cash_strategy 사용 시) ──
     # Ver4.3-fix: HMM must be refit per rebalance date using past SPY data
@@ -1795,6 +1824,8 @@ def run_backtest(
         # 내부 CV에 시간 순서만 강제하면 충분히 안전.
         param_grid = {"max_depth": [3, 5, 7], "min_samples_leaf": [5, 10, 20]}
         is_cls = (label_kind == "classification")
+        # base estimator stays n_jobs=1 on purpose — GridSearchCV below owns
+        # the cores (see the N_JOBS note at the top of this module).
         if is_cls:
             base_rf = RandomForestClassifier(
                 n_estimators=100, random_state=42, n_jobs=1,
@@ -1809,9 +1840,15 @@ def run_backtest(
         cv_splitter = TimeSeriesSplit(n_splits=3) if n_train >= 20 else 3
         gcv = GridSearchCV(base_rf, param_grid, cv=cv_splitter,
                            scoring=gcv_scoring,
-                           n_jobs=1, refit=True)
+                           n_jobs=N_JOBS, refit=True)
         gcv.fit(X_imp, y_train)
         model_rf = gcv.best_estimator_
+        # The grid search is done, so nothing competes for cores any more —
+        # let the winning model use them all when predicting.
+        try:
+            model_rf.set_params(n_jobs=N_JOBS)
+        except Exception:
+            pass
 
         # XGBoost + LightGBM (앙상블 모드 시)
         model_xgb = None
@@ -1821,14 +1858,14 @@ def run_backtest(
                 model_xgb = XGBClassifier(
                     n_estimators=100, max_depth=4, learning_rate=0.1,
                     subsample=0.8, colsample_bytree=0.8,
-                    random_state=42, n_jobs=1, verbosity=0,
+                    random_state=42, n_jobs=N_JOBS, verbosity=0,
                     eval_metric="logloss",
                 )
             else:
                 model_xgb = XGBRegressor(
                     n_estimators=100, max_depth=4, learning_rate=0.1,
                     subsample=0.8, colsample_bytree=0.8,
-                    random_state=42, n_jobs=1, verbosity=0,
+                    random_state=42, n_jobs=N_JOBS, verbosity=0,
                 )
             model_xgb.fit(X_imp, y_train)
 
@@ -1836,13 +1873,13 @@ def run_backtest(
                 model_lgbm = LGBMClassifier(
                     n_estimators=100, max_depth=4, learning_rate=0.1,
                     subsample=0.8, colsample_bytree=0.8,
-                    random_state=42, n_jobs=1, verbose=-1,
+                    random_state=42, n_jobs=N_JOBS, verbose=-1,
                 )
             else:
                 model_lgbm = LGBMRegressor(
                     n_estimators=100, max_depth=4, learning_rate=0.1,
                     subsample=0.8, colsample_bytree=0.8,
-                    random_state=42, n_jobs=1, verbose=-1,
+                    random_state=42, n_jobs=N_JOBS, verbose=-1,
                 )
             model_lgbm.fit(X_imp, y_train)
 
@@ -2187,6 +2224,9 @@ def run_backtest(
         "cash_strategy":    cash_strategy,
         "label_kind":       label_kind,
         "last_full_ranking_df": last_full_ranking_df,
+        # Exposed so a batch runner can reuse them across strategies in the
+        # same sector (see the Step 1 note). Read-only by contract.
+        "snapshots":        snapshots,
     }
 
 

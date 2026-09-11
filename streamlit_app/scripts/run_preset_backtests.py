@@ -31,6 +31,13 @@ from pathlib import Path
 
 os.environ["QUANT_LAB_BATCH"] = "1"   # prevents 2_AI_Quant_Lab.main() auto-run
 
+# Note on thread counts: the lab module gives GridSearchCV n_jobs=-1 in
+# batch mode. We deliberately do NOT pin OMP_NUM_THREADS here — joblib's
+# loky backend (>=0.14; we run 1.5.3) already caps OpenMP threads inside
+# its worker processes, so nested oversubscription is handled. Setting the
+# env vars globally would additionally pin XGBoost's and LightGBM's own
+# standalone fits to a single thread, which costs more than it saves.
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -645,7 +652,8 @@ def _serialize_full_results(results: dict, cfg: dict) -> dict:
     }
 
 
-def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) -> dict:
+def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict,
+                      snapshot_cache: dict | None = None) -> dict:
     """Run one preset backtest and return a compact result dict."""
     import pandas as pd
     import numpy as np
@@ -682,7 +690,17 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict) 
         use_momentum_weight=cfg.get("use_momentum_weight", False),
         cash_strategy=cfg["cash_strategy"],
         label_kind=cfg.get("label_kind", "raw"),
+        # First preset in a sector builds the snapshots; the remaining four
+        # reuse them (identical inputs — see run_backtest's Step 1 note).
+        precomputed_snapshots=(snapshot_cache or {}).get("snapshots"),
     )
+
+    # Hand the freshly-built snapshots back to the caller so the next
+    # strategy in this sector skips Step 1 entirely.
+    if snapshot_cache is not None and "snapshots" not in snapshot_cache:
+        snaps = results.get("snapshots")
+        if snaps:
+            snapshot_cache["snapshots"] = snaps
 
     # ── Build summary metrics ────────────────────────────────
     port_dates = results.get("port_dates") or []
@@ -1201,9 +1219,15 @@ def main() -> int:
                 failures.append(pid)
             continue
 
+        # Snapshot cache is per-sector: all strategies in this sector share
+        # one universe, so they share one set of snapshots. Rebuilt fresh for
+        # the next sector (different universe), and dropped afterwards so we
+        # don't hold every sector's frames in memory at once.
+        snapshot_cache: dict = {}
+
         for pid, preset in presets_for_sector:
             try:
-                r = run_single_preset(pid, preset, common, shared)
+                r = run_single_preset(pid, preset, common, shared, snapshot_cache)
                 out_path = cache_dir / f"{pid}.json"
                 out_path.write_text(
                     json.dumps(r, ensure_ascii=False, indent=2, default=str),
