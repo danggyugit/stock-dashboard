@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-09-11T22:15:05.616572+00:00",
+  "cached_at": "2026-09-12T22:23:24.457092+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -152,12 +152,7 @@
     },
     "wti": {
       "series_id": "DCOILWTICO",
-      "freq": "D",
-      "points": 1420,
-      "latest": {
-        "date": "2026-09-09",
-        "value": 97.26
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 944731 milliseconds with 0 bytes received\n"
     },
     "copper": {
       "series_id": "PCOPPUSDM",
