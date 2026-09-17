@@ -3699,14 +3699,14 @@
     "mom_1m_top1": {
       "summary": {
         "n_rebalances": 31,
-        "total_return_pct": 478.44,
-        "cagr_pct": 97.35,
-        "sharpe": 1.74,
-        "max_dd_pct": -30.82,
+        "total_return_pct": 494.64,
+        "cagr_pct": 99.48,
+        "sharpe": 1.88,
+        "max_dd_pct": -29.31,
         "monthly_win_rate_pct": 70.97,
-        "avg_period_return_pct": 6.7,
+        "avg_period_return_pct": 6.64,
         "spy_cagr_pct": 20.78,
-        "alpha_annual_pct": 76.57
+        "alpha_annual_pct": 78.7
       },
       "port_dates": [
         "2024-01-01",
@@ -3744,53 +3744,53 @@
       ],
       "port_values": [
         1.0,
-        1.2458919623887796,
-        1.2998574630745512,
-        1.2180845582438315,
-        1.2492927249543588,
-        1.2649358432642497,
-        1.414805436569809,
-        1.3977346450220192,
-        1.4630757462374129,
-        1.8455166482433707,
-        2.158877845467923,
-        2.113177454144155,
-        2.5711920967748405,
-        2.703141742738765,
-        2.143704266139885,
-        2.0384059408509563,
-        2.3951198770457895,
-        2.4153909536153435,
-        2.686804671400947,
-        3.1036203758798298,
-        3.952884108207853,
-        4.460650262907642,
-        4.979163863823408,
-        5.410599608488994,
-        5.104857189085376,
-        6.472318595083683,
-        6.133649416579143,
-        6.084743578246284,
-        7.239493206902959,
-        5.008210728004717,
-        5.483838050646765,
-        5.784350213843193
+        1.2310477723494244,
+        1.2843703006331486,
+        1.2035716797500113,
+        1.2344080165014282,
+        1.0856627897060107,
+        1.214292112391927,
+        1.2927511234142512,
+        1.3531844698310125,
+        1.7069003253179982,
+        1.996725036459857,
+        1.9544571908178527,
+        1.897647468875543,
+        1.9345619945067092,
+        2.051668140010221,
+        2.16470370956844,
+        2.543519315165311,
+        2.4448201567203287,
+        2.7195407882021336,
+        3.141434988982452,
+        4.001046178657274,
+        4.597626466455006,
+        5.104239518088847,
+        5.5465128470383345,
+        5.233090235901834,
+        6.332819497101948,
+        6.001449718993347,
+        5.9535979573770845,
+        7.28378238584543,
+        5.148550225910581,
+        5.637505522009627,
+        5.946438602054014
       ],
       "rebalance_log": [
         {
           "rebalance_date": "2024-02-01",
-          "period_return": 0.24589196238877958,
+          "period_return": 0.2310477723494245,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.3723885682226795,
-              "port_return": 0.24589196238877958,
+              "score": 0.39541126878891353,
+              "port_return": 0.2310477723494245,
               "picks": [
                 "PLTR",
                 "MRVL",
-                "FSLR",
+                "INTC",
                 "TER",
-                "AMD"
+                "FSLR"
               ]
             }
           ]
@@ -3851,18 +3851,18 @@
         },
         {
           "rebalance_date": "2024-06-01",
-          "period_return": 0.01252157960854406,
+          "period_return": -0.12049923915513178,
           "chosen_sectors": [
             {
-              "sector": "fin",
-              "score": 0.11990897794360822,
-              "port_return": 0.01252157960854406,
+              "sector": "hc",
+              "score": 0.12758913550079032,
+              "port_return": -0.12049923915513178,
               "picks": [
-                "HOOD",
-                "GL",
-                "COIN",
-                "XYZ",
-                "CPAY"
+                "CVS",
+                "MRNA",
+                "GEHC",
+                "RMD",
+                "MTD"
               ]
             }
           ]
@@ -3887,18 +3887,18 @@
         },
         {
           "rebalance_date": "2024-08-01",
-          "period_return": -0.012065822696566668,
+          "period_return": 0.06461296274730363,
           "chosen_sectors": [
             {
-              "sector": "hc",
-              "score": 0.15394154478542443,
-              "port_return": -0.012065822696566668,
+              "sector": "cd",
+              "score": 0.11847999572753909,
+              "port_return": 0.06461296274730363,
               "picks": [
-                "ALGN",
-                "PODD",
-                "VRTX",
-                "MTD",
-                "AMGN"
+                "GM",
+                "CVNA",
+                "LVS",
+                "F",
+                "PHM"
               ]
             }
           ]
@@ -3977,72 +3977,72 @@
         },
         {
           "rebalance_date": "2025-01-01",
-          "period_return": 0.21674215846495623,
+          "period_return": -0.029066751735062346,
           "chosen_sectors": [
             {
-              "sector": "fin",
-              "score": 0.007576286057889625,
-              "port_return": 0.21674215846495623,
+              "sector": "it",
+              "score": 0.006402728610712005,
+              "port_return": -0.029066751735062346,
               "picks": [
-                "HOOD",
-                "IBKR",
-                "BEN",
-                "ACGL",
-                "TFC"
+                "PLTR",
+                "NVDA",
+                "COHR",
+                "LITE",
+                "AVGO"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-02-01",
-          "period_return": 0.051318470576132605,
+          "period_return": 0.019452783636910283,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.21674215846495626,
-              "port_return": 0.051318470576132605,
+              "score": 0.20022868360076207,
+              "port_return": 0.019452783636910283,
               "picks": [
                 "HOOD",
                 "IBKR",
-                "TFC",
+                "COIN",
                 "KKR",
-                "BEN"
+                "IVZ"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-03-01",
-          "period_return": -0.20695824704777427,
+          "period_return": 0.06053367420431118,
           "chosen_sectors": [
             {
-              "sector": "fin",
-              "score": 0.0513184705761327,
-              "port_return": -0.20695824704777427,
+              "sector": "hc",
+              "score": 0.06344899728750053,
+              "port_return": 0.06053367420431118,
               "picks": [
-                "HOOD",
-                "CINF",
-                "ERIE",
-                "CFG",
-                "GS"
+                "UNH",
+                "COR",
+                "EW",
+                "ELV",
+                "CVS"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-04-01",
-          "period_return": -0.04911980022250766,
+          "period_return": 0.055094470374558516,
           "chosen_sectors": [
             {
-              "sector": "en",
-              "score": -0.008630649824550418,
-              "port_return": -0.04911980022250766,
+              "sector": "hc",
+              "score": 0.060533674204311216,
+              "port_return": 0.055094470374558516,
               "picks": [
-                "EQT",
-                "TPL",
-                "TRGP",
-                "WMB",
-                "EXE"
+                "UHS",
+                "MRK",
+                "COR",
+                "PFE",
+                "MCK"
               ]
             }
           ]
@@ -4067,18 +4067,18 @@
         },
         {
           "rebalance_date": "2025-06-01",
-          "period_return": 0.008463491436828254,
+          "period_return": -0.038804170999018964,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.3235320303900582,
-              "port_return": 0.008463491436828254,
+              "score": 0.30527506640399915,
+              "port_return": -0.038804170999018964,
               "picks": [
                 "ERIE",
+                "AIZ",
                 "EG",
                 "BRO",
-                "AIZ",
-                "GL"
+                "MRSH"
               ]
             }
           ]
@@ -4139,36 +4139,36 @@
         },
         {
           "rebalance_date": "2025-10-01",
-          "period_return": 0.12845460195644304,
+          "period_return": 0.14910607405134726,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.36501253072833517,
-              "port_return": 0.12845460195644304,
+              "score": 0.35763639941357983,
+              "port_return": 0.14910607405134726,
               "picks": [
-                "STX",
                 "WDC",
+                "STX",
                 "CIEN",
-                "LITE",
-                "LRCX"
+                "MU",
+                "LITE"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-11-01",
-          "period_return": 0.11624170700569045,
+          "period_return": 0.11019012860878709,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.12845460195644298,
-              "port_return": 0.11624170700569045,
+              "score": 0.14910607405134724,
+              "port_return": 0.11019012860878709,
               "picks": [
-                "LRCX",
-                "CIEN",
                 "STX",
+                "LRCX",
+                "LITE",
                 "PLTR",
-                "LITE"
+                "GLW"
               ]
             }
           ]
@@ -4211,18 +4211,18 @@
         },
         {
           "rebalance_date": "2026-02-01",
-          "period_return": 0.26787456638788215,
+          "period_return": 0.21014911106546103,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.17919127708345073,
-              "port_return": 0.26787456638788215,
+              "score": 0.21943660492408146,
+              "port_return": 0.21014911106546103,
               "picks": [
+                "MU",
                 "WDC",
                 "STX",
-                "MU",
                 "LITE",
-                "CIEN"
+                "LRCX"
               ]
             }
           ]
@@ -4233,14 +4233,14 @@
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.2678745663878821,
+              "score": 0.21014911106546097,
               "port_return": -0.05232578920972614,
               "picks": [
+                "LITE",
                 "WDC",
                 "STX",
-                "LITE",
-                "COHR",
-                "MU"
+                "MU",
+                "COHR"
               ]
             }
           ]
@@ -4265,35 +4265,35 @@
         },
         {
           "rebalance_date": "2026-05-01",
-          "period_return": 0.18977786225619248,
+          "period_return": 0.22342530315136885,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.3792885820159002,
-              "port_return": 0.18977786225619248,
+              "score": 0.659840438805896,
+              "port_return": 0.22342530315136885,
               "picks": [
                 "LITE",
+                "SNDK",
+                "COHR",
                 "CIEN",
-                "MU",
-                "WDC",
-                "TER"
+                "INTC"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-06-01",
-          "period_return": -0.30820976208261136,
+          "period_return": -0.29314881291404915,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.18977786225619253,
-              "port_return": -0.30820976208261136,
+              "score": 0.22342530315136888,
+              "port_return": -0.29314881291404915,
               "picks": [
-                "HPQ",
-                "CRM",
                 "PLTR",
                 "SMCI",
+                "CRM",
+                "GEN",
                 "CDW"
               ]
             }
@@ -4340,14 +4340,14 @@
     "mom_1m_top3": {
       "summary": {
         "n_rebalances": 31,
-        "total_return_pct": 349.89,
-        "cagr_pct": 79.05,
-        "sharpe": 1.98,
-        "max_dd_pct": -14.56,
+        "total_return_pct": 348.84,
+        "cagr_pct": 78.89,
+        "sharpe": 2.06,
+        "max_dd_pct": -14.08,
         "monthly_win_rate_pct": 70.97,
-        "avg_period_return_pct": 5.35,
+        "avg_period_return_pct": 5.31,
         "spy_cagr_pct": 20.78,
-        "alpha_annual_pct": 58.27
+        "alpha_annual_pct": 58.1
       },
       "port_dates": [
         "2024-01-01",
@@ -4385,53 +4385,53 @@
       ],
       "port_values": [
         1.0,
-        1.2308289445364613,
-        1.2802638673724858,
-        1.2207853140413216,
-        1.2725501627660345,
-        1.3186750365912443,
-        1.3843501115331345,
-        1.412741618750413,
-        1.465756851779584,
-        1.6647098516446912,
-        2.2451251626697757,
-        2.23974466683879,
-        2.438226118750053,
-        2.4195713188704664,
-        2.1606834493258082,
-        2.227985080085065,
-        2.604149608135403,
-        2.581466261682745,
-        2.7024953031647416,
-        2.71405316227488,
-        3.0907759012763725,
-        3.116173911396526,
-        3.358395327600856,
-        3.541832940578775,
-        3.8267407974155203,
-        4.38122501433649,
-        4.247879706907657,
-        4.7417966344525935,
-        5.265717220840366,
-        4.693235800704565,
-        4.6500985263759365,
-        4.498900661066858
+        1.2258808811900097,
+        1.2386729757909962,
+        1.1824321052543478,
+        1.2325706663524567,
+        1.2120368051641706,
+        1.272400887142436,
+        1.3194413712381974,
+        1.344685476379368,
+        1.5272049775339471,
+        2.0596780395265037,
+        2.0443746705913717,
+        2.2075653601551974,
+        2.209883316975193,
+        2.1704734990515826,
+        2.197831557583285,
+        2.555529835701416,
+        2.4930053493940787,
+        2.6502592246222973,
+        2.7200542952961446,
+        3.090183775714482,
+        3.136849201464719,
+        3.2457032346712458,
+        3.441666782079591,
+        3.764687529500915,
+        4.23774096463615,
+        4.1721133142176585,
+        4.657220598724033,
+        5.224030906543084,
+        4.68230785224212,
+        4.639271020748816,
+        4.488425211579658
       ],
       "rebalance_log": [
         {
           "rebalance_date": "2024-02-01",
-          "period_return": 0.2308289445364614,
+          "period_return": 0.2258808811900097,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.3723885682226795,
-              "port_return": 0.24589196238877958,
+              "score": 0.39541126878891353,
+              "port_return": 0.2310477723494245,
               "picks": [
                 "PLTR",
                 "MRVL",
-                "FSLR",
+                "INTC",
                 "TER",
-                "AMD"
+                "FSLR"
               ]
             },
             {
@@ -4462,7 +4462,7 @@
         },
         {
           "rebalance_date": "2024-03-01",
-          "period_return": 0.040163926153558245,
+          "period_return": 0.010435022519128407,
           "chosen_sectors": [
             {
               "sector": "cd",
@@ -4477,18 +4477,6 @@
               ]
             },
             {
-              "sector": "fin",
-              "score": 0.3630687911680328,
-              "port_return": 0.0625286234660603,
-              "picks": [
-                "COIN",
-                "HOOD",
-                "XYZ",
-                "ERIE",
-                "FIS"
-              ]
-            },
-            {
               "sector": "cs",
               "score": 0.2476148479080793,
               "port_return": 0.014648403543531844,
@@ -4499,12 +4487,24 @@
                 "NWS",
                 "NWSA"
               ]
+            },
+            {
+              "sector": "it",
+              "score": 0.23104777234942442,
+              "port_return": -0.026658087437229194,
+              "picks": [
+                "SMCI",
+                "CRWD",
+                "PLTR",
+                "LITE",
+                "NVDA"
+              ]
             }
           ]
         },
         {
           "rebalance_date": "2024-04-01",
-          "period_return": -0.04645804263244061,
+          "period_return": -0.04540413138563377,
           "chosen_sectors": [
             {
               "sector": "en",
@@ -4520,14 +4520,14 @@
             },
             {
               "sector": "fin",
-              "score": 0.06252862346606025,
-              "port_return": -0.08219484557344667,
+              "score": 0.06757483904988293,
+              "port_return": -0.07903311183302612,
               "picks": [
-                "COIN",
-                "HOOD",
                 "XYZ",
-                "KKR",
-                "MS"
+                "HOOD",
+                "COIN",
+                "C",
+                "RJF"
               ]
             },
             {
@@ -4588,8 +4588,20 @@
         },
         {
           "rebalance_date": "2024-06-01",
-          "period_return": 0.03624601620807786,
+          "period_return": -0.016659378442821383,
           "chosen_sectors": [
+            {
+              "sector": "hc",
+              "score": 0.12758913550079032,
+              "port_return": -0.12049923915513178,
+              "picks": [
+                "CVS",
+                "MRNA",
+                "GEHC",
+                "RMD",
+                "MTD"
+              ]
+            },
             {
               "sector": "fin",
               "score": 0.11990897794360822,
@@ -4612,18 +4624,6 @@
                 "BG",
                 "COST",
                 "CASY"
-              ]
-            },
-            {
-              "sector": "it",
-              "score": 0.11032495499484596,
-              "port_return": 0.038216944797565953,
-              "picks": [
-                "SMCI",
-                "DELL",
-                "NVDA",
-                "CRWD",
-                "MRVL"
               ]
             }
           ]
@@ -4672,20 +4672,8 @@
         },
         {
           "rebalance_date": "2024-08-01",
-          "period_return": 0.020508906656449544,
+          "period_return": 0.03696986112718371,
           "chosen_sectors": [
-            {
-              "sector": "hc",
-              "score": 0.15394154478542443,
-              "port_return": -0.012065822696566668,
-              "picks": [
-                "ALGN",
-                "PODD",
-                "VRTX",
-                "MTD",
-                "AMGN"
-              ]
-            },
             {
               "sector": "cd",
               "score": 0.11847999572753909,
@@ -4696,6 +4684,18 @@
                 "LVS",
                 "F",
                 "PHM"
+              ]
+            },
+            {
+              "sector": "hc",
+              "score": 0.10740707672870764,
+              "port_return": 0.03731704071563583,
+              "picks": [
+                "VRTX",
+                "AMGN",
+                "UHS",
+                "ISRG",
+                "MTD"
               ]
             },
             {
@@ -4714,7 +4714,7 @@
         },
         {
           "rebalance_date": "2024-09-01",
-          "period_return": 0.03752648915097693,
+          "period_return": 0.019132418985377885,
           "chosen_sectors": [
             {
               "sector": "cs",
@@ -4730,14 +4730,14 @@
             },
             {
               "sector": "fin",
-              "score": 0.07625721344402248,
-              "port_return": 0.03807481914489112,
+              "score": 0.11778714978490923,
+              "port_return": -0.017107391351906018,
               "picks": [
                 "BEN",
                 "CPAY",
-                "IBKR",
-                "ERIE",
-                "PGR"
+                "KEY",
+                "PRU",
+                "SYF"
               ]
             },
             {
@@ -4772,14 +4772,14 @@
             },
             {
               "sector": "it",
-              "score": 0.09593896560459436,
+              "score": 0.10425384567424656,
               "port_return": 0.0645928419991427,
               "picks": [
                 "PLTR",
                 "COHR",
                 "NVDA",
-                "MPWR",
-                "SMCI"
+                "SMCI",
+                "MPWR"
               ]
             },
             {
@@ -4840,7 +4840,7 @@
         },
         {
           "rebalance_date": "2024-12-01",
-          "period_return": -0.002396523775354972,
+          "period_return": -0.007429981114257136,
           "chosen_sectors": [
             {
               "sector": "cs",
@@ -4856,19 +4856,19 @@
             },
             {
               "sector": "fin",
-              "score": 0.5188484139375542,
-              "port_return": 0.007576286057889665,
+              "score": 0.3675443252703321,
+              "port_return": -0.007524085958816827,
               "picks": [
                 "HOOD",
                 "BEN",
-                "ACGL",
-                "AIG",
-                "EG"
+                "APO",
+                "EG",
+                "ACGL"
               ]
             },
             {
               "sector": "it",
-              "score": 0.2513935497934352,
+              "score": 0.2579452078185782,
               "port_return": 0.006402728610711918,
               "picks": [
                 "PLTR",
@@ -4882,30 +4882,30 @@
         },
         {
           "rebalance_date": "2025-01-01",
-          "period_return": 0.08861789240976435,
+          "period_return": 0.0798242572221951,
           "chosen_sectors": [
-            {
-              "sector": "fin",
-              "score": 0.007576286057889625,
-              "port_return": 0.21674215846495623,
-              "picks": [
-                "HOOD",
-                "IBKR",
-                "BEN",
-                "ACGL",
-                "TFC"
-              ]
-            },
             {
               "sector": "it",
               "score": 0.006402728610712005,
-              "port_return": -0.019199321036548794,
+              "port_return": -0.029066751735062346,
               "picks": [
                 "PLTR",
                 "NVDA",
                 "COHR",
                 "LITE",
-                "CIEN"
+                "AVGO"
+              ]
+            },
+            {
+              "sector": "fin",
+              "score": -0.007524085958816817,
+              "port_return": 0.20022868360076207,
+              "picks": [
+                "IBKR",
+                "HOOD",
+                "TFC",
+                "ERIE",
+                "RF"
               ]
             },
             {
@@ -4924,18 +4924,30 @@
         },
         {
           "rebalance_date": "2025-02-01",
-          "period_return": -0.0076509720473136875,
+          "period_return": 0.0010500059757381497,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.21674215846495626,
-              "port_return": 0.051318470576132605,
+              "score": 0.20022868360076207,
+              "port_return": 0.019452783636910283,
               "picks": [
                 "HOOD",
                 "IBKR",
-                "TFC",
+                "COIN",
                 "KKR",
-                "BEN"
+                "IVZ"
+              ]
+            },
+            {
+              "sector": "hc",
+              "score": 0.11610830795129146,
+              "port_return": 0.06344899728750049,
+              "picks": [
+                "UHS",
+                "LLY",
+                "ELV",
+                "UNH",
+                "EW"
               ]
             },
             {
@@ -4949,35 +4961,23 @@
                 "RCL",
                 "GM"
               ]
-            },
-            {
-              "sector": "hc",
-              "score": 0.0918207904824031,
-              "port_return": 0.005480376279122662,
-              "picks": [
-                "PODD",
-                "LLY",
-                "UHS",
-                "DXCM",
-                "EW"
-              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-03-01",
-          "period_return": -0.10699741211410747,
+          "period_return": -0.017833438363412335,
           "chosen_sectors": [
             {
-              "sector": "fin",
-              "score": 0.0513184705761327,
-              "port_return": -0.20695824704777427,
+              "sector": "hc",
+              "score": 0.06344899728750053,
+              "port_return": 0.06053367420431118,
               "picks": [
-                "HOOD",
-                "CINF",
-                "ERIE",
-                "CFG",
-                "GS"
+                "UNH",
+                "COR",
+                "EW",
+                "ELV",
+                "CVS"
               ]
             },
             {
@@ -5008,8 +5008,20 @@
         },
         {
           "rebalance_date": "2025-04-01",
-          "period_return": 0.031148306699094092,
+          "period_return": 0.012604649881077762,
           "chosen_sectors": [
+            {
+              "sector": "hc",
+              "score": 0.060533674204311216,
+              "port_return": 0.055094470374558516,
+              "picks": [
+                "UHS",
+                "MRK",
+                "COR",
+                "PFE",
+                "MCK"
+              ]
+            },
             {
               "sector": "en",
               "score": -0.008630649824550418,
@@ -5033,24 +5045,12 @@
                 "TSN",
                 "KO"
               ]
-            },
-            {
-              "sector": "ind",
-              "score": -0.053919974106937274,
-              "port_return": 0.11072544082860751,
-              "picks": [
-                "UBER",
-                "HON",
-                "CTAS",
-                "HWM",
-                "WM"
-              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-05-01",
-          "period_return": 0.16883619707003403,
+          "period_return": 0.16275054240801434,
           "chosen_sectors": [
             {
               "sector": "ind",
@@ -5067,12 +5067,12 @@
             {
               "sector": "fin",
               "score": 0.1066453984609157,
-              "port_return": 0.3235320303900583,
+              "port_return": 0.30527506640399926,
               "picks": [
                 "HOOD",
                 "IBKR",
                 "MS",
-                "GS",
+                "BNY",
                 "COF"
               ]
             },
@@ -5092,18 +5092,18 @@
         },
         {
           "rebalance_date": "2025-06-01",
-          "period_return": -0.008710462095493645,
+          "period_return": -0.024466349574109387,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.3235320303900582,
-              "port_return": 0.008463491436828254,
+              "score": 0.30527506640399915,
+              "port_return": -0.038804170999018964,
               "picks": [
                 "ERIE",
+                "AIZ",
                 "EG",
                 "BRO",
-                "AIZ",
-                "GL"
+                "MRSH"
               ]
             },
             {
@@ -5134,7 +5134,7 @@
         },
         {
           "rebalance_date": "2025-07-01",
-          "period_return": 0.04688383624394259,
+          "period_return": 0.06307803361370211,
           "chosen_sectors": [
             {
               "sector": "re",
@@ -5150,33 +5150,33 @@
             },
             {
               "sector": "it",
-              "score": 0.0724412921569082,
-              "port_return": 0.11238761618951879,
+              "score": 0.0525457729977743,
+              "port_return": 0.10992678919311075,
               "picks": [
-                "COHR",
-                "TER",
+                "LITE",
+                "MPWR",
                 "HPE",
-                "NVDA",
-                "MPWR"
+                "MCHP",
+                "SMCI"
               ]
             },
             {
               "sector": "hc",
               "score": 0.042571478959130715,
-              "port_return": -0.0841045492535637,
+              "port_return": -0.03306113014787709,
               "picks": [
-                "PODD",
-                "BDX",
-                "BIIB",
                 "MRK",
-                "CI"
+                "PODD",
+                "PFE",
+                "ABBV",
+                "BDX"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-08-01",
-          "period_return": 0.004276736058191729,
+          "period_return": 0.02633518639437768,
           "chosen_sectors": [
             {
               "sector": "cs",
@@ -5191,18 +5191,6 @@
               ]
             },
             {
-              "sector": "it",
-              "score": 0.11238761618951876,
-              "port_return": -0.11866555144536883,
-              "picks": [
-                "SMCI",
-                "COHR",
-                "AMD",
-                "WDC",
-                "FSLR"
-              ]
-            },
-            {
               "sector": "re",
               "score": 0.1123684417958728,
               "port_return": -0.02363859343354664,
@@ -5213,12 +5201,24 @@
                 "CCI",
                 "VTR"
               ]
+            },
+            {
+              "sector": "it",
+              "score": 0.10992678919311083,
+              "port_return": -0.05249020043681099,
+              "picks": [
+                "SMCI",
+                "LITE",
+                "AMD",
+                "WDC",
+                "COHR"
+              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-09-01",
-          "period_return": 0.13880448041250923,
+          "period_return": 0.13607429861176354,
           "chosen_sectors": [
             {
               "sector": "cs",
@@ -5245,33 +5245,33 @@
               ]
             },
             {
-              "sector": "en",
-              "score": 0.08308780199699428,
-              "port_return": 0.028890664991416737,
+              "sector": "hc",
+              "score": 0.09223933568627674,
+              "port_return": 0.020700119589179625,
               "picks": [
-                "BKR",
-                "XOM",
-                "MPC",
-                "HAL",
-                "CVX"
+                "JNJ",
+                "REGN",
+                "LLY",
+                "DGX",
+                "BMY"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-10-01",
-          "period_return": 0.008217357366370337,
+          "period_return": 0.015101181398005079,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.36501253072833517,
-              "port_return": 0.12845460195644304,
+              "score": 0.35763639941357983,
+              "port_return": 0.14910607405134726,
               "picks": [
-                "STX",
                 "WDC",
+                "STX",
                 "CIEN",
-                "LITE",
-                "LRCX"
+                "MU",
+                "LITE"
               ]
             },
             {
@@ -5302,18 +5302,30 @@
         },
         {
           "rebalance_date": "2025-11-01",
-          "period_return": 0.07773039088687371,
+          "period_return": 0.03470171060684043,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.12845460195644298,
-              "port_return": 0.11624170700569045,
+              "score": 0.14910607405134724,
+              "port_return": 0.11019012860878709,
               "picks": [
-                "LRCX",
-                "CIEN",
                 "STX",
+                "LRCX",
+                "LITE",
                 "PLTR",
-                "LITE"
+                "GLW"
+              ]
+            },
+            {
+              "sector": "hc",
+              "score": 0.13541437939557044,
+              "port_return": -0.12914138171967549,
+              "picks": [
+                "CNC",
+                "BAX",
+                "RMD",
+                "DXCM",
+                "HUM"
               ]
             },
             {
@@ -5327,24 +5339,12 @@
                 "COP",
                 "FANG"
               ]
-            },
-            {
-              "sector": "ind",
-              "score": -0.02247563706549005,
-              "port_return": -0.006106919276478995,
-              "picks": [
-                "FIX",
-                "CPRT",
-                "VRT",
-                "CHRW",
-                "JBHT"
-              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-12-01",
-          "period_return": 0.05462061344307605,
+          "period_return": 0.06037629852138793,
           "chosen_sectors": [
             {
               "sector": "mat",
@@ -5372,21 +5372,21 @@
             },
             {
               "sector": "it",
-              "score": 0.11624170700569048,
-              "port_return": 0.12569125717198665,
+              "score": 0.11019012860878719,
+              "port_return": 0.14295831240692228,
               "picks": [
                 "LITE",
                 "COHR",
-                "CIEN",
                 "WDC",
-                "STX"
+                "MU",
+                "TER"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-01-01",
-          "period_return": 0.08044079481348673,
+          "period_return": 0.09385590409369689,
           "chosen_sectors": [
             {
               "sector": "cs",
@@ -5402,14 +5402,14 @@
             },
             {
               "sector": "it",
-              "score": 0.1256912571719866,
-              "port_return": 0.17919127708345084,
+              "score": 0.14295831240692225,
+              "port_return": 0.21943660492408135,
               "picks": [
                 "LITE",
                 "COHR",
+                "MU",
                 "WDC",
-                "CIEN",
-                "STX"
+                "TER"
               ]
             },
             {
@@ -5428,18 +5428,18 @@
         },
         {
           "rebalance_date": "2026-02-01",
-          "period_return": 0.14489724971585574,
+          "period_return": 0.1256554312750487,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.17919127708345073,
-              "port_return": 0.26787456638788215,
+              "score": 0.21943660492408146,
+              "port_return": 0.21014911106546103,
               "picks": [
+                "MU",
                 "WDC",
                 "STX",
-                "MU",
                 "LITE",
-                "CIEN"
+                "LRCX"
               ]
             },
             {
@@ -5470,30 +5470,30 @@
         },
         {
           "rebalance_date": "2026-03-01",
-          "period_return": -0.03043562177073611,
+          "period_return": -0.015486470495991304,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.2678745663878821,
+              "score": 0.21014911106546097,
               "port_return": -0.05232578920972614,
               "picks": [
+                "LITE",
                 "WDC",
                 "STX",
-                "LITE",
-                "COHR",
-                "MU"
+                "MU",
+                "COHR"
               ]
             },
             {
               "sector": "hc",
               "score": 0.1631834359985529,
-              "port_return": -0.07200242381197357,
+              "port_return": -0.02715496998773914,
               "picks": [
-                "MRNA",
                 "BAX",
-                "DVA",
-                "CRL",
-                "IQV"
+                "RVTY",
+                "UNH",
+                "IQV",
+                "CRL"
               ]
             },
             {
@@ -5554,18 +5554,18 @@
         },
         {
           "rebalance_date": "2026-05-01",
-          "period_return": 0.11048988954547516,
+          "period_return": 0.12170570317720063,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.3792885820159002,
-              "port_return": 0.18977786225619248,
+              "score": 0.659840438805896,
+              "port_return": 0.22342530315136885,
               "picks": [
                 "LITE",
+                "SNDK",
+                "COHR",
                 "CIEN",
-                "MU",
-                "WDC",
-                "TER"
+                "INTC"
               ]
             },
             {
@@ -5582,31 +5582,31 @@
             },
             {
               "sector": "hc",
-              "score": 0.1445718625356327,
+              "score": 0.2374076187462506,
               "port_return": 0.16748398701333733,
               "picks": [
                 "BSX",
                 "BAX",
-                "ABT",
                 "PODD",
-                "CNC"
+                "CNC",
+                "ABT"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-06-01",
-          "period_return": -0.1087186030176601,
+          "period_return": -0.10369828662813936,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.18977786225619253,
-              "port_return": -0.30820976208261136,
+              "score": 0.22342530315136888,
+              "port_return": -0.29314881291404915,
               "picks": [
-                "HPQ",
-                "CRM",
                 "PLTR",
                 "SMCI",
+                "CRM",
+                "GEN",
                 "CDW"
               ]
             },
@@ -5616,9 +5616,9 @@
               "port_return": -0.0694482294773916,
               "picks": [
                 "ZTS",
-                "BSX",
-                "BAX",
                 "PODD",
+                "BAX",
+                "BSX",
                 "DXCM"
               ]
             },
@@ -5666,14 +5666,14 @@
             },
             {
               "sector": "fin",
-              "score": 0.04546083412627877,
-              "port_return": -0.0001653659459647138,
+              "score": 0.038598628732987805,
+              "port_return": -0.00016536594596471346,
               "picks": [
                 "IBKR",
                 "C",
-                "STT",
                 "BNY",
-                "CFG"
+                "CFG",
+                "STT"
               ]
             }
           ]
@@ -5725,14 +5725,14 @@
     "mom_3m_top1": {
       "summary": {
         "n_rebalances": 29,
-        "total_return_pct": 231.1,
-        "cagr_pct": 59.0,
-        "sharpe": 1.23,
-        "max_dd_pct": -39.29,
+        "total_return_pct": 305.27,
+        "cagr_pct": 71.95,
+        "sharpe": 1.21,
+        "max_dd_pct": -48.05,
         "monthly_win_rate_pct": 72.41,
-        "avg_period_return_pct": 5.27,
+        "avg_period_return_pct": 6.45,
         "spy_cagr_pct": 20.78,
-        "alpha_annual_pct": 38.22
+        "alpha_annual_pct": 51.17
       },
       "port_dates": [
         "2024-01-01",
@@ -5778,25 +5778,25 @@
         1.7366724680238237,
         1.6999095675398916,
         1.816031817684102,
-        1.9092277930852444,
-        1.5140973558134316,
-        1.4397251961784487,
-        1.4669897998091692,
-        1.5208252317919715,
-        1.5580209162335381,
-        1.6022663357879252,
-        2.0407048442762736,
-        1.9470439352915658,
-        1.9753469537729607,
-        2.223630795743538,
-        2.6220860377949124,
-        3.3244761982009443,
-        3.15052035742113,
-        4.345476756399617,
-        5.1701520457131105,
-        3.576660713772946,
-        3.1389552001987413,
-        3.3109687076503604
+        1.7934277140016266,
+        1.3976006155066365,
+        1.4746006812131318,
+        1.4789620042164289,
+        1.5332367908533229,
+        1.6733684632059758,
+        1.6889495558114043,
+        2.151107754871278,
+        2.0523797549792846,
+        2.278531744134523,
+        2.6042667970415954,
+        3.175738261300915,
+        3.843116833889875,
+        3.642022712531403,
+        6.045176577309164,
+        7.395821986698018,
+        5.22774555077387,
+        3.8421217670212564,
+        4.052668525114425
       ],
       "rebalance_log": [
         {
@@ -5805,14 +5805,14 @@
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.6149726560684738,
+              "score": 0.6720241932692932,
               "port_return": -0.15529360159399475,
               "picks": [
                 "PLTR",
-                "COHR",
-                "SMCI",
                 "NVDA",
-                "LITE"
+                "SMCI",
+                "LITE",
+                "COHR"
               ]
             }
           ]
@@ -5841,7 +5841,7 @@
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.09212879283827391,
+              "score": 0.10109571370983206,
               "port_return": 0.01252157960854406,
               "picks": [
                 "HOOD",
@@ -5981,72 +5981,72 @@
         },
         {
           "rebalance_date": "2025-02-01",
-          "period_return": 0.051318470576132605,
+          "period_return": -0.012446975577388983,
           "chosen_sectors": [
             {
-              "sector": "fin",
-              "score": 0.8620482294997307,
-              "port_return": 0.051318470576132605,
+              "sector": "cs",
+              "score": 0.6990701333006717,
+              "port_return": -0.012446975577388983,
               "picks": [
-                "HOOD",
-                "IBKR",
-                "TFC",
-                "KKR",
-                "BEN"
+                "APP",
+                "TTD",
+                "ECHO",
+                "NFLX",
+                "LYV"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-03-01",
-          "period_return": -0.20695824704777427,
+          "period_return": -0.22070981473336995,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.2888749652782252,
-              "port_return": -0.20695824704777427,
+              "score": 0.21437017794140312,
+              "port_return": -0.22070981473336995,
               "picks": [
                 "HOOD",
                 "CINF",
+                "ACGL",
                 "ERIE",
-                "CFG",
-                "GS"
+                "IBKR"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-04-01",
-          "period_return": -0.04911980022250766,
+          "period_return": 0.055094470374558516,
           "chosen_sectors": [
             {
-              "sector": "en",
-              "score": 0.0859200682923087,
-              "port_return": -0.04911980022250766,
+              "sector": "hc",
+              "score": 0.2587731474728956,
+              "port_return": 0.055094470374558516,
               "picks": [
-                "EQT",
-                "TPL",
-                "TRGP",
-                "WMB",
-                "EXE"
+                "UHS",
+                "MRK",
+                "COR",
+                "PFE",
+                "MCK"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-05-01",
-          "period_return": 0.018937366452355227,
+          "period_return": 0.002957629857941767,
           "chosen_sectors": [
             {
-              "sector": "staples",
-              "score": 0.010775505844992983,
-              "port_return": 0.018937366452355227,
+              "sector": "hc",
+              "score": 0.18996030931130048,
+              "port_return": 0.002957629857941767,
               "picks": [
-                "PM",
-                "MO",
-                "COST",
-                "KVUE",
-                "CASY"
+                "DXCM",
+                "COR",
+                "AMGN",
+                "MCK",
+                "UHS"
               ]
             }
           ]
@@ -6071,36 +6071,36 @@
         },
         {
           "rebalance_date": "2025-07-01",
-          "period_return": 0.024457566631597445,
+          "period_return": 0.09139597561747959,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.47707694312618987,
-              "port_return": 0.024457566631597445,
+              "score": 0.38842492718776245,
+              "port_return": 0.09139597561747959,
               "picks": [
-                "APO",
                 "KKR",
+                "XYZ",
+                "APO",
                 "FISV",
-                "CPAY",
-                "ERIE"
+                "BX"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-08-01",
-          "period_return": 0.028398475972549145,
+          "period_return": 0.009311214444413036,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.3673780715911392,
-              "port_return": 0.028398475972549145,
+              "score": 0.36929262082250824,
+              "port_return": 0.009311214444413036,
               "picks": [
                 "IVZ",
-                "AIZ",
                 "ERIE",
-                "WTW",
-                "RJF"
+                "AIZ",
+                "ARES",
+                "GL"
               ]
             }
           ]
@@ -6143,72 +6143,72 @@
         },
         {
           "rebalance_date": "2025-11-01",
-          "period_return": 0.01453640463288097,
+          "period_return": 0.11019012860878709,
           "chosen_sectors": [
             {
-              "sector": "cs",
-              "score": 0.40369755409841823,
-              "port_return": 0.01453640463288097,
+              "sector": "it",
+              "score": 0.47817993867830766,
+              "port_return": 0.11019012860878709,
               "picks": [
-                "WBD",
-                "ECHO",
-                "APP",
-                "RDDT",
-                "PSKY"
+                "STX",
+                "LRCX",
+                "LITE",
+                "PLTR",
+                "GLW"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-12-01",
-          "period_return": 0.12569125717198665,
+          "period_return": 0.14295831240692228,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.7194081284993954,
-              "port_return": 0.12569125717198665,
+              "score": 0.7319723521432115,
+              "port_return": 0.14295831240692228,
               "picks": [
                 "LITE",
                 "COHR",
-                "CIEN",
                 "WDC",
-                "STX"
+                "MU",
+                "TER"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-01-01",
-          "period_return": 0.17919127708345084,
+          "period_return": 0.21943660492408135,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.4179523295141272,
-              "port_return": 0.17919127708345084,
+              "score": 0.45810188766013704,
+              "port_return": 0.21943660492408135,
               "picks": [
                 "LITE",
                 "COHR",
+                "MU",
                 "WDC",
-                "CIEN",
-                "STX"
+                "TER"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-02-01",
-          "period_return": 0.26787456638788215,
+          "period_return": 0.21014911106546103,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.4817051704023769,
-              "port_return": 0.26787456638788215,
+              "score": 0.547344371136115,
+              "port_return": 0.21014911106546103,
               "picks": [
+                "MU",
                 "WDC",
                 "STX",
-                "MU",
                 "LITE",
-                "CIEN"
+                "LRCX"
               ]
             }
           ]
@@ -6219,67 +6219,67 @@
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.6829834332905995,
+              "score": 0.686663722716597,
               "port_return": -0.05232578920972614,
               "picks": [
+                "LITE",
                 "WDC",
                 "STX",
-                "LITE",
-                "COHR",
-                "MU"
+                "MU",
+                "COHR"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-04-01",
-          "period_return": 0.37928858201590027,
+          "period_return": 0.6598404388058962,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.41683608783069515,
-              "port_return": 0.37928858201590027,
+              "score": 0.3984829498531721,
+              "port_return": 0.6598404388058962,
               "picks": [
                 "COHR",
+                "SNDK",
                 "WDC",
-                "CIEN",
-                "GLW",
-                "TER"
+                "LITE",
+                "STX"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-05-01",
-          "period_return": 0.18977786225619248,
+          "period_return": 0.22342530315136885,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.6572594086401602,
-              "port_return": 0.18977786225619248,
+              "score": 0.9035500031519623,
+              "port_return": 0.22342530315136885,
               "picks": [
                 "LITE",
+                "SNDK",
+                "COHR",
                 "CIEN",
-                "MU",
-                "WDC",
-                "TER"
+                "INTC"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-06-01",
-          "period_return": -0.30820976208261136,
+          "period_return": -0.29314881291404915,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.5551779400649526,
-              "port_return": -0.30820976208261136,
+              "score": 0.9244332936951629,
+              "port_return": -0.29314881291404915,
               "picks": [
-                "HPQ",
-                "CRM",
                 "PLTR",
                 "SMCI",
+                "CRM",
+                "GEN",
                 "CDW"
               ]
             }
@@ -6287,18 +6287,18 @@
         },
         {
           "rebalance_date": "2026-07-01",
-          "period_return": -0.12237825966793425,
+          "period_return": -0.26505187949468917,
           "chosen_sectors": [
             {
-              "sector": "ind",
-              "score": 0.3468516761756044,
-              "port_return": -0.12237825966793425,
+              "sector": "it",
+              "score": 0.4353961969502116,
+              "port_return": -0.26505187949468917,
               "picks": [
-                "FIX",
-                "CMI",
-                "VRT",
-                "UAL",
-                "EME"
+                "DELL",
+                "INTC",
+                "FLEX",
+                "GLW",
+                "KLAC"
               ]
             }
           ]
@@ -6326,14 +6326,14 @@
     "mom_3m_top3": {
       "summary": {
         "n_rebalances": 29,
-        "total_return_pct": 283.36,
-        "cagr_pct": 68.29,
-        "sharpe": 1.77,
-        "max_dd_pct": -15.55,
-        "monthly_win_rate_pct": 75.86,
-        "avg_period_return_pct": 5.2,
+        "total_return_pct": 197.13,
+        "cagr_pct": 52.47,
+        "sharpe": 1.36,
+        "max_dd_pct": -25.82,
+        "monthly_win_rate_pct": 72.41,
+        "avg_period_return_pct": 4.37,
         "spy_cagr_pct": 20.78,
-        "alpha_annual_pct": 47.5
+        "alpha_annual_pct": 31.69
       },
       "port_dates": [
         "2024-01-01",
@@ -6370,34 +6370,34 @@
       "port_values": [
         1.0,
         0.9624811248572883,
-        1.0216090723385043,
-        1.0473456173992193,
-        1.0658944400422539,
-        1.1825537967500264,
-        1.2404575920235847,
-        1.4600344563917969,
-        1.9581290075426891,
-        1.8664874464912615,
-        2.0318916302086,
-        2.0650881149162403,
-        1.833551740607864,
-        1.8608669837981502,
-        1.912370556902129,
-        1.987337187762611,
-        2.119671077836957,
-        1.999216643792004,
-        2.2839796538672164,
-        2.302747930900562,
-        2.5436651350669357,
-        2.950091290607523,
-        3.187398978796337,
-        3.593396260938081,
-        3.29449582927033,
-        4.052423000057314,
-        4.50017476972519,
-        4.0060594431727194,
-        3.800371362807243,
-        3.833570258289818
+        1.0032931245230563,
+        1.0285682511909187,
+        1.0467845207304554,
+        1.0988316417588386,
+        1.1526359782713715,
+        1.3029141888445637,
+        1.747406752180693,
+        1.6649435528487022,
+        1.7978464352717323,
+        1.8081226169508666,
+        1.6792582835692167,
+        1.700424746293506,
+        1.7005806803696095,
+        1.7235187923108817,
+        1.8753281742585095,
+        1.7981942081781506,
+        2.0543241263691963,
+        2.085346847651796,
+        2.0822780175329716,
+        2.426968795616553,
+        2.654754146136335,
+        2.941823104861684,
+        2.697120842132727,
+        3.5698441666221967,
+        4.004314561153979,
+        3.584747185852876,
+        2.9704958415840603,
+        2.971307784731689
       ],
       "rebalance_log": [
         {
@@ -6406,14 +6406,14 @@
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.6149726560684738,
+              "score": 0.6720241932692932,
               "port_return": -0.15529360159399475,
               "picks": [
                 "PLTR",
-                "COHR",
-                "SMCI",
                 "NVDA",
-                "LITE"
+                "SMCI",
+                "LITE",
+                "COHR"
               ]
             },
             {
@@ -6444,7 +6444,7 @@
         },
         {
           "rebalance_date": "2024-05-01",
-          "period_return": 0.06143283847772411,
+          "period_return": 0.042402909118679465,
           "chosen_sectors": [
             {
               "sector": "cd",
@@ -6459,18 +6459,6 @@
               ]
             },
             {
-              "sector": "fin",
-              "score": 0.329256843879707,
-              "port_return": 0.11990897794360816,
-              "picks": [
-                "HOOD",
-                "XYZ",
-                "COIN",
-                "GL",
-                "MSCI"
-              ]
-            },
-            {
               "sector": "ind",
               "score": 0.2700436624878806,
               "port_return": 0.025620689876835398,
@@ -6481,6 +6469,18 @@
                 "BLDR",
                 "EFX"
               ]
+            },
+            {
+              "sector": "cs",
+              "score": 0.2689975687870092,
+              "port_return": 0.06281918986647421,
+              "picks": [
+                "META",
+                "TKO",
+                "PSKY",
+                "GOOG",
+                "GOOGL"
+              ]
             }
           ]
         },
@@ -6490,7 +6490,7 @@
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.09212879283827391,
+              "score": 0.10109571370983206,
               "port_return": 0.01252157960854406,
               "picks": [
                 "HOOD",
@@ -6570,7 +6570,7 @@
         },
         {
           "rebalance_date": "2024-08-01",
-          "period_return": 0.10944738271000641,
+          "period_return": 0.04972095020287883,
           "chosen_sectors": [
             {
               "sector": "cd",
@@ -6597,15 +6597,15 @@
               ]
             },
             {
-              "sector": "cs",
-              "score": 0.02942892228990046,
-              "port_return": 0.21649633823701855,
+              "sector": "hc",
+              "score": 0.09823276567344541,
+              "port_return": 0.03731704071563583,
               "picks": [
-                "WBD",
-                "PSKY",
-                "APP",
-                "CHTR",
-                "NFLX"
+                "VRTX",
+                "AMGN",
+                "UHS",
+                "ISRG",
+                "MTD"
               ]
             }
           ]
@@ -6654,7 +6654,7 @@
         },
         {
           "rebalance_date": "2024-10-01",
-          "period_return": 0.17701279413350335,
+          "period_return": 0.13037785858339,
           "chosen_sectors": [
             {
               "sector": "cd",
@@ -6681,15 +6681,15 @@
               ]
             },
             {
-              "sector": "en",
-              "score": 0.10684438865319557,
-              "port_return": 0.12940786552899125,
+              "sector": "hc",
+              "score": 0.17860369743171822,
+              "port_return": -0.01049694112134879,
               "picks": [
-                "WMB",
-                "KMI",
-                "OKE",
-                "TRGP",
-                "TPL"
+                "ISRG",
+                "MTD",
+                "ALGN",
+                "IDXX",
+                "WST"
               ]
             }
           ]
@@ -6738,7 +6738,7 @@
         },
         {
           "rebalance_date": "2024-12-01",
-          "period_return": -0.0468005737611901,
+          "period_return": -0.04719175957691602,
           "chosen_sectors": [
             {
               "sector": "cs",
@@ -6753,18 +6753,6 @@
               ]
             },
             {
-              "sector": "fin",
-              "score": 0.7220579486098093,
-              "port_return": 0.007576286057889665,
-              "picks": [
-                "HOOD",
-                "BEN",
-                "ACGL",
-                "AIG",
-                "EG"
-              ]
-            },
-            {
               "sector": "cd",
               "score": 0.6416061098698342,
               "port_return": -0.1268094213467935,
@@ -6775,12 +6763,24 @@
                 "GPC",
                 "CCL"
               ]
+            },
+            {
+              "sector": "it",
+              "score": 0.47881615810420053,
+              "port_return": 0.006402728610711918,
+              "picks": [
+                "PLTR",
+                "COHR",
+                "NVDA",
+                "FICO",
+                "LITE"
+              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-01-01",
-          "period_return": 0.08861789240976435,
+          "period_return": 0.0798242572221951,
           "chosen_sectors": [
             {
               "sector": "cs",
@@ -6796,46 +6796,34 @@
             },
             {
               "sector": "fin",
-              "score": 0.6714640604287305,
-              "port_return": 0.21674215846495623,
+              "score": 0.46725009490817837,
+              "port_return": 0.20022868360076207,
               "picks": [
-                "HOOD",
                 "IBKR",
-                "BEN",
-                "ACGL",
-                "TFC"
+                "HOOD",
+                "TFC",
+                "ERIE",
+                "RF"
               ]
             },
             {
               "sector": "it",
-              "score": 0.3407544882964033,
-              "port_return": -0.019199321036548794,
+              "score": 0.34777399459355784,
+              "port_return": -0.029066751735062346,
               "picks": [
                 "PLTR",
                 "NVDA",
                 "COHR",
                 "LITE",
-                "CIEN"
+                "AVGO"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-02-01",
-          "period_return": 0.016337724027256424,
+          "period_return": 0.0057158283808489835,
           "chosen_sectors": [
-            {
-              "sector": "fin",
-              "score": 0.8620482294997307,
-              "port_return": 0.051318470576132605,
-              "picks": [
-                "HOOD",
-                "IBKR",
-                "TFC",
-                "KKR",
-                "BEN"
-              ]
-            },
             {
               "sector": "cs",
               "score": 0.6990701333006717,
@@ -6849,8 +6837,20 @@
               ]
             },
             {
+              "sector": "fin",
+              "score": 0.6290161469731868,
+              "port_return": 0.019452783636910283,
+              "picks": [
+                "HOOD",
+                "IBKR",
+                "COIN",
+                "KKR",
+                "IVZ"
+              ]
+            },
+            {
               "sector": "it",
-              "score": 0.2352261452134261,
+              "score": 0.2292009967307178,
               "port_return": 0.010141677083025649,
               "picks": [
                 "PLTR",
@@ -6864,30 +6864,30 @@
         },
         {
           "rebalance_date": "2025-03-01",
-          "period_return": -0.11211936799983346,
+          "period_return": -0.07126968722893404,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.2888749652782252,
-              "port_return": -0.20695824704777427,
+              "score": 0.21437017794140312,
+              "port_return": -0.22070981473336995,
               "picks": [
                 "HOOD",
                 "CINF",
+                "ACGL",
                 "ERIE",
-                "CFG",
-                "GS"
+                "IBKR"
               ]
             },
             {
               "sector": "hc",
-              "score": 0.0660494065214503,
-              "port_return": -0.07576693579398273,
+              "score": 0.11066204709642746,
+              "port_return": 0.06053367420431118,
               "picks": [
                 "UNH",
-                "PODD",
-                "CVS",
-                "ISRG",
-                "STE"
+                "COR",
+                "EW",
+                "ELV",
+                "CVS"
               ]
             },
             {
@@ -6906,8 +6906,20 @@
         },
         {
           "rebalance_date": "2025-04-01",
-          "period_return": 0.014897448806778957,
+          "period_return": 0.012604649881077762,
           "chosen_sectors": [
+            {
+              "sector": "hc",
+              "score": 0.2587731474728956,
+              "port_return": 0.055094470374558516,
+              "picks": [
+                "UHS",
+                "MRK",
+                "COR",
+                "PFE",
+                "MCK"
+              ]
+            },
             {
               "sector": "en",
               "score": 0.0859200682923087,
@@ -6931,25 +6943,25 @@
                 "TSN",
                 "KO"
               ]
-            },
-            {
-              "sector": "hc",
-              "score": 0.014627105327111645,
-              "port_return": 0.0619728671516621,
-              "picks": [
-                "UHS",
-                "COR",
-                "MRK",
-                "CAH",
-                "MCK"
-              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-05-01",
-          "period_return": 0.0276771921649427,
+          "period_return": 9.170301505149446e-05,
           "chosen_sectors": [
+            {
+              "sector": "hc",
+              "score": 0.18996030931130048,
+              "port_return": 0.002957629857941767,
+              "picks": [
+                "DXCM",
+                "COR",
+                "AMGN",
+                "MCK",
+                "UHS"
+              ]
+            },
             {
               "sector": "staples",
               "score": 0.010775505844992983,
@@ -6960,18 +6972,6 @@
                 "COST",
                 "KVUE",
                 "CASY"
-              ]
-            },
-            {
-              "sector": "it",
-              "score": -0.002343126964452269,
-              "port_return": 0.08571409730761538,
-              "picks": [
-                "PLTR",
-                "VRSN",
-                "AVGO",
-                "CRWD",
-                "DDOG"
               ]
             },
             {
@@ -6990,7 +6990,7 @@
         },
         {
           "rebalance_date": "2025-06-01",
-          "period_return": 0.03920089157925617,
+          "period_return": 0.013488399701381293,
           "chosen_sectors": [
             {
               "sector": "ind",
@@ -7006,44 +7006,44 @@
             },
             {
               "sector": "fin",
-              "score": 0.1615528952398233,
-              "port_return": 0.008463491436828254,
+              "score": 0.125666473044854,
+              "port_return": -0.038804170999018964,
               "picks": [
                 "ERIE",
+                "AIZ",
                 "EG",
                 "BRO",
-                "AIZ",
-                "GL"
+                "MRSH"
               ]
             },
             {
-              "sector": "it",
-              "score": 0.07229525907532675,
-              "port_return": 0.07244129215690813,
+              "sector": "hc",
+              "score": 0.12227269431448895,
+              "port_return": 0.04257147895913071,
               "picks": [
-                "AVGO",
-                "GLW",
-                "ADBE",
-                "TDY",
-                "ADSK"
+                "LLY",
+                "CAH",
+                "MCK",
+                "HUM",
+                "INCY"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-07-01",
-          "period_return": 0.06658854415305875,
+          "period_return": 0.08808107148288342,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.47707694312618987,
-              "port_return": 0.024457566631597445,
+              "score": 0.38842492718776245,
+              "port_return": 0.09139597561747959,
               "picks": [
-                "APO",
                 "KKR",
+                "XYZ",
+                "APO",
                 "FISV",
-                "CPAY",
-                "ERIE"
+                "BX"
               ]
             },
             {
@@ -7060,44 +7060,32 @@
             },
             {
               "sector": "it",
-              "score": 0.23580308166351727,
-              "port_return": 0.11238761618951879,
+              "score": 0.2003449575866365,
+              "port_return": 0.10992678919311075,
               "picks": [
-                "COHR",
-                "TER",
+                "LITE",
+                "MPWR",
                 "HPE",
-                "NVDA",
-                "MPWR"
+                "MCHP",
+                "SMCI"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-08-01",
-          "period_return": -0.05682694607876251,
+          "period_return": -0.04113091625195526,
           "chosen_sectors": [
             {
               "sector": "fin",
-              "score": 0.3673780715911392,
-              "port_return": 0.028398475972549145,
+              "score": 0.36929262082250824,
+              "port_return": 0.009311214444413036,
               "picks": [
                 "IVZ",
-                "AIZ",
                 "ERIE",
-                "WTW",
-                "RJF"
-              ]
-            },
-            {
-              "sector": "it",
-              "score": 0.29522479450652983,
-              "port_return": -0.11866555144536883,
-              "picks": [
-                "SMCI",
-                "COHR",
-                "AMD",
-                "WDC",
-                "FSLR"
+                "AIZ",
+                "ARES",
+                "GL"
               ]
             },
             {
@@ -7110,6 +7098,18 @@
                 "GEV",
                 "VRT",
                 "EME"
+              ]
+            },
+            {
+              "sector": "it",
+              "score": 0.2819381879255345,
+              "port_return": -0.05249020043681099,
+              "picks": [
+                "SMCI",
+                "LITE",
+                "AMD",
+                "WDC",
+                "COHR"
               ]
             }
           ]
@@ -7158,7 +7158,7 @@
         },
         {
           "rebalance_date": "2025-10-01",
-          "period_return": 0.008217357366370337,
+          "period_return": 0.015101181398005079,
           "chosen_sectors": [
             {
               "sector": "cs",
@@ -7174,14 +7174,14 @@
             },
             {
               "sector": "it",
-              "score": 0.33823852833517143,
-              "port_return": 0.12845460195644304,
+              "score": 0.42778073342041223,
+              "port_return": 0.14910607405134726,
               "picks": [
-                "STX",
                 "WDC",
+                "STX",
                 "CIEN",
-                "LITE",
-                "LRCX"
+                "MU",
+                "LITE"
               ]
             },
             {
@@ -7200,8 +7200,20 @@
         },
         {
           "rebalance_date": "2025-11-01",
-          "period_return": 0.10462161356590838,
+          "period_return": -0.001471616159335808,
           "chosen_sectors": [
+            {
+              "sector": "it",
+              "score": 0.47817993867830766,
+              "port_return": 0.11019012860878709,
+              "picks": [
+                "STX",
+                "LRCX",
+                "LITE",
+                "PLTR",
+                "GLW"
+              ]
+            },
             {
               "sector": "cs",
               "score": 0.40369755409841823,
@@ -7215,45 +7227,33 @@
               ]
             },
             {
-              "sector": "it",
-              "score": 0.35756763545087633,
-              "port_return": 0.11624170700569045,
+              "sector": "hc",
+              "score": 0.26581538171032615,
+              "port_return": -0.12914138171967549,
               "picks": [
-                "LRCX",
-                "CIEN",
-                "STX",
-                "PLTR",
-                "LITE"
-              ]
-            },
-            {
-              "sector": "mat",
-              "score": 0.1862146697950131,
-              "port_return": 0.18308672905915369,
-              "picks": [
-                "NUE",
-                "ALB",
-                "NEM",
-                "STLD",
-                "MOS"
+                "CNC",
+                "BAX",
+                "RMD",
+                "DXCM",
+                "HUM"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-12-01",
-          "period_return": 0.15977974063393863,
+          "period_return": 0.16553542571225052,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.7194081284993954,
-              "port_return": 0.12569125717198665,
+              "score": 0.7319723521432115,
+              "port_return": 0.14295831240692228,
               "picks": [
                 "LITE",
                 "COHR",
-                "CIEN",
                 "WDC",
-                "STX"
+                "MU",
+                "TER"
               ]
             },
             {
@@ -7284,18 +7284,18 @@
         },
         {
           "rebalance_date": "2026-01-01",
-          "period_return": 0.08044079481348673,
+          "period_return": 0.09385590409369689,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.4179523295141272,
-              "port_return": 0.17919127708345084,
+              "score": 0.45810188766013704,
+              "port_return": 0.21943660492408135,
               "picks": [
                 "LITE",
                 "COHR",
+                "MU",
                 "WDC",
-                "CIEN",
-                "STX"
+                "TER"
               ]
             },
             {
@@ -7326,18 +7326,18 @@
         },
         {
           "rebalance_date": "2026-02-01",
-          "period_return": 0.12737573326796428,
+          "period_return": 0.10813391482715723,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.4817051704023769,
-              "port_return": 0.26787456638788215,
+              "score": 0.547344371136115,
+              "port_return": 0.21014911106546103,
               "picks": [
+                "MU",
                 "WDC",
                 "STX",
-                "MU",
                 "LITE",
-                "CIEN"
+                "LRCX"
               ]
             },
             {
@@ -7372,14 +7372,14 @@
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.6829834332905995,
+              "score": 0.686663722716597,
               "port_return": -0.05232578920972614,
               "picks": [
+                "LITE",
                 "WDC",
                 "STX",
-                "LITE",
-                "COHR",
-                "MU"
+                "MU",
+                "COHR"
               ]
             },
             {
@@ -7410,18 +7410,18 @@
         },
         {
           "rebalance_date": "2026-04-01",
-          "period_return": 0.23005862203651675,
+          "period_return": 0.32357590763318206,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.41683608783069515,
-              "port_return": 0.37928858201590027,
+              "score": 0.3984829498531721,
+              "port_return": 0.6598404388058962,
               "picks": [
                 "COHR",
+                "SNDK",
                 "WDC",
-                "CIEN",
-                "GLW",
-                "TER"
+                "LITE",
+                "STX"
               ]
             },
             {
@@ -7452,18 +7452,18 @@
         },
         {
           "rebalance_date": "2026-05-01",
-          "period_return": 0.11048988954547516,
+          "period_return": 0.12170570317720063,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.6572594086401602,
-              "port_return": 0.18977786225619248,
+              "score": 0.9035500031519623,
+              "port_return": 0.22342530315136885,
               "picks": [
                 "LITE",
+                "SNDK",
+                "COHR",
                 "CIEN",
-                "MU",
-                "WDC",
-                "TER"
+                "INTC"
               ]
             },
             {
@@ -7480,32 +7480,44 @@
             },
             {
               "sector": "hc",
-              "score": 0.23548681858615894,
+              "score": 0.4002470272005665,
               "port_return": 0.16748398701333733,
               "picks": [
                 "BSX",
                 "BAX",
-                "ABT",
                 "PODD",
-                "CNC"
+                "CNC",
+                "ABT"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-06-01",
-          "period_return": -0.10979914155259447,
+          "period_return": -0.10477882516307375,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.5551779400649526,
-              "port_return": -0.30820976208261136,
+              "score": 0.9244332936951629,
+              "port_return": -0.29314881291404915,
               "picks": [
-                "HPQ",
-                "CRM",
                 "PLTR",
                 "SMCI",
+                "CRM",
+                "GEN",
                 "CDW"
+              ]
+            },
+            {
+              "sector": "hc",
+              "score": 0.4054240556789739,
+              "port_return": -0.0694482294773916,
+              "picks": [
+                "ZTS",
+                "PODD",
+                "BAX",
+                "BSX",
+                "DXCM"
               ]
             },
             {
@@ -7519,25 +7531,25 @@
                 "GEV",
                 "CAT"
               ]
-            },
-            {
-              "sector": "hc",
-              "score": 0.24005469148306124,
-              "port_return": -0.0694482294773916,
-              "picks": [
-                "ZTS",
-                "BSX",
-                "BAX",
-                "PODD",
-                "DXCM"
-              ]
             }
           ]
         },
         {
           "rebalance_date": "2026-07-01",
-          "period_return": -0.0513442407141557,
+          "period_return": -0.17135137080041365,
           "chosen_sectors": [
+            {
+              "sector": "it",
+              "score": 0.4353961969502116,
+              "port_return": -0.26505187949468917,
+              "picks": [
+                "DELL",
+                "INTC",
+                "FLEX",
+                "GLW",
+                "KLAC"
+              ]
+            },
             {
               "sector": "ind",
               "score": 0.3468516761756044,
@@ -7552,33 +7564,21 @@
             },
             {
               "sector": "hc",
-              "score": 0.2434677830135028,
+              "score": 0.344324946934921,
               "port_return": -0.12662397323861754,
               "picks": [
                 "MRNA",
-                "CNC",
                 "TECH",
+                "CNC",
                 "BAX",
                 "CRL"
-              ]
-            },
-            {
-              "sector": "staples",
-              "score": 0.22082825449622945,
-              "port_return": 0.09496951076408469,
-              "picks": [
-                "DLTR",
-                "BG",
-                "TGT",
-                "CASY",
-                "GIS"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-08-01",
-          "period_return": 0.008735697728774501,
+          "period_return": 0.00027333589775213607,
           "chosen_sectors": [
             {
               "sector": "staples",
@@ -7594,14 +7594,14 @@
             },
             {
               "sector": "fin",
-              "score": 0.04209275636582066,
-              "port_return": 0.0028081493421130196,
+              "score": 0.06268664709676441,
+              "port_return": -0.022578936150954076,
               "picks": [
                 "FISV",
+                "C",
                 "HBAN",
                 "CINF",
-                "C",
-                "STT"
+                "KEY"
               ]
             },
             {
@@ -7623,14 +7623,14 @@
     "conf_top1": {
       "summary": {
         "n_rebalances": 31,
-        "total_return_pct": 243.14,
-        "cagr_pct": 61.21,
-        "sharpe": 1.17,
-        "max_dd_pct": -19.28,
-        "monthly_win_rate_pct": 61.29,
-        "avg_period_return_pct": 4.97,
+        "total_return_pct": 362.17,
+        "cagr_pct": 80.92,
+        "sharpe": 1.44,
+        "max_dd_pct": -20.73,
+        "monthly_win_rate_pct": 67.74,
+        "avg_period_return_pct": 6.0,
         "spy_cagr_pct": 20.78,
-        "alpha_annual_pct": 40.43
+        "alpha_annual_pct": 60.14
       },
       "port_dates": [
         "2024-01-01",
@@ -7668,125 +7668,125 @@
       ],
       "port_values": [
         1.0,
-        1.2458919623887796,
-        1.176760498784943,
-        1.102731517139459,
-        1.1192275587064309,
-        1.1332420556828497,
-        1.0213414573680193,
-        1.0090181324307639,
-        1.03702523678277,
-        1.1212461278899537,
-        1.7030029029792801,
-        1.416115056296106,
-        1.5461438601792472,
-        1.5546173103146848,
-        1.436828720379858,
-        1.5258731157876517,
-        2.019541943056035,
-        2.0936548734431124,
-        1.9175689740196524,
-        1.6900195942830802,
-        1.7388453842104425,
-        1.9622080759029932,
-        2.1902984921463085,
-        2.4655998632060845,
-        2.907413851470764,
-        3.6862360762436173,
-        3.4933508643408056,
-        3.998391105289018,
-        3.9861689842691868,
-        3.4290892971433906,
-        3.5425898448776367,
-        3.431350178872159
+        1.2310477723494244,
+        1.1982303931947274,
+        1.105853324661839,
+        1.2469481943461178,
+        1.096691885661545,
+        0.9884003891033807,
+        1.0252845666669017,
+        1.053743175017145,
+        1.139321795527272,
+        1.5580730561301266,
+        1.2956000895448883,
+        1.4460300237234869,
+        1.5377791787763628,
+        1.3194657671462149,
+        1.3921610347644964,
+        1.817153087097288,
+        1.8838387732796262,
+        1.8215569344186116,
+        1.8385178416576908,
+        1.8916338447017655,
+        2.1736879408279015,
+        2.4132068945830976,
+        2.6223070049773574,
+        3.197737151218225,
+        3.8697387709677344,
+        3.327469132858549,
+        4.388468107319033,
+        5.368962924566902,
+        4.618633423230902,
+        4.771507080897707,
+        4.621678600248357
       ],
       "rebalance_log": [
         {
           "rebalance_date": "2024-02-01",
-          "period_return": 0.24589196238877958,
+          "period_return": 0.2310477723494245,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.8,
-              "port_return": 0.24589196238877958,
+              "score": 0.6,
+              "port_return": 0.2310477723494245,
               "picks": [
                 "PLTR",
                 "MRVL",
-                "FSLR",
+                "INTC",
                 "TER",
-                "AMD"
+                "FSLR"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2024-03-01",
-          "period_return": -0.05548752676057823,
+          "period_return": -0.026658087437229194,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 1.0,
-              "port_return": -0.05548752676057823,
+              "score": 0.8,
+              "port_return": -0.026658087437229194,
               "picks": [
                 "SMCI",
-                "PLTR",
                 "CRWD",
-                "AMD",
-                "LITE"
+                "PLTR",
+                "LITE",
+                "NVDA"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2024-04-01",
-          "period_return": -0.06290913208076088,
+          "period_return": -0.0770945796881285,
           "chosen_sectors": [
             {
-              "sector": "en",
+              "sector": "hc",
               "score": 0.8,
-              "port_return": -0.06290913208076088,
+              "port_return": -0.0770945796881285,
               "picks": [
-                "APA",
-                "TPL",
-                "TRGP",
-                "HAL",
-                "MPC"
+                "HUM",
+                "MRNA",
+                "PFE",
+                "IQV",
+                "PODD"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2024-05-01",
-          "period_return": 0.01495925464229357,
+          "period_return": 0.12758913550079024,
           "chosen_sectors": [
             {
               "sector": "hc",
               "score": 0.8,
-              "port_return": 0.01495925464229357,
+              "port_return": 0.12758913550079024,
               "picks": [
-                "HUM",
                 "CVS",
+                "HUM",
                 "GEHC",
-                "MRNA",
-                "CRL"
+                "ZTS",
+                "MRNA"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2024-06-01",
-          "period_return": 0.01252157960854406,
+          "period_return": -0.12049923915513178,
           "chosen_sectors": [
             {
-              "sector": "fin",
+              "sector": "hc",
               "score": 0.8,
-              "port_return": 0.01252157960854406,
+              "port_return": -0.12049923915513178,
               "picks": [
-                "HOOD",
-                "GL",
-                "COIN",
-                "XYZ",
-                "CPAY"
+                "CVS",
+                "MRNA",
+                "GEHC",
+                "RMD",
+                "MTD"
               ]
             }
           ]
@@ -7802,8 +7802,8 @@
               "picks": [
                 "COIN",
                 "HOOD",
-                "GL",
                 "SYF",
+                "GL",
                 "XYZ"
               ]
             }
@@ -7811,18 +7811,18 @@
         },
         {
           "rebalance_date": "2024-08-01",
-          "period_return": -0.012065822696566668,
+          "period_return": 0.03731704071563583,
           "chosen_sectors": [
             {
               "sector": "hc",
-              "score": 0.8,
-              "port_return": -0.012065822696566668,
+              "score": 0.6,
+              "port_return": 0.03731704071563583,
               "picks": [
-                "ALGN",
-                "PODD",
                 "VRTX",
-                "MTD",
-                "AMGN"
+                "AMGN",
+                "UHS",
+                "ISRG",
+                "MTD"
               ]
             }
           ]
@@ -7865,17 +7865,17 @@
         },
         {
           "rebalance_date": "2024-11-01",
-          "period_return": 0.5188484139375543,
+          "period_return": 0.3675443252703321,
           "chosen_sectors": [
             {
               "sector": "fin",
               "score": 1.0,
-              "port_return": 0.5188484139375543,
+              "port_return": 0.3675443252703321,
               "picks": [
                 "COIN",
                 "BEN",
-                "HOOD",
                 "GPN",
+                "TROW",
                 "C"
               ]
             }
@@ -7901,35 +7901,35 @@
         },
         {
           "rebalance_date": "2025-01-01",
-          "period_return": 0.09182079048240302,
+          "period_return": 0.11610830795129144,
           "chosen_sectors": [
             {
               "sector": "hc",
-              "score": 0.8,
-              "port_return": 0.09182079048240302,
+              "score": 0.6,
+              "port_return": 0.11610830795129144,
               "picks": [
                 "ISRG",
+                "IDXX",
                 "DXCM",
-                "LLY",
                 "BSX",
-                "PODD"
+                "DVA"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-02-01",
-          "period_return": 0.005480376279122662,
+          "period_return": 0.06344899728750049,
           "chosen_sectors": [
             {
               "sector": "hc",
-              "score": 0.8,
-              "port_return": 0.005480376279122662,
+              "score": 1.0,
+              "port_return": 0.06344899728750049,
               "picks": [
-                "PODD",
-                "LLY",
                 "UHS",
-                "DXCM",
+                "LLY",
+                "ELV",
+                "UNH",
                 "EW"
               ]
             }
@@ -7937,35 +7937,35 @@
         },
         {
           "rebalance_date": "2025-03-01",
-          "period_return": -0.07576693579398273,
+          "period_return": -0.1419666845820241,
           "chosen_sectors": [
             {
-              "sector": "hc",
+              "sector": "mat",
               "score": 0.8,
-              "port_return": -0.07576693579398273,
+              "port_return": -0.1419666845820241,
               "picks": [
-                "UNH",
-                "PODD",
-                "CVS",
-                "ISRG",
-                "STE"
+                "STLD",
+                "CF",
+                "NUE",
+                "SW",
+                "IFF"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-04-01",
-          "period_return": 0.0619728671516621,
+          "period_return": 0.055094470374558516,
           "chosen_sectors": [
             {
               "sector": "hc",
-              "score": 0.6,
-              "port_return": 0.0619728671516621,
+              "score": 1.0,
+              "port_return": 0.055094470374558516,
               "picks": [
                 "UHS",
-                "COR",
                 "MRK",
-                "CAH",
+                "COR",
+                "PFE",
                 "MCK"
               ]
             }
@@ -7973,17 +7973,17 @@
         },
         {
           "rebalance_date": "2025-05-01",
-          "period_return": 0.3235320303900583,
+          "period_return": 0.30527506640399926,
           "chosen_sectors": [
             {
               "sector": "fin",
               "score": 1.0,
-              "port_return": 0.3235320303900583,
+              "port_return": 0.30527506640399926,
               "picks": [
                 "HOOD",
                 "IBKR",
                 "MS",
-                "GS",
+                "BNY",
                 "COF"
               ]
             }
@@ -8009,36 +8009,36 @@
         },
         {
           "rebalance_date": "2025-07-01",
-          "period_return": -0.0841045492535637,
+          "period_return": -0.03306113014787709,
           "chosen_sectors": [
             {
               "sector": "hc",
               "score": 0.8,
-              "port_return": -0.0841045492535637,
+              "port_return": -0.03306113014787709,
               "picks": [
-                "PODD",
-                "BDX",
-                "BIIB",
                 "MRK",
-                "CI"
+                "PODD",
+                "PFE",
+                "ABBV",
+                "BDX"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-08-01",
-          "period_return": -0.11866555144536883,
+          "period_return": 0.009311214444413036,
           "chosen_sectors": [
             {
-              "sector": "it",
+              "sector": "fin",
               "score": 0.8,
-              "port_return": -0.11866555144536883,
+              "port_return": 0.009311214444413036,
               "picks": [
-                "SMCI",
-                "COHR",
-                "AMD",
-                "WDC",
-                "FSLR"
+                "IVZ",
+                "ERIE",
+                "AIZ",
+                "ARES",
+                "GL"
               ]
             }
           ]
@@ -8063,16 +8063,88 @@
         },
         {
           "rebalance_date": "2025-10-01",
-          "period_return": 0.12845460195644304,
+          "period_return": 0.14910607405134726,
           "chosen_sectors": [
             {
               "sector": "it",
               "score": 0.8,
-              "port_return": 0.12845460195644304,
+              "port_return": 0.14910607405134726,
+              "picks": [
+                "WDC",
+                "STX",
+                "CIEN",
+                "MU",
+                "LITE"
+              ]
+            }
+          ]
+        },
+        {
+          "rebalance_date": "2025-11-01",
+          "period_return": 0.11019012860878709,
+          "chosen_sectors": [
+            {
+              "sector": "it",
+              "score": 0.8,
+              "port_return": 0.11019012860878709,
               "picks": [
                 "STX",
+                "LRCX",
+                "LITE",
+                "PLTR",
+                "GLW"
+              ]
+            }
+          ]
+        },
+        {
+          "rebalance_date": "2025-12-01",
+          "period_return": 0.08664823180458545,
+          "chosen_sectors": [
+            {
+              "sector": "mat",
+              "score": 0.8,
+              "port_return": 0.08664823180458545,
+              "picks": [
+                "ALB",
+                "NEM",
+                "NUE",
+                "STLD",
+                "CTVA"
+              ]
+            }
+          ]
+        },
+        {
+          "rebalance_date": "2026-01-01",
+          "period_return": 0.21943660492408135,
+          "chosen_sectors": [
+            {
+              "sector": "it",
+              "score": 1.0,
+              "port_return": 0.21943660492408135,
+              "picks": [
+                "LITE",
+                "COHR",
+                "MU",
                 "WDC",
-                "CIEN",
+                "TER"
+              ]
+            }
+          ]
+        },
+        {
+          "rebalance_date": "2026-02-01",
+          "period_return": 0.21014911106546103,
+          "chosen_sectors": [
+            {
+              "sector": "it",
+              "score": 1.0,
+              "port_return": 0.21014911106546103,
+              "picks": [
+                "MU",
+                "WDC",
+                "STX",
                 "LITE",
                 "LRCX"
               ]
@@ -8080,127 +8152,55 @@
           ]
         },
         {
-          "rebalance_date": "2025-11-01",
-          "period_return": 0.11624170700569045,
-          "chosen_sectors": [
-            {
-              "sector": "it",
-              "score": 0.8,
-              "port_return": 0.11624170700569045,
-              "picks": [
-                "LRCX",
-                "CIEN",
-                "STX",
-                "PLTR",
-                "LITE"
-              ]
-            }
-          ]
-        },
-        {
-          "rebalance_date": "2025-12-01",
-          "period_return": 0.12569125717198665,
-          "chosen_sectors": [
-            {
-              "sector": "it",
-              "score": 0.8,
-              "port_return": 0.12569125717198665,
-              "picks": [
-                "LITE",
-                "COHR",
-                "CIEN",
-                "WDC",
-                "STX"
-              ]
-            }
-          ]
-        },
-        {
-          "rebalance_date": "2026-01-01",
-          "period_return": 0.17919127708345084,
-          "chosen_sectors": [
-            {
-              "sector": "it",
-              "score": 1.0,
-              "port_return": 0.17919127708345084,
-              "picks": [
-                "LITE",
-                "COHR",
-                "WDC",
-                "CIEN",
-                "STX"
-              ]
-            }
-          ]
-        },
-        {
-          "rebalance_date": "2026-02-01",
-          "period_return": 0.26787456638788215,
-          "chosen_sectors": [
-            {
-              "sector": "it",
-              "score": 1.0,
-              "port_return": 0.26787456638788215,
-              "picks": [
-                "WDC",
-                "STX",
-                "MU",
-                "LITE",
-                "CIEN"
-              ]
-            }
-          ]
-        },
-        {
           "rebalance_date": "2026-03-01",
-          "period_return": -0.05232578920972614,
+          "period_return": -0.14013081249243506,
           "chosen_sectors": [
             {
-              "sector": "it",
+              "sector": "staples",
               "score": 0.6,
-              "port_return": -0.05232578920972614,
+              "port_return": -0.14013081249243506,
               "picks": [
-                "WDC",
-                "STX",
-                "LITE",
-                "COHR",
-                "MU"
+                "SJM",
+                "DLTR",
+                "TAP",
+                "BF-B",
+                "GIS"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-04-01",
-          "period_return": 0.14457186253563264,
+          "period_return": 0.3188606511727444,
           "chosen_sectors": [
             {
-              "sector": "hc",
+              "sector": "ind",
               "score": 0.8,
-              "port_return": 0.14457186253563264,
+              "port_return": 0.3188606511727444,
               "picks": [
-                "BAX",
-                "CNC",
-                "BSX",
-                "UNH",
-                "PODD"
+                "VRT",
+                "GEV",
+                "FIX",
+                "GNRC",
+                "BLDR"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-05-01",
-          "period_return": -0.0030567597561089346,
+          "period_return": 0.22342530315136885,
           "chosen_sectors": [
             {
-              "sector": "fin",
-              "score": 0.8,
-              "port_return": -0.0030567597561089346,
+              "sector": "it",
+              "score": 1.0,
+              "port_return": 0.22342530315136885,
               "picks": [
-                "PFG",
-                "CFG",
-                "KEY",
-                "IVZ",
-                "RF"
+                "LITE",
+                "SNDK",
+                "COHR",
+                "CIEN",
+                "INTC"
               ]
             }
           ]
@@ -8264,14 +8264,14 @@
     "conf_top3": {
       "summary": {
         "n_rebalances": 31,
-        "total_return_pct": 228.82,
-        "cagr_pct": 58.57,
-        "sharpe": 1.67,
-        "max_dd_pct": -10.93,
+        "total_return_pct": 304.69,
+        "cagr_pct": 71.85,
+        "sharpe": 1.87,
+        "max_dd_pct": -19.09,
         "monthly_win_rate_pct": 67.74,
-        "avg_period_return_pct": 4.26,
+        "avg_period_return_pct": 5.0,
         "spy_cagr_pct": 20.78,
-        "alpha_annual_pct": 37.79
+        "alpha_annual_pct": 51.07
       },
       "port_dates": [
         "2024-01-01",
@@ -8309,53 +8309,53 @@
       ],
       "port_values": [
         1.0,
-        1.089870382643164,
-        1.065100188268793,
-        1.017274552135853,
-        1.0567947502677004,
-        1.0181797224725058,
-        0.9951646986878976,
-        1.0844122226892903,
-        1.1246523539984703,
-        1.277305885422656,
-        1.702668391969748,
-        1.6149917691244848,
-        1.8392019609960615,
-        1.825130278203116,
-        1.6600371810549457,
-        1.7010993562215253,
-        1.8768184904836482,
-        1.9717296158613884,
-        2.0808145929148694,
-        2.081459171791917,
-        2.4337735419712456,
-        2.441015740956084,
-        2.6682967094823753,
-        2.7627366269995517,
-        2.907870896875917,
-        3.1754671851418435,
-        2.930552111729691,
-        3.3730480514639307,
-        3.5539883802397987,
-        3.282063623385025,
-        3.16538499494832,
-        3.2882384830447697
+        1.0849223192967123,
+        1.0706904835072075,
+        0.9925169359844682,
+        1.0683376778256966,
+        1.0419656100824866,
+        1.0184129280073042,
+        1.1265094290090738,
+        1.1714339578323214,
+        1.3304373421737528,
+        1.7063932378575306,
+        1.6099357515080999,
+        1.8376159167257242,
+        1.8200055893287597,
+        1.7380653392212844,
+        1.8033123518069243,
+        1.9786154861551937,
+        2.005303842687798,
+        2.148733400469842,
+        2.228920812658519,
+        2.600714736227439,
+        2.797167765359908,
+        2.816820841569537,
+        3.28310447873389,
+        3.499618330334213,
+        3.903551383691718,
+        3.5793433662489145,
+        4.230566609515193,
+        4.814767424201506,
+        4.446377232377091,
+        3.89571168480251,
+        4.046910281453436
       ],
       "rebalance_log": [
         {
           "rebalance_date": "2024-02-01",
-          "period_return": 0.089870382643164,
+          "period_return": 0.0849223192967123,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 0.8,
-              "port_return": 0.24589196238877958,
+              "score": 0.6,
+              "port_return": 0.2310477723494245,
               "picks": [
                 "PLTR",
                 "MRVL",
-                "FSLR",
+                "INTC",
                 "TER",
-                "AMD"
+                "FSLR"
               ]
             },
             {
@@ -8386,18 +8386,18 @@
         },
         {
           "rebalance_date": "2024-03-01",
-          "period_return": -0.022727651626148527,
+          "period_return": -0.013117838518365519,
           "chosen_sectors": [
             {
               "sector": "it",
-              "score": 1.0,
-              "port_return": -0.05548752676057823,
+              "score": 0.8,
+              "port_return": -0.026658087437229194,
               "picks": [
                 "SMCI",
-                "PLTR",
                 "CRWD",
-                "AMD",
-                "LITE"
+                "PLTR",
+                "LITE",
+                "NVDA"
               ]
             },
             {
@@ -8428,8 +8428,20 @@
         },
         {
           "rebalance_date": "2024-04-01",
-          "period_return": -0.04490247646155738,
+          "period_return": -0.07301227453397184,
           "chosen_sectors": [
+            {
+              "sector": "hc",
+              "score": 0.8,
+              "port_return": -0.0770945796881285,
+              "picks": [
+                "HUM",
+                "MRNA",
+                "PFE",
+                "IQV",
+                "PODD"
+              ]
+            },
             {
               "sector": "en",
               "score": 0.8,
@@ -8443,45 +8455,33 @@
               ]
             },
             {
-              "sector": "hc",
+              "sector": "fin",
               "score": 0.6,
-              "port_return": -0.07752814706079697,
+              "port_return": -0.07903311183302612,
               "picks": [
-                "HUM",
-                "BIIB",
-                "PODD",
-                "CNC",
-                "GEHC"
-              ]
-            },
-            {
-              "sector": "cd",
-              "score": 0.6,
-              "port_return": 0.005729849756885714,
-              "picks": [
-                "APTV",
-                "TSLA",
-                "GM",
-                "DPZ",
-                "MGM"
+                "XYZ",
+                "HOOD",
+                "COIN",
+                "C",
+                "RJF"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2024-05-01",
-          "period_return": 0.03884909737383218,
+          "period_return": 0.07639239099333107,
           "chosen_sectors": [
             {
               "sector": "hc",
               "score": 0.8,
-              "port_return": 0.01495925464229357,
+              "port_return": 0.12758913550079024,
               "picks": [
-                "HUM",
                 "CVS",
+                "HUM",
                 "GEHC",
-                "MRNA",
-                "CRL"
+                "ZTS",
+                "MRNA"
               ]
             },
             {
@@ -8512,8 +8512,20 @@
         },
         {
           "rebalance_date": "2024-06-01",
-          "period_return": -0.03653976118391294,
+          "period_return": -0.024685142432571475,
           "chosen_sectors": [
+            {
+              "sector": "hc",
+              "score": 0.8,
+              "port_return": -0.12049923915513178,
+              "picks": [
+                "CVS",
+                "MRNA",
+                "GEHC",
+                "RMD",
+                "MTD"
+              ]
+            },
             {
               "sector": "fin",
               "score": 0.8,
@@ -8529,25 +8541,13 @@
             {
               "sector": "it",
               "score": 0.6,
-              "port_return": 0.038216944797565953,
+              "port_return": 0.033922232248873294,
               "picks": [
                 "SMCI",
-                "DELL",
                 "NVDA",
+                "DELL",
                 "CRWD",
-                "MRVL"
-              ]
-            },
-            {
-              "sector": "hc",
-              "score": 0.6,
-              "port_return": -0.16035780795784882,
-              "picks": [
-                "CVS",
-                "CRL",
-                "BMY",
-                "VEEV",
-                "MRNA"
+                "AMD"
               ]
             }
           ]
@@ -8563,8 +8563,8 @@
               "picks": [
                 "COIN",
                 "HOOD",
-                "GL",
                 "SYF",
+                "GL",
                 "XYZ"
               ]
             },
@@ -8596,18 +8596,18 @@
         },
         {
           "rebalance_date": "2024-08-01",
-          "period_return": 0.08968115942925185,
+          "period_return": 0.106142113899986,
           "chosen_sectors": [
             {
               "sector": "hc",
-              "score": 0.8,
-              "port_return": -0.012065822696566668,
+              "score": 0.6,
+              "port_return": 0.03731704071563583,
               "picks": [
-                "ALGN",
-                "PODD",
                 "VRTX",
-                "MTD",
-                "AMGN"
+                "AMGN",
+                "UHS",
+                "ISRG",
+                "MTD"
               ]
             },
             {
@@ -8638,7 +8638,7 @@
         },
         {
           "rebalance_date": "2024-09-01",
-          "period_return": 0.03710778103310789,
+          "period_return": 0.0398794077229919,
           "chosen_sectors": [
             {
               "sector": "en",
@@ -8667,13 +8667,13 @@
             {
               "sector": "it",
               "score": 0.6,
-              "port_return": 0.09593896560459447,
+              "port_return": 0.1042538456742465,
               "picks": [
                 "NVDA",
                 "COHR",
                 "SMCI",
-                "AVGO",
-                "PLTR"
+                "PLTR",
+                "LITE"
               ]
             }
           ]
@@ -8702,8 +8702,8 @@
                 "PLTR",
                 "COHR",
                 "NVDA",
-                "MPWR",
-                "SMCI"
+                "SMCI",
+                "MPWR"
               ]
             },
             {
@@ -8722,17 +8722,17 @@
         },
         {
           "rebalance_date": "2024-11-01",
-          "period_return": 0.33301538135976033,
+          "period_return": 0.28258068513735296,
           "chosen_sectors": [
             {
               "sector": "fin",
               "score": 1.0,
-              "port_return": 0.5188484139375543,
+              "port_return": 0.3675443252703321,
               "picks": [
                 "COIN",
                 "BEN",
-                "HOOD",
                 "GPN",
+                "TROW",
                 "C"
               ]
             },
@@ -8764,7 +8764,7 @@
         },
         {
           "rebalance_date": "2024-12-01",
-          "period_return": -0.05149365740197576,
+          "period_return": -0.056527114740877925,
           "chosen_sectors": [
             {
               "sector": "en",
@@ -8792,44 +8792,44 @@
             },
             {
               "sector": "fin",
-              "score": 0.8,
-              "port_return": 0.007576286057889665,
+              "score": 0.6,
+              "port_return": -0.007524085958816827,
               "picks": [
                 "HOOD",
                 "BEN",
-                "ACGL",
-                "AIG",
-                "EG"
+                "APO",
+                "EG",
+                "ACGL"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-01-01",
-          "period_return": 0.1388305477204536,
+          "period_return": 0.1414218952553517,
           "chosen_sectors": [
             {
               "sector": "hc",
-              "score": 0.8,
-              "port_return": 0.09182079048240302,
+              "score": 0.6,
+              "port_return": 0.11610830795129144,
               "picks": [
                 "ISRG",
+                "IDXX",
                 "DXCM",
-                "LLY",
                 "BSX",
-                "PODD"
+                "DVA"
               ]
             },
             {
               "sector": "fin",
               "score": 0.6,
-              "port_return": 0.21674215846495623,
+              "port_return": 0.20022868360076207,
               "picks": [
-                "HOOD",
                 "IBKR",
-                "BEN",
-                "ACGL",
-                "TFC"
+                "HOOD",
+                "TFC",
+                "ERIE",
+                "RF"
               ]
             },
             {
@@ -8848,30 +8848,18 @@
         },
         {
           "rebalance_date": "2025-02-01",
-          "period_return": -0.007650972047313687,
+          "period_return": -0.009583247095694941,
           "chosen_sectors": [
             {
               "sector": "hc",
-              "score": 0.8,
-              "port_return": 0.005480376279122662,
+              "score": 1.0,
+              "port_return": 0.06344899728750049,
               "picks": [
-                "PODD",
-                "LLY",
                 "UHS",
-                "DXCM",
+                "LLY",
+                "ELV",
+                "UNH",
                 "EW"
-              ]
-            },
-            {
-              "sector": "fin",
-              "score": 0.8,
-              "port_return": 0.051318470576132605,
-              "picks": [
-                "HOOD",
-                "IBKR",
-                "TFC",
-                "KKR",
-                "BEN"
               ]
             },
             {
@@ -8885,25 +8873,25 @@
                 "RCL",
                 "GM"
               ]
+            },
+            {
+              "sector": "cs",
+              "score": 0.8,
+              "port_return": -0.012446975577388983,
+              "picks": [
+                "APP",
+                "TTD",
+                "ECHO",
+                "NFLX",
+                "LYV"
+              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-03-01",
-          "period_return": -0.0904555138445834,
+          "period_return": -0.04502197717848542,
           "chosen_sectors": [
-            {
-              "sector": "hc",
-              "score": 0.8,
-              "port_return": -0.07576693579398273,
-              "picks": [
-                "UNH",
-                "PODD",
-                "CVS",
-                "ISRG",
-                "STE"
-              ]
-            },
             {
               "sector": "mat",
               "score": 0.8,
@@ -8914,6 +8902,18 @@
                 "NUE",
                 "SW",
                 "IFF"
+              ]
+            },
+            {
+              "sector": "hc",
+              "score": 0.6,
+              "port_return": 0.06053367420431118,
+              "picks": [
+                "UNH",
+                "COR",
+                "EW",
+                "ELV",
+                "CVS"
               ]
             },
             {
@@ -8932,18 +8932,30 @@
         },
         {
           "rebalance_date": "2025-04-01",
-          "period_return": 0.024735696064641554,
+          "period_return": 0.037540022870988836,
           "chosen_sectors": [
             {
               "sector": "hc",
-              "score": 0.6,
-              "port_return": 0.0619728671516621,
+              "score": 1.0,
+              "port_return": 0.055094470374558516,
               "picks": [
                 "UHS",
-                "COR",
                 "MRK",
-                "CAH",
+                "COR",
+                "PFE",
                 "MCK"
+              ]
+            },
+            {
+              "sector": "fin",
+              "score": 0.6,
+              "port_return": 0.10664539846091566,
+              "picks": [
+                "HOOD",
+                "IBKR",
+                "COF",
+                "MS",
+                "KKR"
               ]
             },
             {
@@ -8957,34 +8969,22 @@
                 "WMB",
                 "EXE"
               ]
-            },
-            {
-              "sector": "it",
-              "score": 0.4,
-              "port_return": 0.06135402126477022,
-              "picks": [
-                "MSFT",
-                "INTU",
-                "VRSN",
-                "ROP",
-                "AAPL"
-              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-05-01",
-          "period_return": 0.10329739625110985,
+          "period_return": 0.09721174158909018,
           "chosen_sectors": [
             {
               "sector": "fin",
               "score": 1.0,
-              "port_return": 0.3235320303900583,
+              "port_return": 0.30527506640399926,
               "picks": [
                 "HOOD",
                 "IBKR",
                 "MS",
-                "GS",
+                "BNY",
                 "COF"
               ]
             },
@@ -9016,7 +9016,7 @@
         },
         {
           "rebalance_date": "2025-06-01",
-          "period_return": 0.050570220753356994,
+          "period_return": 0.013488399701381293,
           "chosen_sectors": [
             {
               "sector": "ind",
@@ -9031,18 +9031,6 @@
               ]
             },
             {
-              "sector": "it",
-              "score": 0.8,
-              "port_return": 0.07244129215690813,
-              "picks": [
-                "AVGO",
-                "GLW",
-                "ADBE",
-                "TDY",
-                "ADSK"
-              ]
-            },
-            {
               "sector": "hc",
               "score": 0.8,
               "port_return": 0.04257147895913071,
@@ -9053,23 +9041,47 @@
                 "HUM",
                 "INCY"
               ]
+            },
+            {
+              "sector": "fin",
+              "score": 0.8,
+              "port_return": -0.038804170999018964,
+              "picks": [
+                "ERIE",
+                "AIZ",
+                "EG",
+                "BRO",
+                "MRSH"
+              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-07-01",
-          "period_return": 0.05532451111752712,
+          "period_return": 0.07152509995183534,
           "chosen_sectors": [
             {
               "sector": "hc",
               "score": 0.8,
-              "port_return": -0.0841045492535637,
+              "port_return": -0.03306113014787709,
               "picks": [
-                "PODD",
-                "BDX",
-                "BIIB",
                 "MRK",
-                "CI"
+                "PODD",
+                "PFE",
+                "ABBV",
+                "BDX"
+              ]
+            },
+            {
+              "sector": "it",
+              "score": 0.6,
+              "port_return": 0.10992678919311075,
+              "picks": [
+                "LITE",
+                "MPWR",
+                "HPE",
+                "MCHP",
+                "SMCI"
               ]
             },
             {
@@ -9083,35 +9095,23 @@
                 "TTD",
                 "ECHO"
               ]
-            },
-            {
-              "sector": "re",
-              "score": 0.6,
-              "port_return": 0.11236844179587269,
-              "picks": [
-                "ARE",
-                "WY",
-                "CSGP",
-                "ESS",
-                "CBRE"
-              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-08-01",
-          "period_return": 0.0003097723743587105,
+          "period_return": 0.037318455687030905,
           "chosen_sectors": [
             {
-              "sector": "it",
+              "sector": "fin",
               "score": 0.8,
-              "port_return": -0.11866555144536883,
+              "port_return": 0.009311214444413036,
               "picks": [
-                "SMCI",
-                "COHR",
-                "AMD",
-                "WDC",
-                "FSLR"
+                "IVZ",
+                "ERIE",
+                "AIZ",
+                "ARES",
+                "GL"
               ]
             },
             {
@@ -9127,22 +9127,22 @@
               ]
             },
             {
-              "sector": "hc",
+              "sector": "it",
               "score": 0.6,
-              "port_return": -0.035539484485045694,
+              "port_return": -0.05249020043681099,
               "picks": [
-                "MCK",
-                "VEEV",
-                "RMD",
-                "ISRG",
-                "COR"
+                "SMCI",
+                "LITE",
+                "AMD",
+                "WDC",
+                "COHR"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-09-01",
-          "period_return": 0.16926316641417638,
+          "period_return": 0.1668044559759246,
           "chosen_sectors": [
             {
               "sector": "en",
@@ -9171,31 +9171,31 @@
             {
               "sector": "it",
               "score": 0.4,
-              "port_return": 0.36501253072833506,
+              "port_return": 0.3576363994135798,
               "picks": [
                 "LITE",
-                "COHR",
-                "SMCI",
-                "FLEX",
-                "CIEN"
+                "AMD",
+                "WDC",
+                "TER",
+                "ANET"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-10-01",
-          "period_return": 0.002975707829814373,
+          "period_return": 0.07553809204674272,
           "chosen_sectors": [
             {
               "sector": "it",
               "score": 0.8,
-              "port_return": 0.12845460195644304,
+              "port_return": 0.14910607405134726,
               "picks": [
-                "STX",
                 "WDC",
+                "STX",
                 "CIEN",
-                "LITE",
-                "LRCX"
+                "MU",
+                "LITE"
               ]
             },
             {
@@ -9213,31 +9213,43 @@
             {
               "sector": "hc",
               "score": 0.6,
-              "port_return": -0.06162130116031039,
+              "port_return": 0.13541437939557044,
               "picks": [
-                "REGN",
-                "ALGN",
                 "CNC",
+                "EW",
+                "CAH",
                 "ABT",
-                "MRNA"
+                "REGN"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2025-11-01",
-          "period_return": 0.09310917775453208,
+          "period_return": 0.007026062738535889,
           "chosen_sectors": [
             {
               "sector": "it",
               "score": 0.8,
-              "port_return": 0.11624170700569045,
+              "port_return": 0.11019012860878709,
               "picks": [
-                "LRCX",
-                "CIEN",
                 "STX",
+                "LRCX",
+                "LITE",
                 "PLTR",
-                "LITE"
+                "GLW"
+              ]
+            },
+            {
+              "sector": "hc",
+              "score": 0.6,
+              "port_return": -0.12914138171967549,
+              "picks": [
+                "CNC",
+                "BAX",
+                "RMD",
+                "DXCM",
+                "HUM"
               ]
             },
             {
@@ -9251,37 +9263,13 @@
                 "KVUE",
                 "KDP"
               ]
-            },
-            {
-              "sector": "en",
-              "score": 0.6,
-              "port_return": 0.12305638493140969,
-              "picks": [
-                "APA",
-                "DVN",
-                "OXY",
-                "COP",
-                "FANG"
-              ]
             }
           ]
         },
         {
           "rebalance_date": "2025-12-01",
-          "period_return": 0.035393334325063426,
+          "period_return": 0.16553542571225052,
           "chosen_sectors": [
-            {
-              "sector": "it",
-              "score": 0.8,
-              "port_return": 0.12569125717198665,
-              "picks": [
-                "LITE",
-                "COHR",
-                "CIEN",
-                "WDC",
-                "STX"
-              ]
-            },
             {
               "sector": "mat",
               "score": 0.8,
@@ -9295,33 +9283,45 @@
               ]
             },
             {
-              "sector": "hc",
+              "sector": "it",
               "score": 0.6,
-              "port_return": -0.10615948600138181,
+              "port_return": 0.14295831240692228,
               "picks": [
-                "HUM",
-                "CNC",
-                "UNH",
-                "VEEV",
-                "UHS"
+                "LITE",
+                "COHR",
+                "WDC",
+                "MU",
+                "TER"
+              ]
+            },
+            {
+              "sector": "cs",
+              "score": 0.6,
+              "port_return": 0.2669997329252438,
+              "picks": [
+                "RDDT",
+                "APP",
+                "PSKY",
+                "ECHO",
+                "META"
               ]
             }
           ]
         },
         {
           "rebalance_date": "2026-01-01",
-          "period_return": 0.052532792470336785,
+          "period_return": 0.06594790175054695,
           "chosen_sectors": [
             {
               "sector": "it",
               "score": 1.0,
-              "port_return": 0.17919127708345084,
+              "port_return": 0.21943660492408135,
               "picks": [
                 "LITE",
                 "COHR",
+                "MU",
                 "WDC",
-                "CIEN",
-                "STX"
+                "TER"
               ]
             },
             {
@@ -9352,30 +9352,18 @@
         },
         {
           "rebalance_date": "2026-02-01",
-          "period_return": 0.09202481738560668,
+          "period_return": 0.1154220304129363,
           "chosen_sectors": [
             {
               "sector": "it",
               "score": 1.0,
-              "port_return": 0.26787456638788215,
+              "port_return": 0.21014911106546103,
               "picks": [
+                "MU",
                 "WDC",
                 "STX",
-                "MU",
                 "LITE",
-                "CIEN"
-              ]
-            },
-            {
-              "sector": "fin",
-              "score": 0.6,
-              "port_return": -0.06169277646612043,
-              "picks": [
-                "FISV",
-                "ICE",
-                "EG",
-                "AMP",
-                "MET"
+                "LRCX"
               ]
             },
             {
@@ -9389,37 +9377,25 @@
                 "HII",
                 "BLDR"
               ]
+            },
+            {
+              "sector": "staples",
+              "score": 0.6,
+              "port_return": 0.06622431793828952,
+              "picks": [
+                "DLTR",
+                "DG",
+                "BG",
+                "MNST",
+                "TGT"
+              ]
             }
           ]
         },
         {
           "rebalance_date": "2026-03-01",
-          "period_return": -0.07712725691454837,
+          "period_return": -0.08305463040586118,
           "chosen_sectors": [
-            {
-              "sector": "it",
-              "score": 0.6,
-              "port_return": -0.05232578920972614,
-              "picks": [
-                "WDC",
-                "STX",
-                "LITE",
-                "COHR",
-                "MU"
-              ]
-            },
-            {
-              "sector": "fin",
-              "score": 0.6,
-              "port_return": -0.0389251690414839,
-              "picks": [
-                "GPN",
-                "CB",
-                "CPAY",
-                "XYZ",
-                "FISV"
-              ]
-            },
             {
               "sector": "staples",
               "score": 0.6,
@@ -9431,25 +9407,37 @@
                 "BF-B",
                 "GIS"
               ]
+            },
+            {
+              "sector": "mat",
+              "score": 0.6,
+              "port_return": -0.05708484318406548,
+              "picks": [
+                "ALB",
+                "FCX",
+                "SW",
+                "IP",
+                "STLD"
+              ]
+            },
+            {
+              "sector": "re",
+              "score": 0.6,
+              "port_return": -0.051948235541082986,
+              "picks": [
+                "IRM",
+                "AMT",
+                "WELL",
+                "CCI",
+                "VTR"
+              ]
             }
           ]
         },
         {
           "rebalance_date": "2026-04-01",
-          "period_return": 0.15099405260978851,
+          "period_return": 0.18193930467999453,
           "chosen_sectors": [
-            {
-              "sector": "hc",
-              "score": 0.8,
-              "port_return": 0.14457186253563264,
-              "picks": [
-                "BAX",
-                "CNC",
-                "BSX",
-                "UNH",
-                "PODD"
-              ]
-            },
             {
               "sector": "ind",
               "score": 0.8,
@@ -9460,6 +9448,18 @@
                 "FIX",
                 "GNRC",
                 "BLDR"
+              ]
+            },
+            {
+              "sector": "hc",
+              "score": 0.6,
+              "port_return": 0.2374076187462506,
+              "picks": [
+                "CNC",
+                "BAX",
+                "BSX",
+                "UNH",
+                "HUM"
               ]
             },
             {
@@ -9478,42 +9478,42 @@
         },
         {
           "rebalance_date": "2026-05-01",
-          "period_return": 0.053642973955659735,
+          "period_return": 0.1380904423942542,
           "chosen_sectors": [
+            {
+              "sector": "it",
+              "score": 1.0,
+              "port_return": 0.22342530315136885,
+              "picks": [
+                "LITE",
+                "SNDK",
+                "COHR",
+                "CIEN",
+                "INTC"
+              ]
+            },
+            {
+              "sector": "hc",
+              "score": 0.8,
+              "port_return": 0.16748398701333733,
+              "picks": [
+                "BSX",
+                "BAX",
+                "PODD",
+                "CNC",
+                "ABT"
+              ]
+            },
             {
               "sector": "fin",
               "score": 0.8,
-              "port_return": -0.0030567597561089346,
+              "port_return": 0.023362037018056413,
               "picks": [
-                "PFG",
                 "CFG",
-                "KEY",
-                "IVZ",
-                "RF"
-              ]
-            },
-            {
-              "sector": "ind",
-              "score": 0.8,
-              "port_return": -0.02579218063310433,
-              "picks": [
-                "VRT",
-                "FIX",
-                "GEV",
-                "CAT",
-                "CMI"
-              ]
-            },
-            {
-              "sector": "it",
-              "score": 0.6,
-              "port_return": 0.18977786225619248,
-              "picks": [
-                "LITE",
-                "CIEN",
-                "MU",
-                "WDC",
-                "TER"
+                "BNY",
+                "GS",
+                "C",
+                "KEY"
               ]
             }
           ]
@@ -9562,7 +9562,7 @@
         },
         {
           "rebalance_date": "2026-07-01",
-          "period_return": -0.035550385923465426,
+          "period_return": -0.12384589043970691,
           "chosen_sectors": [
             {
               "sector": "en",
@@ -9589,15 +9589,15 @@
               ]
             },
             {
-              "sector": "fin",
+              "sector": "it",
               "score": 0.4,
-              "port_return": -0.0001653659459647138,
+              "port_return": -0.26505187949468917,
               "picks": [
-                "IBKR",
-                "C",
-                "STT",
-                "BNY",
-                "CFG"
+                "DELL",
+                "INTC",
+                "FLEX",
+                "GLW",
+                "KLAC"
               ]
             }
           ]
@@ -9725,15 +9725,15 @@
       },
       {
         "sector": "fin",
-        "score": 0.04209275636582066,
+        "score": 0.06268664709676441,
         "today_picks": [
-          "MTB",
-          "USB",
           "CFG",
+          "PNC",
+          "TFC",
           "BAC",
-          "PNC"
+          "RF"
         ],
-        "picks_at": "2026-09-15T00:00:00"
+        "picks_at": "2026-09-17T00:00:00"
       },
       {
         "sector": "re",
@@ -9813,13 +9813,13 @@
         "sector": "fin",
         "score": 0.4,
         "today_picks": [
-          "MTB",
-          "USB",
           "CFG",
+          "PNC",
+          "TFC",
           "BAC",
-          "PNC"
+          "RF"
         ],
-        "picks_at": "2026-09-15T00:00:00"
+        "picks_at": "2026-09-17T00:00:00"
       },
       {
         "sector": "cd",
@@ -9835,5 +9835,5 @@
       }
     ]
   },
-  "updated_at": "2026-09-16T01:39:29.191251+00:00"
+  "updated_at": "2026-09-17T01:30:33.954078+00:00"
 }
