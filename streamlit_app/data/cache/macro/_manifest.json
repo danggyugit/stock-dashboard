@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-09-18T22:25:12.704956+00:00",
+  "cached_at": "2026-09-19T22:23:51.327674+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -22,7 +22,12 @@
     },
     "tga": {
       "series_id": "WTREGEN",
-      "error": "curl exit 28: curl: (28) Operation timed out after 920114 milliseconds with 0 bytes received\n"
+      "freq": "W",
+      "points": 298,
+      "latest": {
+        "date": "2026-09-16",
+        "value": 877028.0
+      }
     },
     "reserves": {
       "series_id": "WRESBAL",
@@ -71,7 +76,12 @@
     },
     "dgs3mo": {
       "series_id": "DGS3MO",
-      "error": "curl exit 28: curl: (28) Connection timed out after 993174 milliseconds\n"
+      "freq": "D",
+      "points": 1428,
+      "latest": {
+        "date": "2026-09-17",
+        "value": 4.12
+      }
     },
     "dgs2": {
       "series_id": "DGS2",
