@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-09-19T22:23:51.327674+00:00",
+  "cached_at": "2026-09-20T22:23:23.578413+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -103,12 +103,7 @@
     },
     "dgs10": {
       "series_id": "DGS10",
-      "freq": "D",
-      "points": 1428,
-      "latest": {
-        "date": "2026-09-17",
-        "value": 4.94
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 973182 milliseconds with 0 bytes received\n"
     },
     "dgs30": {
       "series_id": "DGS30",
