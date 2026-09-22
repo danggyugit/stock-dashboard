@@ -402,6 +402,12 @@
     "cap_tier": "Large Cap"
   },
   {
+    "ticker": "BE",
+    "name": "Bloom Energy",
+    "sector": "Industrials",
+    "cap_tier": "Large Cap"
+  },
+  {
     "ticker": "BNY",
     "name": "BNY Mellon",
     "sector": "Financials",
@@ -453,12 +459,6 @@
     "ticker": "BF-B",
     "name": "Brown\u2013Forman",
     "sector": "Consumer Staples",
-    "cap_tier": "Large Cap"
-  },
-  {
-    "ticker": "BLDR",
-    "name": "Builders FirstSource",
-    "sector": "Industrials",
     "cap_tier": "Large Cap"
   },
   {
@@ -1074,6 +1074,12 @@
     "cap_tier": "Large Cap"
   },
   {
+    "ticker": "P",
+    "name": "Everpure",
+    "sector": "Information Technology",
+    "cap_tier": "Large Cap"
+  },
+  {
     "ticker": "ES",
     "name": "Eversource Energy",
     "sector": "Utilities",
@@ -1479,6 +1485,12 @@
     "ticker": "ITW",
     "name": "Illinois Tool Works",
     "sector": "Industrials",
+    "cap_tier": "Large Cap"
+  },
+  {
+    "ticker": "ILMN",
+    "name": "Illumina, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Large Cap"
   },
   {
@@ -1899,12 +1911,6 @@
     "ticker": "MRNA",
     "name": "Moderna",
     "sector": "Health Care",
-    "cap_tier": "Large Cap"
-  },
-  {
-    "ticker": "TAP",
-    "name": "Molson Coors Beverage Company",
-    "sector": "Consumer Staples",
     "cap_tier": "Large Cap"
   },
   {
@@ -2660,12 +2666,6 @@
   {
     "ticker": "TKO",
     "name": "TKO Group Holdings",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap"
-  },
-  {
-    "ticker": "TTD",
-    "name": "Trade Desk (The)",
     "sector": "Communication Services",
     "cap_tier": "Large Cap"
   },
@@ -4116,12 +4116,6 @@
     "cap_tier": "Mid Cap"
   },
   {
-    "ticker": "ILMN",
-    "name": "Illumina, Inc.",
-    "sector": "Health Care",
-    "cap_tier": "Mid Cap"
-  },
-  {
     "ticker": "INGR",
     "name": "Ingredion",
     "sector": "Consumer Staples",
@@ -4611,12 +4605,6 @@
     "ticker": "OZK",
     "name": "Bank OZK",
     "sector": "Financials",
-    "cap_tier": "Mid Cap"
-  },
-  {
-    "ticker": "P",
-    "name": "Everpure",
-    "sector": "Information Technology",
     "cap_tier": "Mid Cap"
   },
   {
