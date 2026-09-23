@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-09-22T22:15:05.722423+00:00",
+  "cached_at": "2026-09-23T22:27:49.122206+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -14,10 +14,10 @@
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1428,
+      "points": 1429,
       "latest": {
-        "date": "2026-09-22",
-        "value": 0.453
+        "date": "2026-09-23",
+        "value": 0.461
       }
     },
     "tga": {
@@ -41,9 +41,9 @@
     "hy_oas": {
       "series_id": "BAMLH0A0HYM2",
       "freq": "D",
-      "points": 785,
+      "points": 786,
       "latest": {
-        "date": "2026-09-18",
+        "date": "2026-09-22",
         "value": 2.68
       }
     },
@@ -77,47 +77,42 @@
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1430,
+      "points": 1431,
       "latest": {
-        "date": "2026-09-21",
-        "value": 4.17
+        "date": "2026-09-22",
+        "value": 4.16
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1430,
+      "points": 1431,
       "latest": {
-        "date": "2026-09-21",
-        "value": 4.76
+        "date": "2026-09-22",
+        "value": 4.71
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1430,
+      "points": 1431,
       "latest": {
-        "date": "2026-09-21",
+        "date": "2026-09-22",
         "value": 4.83
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1430,
+      "points": 1431,
       "latest": {
-        "date": "2026-09-21",
+        "date": "2026-09-22",
         "value": 4.96
       }
     },
     "dgs30": {
       "series_id": "DGS30",
-      "freq": "D",
-      "points": 1430,
-      "latest": {
-        "date": "2026-09-21",
-        "value": 5.29
-      }
+      "error": "curl exit 28: curl: (28) Connection timed out after 1007004 milliseconds\n"
     },
     "cpi": {
       "series_id": "CPIAUCSL",
@@ -153,10 +148,10 @@
     "wti": {
       "series_id": "DCOILWTICO",
       "freq": "D",
-      "points": 1424,
+      "points": 1429,
       "latest": {
-        "date": "2026-09-15",
-        "value": 107.02
+        "date": "2026-09-22",
+        "value": 96.41
       }
     },
     "copper": {
@@ -170,12 +165,7 @@
     },
     "natgas": {
       "series_id": "DHHNGSP",
-      "freq": "D",
-      "points": 1424,
-      "latest": {
-        "date": "2026-09-15",
-        "value": 2.97
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 962839 milliseconds with 0 bytes received\n"
     }
   }
 }
