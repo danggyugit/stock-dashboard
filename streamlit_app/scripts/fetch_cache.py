@@ -12,6 +12,7 @@ Outputs:
 
 import io
 import json
+import re
 import logging
 import sys
 import time
@@ -356,6 +357,94 @@ def fetch_sp1500_list() -> pd.DataFrame:
     combined = combined.drop_duplicates(subset=["ticker"], keep="first")
     logger.info("Fetched %d unique S&P 1500 stocks.", len(combined))
     return combined
+
+
+# ── Supplementary universe (non-S&P large/mid caps) ──────────────
+#
+# The S&P 1500 tiers are index-membership based, and S&P admission needs
+# GAAP profitability + listing age. That silently drops the exact names a
+# momentum screener most wants: unprofitable growth (TXG, TWST), recent
+# IPOs (TEM), and anything S&P just hasn't gotten to yet. Backfill them
+# from the NASDAQ screener — one unauthenticated request returns every
+# US-listed equity with market cap, sector and industry.
+#
+# Scope is deliberately screener/heatmap/top-down only. These names have
+# no index membership history, so the backtest keeps its own S&P-only
+# universe (cache_backtest_data.py) where survivorship correction works.
+
+# NASDAQ uses its own sector taxonomy; map to the GICS names the rest of
+# the app filters on so the supplement lands in the right buckets.
+_NASDAQ_SECTOR_TO_GICS = {
+    "Basic Materials":        "Materials",
+    "Finance":                "Financials",
+    "Technology":             "Information Technology",
+    "Telecommunications":     "Communication Services",
+    "Health Care":            "Health Care",
+    "Industrials":            "Industrials",
+    "Consumer Discretionary": "Consumer Discretionary",
+    "Consumer Staples":       "Consumer Staples",
+    "Energy":                 "Energy",
+    "Real Estate":            "Real Estate",
+    "Utilities":              "Utilities",
+}
+_SUPPLEMENT_MIN_CAP = 5_000_000_000  # $5B floor keeps it ~400-600 names
+# Drop non-common-stock lines the screener endpoint mixes in. ADRs are
+# kept on purpose (TSM, ASML etc. are real large caps).
+_SUPPLEMENT_SKIP_NAME = re.compile(
+    r"\b(warrant|warrants|unit|units|preferred|pref\.|rights?|notes?|debenture)\b",
+    re.IGNORECASE,
+)
+
+
+def fetch_supplement_list(exclude: set[str], min_cap: float = _SUPPLEMENT_MIN_CAP) -> pd.DataFrame:
+    """US-listed equities with market cap >= min_cap that are NOT in `exclude`.
+
+    Returns the same schema as fetch_sp1500_list plus universe="supplement".
+    cap_tier uses dollar bands ($10B+ Large, else Mid) since these names
+    have no index tier. Any failure returns an empty frame so the main
+    job never breaks on this optional step.
+    """
+    logger.info("Fetching supplementary universe (NASDAQ screener, cap >= $%.0fB)...",
+                min_cap / 1e9)
+    url = ("https://api.nasdaq.com/api/screener/stocks"
+           "?tableonly=true&limit=10000&offset=0&download=true")
+    try:
+        resp = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=60)
+        resp.raise_for_status()
+        rows = resp.json()["data"]["rows"]
+    except Exception as e:
+        logger.warning("Supplement fetch failed (skipping): %s", e)
+        return pd.DataFrame(columns=["ticker", "name", "sector", "industry", "cap_tier", "universe"])
+
+    out = []
+    for r in rows:
+        sym = str(r.get("symbol") or "").strip()
+        # yfinance uses '-' for share classes (BRK-B); NASDAQ uses '/'.
+        sym = sym.replace("/", "-").replace(".", "-")
+        if not sym or " " in sym or "^" in sym or sym in exclude:
+            continue
+        try:
+            cap = float(r.get("marketCap") or 0)
+        except (TypeError, ValueError):
+            continue
+        if cap < min_cap:
+            continue
+        name = str(r.get("name") or "").strip()
+        if _SUPPLEMENT_SKIP_NAME.search(name):
+            continue
+        sector = _NASDAQ_SECTOR_TO_GICS.get(str(r.get("sector") or "").strip(), "Other")
+        out.append({
+            "ticker": sym,
+            "name": name,
+            "sector": sector,
+            "industry": str(r.get("industry") or "").strip(),
+            "cap_tier": "Large Cap" if cap >= 10e9 else "Mid Cap",
+            "universe": "supplement",
+        })
+
+    df = pd.DataFrame(out).drop_duplicates(subset=["ticker"], keep="first")
+    logger.info("Supplement: %d non-S&P tickers >= $%.0fB", len(df), min_cap / 1e9)
+    return df
 
 
 def fetch_batch_prices_and_returns(
@@ -746,6 +835,15 @@ def main() -> int:
         if stocks_df.empty:
             logger.error("Failed to fetch stock list.")
             return 1
+        stocks_df["universe"] = "sp1500"
+
+        # 1b. Supplement with non-S&P large/mid caps (screener-only universe;
+        #     the backtest keeps its own S&P-only list — see fetch_supplement_list).
+        supp_df = fetch_supplement_list(exclude=set(stocks_df["ticker"]))
+        if not supp_df.empty:
+            stocks_df = pd.concat([stocks_df, supp_df], ignore_index=True)
+            logger.info("Universe: %d S&P 1500 + %d supplement = %d tickers",
+                        len(stocks_df) - len(supp_df), len(supp_df), len(stocks_df))
 
         tickers = stocks_df["ticker"].tolist()
 
