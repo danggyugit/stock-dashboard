@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-09-26T22:15:06.606359+00:00",
+  "cached_at": "2026-09-27T22:30:07.540765+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -58,12 +58,7 @@
     },
     "m2": {
       "series_id": "M2SL",
-      "freq": "M",
-      "points": 68,
-      "latest": {
-        "date": "2026-08-01",
-        "value": 23342.8
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 1022717 milliseconds with 0 bytes received\n"
     },
     "fed_funds": {
       "series_id": "FEDFUNDS",
@@ -148,7 +143,7 @@
     },
     "gold": {
       "series_id": "GOLDPMGBD228NLBM",
-      "error": "Error tokenizing data. C error: Expected 1 fields in line 6, saw 2\n"
+      "error": "curl exit 28: curl: (28) Operation timed out after 1059805 milliseconds with 0 bytes received\n"
     },
     "wti": {
       "series_id": "DCOILWTICO",
