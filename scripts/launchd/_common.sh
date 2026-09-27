@@ -31,6 +31,17 @@ VENV_PY="$REPO/.venv-cache/bin/python"
 LOGDIR="$REPO/logs/launchd"
 mkdir -p "$LOGDIR"
 
+# ── Git push buffer ──────────────────────────────────────────────
+# Every cache job pushes multi-MB blobs (prices.pkl.gz ~15MB, 55 preset
+# JSONs, forward-test logs). git's default http.postBuffer is 1 MiB, which
+# forces chunked transfer; when a few days of commits pile up GitHub's
+# edge rejects the push with "HTTP 400 / unexpected disconnect while
+# reading sideband packet". Rebase succeeds, push dies, commits strand
+# locally, site goes stale — and the retry loop can't fix it because
+# the failure isn't a divergence. 500 MB clears it for any realistic
+# backlog. Repo-local so it survives regardless of who runs the job.
+git -C "$REPO" config http.postBuffer 524288000 2>/dev/null || true
+
 # ── Small helpers ────────────────────────────────────────────────
 
 log_line() {
