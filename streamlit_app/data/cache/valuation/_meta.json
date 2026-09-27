@@ -1,7 +1,7 @@
 {
-  "universe": "sp500",
-  "saved": 503,
-  "failed": 0,
-  "total": 503,
-  "updated_at": "2026-09-27T08:47:36.284927+00:00"
+  "universe": "sp1500",
+  "saved": 1503,
+  "failed": 1,
+  "total": 1504,
+  "updated_at": "2026-09-27T10:25:25.545325+00:00"
 }
