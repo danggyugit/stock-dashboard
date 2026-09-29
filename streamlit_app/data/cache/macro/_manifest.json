@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-09-28T22:16:38.091350+00:00",
+  "cached_at": "2026-09-29T22:18:32.071435+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -14,10 +14,10 @@
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1432,
+      "points": 1433,
       "latest": {
-        "date": "2026-09-28",
-        "value": 0.851
+        "date": "2026-09-29",
+        "value": 11.446
       }
     },
     "tga": {
@@ -40,12 +40,7 @@
     },
     "hy_oas": {
       "series_id": "BAMLH0A0HYM2",
-      "freq": "D",
-      "points": 785,
-      "latest": {
-        "date": "2026-09-25",
-        "value": 2.93
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 151896 milliseconds with 0 bytes received\n"
     },
     "m1": {
       "series_id": "M1SL",
@@ -77,46 +72,46 @@
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1434,
+      "points": 1435,
       "latest": {
-        "date": "2026-09-25",
-        "value": 4.24
+        "date": "2026-09-28",
+        "value": 4.28
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1434,
+      "points": 1435,
       "latest": {
-        "date": "2026-09-25",
-        "value": 4.81
+        "date": "2026-09-28",
+        "value": 4.92
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1434,
+      "points": 1435,
       "latest": {
-        "date": "2026-09-25",
-        "value": 4.98
+        "date": "2026-09-28",
+        "value": 5.06
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1434,
+      "points": 1435,
       "latest": {
-        "date": "2026-09-25",
-        "value": 5.17
+        "date": "2026-09-28",
+        "value": 5.24
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1434,
+      "points": 1435,
       "latest": {
-        "date": "2026-09-25",
-        "value": 5.49
+        "date": "2026-09-28",
+        "value": 5.56
       }
     },
     "cpi": {
@@ -139,7 +134,12 @@
     },
     "dxy": {
       "series_id": "DTWEXBGS",
-      "error": "curl exit 28: curl: (28) Operation timed out after 1074406 milliseconds with 0 bytes received\n"
+      "freq": "D",
+      "points": 1434,
+      "latest": {
+        "date": "2026-09-25",
+        "value": 120.33
+      }
     },
     "gold": {
       "series_id": "GOLDPMGBD228NLBM",
@@ -165,12 +165,7 @@
     },
     "natgas": {
       "series_id": "DHHNGSP",
-      "freq": "D",
-      "points": 1429,
-      "latest": {
-        "date": "2026-09-22",
-        "value": 2.9
-      }
+      "error": "curl exit 28: curl: (28) Connection timed out after 1068365 milliseconds\n"
     }
   }
 }
