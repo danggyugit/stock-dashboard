@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-10-01T22:19:08.936559+00:00",
+  "cached_at": "2026-10-02T22:22:46.372512+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -14,10 +14,10 @@
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1435,
+      "points": 1436,
       "latest": {
-        "date": "2026-10-01",
-        "value": 0.35
+        "date": "2026-10-02",
+        "value": 1.501
       }
     },
     "tga": {
@@ -43,8 +43,8 @@
       "freq": "D",
       "points": 786,
       "latest": {
-        "date": "2026-09-30",
-        "value": 3.12
+        "date": "2026-10-01",
+        "value": 3.24
       }
     },
     "m1": {
@@ -67,61 +67,61 @@
     },
     "fed_funds": {
       "series_id": "FEDFUNDS",
-      "error": "curl exit 28: curl: (28) Operation timed out after 598837 milliseconds with 0 bytes received\n"
+      "freq": "M",
+      "points": 69,
+      "latest": {
+        "date": "2026-09-01",
+        "value": 3.75
+      }
     },
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1437,
+      "points": 1438,
       "latest": {
-        "date": "2026-09-30",
-        "value": 4.2
+        "date": "2026-10-01",
+        "value": 4.17
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1437,
+      "points": 1438,
       "latest": {
-        "date": "2026-09-30",
-        "value": 4.88
+        "date": "2026-10-01",
+        "value": 4.78
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1437,
+      "points": 1438,
       "latest": {
-        "date": "2026-09-30",
-        "value": 5.09
+        "date": "2026-10-01",
+        "value": 5.01
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1437,
+      "points": 1438,
       "latest": {
-        "date": "2026-09-30",
-        "value": 5.29
+        "date": "2026-10-01",
+        "value": 5.24
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1437,
+      "points": 1438,
       "latest": {
-        "date": "2026-09-30",
-        "value": 5.64
+        "date": "2026-10-01",
+        "value": 5.61
       }
     },
     "cpi": {
       "series_id": "CPIAUCSL",
-      "freq": "M",
-      "points": 67,
-      "latest": {
-        "date": "2026-08-01",
-        "value": 334.131
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 944713 milliseconds with 0 bytes received\n"
     },
     "core_pce": {
       "series_id": "PCEPILFE",
