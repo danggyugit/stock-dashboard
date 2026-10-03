@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-10-02T22:22:46.372512+00:00",
+  "cached_at": "2026-10-03T22:19:05.215779+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -94,12 +94,7 @@
     },
     "dgs5": {
       "series_id": "DGS5",
-      "freq": "D",
-      "points": 1438,
-      "latest": {
-        "date": "2026-10-01",
-        "value": 5.01
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 1055783 milliseconds with 0 bytes received\n"
     },
     "dgs10": {
       "series_id": "DGS10",
@@ -121,7 +116,12 @@
     },
     "cpi": {
       "series_id": "CPIAUCSL",
-      "error": "curl exit 28: curl: (28) Operation timed out after 944713 milliseconds with 0 bytes received\n"
+      "freq": "M",
+      "points": 67,
+      "latest": {
+        "date": "2026-08-01",
+        "value": 334.131
+      }
     },
     "core_pce": {
       "series_id": "PCEPILFE",
