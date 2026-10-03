@@ -1,0 +1,118 @@
+{
+  "preset_id": "it_momentum",
+  "windows": {
+    "21d": {
+      "series": [
+        {
+          "picks_at": "2026-08-24",
+          "eval_date": "2026-09-23",
+          "n_ranked": 46,
+          "ic": 0.5068763490595127,
+          "decile_spread": 0.15688645504576265,
+          "top_n_ret": 0.17788414274637213,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-25",
+          "eval_date": "2026-09-24",
+          "n_ranked": 45,
+          "ic": 0.4798418972332016,
+          "decile_spread": 0.18093146927604864,
+          "top_n_ret": 0.12271727820755696,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-27",
+          "eval_date": "2026-09-28",
+          "n_ranked": 10,
+          "ic": 0.5757575757575757,
+          "decile_spread": 0.34414022973815384,
+          "top_n_ret": 0.06670315170017567,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-28",
+          "eval_date": "2026-09-29",
+          "n_ranked": 10,
+          "ic": 0.8181818181818182,
+          "decile_spread": 0.37084657577139846,
+          "top_n_ret": 0.10648593406456,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-29",
+          "eval_date": "2026-09-30",
+          "n_ranked": 12,
+          "ic": 0.7972027972027973,
+          "decile_spread": 0.4912093000852076,
+          "top_n_ret": 0.11286988590082829,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-30",
+          "eval_date": "2026-09-30",
+          "n_ranked": 12,
+          "ic": 0.8251748251748254,
+          "decile_spread": 0.4801309363058227,
+          "top_n_ret": 0.1227304815029732,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-09-01",
+          "eval_date": "2026-10-01",
+          "n_ranked": 12,
+          "ic": 0.7972027972027973,
+          "decile_spread": 0.4962788107691767,
+          "top_n_ret": 0.16965472147972488,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-09-02",
+          "eval_date": "2026-10-02",
+          "n_ranked": 44,
+          "ic": -0.13375616631430584,
+          "decile_spread": 0.0941454577884282,
+          "top_n_ret": 0.19323740236135833,
+          "spy_ret": null,
+          "alpha": null
+        }
+      ],
+      "summary": {
+        "ic": {
+          "n": 8,
+          "mean": 0.5833102366872778,
+          "std": 0.32424688549970115,
+          "positive_rate": 0.875
+        },
+        "decile_spread": {
+          "n": 8,
+          "mean": 0.3268211543474998,
+          "std": 0.16291146549729077,
+          "positive_rate": 1.0
+        },
+        "top_n_return": {
+          "n": 8,
+          "mean": 0.1340353747454437,
+          "std": 0.04258237423991139,
+          "positive_rate": 1.0
+        },
+        "spy_return": {
+          "n": 0
+        },
+        "alpha": {
+          "n": 0
+        }
+      }
+    }
+  },
+  "updated_at": "2026-10-03T20:30:14.396691+00:00",
+  "min_eligible_entries": 5,
+  "top_n_picks": 5
+}

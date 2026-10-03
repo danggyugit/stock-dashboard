@@ -1,0 +1,108 @@
+{
+  "preset_id": "it_ensemble",
+  "windows": {
+    "21d": {
+      "series": [
+        {
+          "picks_at": "2026-08-24",
+          "eval_date": "2026-09-23",
+          "n_ranked": 45,
+          "ic": 0.2241106719367589,
+          "decile_spread": 0.1859830711729987,
+          "top_n_ret": 0.2313113731258712,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-25",
+          "eval_date": "2026-09-24",
+          "n_ranked": 45,
+          "ic": 0.23346508563899868,
+          "decile_spread": 0.1070055308946912,
+          "top_n_ret": 0.17563513461490782,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-27",
+          "eval_date": "2026-09-28",
+          "n_ranked": 10,
+          "ic": 0.5878787878787878,
+          "decile_spread": 0.34414022973815384,
+          "top_n_ret": 0.06670315170017567,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-28",
+          "eval_date": "2026-09-29",
+          "n_ranked": 10,
+          "ic": 0.8303030303030302,
+          "decile_spread": 0.37084657577139846,
+          "top_n_ret": 0.10648593406456,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-29",
+          "eval_date": "2026-09-30",
+          "n_ranked": 12,
+          "ic": 0.7202797202797203,
+          "decile_spread": 0.3333002344960727,
+          "top_n_ret": 0.11780315130411723,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-08-30",
+          "eval_date": "2026-09-30",
+          "n_ranked": 12,
+          "ic": 0.7552447552447553,
+          "decile_spread": 0.3333002344960727,
+          "top_n_ret": 0.09479941694499752,
+          "spy_ret": null,
+          "alpha": null
+        },
+        {
+          "picks_at": "2026-09-01",
+          "eval_date": "2026-10-01",
+          "n_ranked": 12,
+          "ic": 0.49650349650349657,
+          "decile_spread": 0.2109642784423269,
+          "top_n_ret": 0.15538574370412847,
+          "spy_ret": null,
+          "alpha": null
+        }
+      ],
+      "summary": {
+        "ic": {
+          "n": 7,
+          "mean": 0.5496836496836497,
+          "std": 0.24507977121778704,
+          "positive_rate": 1.0
+        },
+        "decile_spread": {
+          "n": 7,
+          "mean": 0.2693628792873878,
+          "std": 0.10065540317805359,
+          "positive_rate": 1.0
+        },
+        "top_n_return": {
+          "n": 7,
+          "mean": 0.13544627220839398,
+          "std": 0.05587278574230938,
+          "positive_rate": 1.0
+        },
+        "spy_return": {
+          "n": 0
+        },
+        "alpha": {
+          "n": 0
+        }
+      }
+    }
+  },
+  "updated_at": "2026-10-03T20:30:14.301910+00:00",
+  "min_eligible_entries": 5,
+  "top_n_picks": 5
+}
