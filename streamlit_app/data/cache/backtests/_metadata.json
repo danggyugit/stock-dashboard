@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T18:18:23.181223+00:00",
+  "updated_at": "2026-10-03T18:05:13.156227+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -15,7 +15,7 @@
     "use_mom_filter": false,
     "use_turnover_buffer": true,
     "start": "2023-01-01T00:00:00",
-    "end": "2026-10-02T00:00:00",
+    "end": "2026-10-03T00:00:00",
     "min_test": 5
   },
   "sectors": [
@@ -45,7 +45,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:44.444278+00:00"
+      "updated_at": "2026-10-03T17:33:07.874884+00:00"
     },
     "it_momentum": {
       "name": "IT Momentum-Weight (No Cash)",
@@ -54,7 +54,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:44.449537+00:00"
+      "updated_at": "2026-10-03T17:33:07.878626+00:00"
     },
     "it_invvol": {
       "name": "IT Inverse-Vol (No Cash)",
@@ -63,7 +63,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:44.451711+00:00"
+      "updated_at": "2026-10-03T17:33:07.880451+00:00"
     },
     "it_ensemble": {
       "name": "IT Ensemble ML + Inv-Vol",
@@ -72,7 +72,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:44.453583+00:00"
+      "updated_at": "2026-10-03T17:33:07.882446+00:00"
     },
     "it_regime": {
       "name": "IT Inv-Vol + Regime Cash",
@@ -81,7 +81,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:44.455888+00:00"
+      "updated_at": "2026-10-03T17:33:07.884187+00:00"
     },
     "hc_equal": {
       "name": "Health Care Equal Weight (No Cash)",
@@ -90,7 +90,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:45.187825+00:00"
+      "updated_at": "2026-10-03T17:33:08.605380+00:00"
     },
     "hc_momentum": {
       "name": "Health Care Momentum-Weight (No Cash)",
@@ -99,7 +99,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:45.191348+00:00"
+      "updated_at": "2026-10-03T17:33:08.608470+00:00"
     },
     "hc_invvol": {
       "name": "Health Care Inverse-Vol (No Cash)",
@@ -108,7 +108,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:45.193721+00:00"
+      "updated_at": "2026-10-03T17:33:08.610233+00:00"
     },
     "hc_ensemble": {
       "name": "Health Care Ensemble ML + Inv-Vol",
@@ -117,7 +117,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:45.195495+00:00"
+      "updated_at": "2026-10-03T17:33:08.611971+00:00"
     },
     "hc_regime": {
       "name": "Health Care Inv-Vol + Regime Cash",
@@ -126,7 +126,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:45.197460+00:00"
+      "updated_at": "2026-10-03T17:33:08.613889+00:00"
     },
     "fin_equal": {
       "name": "Financials Equal Weight (No Cash)",
@@ -135,7 +135,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:46.098898+00:00"
+      "updated_at": "2026-10-03T17:49:21.310812+00:00"
     },
     "fin_momentum": {
       "name": "Financials Momentum-Weight (No Cash)",
@@ -144,7 +144,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:46.101431+00:00"
+      "updated_at": "2026-10-03T17:49:21.312903+00:00"
     },
     "fin_invvol": {
       "name": "Financials Inverse-Vol (No Cash)",
@@ -153,7 +153,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:46.103300+00:00"
+      "updated_at": "2026-10-03T17:49:21.315238+00:00"
     },
     "fin_ensemble": {
       "name": "Financials Ensemble ML + Inv-Vol",
@@ -162,7 +162,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:46.105113+00:00"
+      "updated_at": "2026-10-03T17:49:21.317029+00:00"
     },
     "fin_regime": {
       "name": "Financials Inv-Vol + Regime Cash",
@@ -171,7 +171,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T17:42:46.109267+00:00"
+      "updated_at": "2026-10-03T17:49:21.318752+00:00"
     },
     "cd_equal": {
       "name": "Consumer Disc. Equal Weight (No Cash)",
@@ -180,7 +180,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.405208+00:00"
+      "updated_at": "2026-10-03T17:49:21.828842+00:00"
     },
     "cd_momentum": {
       "name": "Consumer Disc. Momentum-Weight (No Cash)",
@@ -189,7 +189,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.409043+00:00"
+      "updated_at": "2026-10-03T17:49:21.831769+00:00"
     },
     "cd_invvol": {
       "name": "Consumer Disc. Inverse-Vol (No Cash)",
@@ -198,7 +198,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.411546+00:00"
+      "updated_at": "2026-10-03T17:49:21.833519+00:00"
     },
     "cd_ensemble": {
       "name": "Consumer Disc. Ensemble ML + Inv-Vol",
@@ -207,7 +207,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.413447+00:00"
+      "updated_at": "2026-10-03T17:49:21.835221+00:00"
     },
     "cd_regime": {
       "name": "Consumer Disc. Inv-Vol + Regime Cash",
@@ -216,7 +216,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.415887+00:00"
+      "updated_at": "2026-10-03T17:49:21.836922+00:00"
     },
     "cs_equal": {
       "name": "Comm. Services Equal Weight (No Cash)",
@@ -225,7 +225,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.696103+00:00"
+      "updated_at": "2026-10-03T17:49:22.089933+00:00"
     },
     "cs_momentum": {
       "name": "Comm. Services Momentum-Weight (No Cash)",
@@ -234,7 +234,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.698142+00:00"
+      "updated_at": "2026-10-03T17:49:22.093534+00:00"
     },
     "cs_invvol": {
       "name": "Comm. Services Inverse-Vol (No Cash)",
@@ -243,7 +243,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.700175+00:00"
+      "updated_at": "2026-10-03T17:49:22.095471+00:00"
     },
     "cs_ensemble": {
       "name": "Comm. Services Ensemble ML + Inv-Vol",
@@ -252,7 +252,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.702121+00:00"
+      "updated_at": "2026-10-03T17:49:22.097161+00:00"
     },
     "cs_regime": {
       "name": "Comm. Services Inv-Vol + Regime Cash",
@@ -261,7 +261,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:34.703852+00:00"
+      "updated_at": "2026-10-03T17:49:22.098837+00:00"
     },
     "ind_equal": {
       "name": "Industrials Equal Weight (No Cash)",
@@ -270,7 +270,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:35.610711+00:00"
+      "updated_at": "2026-10-03T17:49:23.043584+00:00"
     },
     "ind_momentum": {
       "name": "Industrials Momentum-Weight (No Cash)",
@@ -279,7 +279,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:35.612771+00:00"
+      "updated_at": "2026-10-03T17:49:23.046675+00:00"
     },
     "ind_invvol": {
       "name": "Industrials Inverse-Vol (No Cash)",
@@ -288,7 +288,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:35.614543+00:00"
+      "updated_at": "2026-10-03T17:49:23.048446+00:00"
     },
     "ind_ensemble": {
       "name": "Industrials Ensemble ML + Inv-Vol",
@@ -297,7 +297,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:35.616340+00:00"
+      "updated_at": "2026-10-03T17:49:23.050426+00:00"
     },
     "ind_regime": {
       "name": "Industrials Inv-Vol + Regime Cash",
@@ -306,7 +306,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:35.618216+00:00"
+      "updated_at": "2026-10-03T17:49:23.052153+00:00"
     },
     "staples_equal": {
       "name": "Consumer Stap. Equal Weight (No Cash)",
@@ -315,7 +315,7 @@
         "Consumer Staples"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.020786+00:00"
+      "updated_at": "2026-10-03T17:49:23.358728+00:00"
     },
     "staples_momentum": {
       "name": "Consumer Stap. Momentum-Weight (No Cash)",
@@ -324,7 +324,7 @@
         "Consumer Staples"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.023381+00:00"
+      "updated_at": "2026-10-03T17:49:23.360696+00:00"
     },
     "staples_invvol": {
       "name": "Consumer Stap. Inverse-Vol (No Cash)",
@@ -333,7 +333,7 @@
         "Consumer Staples"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.025599+00:00"
+      "updated_at": "2026-10-03T17:49:23.362425+00:00"
     },
     "staples_ensemble": {
       "name": "Consumer Stap. Ensemble ML + Inv-Vol",
@@ -342,7 +342,7 @@
         "Consumer Staples"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.027344+00:00"
+      "updated_at": "2026-10-03T17:49:23.364119+00:00"
     },
     "staples_regime": {
       "name": "Consumer Stap. Inv-Vol + Regime Cash",
@@ -351,7 +351,7 @@
         "Consumer Staples"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.029528+00:00"
+      "updated_at": "2026-10-03T17:49:23.365813+00:00"
     },
     "en_equal": {
       "name": "Energy Equal Weight (No Cash)",
@@ -360,7 +360,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.275468+00:00"
+      "updated_at": "2026-10-03T17:49:23.623616+00:00"
     },
     "en_momentum": {
       "name": "Energy Momentum-Weight (No Cash)",
@@ -369,7 +369,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.277439+00:00"
+      "updated_at": "2026-10-03T17:49:23.625653+00:00"
     },
     "en_invvol": {
       "name": "Energy Inverse-Vol (No Cash)",
@@ -378,7 +378,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.279288+00:00"
+      "updated_at": "2026-10-03T17:49:23.627439+00:00"
     },
     "en_ensemble": {
       "name": "Energy Ensemble ML + Inv-Vol",
@@ -387,7 +387,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.281089+00:00"
+      "updated_at": "2026-10-03T17:49:23.629187+00:00"
     },
     "en_regime": {
       "name": "Energy Inv-Vol + Regime Cash",
@@ -396,7 +396,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.282821+00:00"
+      "updated_at": "2026-10-03T17:49:23.630932+00:00"
     },
     "mat_equal": {
       "name": "Materials Equal Weight (No Cash)",
@@ -405,7 +405,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.593214+00:00"
+      "updated_at": "2026-10-03T17:49:23.964247+00:00"
     },
     "mat_momentum": {
       "name": "Materials Momentum-Weight (No Cash)",
@@ -414,7 +414,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.596750+00:00"
+      "updated_at": "2026-10-03T17:49:23.966295+00:00"
     },
     "mat_invvol": {
       "name": "Materials Inverse-Vol (No Cash)",
@@ -423,7 +423,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.598916+00:00"
+      "updated_at": "2026-10-03T17:49:23.968112+00:00"
     },
     "mat_ensemble": {
       "name": "Materials Ensemble ML + Inv-Vol",
@@ -432,7 +432,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.600772+00:00"
+      "updated_at": "2026-10-03T17:49:23.969880+00:00"
     },
     "mat_regime": {
       "name": "Materials Inv-Vol + Regime Cash",
@@ -441,7 +441,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.602797+00:00"
+      "updated_at": "2026-10-03T17:49:23.971642+00:00"
     },
     "re_equal": {
       "name": "Real Estate Equal Weight (No Cash)",
@@ -450,7 +450,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.975877+00:00"
+      "updated_at": "2026-10-03T17:49:24.316955+00:00"
     },
     "re_momentum": {
       "name": "Real Estate Momentum-Weight (No Cash)",
@@ -459,7 +459,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.977958+00:00"
+      "updated_at": "2026-10-03T17:49:24.319019+00:00"
     },
     "re_invvol": {
       "name": "Real Estate Inverse-Vol (No Cash)",
@@ -468,7 +468,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.979859+00:00"
+      "updated_at": "2026-10-03T17:49:24.321666+00:00"
     },
     "re_ensemble": {
       "name": "Real Estate Ensemble ML + Inv-Vol",
@@ -477,7 +477,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.981634+00:00"
+      "updated_at": "2026-10-03T17:49:24.323502+00:00"
     },
     "re_regime": {
       "name": "Real Estate Inv-Vol + Regime Cash",
@@ -486,7 +486,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:00:36.983421+00:00"
+      "updated_at": "2026-10-03T17:49:24.325269+00:00"
     },
     "all_equal": {
       "name": "Cross-Sector Equal Weight (No Cash)",
@@ -504,7 +504,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:18:23.169545+00:00"
+      "updated_at": "2026-10-03T18:05:13.147455+00:00"
     },
     "all_momentum": {
       "name": "Cross-Sector Momentum-Weight (No Cash)",
@@ -522,7 +522,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:18:23.173382+00:00"
+      "updated_at": "2026-10-03T18:05:13.150002+00:00"
     },
     "all_invvol": {
       "name": "Cross-Sector Inverse-Vol (No Cash)",
@@ -540,7 +540,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:18:23.176049+00:00"
+      "updated_at": "2026-10-03T18:05:13.151797+00:00"
     },
     "all_ensemble": {
       "name": "Cross-Sector Ensemble ML + Inv-Vol",
@@ -558,7 +558,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:18:23.177907+00:00"
+      "updated_at": "2026-10-03T18:05:13.153516+00:00"
     },
     "all_regime": {
       "name": "Cross-Sector Inv-Vol + Regime Cash",
@@ -576,7 +576,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-02T18:18:23.180426+00:00"
+      "updated_at": "2026-10-03T18:05:13.155709+00:00"
     }
   },
   "failures": []
