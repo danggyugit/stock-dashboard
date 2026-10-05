@@ -1174,6 +1174,109 @@ def _acquire_singleton_lock() -> "object | None":
     return handle
 
 
+def _write_metadata(cache_dir: Path, common_base: dict, results_by_id: dict,
+                    failures: list[str], partial: bool = False) -> None:
+    """Write backtests/_metadata.json.
+
+    partial=True is the per-sector checkpoint: only presets attempted so far
+    are updated and everything else is merged from the existing file, so
+    sectors that haven't run yet keep their previous entries.
+    """
+    # Metadata (common config with sectors removed since it's per-sector now).
+    # If a sector filter is active, MERGE into the existing _metadata.json so
+    # the 45 sectors we didn't touch keep their entries. Otherwise the site
+    # would think they were removed.
+    common_meta = {k: v for k, v in common_base.items() if k != "sectors"}
+    new_presets = {
+        pid: {
+            "name": p["name"],
+            "description": p["description"],
+            "sectors": p["sectors"],
+            "success": pid in results_by_id,
+            "updated_at": results_by_id.get(pid, {}).get("updated_at"),
+        }
+        for pid, p in PRESETS.items()
+        if not partial or pid in results_by_id or pid in failures
+    }
+    meta_path = cache_dir / "_metadata.json"
+    existing_meta = {}
+    if (partial or _sector_filter) and meta_path.exists():
+        try:
+            existing_meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            logger.warning("Could not read existing metadata for merge: %s", e)
+            existing_meta = {}
+    merged_presets = dict(existing_meta.get("presets", {}))
+    merged_presets.update(new_presets)
+    meta = {
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "common_config": {
+            k: (v.isoformat() if isinstance(v, (datetime, date)) else v)
+            for k, v in common_meta.items()
+        },
+        # Sector/strategy lists mirror the FULL matrix so the site always
+        # shows all 10 sectors × 5 strategies in dropdowns.
+        "sectors": existing_meta.get("sectors") or [s[2] for s in SECTORS],
+        "strategies": existing_meta.get("strategies") or [s[0] for s in STRATEGIES],
+        "presets": merged_presets,
+        "failures": failures,
+    }
+    meta_path.write_text(
+        json.dumps(meta, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+# Network git steps get a timeout so a hung fetch/push (flaky Wi-Fi, Mac
+# dozing off mid-run) can't stall the remaining sectors.
+_GIT_NET_TIMEOUT = 600
+
+
+def _git_commit_and_push(label: str = "") -> bool:
+    """Commit the backtest cache dirs and push. Never raises.
+
+    Called after every sector (label = sector name) and once at the end.
+    If a push fails the commit stays local and rides along with the next
+    call's push, so one bad network moment doesn't lose the whole run.
+    """
+    try:
+        import subprocess as _sp
+        _repo = Path(__file__).resolve().parents[2]
+        kst_now = datetime.now().strftime("%m/%d %H:%M")
+        # Add entire cache directories — captures all 50 preset files, the
+        # metadata, and the forward_test JSONL log without a hard-coded list
+        # that goes stale every time we add a preset or a year rolls over.
+        _paths = [
+            "streamlit_app/data/cache/backtests",
+            "streamlit_app/data/cache/forward_test",
+        ]
+        _sp.run(["git", "add"] + _paths, cwd=_repo, check=True)
+        _staged = _sp.run(["git", "diff", "--cached", "--quiet"], cwd=_repo)
+        if _staged.returncode != 0:
+            _what = f" — {label}" if label else ""
+            _sp.run(
+                ["git", "commit", "-m",
+                 f"chore: refresh preset backtest cache{_what} [skip ci] ({kst_now} KST)"],
+                cwd=_repo, check=True,
+            )
+        # Integrate any remote commits (GitHub Actions valuation cache, etc.)
+        # before pushing — otherwise the push is rejected as non-fast-forward.
+        # merge -X ours keeps our fresh local cache on conflict while preserving
+        # remote-only files. core.protectNTFS=false + sparse-checkout (set on this
+        # machine) let the merge tolerate the Windows-illegal valuation/CON.json.
+        _sp.run(["git", "fetch", "origin"], cwd=_repo, check=True,
+                timeout=_GIT_NET_TIMEOUT)
+        _sp.run(["git", "merge", "-X", "ours", "origin/main", "--no-edit"],
+                cwd=_repo, check=True)
+        _sp.run(["git", "push", "origin", "main"], cwd=_repo, check=True,
+                timeout=_GIT_NET_TIMEOUT)
+        logger.info("Git push complete%s.", f" ({label})" if label else "")
+        return True
+    except Exception as _git_e:
+        logger.warning("Git push failed (non-critical): %s", _git_e)
+        return False
+
+
 def main() -> int:
     from collections import defaultdict
 
@@ -1219,6 +1322,21 @@ def main() -> int:
                 failures.append(pid)
             continue
 
+        # Empty-input guard. When the backtest_data cache is incomplete
+        # (cache_backtest_data still writing, or it ran half-asleep) prices
+        # load but tech/PIT come back empty, and the engine then "succeeds"
+        # with 0 rebalances. Those hollow JSONs overwrote good results on the
+        # site (10/03, 10/04). Fail the sector instead so the previous files
+        # stay in place.
+        if not shared["tech_map"]:
+            logger.error(
+                "Sector %s: no technical indicators computed (input cache "
+                "incomplete?) — skipping, previous results kept", sector_tuple[0],
+            )
+            for pid, _ in presets_for_sector:
+                failures.append(pid)
+            continue
+
         # Snapshot cache is per-sector: all strategies in this sector share
         # one universe, so they share one set of snapshots. Rebuilt fresh for
         # the next sector (different universe), and dropped afterwards so we
@@ -1228,6 +1346,9 @@ def main() -> int:
         for pid, preset in presets_for_sector:
             try:
                 r = run_single_preset(pid, preset, common, shared, snapshot_cache)
+                if not (r.get("summary") or {}).get("n_rebalances"):
+                    # Same guard at the result level, whatever the cause.
+                    raise RuntimeError("backtest produced 0 rebalances — not saving")
                 out_path = cache_dir / f"{pid}.json"
                 out_path.write_text(
                     json.dumps(r, ensure_ascii=False, indent=2, default=str),
@@ -1246,48 +1367,19 @@ def main() -> int:
                 logger.exception("Preset %s failed: %s", pid, e)
                 failures.append(pid)
 
-    # Metadata (common config with sectors removed since it's per-sector now).
-    # If a sector filter is active, MERGE into the existing _metadata.json so
-    # the 45 sectors we didn't touch keep their entries. Otherwise the site
-    # would think they were removed.
-    common_meta = {k: v for k, v in common_base.items() if k != "sectors"}
-    new_presets = {
-        pid: {
-            "name": p["name"],
-            "description": p["description"],
-            "sectors": p["sectors"],
-            "success": pid in results_by_id,
-            "updated_at": results_by_id.get(pid, {}).get("updated_at"),
-        }
-        for pid, p in PRESETS.items()
-    }
-    meta_path = cache_dir / "_metadata.json"
-    existing_meta = {}
-    if _sector_filter and meta_path.exists():
-        try:
-            existing_meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        except Exception as e:
-            logger.warning("Could not read existing metadata for merge: %s", e)
-            existing_meta = {}
-    merged_presets = dict(existing_meta.get("presets", {}))
-    merged_presets.update(new_presets)
-    meta = {
-        "updated_at": datetime.now(timezone.utc).isoformat(),
-        "common_config": {
-            k: (v.isoformat() if isinstance(v, (datetime, date)) else v)
-            for k, v in common_meta.items()
-        },
-        # Sector/strategy lists mirror the FULL matrix so the site always
-        # shows all 10 sectors × 5 strategies in dropdowns.
-        "sectors": existing_meta.get("sectors") or [s[2] for s in SECTORS],
-        "strategies": existing_meta.get("strategies") or [s[0] for s in STRATEGIES],
-        "presets": merged_presets,
-        "failures": failures,
-    }
-    meta_path.write_text(
-        json.dumps(meta, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
+        # Per-sector checkpoint: publish this sector's results right away
+        # instead of holding all 55 presets for one push at the very end.
+        # The full run takes hours and rarely survives a laptop sleep in one
+        # piece — this way every finished sector reaches the site regardless.
+        # (The last sector is covered by the final push below.)
+        if sector_num < len(by_sector) and any(
+            pid in results_by_id for pid, _ in presets_for_sector
+        ):
+            _write_metadata(cache_dir, common_base, results_by_id, failures,
+                            partial=True)
+            _git_commit_and_push(sector_tuple[0])
+
+    _write_metadata(cache_dir, common_base, results_by_id, failures)
     logger.info("Done. %d success, %d failures", len(results_by_id), len(failures))
 
     # ── Telegram 결과 알림 ──────────────────────────────────
@@ -1371,34 +1463,7 @@ def main() -> int:
         )
         return 1
 
-    try:
-        import subprocess as _sp
-        _repo = Path(__file__).resolve().parents[2]
-        # Add entire cache directories — captures all 50 preset files, the
-        # metadata, and the forward_test JSONL log without a hard-coded list
-        # that goes stale every time we add a preset or a year rolls over.
-        _paths = [
-            "streamlit_app/data/cache/backtests",
-            "streamlit_app/data/cache/forward_test",
-        ]
-        _sp.run(["git", "add"] + _paths, cwd=_repo, check=True)
-        _sp.run(
-            ["git", "commit", "-m",
-             f"chore: refresh preset backtest cache [skip ci] ({kst_now} KST)"],
-            cwd=_repo, check=True,
-        )
-        # Integrate any remote commits (GitHub Actions valuation cache, etc.)
-        # before pushing — otherwise the push is rejected as non-fast-forward.
-        # merge -X ours keeps our fresh local cache on conflict while preserving
-        # remote-only files. core.protectNTFS=false + sparse-checkout (set on this
-        # machine) let the merge tolerate the Windows-illegal valuation/CON.json.
-        _sp.run(["git", "fetch", "origin"], cwd=_repo, check=True)
-        _sp.run(["git", "merge", "-X", "ours", "origin/main", "--no-edit"],
-                cwd=_repo, check=True)
-        _sp.run(["git", "push", "origin", "main"], cwd=_repo, check=True)
-        logger.info("Git push complete.")
-    except Exception as _git_e:
-        logger.warning("Git push failed (non-critical): %s", _git_e)
+    _git_commit_and_push()
 
     return 0 if not failures else 1
 

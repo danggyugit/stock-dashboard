@@ -26,6 +26,14 @@ export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 export LANG="en_US.UTF-8"
 export HOME="${HOME:-/Users/danggyu}"
 
+# ── Warning spam guard ───────────────────────────────────────────
+# sklearn emits a "`sklearn.utils.parallel.delayed` should be used with
+# `sklearn.utils.parallel.Parallel`" UserWarning on every joblib task.
+# During preset_backtests that is millions of lines — single logs grew
+# to 3-6 GB and filled the disk. Env var (not warnings.filterwarnings)
+# so the loky worker processes inherit it too.
+export PYTHONWARNINGS="ignore::UserWarning:sklearn.utils.parallel"
+
 REPO="$HOME/claude/stock-dashboard"
 VENV_PY="$REPO/.venv-cache/bin/python"
 LOGDIR="$REPO/logs/launchd"
