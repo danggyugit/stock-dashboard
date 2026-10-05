@@ -15605,14 +15605,14 @@
         ],
         "port_return": -0.0771085305560715,
         "stock_return": -0.0771085305560715,
-        "ic": NaN,
+        "ic": null,
         "turnover": 0.7924820161988605,
         "tc_actual": 0.0023774460485965817,
         "cash_ratio": 0.0,
         "regime": "N/A",
-        "univ_avg_ret": NaN,
+        "univ_avg_ret": null,
         "bottom_ret": -0.0016660597263419286,
-        "precision": NaN
+        "precision": null
       }
     ],
     "cash_history": [

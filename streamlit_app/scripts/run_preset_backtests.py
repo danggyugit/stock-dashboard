@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import math
 import logging
 import os
 import sys
@@ -1174,6 +1175,23 @@ def _acquire_singleton_lock() -> "object | None":
     return handle
 
 
+def _json_safe(o):
+    """Recursively replace NaN/±Infinity floats with None.
+
+    json.dumps writes them as bare NaN/Infinity, which Python reads back but
+    JavaScript's JSON.parse rejects — one NaN (e.g. the IC of a rebalance
+    whose forward window hasn't closed yet) makes the whole preset
+    unreadable for the web app.
+    """
+    if isinstance(o, float):
+        return o if math.isfinite(o) else None
+    if isinstance(o, dict):
+        return {k: _json_safe(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [_json_safe(v) for v in o]
+    return o
+
+
 def _write_metadata(cache_dir: Path, common_base: dict, results_by_id: dict,
                     failures: list[str], partial: bool = False) -> None:
     """Write backtests/_metadata.json.
@@ -1351,7 +1369,8 @@ def main() -> int:
                     raise RuntimeError("backtest produced 0 rebalances — not saving")
                 out_path = cache_dir / f"{pid}.json"
                 out_path.write_text(
-                    json.dumps(r, ensure_ascii=False, indent=2, default=str),
+                    json.dumps(_json_safe(r), ensure_ascii=False, indent=2,
+                               default=str, allow_nan=False),
                     encoding="utf-8",
                 )
                 logger.info("Saved %s", out_path.name)

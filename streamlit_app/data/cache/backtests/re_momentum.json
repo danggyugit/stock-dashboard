@@ -10742,7 +10742,7 @@
         ],
         "port_return": 0.026247672228031805,
         "stock_return": 0.026247672228031805,
-        "ic": NaN,
+        "ic": null,
         "turnover": 1.0,
         "tc_actual": 0.003,
         "cash_ratio": 0.0,
@@ -15162,14 +15162,14 @@
         ],
         "port_return": -0.031860190546800345,
         "stock_return": -0.031860190546800345,
-        "ic": NaN,
+        "ic": null,
         "turnover": 0.5796824419068158,
         "tc_actual": 0.0017390473257204477,
         "cash_ratio": 0.0,
         "regime": "N/A",
-        "univ_avg_ret": NaN,
+        "univ_avg_ret": null,
         "bottom_ret": -0.08972062089590598,
-        "precision": NaN
+        "precision": null
       }
     ],
     "cash_history": [

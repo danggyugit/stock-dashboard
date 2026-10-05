@@ -4361,6 +4361,11 @@ def _deserialize_preset(data: dict) -> tuple[dict, dict]:
     rebal_hist = []
     for h in full.get("rebal_hist", []):
         entry = dict(h)
+        # JSON has no NaN — the batch writes missing stats as null. Restore
+        # NaN so the numeric code paths (nanmean, formatting) keep working.
+        for _k in ("ic", "univ_avg_ret", "precision"):
+            if entry.get(_k, 0) is None:
+                entry[_k] = np.nan
         for k in ("rebalance_date", "next_date"):
             if k in entry:
                 entry[k] = _parse_dt(entry[k])
