@@ -4,6 +4,10 @@
 # preset_backtests to feed fresh price/PIT data into the ML pipeline.
 source "$(dirname "$0")/_common.sh"
 
+# Backtest universe = full S&P 1500 (Large + Mid + Small, 10 sectors).
+# preset_backtests.sh sets the same value — keep the two in sync.
+export BACKTEST_CAP_TIERS=all
+
 run_and_commit \
   "cache_backtest_data" \
   "streamlit_app/scripts/cache_backtest_data.py" \

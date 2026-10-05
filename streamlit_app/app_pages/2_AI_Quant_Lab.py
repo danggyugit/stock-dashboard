@@ -1654,9 +1654,17 @@ def run_backtest(
     rf_annual:           float = 0.04,  # annual risk-free rate for cash return
     label_kind:          str = "raw",   # "raw" | "vol_adj" | "classification"
     precomputed_snapshots: dict | None = None,
+    model_cache: dict | None = None,
+    untracked_universe: list | None = None,
 ) -> dict:
     """메인 백테스트 엔진.
     Ver4.3: + HMM Regime-Based Cash Allocation + Volatility Targeting.
+
+    model_cache: 호출자가 넘기는 dict. 리밸런싱 날짜별로 학습된 모델을
+        보관해, 같은 유니버스·스냅샷으로 여러 전략을 돌릴 때 재학습을
+        건너뛴다 (Step 2 note 참고). None이면 매번 새로 학습.
+    untracked_universe: S&P 500 편입·편출 이력으로 추적되지 않는 종목
+        (Mid/Small Cap). 생존편향 보정 시에도 항상 유니버스에 포함된다.
     """
     n_dates = len(rebal_dates)
     feature_cols = FEAT_COLS
@@ -1682,7 +1690,11 @@ def run_backtest(
         # ── 생존자 편향 보정: 해당 날짜의 역사적 유니버스 ──
         if sp500_changes is not None and current_sp500 is not None:
             hist_members = reconstruct_sp500_at_date(current_sp500, sp500_changes, date)
-            tickers = [t for t in hist_members if t in price_data]
+            # Membership history only covers the S&P 500. Names outside it
+            # (mid/small caps) have no history to reconstruct, so they stay
+            # eligible on every date instead of being dropped wholesale.
+            eligible = set(hist_members) | set(untracked_universe or [])
+            tickers = [t for t in price_data if t in eligible]
         else:
             tickers = list(price_data.keys())
 
@@ -1816,6 +1828,24 @@ def run_backtest(
                 X_imp_df[col] = X_imp_df[col].clip(lo, hi)
         X_imp = X_imp_df.values
 
+        # ── 학습 결과 공유 ────────────────────────────────
+        # The fitted models depend only on the training frame (snapshots,
+        # rolling window, label kind) — never on the strategy knobs applied
+        # after prediction (weighting, cash, turnover buffer). Equal /
+        # momentum / inverse-vol / regime all use this same RF, and the
+        # ensemble adds XGB + LightGBM on top of it. A caller running several
+        # strategies over one universe passes the same dict each time so the
+        # grid search runs once per rebalance date instead of once per
+        # strategy. The row/column check drops an entry that was fitted on a
+        # different training frame, so a mismatched cache refits, not misuses.
+        n_train = len(y_train)
+        fit_key = (date, label_kind)
+        fitted = model_cache.get(fit_key) if model_cache is not None else None
+        if fitted is None or fitted.get("shape") != (n_train, tuple(all_train_cols)):
+            fitted = {"shape": (n_train, tuple(all_train_cols))}
+            if model_cache is not None:
+                model_cache[fit_key] = fitted
+
         # ── Ver4.2: RF 하이퍼파라미터 자동 튜닝 ──────────
         # Ver4.4: cv=3 (random KFold) → TimeSeriesSplit. 학습 데이터가 여러
         # 리밸런싱 스냅샷을 시간 순서로 concat한 것이라, 랜덤 KFold는
@@ -1836,24 +1866,30 @@ def run_backtest(
                 n_estimators=100, random_state=42, n_jobs=1,
             )
             gcv_scoring = "neg_mean_squared_error"
-        n_train = len(y_train)
-        cv_splitter = TimeSeriesSplit(n_splits=3) if n_train >= 20 else 3
-        gcv = GridSearchCV(base_rf, param_grid, cv=cv_splitter,
-                           scoring=gcv_scoring,
-                           n_jobs=N_JOBS, refit=True)
-        gcv.fit(X_imp, y_train)
-        model_rf = gcv.best_estimator_
-        # The grid search is done, so nothing competes for cores any more —
-        # let the winning model use them all when predicting.
-        try:
-            model_rf.set_params(n_jobs=N_JOBS)
-        except Exception:
-            pass
+        if "rf" in fitted:
+            model_rf = fitted["rf"]
+        else:
+            cv_splitter = TimeSeriesSplit(n_splits=3) if n_train >= 20 else 3
+            gcv = GridSearchCV(base_rf, param_grid, cv=cv_splitter,
+                               scoring=gcv_scoring,
+                               n_jobs=N_JOBS, refit=True)
+            gcv.fit(X_imp, y_train)
+            model_rf = gcv.best_estimator_
+            # The grid search is done, so nothing competes for cores any more —
+            # let the winning model use them all when predicting.
+            try:
+                model_rf.set_params(n_jobs=N_JOBS)
+            except Exception:
+                pass
+            fitted["rf"] = model_rf
 
         # XGBoost + LightGBM (앙상블 모드 시)
         model_xgb = None
         model_lgbm = None
-        if use_ensemble:
+        if use_ensemble and "xgb" in fitted and "lgbm" in fitted:
+            model_xgb = fitted["xgb"]
+            model_lgbm = fitted["lgbm"]
+        elif use_ensemble:
             if is_cls:
                 model_xgb = XGBClassifier(
                     n_estimators=100, max_depth=4, learning_rate=0.1,
@@ -1882,6 +1918,8 @@ def run_backtest(
                     random_state=42, n_jobs=N_JOBS, verbose=-1,
                 )
             model_lgbm.fit(X_imp, y_train)
+            fitted["xgb"] = model_xgb
+            fitted["lgbm"] = model_lgbm
 
         # 중요도: 모델별 개별 저장 (raw) + 앙상블 평균 (정규화 후)
         # LightGBM은 split 기반으로 RF/XGBoost 대비 스케일이 수백배 다름
@@ -1889,12 +1927,20 @@ def run_backtest(
         imp_rf_raw = {}
         imp_xgb_raw = {}
         imp_lgbm_raw = {}
+        # Read each importance vector once. RandomForest's feature_importances_
+        # is a property that re-aggregates all trees through a thread pool on
+        # every access — indexing it per column inside the loop cost more
+        # than the rest of a cached-model pass put together.
+        _avail_set = set(avail_cols)
+        _fi_rf = model_rf.feature_importances_
+        _fi_xgb = model_xgb.feature_importances_ if use_ensemble else None
+        _fi_lgbm = model_lgbm.feature_importances_ if use_ensemble else None
         for idx_c, col_name in enumerate(all_train_cols):
-            if col_name in avail_cols:
-                imp_rf_raw[col_name] = model_rf.feature_importances_[idx_c]
+            if col_name in _avail_set:
+                imp_rf_raw[col_name] = _fi_rf[idx_c]
                 if use_ensemble:
-                    imp_xgb_raw[col_name]  = model_xgb.feature_importances_[idx_c]
-                    imp_lgbm_raw[col_name] = model_lgbm.feature_importances_[idx_c]
+                    imp_xgb_raw[col_name]  = _fi_xgb[idx_c]
+                    imp_lgbm_raw[col_name] = _fi_lgbm[idx_c]
 
         # 정규화 (합계 1)
         def _norm(d):

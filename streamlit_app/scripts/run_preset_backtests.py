@@ -70,6 +70,8 @@ _TG_CHAT_IDS = (
 
 def _notify_telegram(text: str) -> None:
     """배치 결과를 Telegram으로 발송. 실패해도 배치 자체에 영향 없음."""
+    if os.environ.get("PRESET_NO_PUSH", "").strip() == "1":
+        return
     if not _TG_TOKEN or not _TG_CHAT_IDS:
         logger.info("Telegram 미설정 — 알림 건너뜀")
         return
@@ -227,6 +229,38 @@ logger.info("AI Quant Lab module loaded (batch mode)")
 # 3. Preset configurations
 # ════════════════════════════════════════════════════════════
 
+# ── Universe / trial-run switches (env) ───────────────────────
+#
+# BACKTEST_CAP_TIERS  "large" (default) | "all" (S&P 1500: Large+Mid+Small)
+#                     or a comma list of tier names. Must match what
+#                     cache_backtest_data.py collected.
+# BACKTEST_DATA_DIR   input pickle dir (default data/cache/backtest_data)
+# PRESET_OUTPUT_DIR   where preset JSONs go (default data/cache/backtests)
+# PRESET_NO_PUSH=1    dry run: no git commit/push, no Telegram, no
+#                     forward-test log append. For timing a new universe
+#                     without touching what the site serves.
+_ALL_CAP_TIERS = ["Large Cap", "Mid Cap", "Small Cap"]
+
+
+def _cap_tiers_from_env() -> list[str]:
+    raw = os.environ.get("BACKTEST_CAP_TIERS", "").strip()
+    if not raw or raw.lower() == "large":
+        return ["Large Cap"]
+    if raw.lower() == "all":
+        return list(_ALL_CAP_TIERS)
+    tiers = [t.strip() for t in raw.split(",") if t.strip()]
+    unknown = [t for t in tiers if t not in _ALL_CAP_TIERS]
+    if unknown:
+        raise ValueError(f"BACKTEST_CAP_TIERS: unknown tier(s) {unknown}")
+    return tiers
+
+
+CAP_TIERS = _cap_tiers_from_env()
+_DATA_DIR_ENV = os.environ.get("BACKTEST_DATA_DIR", "").strip()
+_OUTPUT_DIR_ENV = os.environ.get("PRESET_OUTPUT_DIR", "").strip()
+NO_PUSH = os.environ.get("PRESET_NO_PUSH", "").strip() == "1"
+
+
 def _common_config() -> dict:
     """Settings shared across ALL presets. `sectors` is filled in per-loop
     because each preset targets a single sector (10-sector matrix)."""
@@ -234,7 +268,7 @@ def _common_config() -> dict:
     end_dt = today - timedelta(days=1)           # yesterday
     start_dt = date(2023, 1, 1)
     return {
-        "cap_tiers": ["Large Cap"],
+        "cap_tiers": list(CAP_TIERS),
         # sectors set per-sector iteration in main()
         "rebal_m": 1,
         "rolling_w": 12,
@@ -312,6 +346,54 @@ STRATEGIES = [
 # universe always spans all 10 sectors even when we filter for a subset.
 _ALL_SECTORS_FULL = [s[2] for s in SECTORS]
 
+
+# ── Data-readiness gate for the wider universe ────────────────
+#
+# Yahoo rate-limits statement downloads, so after switching the collector
+# to the S&P 1500 it takes a few nights before mid/small caps have PIT
+# financials (see collect_pit in cache_backtest_data.py). Running the
+# matrix on them before that would rank two thirds of the universe on
+# imputed fundamentals. Until coverage of the non-large tiers reaches the
+# threshold, fall back to Large Cap — same universe as before — and switch
+# over automatically on the first night the data is there.
+def _gate_cap_tiers(tiers: list[str]) -> list[str]:
+    extra = [t for t in tiers if t != "Large Cap"]
+    if not extra:
+        return tiers
+    need = float(os.environ.get("PRESET_MIN_PIT_COVERAGE", "0.9"))
+    data_dir = (Path(_DATA_DIR_ENV) if _DATA_DIR_ENV
+                else _APP_DIR / "data" / "cache" / "backtest_data")
+    try:
+        import gzip
+        import pickle
+        meta = json.loads((data_dir / "metadata.json").read_text(encoding="utf-8"))
+        with gzip.open(data_dir / "pit.pkl.gz", "rb") as f:
+            pit = pickle.load(f)
+        wanted = [m["ticker"] for m in meta
+                  if m.get("cap_tier") in extra and m.get("sector") in _ALL_SECTORS_FULL]
+        ok = 0
+        for t in wanted:
+            df = (pit.get(t) or {}).get("income")
+            if df is not None and not df.empty:
+                ok += 1
+        cov = ok / len(wanted) if wanted else 0.0
+    except Exception as e:
+        logger.warning("Universe gate: could not read PIT coverage (%s) — "
+                       "using Large Cap only", e)
+        return ["Large Cap"]
+    if cov < need:
+        logger.warning(
+            "Universe gate: PIT coverage for %s is %.0f%% (%d/%d), below %.0f%% "
+            "— running Large Cap only tonight", "+".join(extra), cov * 100,
+            ok, len(wanted), need * 100)
+        return ["Large Cap"]
+    logger.info("Universe gate: PIT coverage for %s is %.0f%% — using %s",
+                "+".join(extra), cov * 100, " + ".join(tiers))
+    return tiers
+
+
+CAP_TIERS = _gate_cap_tiers(CAP_TIERS)
+
 # Optional sector filter via env var — comma-separated sector KEYS (not full
 # names). Used to iterate a subset quickly, e.g. testing a code change on
 # just IT before committing 4-5h of full-matrix compute.
@@ -348,7 +430,10 @@ if _include_cross:
     for _strat_key, _strat_name, _strat_desc, _overrides in STRATEGIES:
         PRESETS[f"all_{_strat_key}"] = {
             "name": f"Cross-Sector {_strat_name}",
-            "description": f"전 섹터 라지캡 통합 유니버스, {_strat_desc}",
+            "description": (
+                f"전 섹터 {'라지캡' if CAP_TIERS == ['Large Cap'] else 'S&P 1500'}"
+                f" 통합 유니버스, {_strat_desc}"
+            ),
             "sectors": list(_ALL_SECTORS_FULL),
             "overrides": _overrides,
         }
@@ -386,7 +471,8 @@ def prepare_shared_data(cfg: dict):
     # Module-level cache — populated once per process, reused across sectors.
     global _CACHE
     if "_CACHE" not in globals() or _CACHE is None:
-        cache_dir = _APP_DIR / "data" / "cache" / "backtest_data"
+        cache_dir = (Path(_DATA_DIR_ENV) if _DATA_DIR_ENV
+                     else _APP_DIR / "data" / "cache" / "backtest_data")
         if not cache_dir.exists():
             raise RuntimeError(
                 f"Cache dir missing: {cache_dir}. Run "
@@ -438,6 +524,10 @@ def prepare_shared_data(cfg: dict):
             extra_tickers = [t for t in extra_tickers if t not in universe]
     all_tickers = list(set(universe + extra_tickers))
     logger.info("All tickers incl. historical: %d", len(all_tickers))
+    # Mid/small caps have no S&P 500 membership history — keep them eligible
+    # on every date rather than letting the reconstruction drop them.
+    _sp500_set = set(current_sp500 or [])
+    untracked_universe = [t for t in universe if t not in _sp500_set]
 
     # Filter cached prices/fundamentals/PIT to this sector's universe
     all_prices = _CACHE["prices"]
@@ -484,6 +574,7 @@ def prepare_shared_data(cfg: dict):
         "rebal_dates": rebal_dates,
         "sp500_changes": sp500_changes,
         "current_sp500": current_sp500,
+        "untracked_universe": untracked_universe,
         "available": available,
     }
 
@@ -694,6 +785,12 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict,
         # First preset in a sector builds the snapshots; the remaining four
         # reuse them (identical inputs — see run_backtest's Step 1 note).
         precomputed_snapshots=(snapshot_cache or {}).get("snapshots"),
+        # Same idea for the fitted models: the strategies in a sector differ
+        # only in what happens after prediction, so the per-rebalance grid
+        # search runs once and the other four reuse it.
+        model_cache=(snapshot_cache.setdefault("models", {})
+                     if snapshot_cache is not None else None),
+        untracked_universe=shared.get("untracked_universe"),
     )
 
     # Hand the freshly-built snapshots back to the caller so the next
@@ -1257,6 +1354,8 @@ def _git_commit_and_push(label: str = "") -> bool:
     If a push fails the commit stays local and rides along with the next
     call's push, so one bad network moment doesn't lose the whole run.
     """
+    if NO_PUSH:
+        return False
     try:
         import subprocess as _sp
         _repo = Path(__file__).resolve().parents[2]
@@ -1298,8 +1397,11 @@ def _git_commit_and_push(label: str = "") -> bool:
 def main() -> int:
     from collections import defaultdict
 
-    cache_dir = _APP_DIR / "data" / "cache" / "backtests"
+    cache_dir = (Path(_OUTPUT_DIR_ENV) if _OUTPUT_DIR_ENV
+                 else _APP_DIR / "data" / "cache" / "backtests")
     cache_dir.mkdir(parents=True, exist_ok=True)
+    if NO_PUSH:
+        logger.info("PRESET_NO_PUSH=1 — dry run, results stay in %s", cache_dir)
 
     common_base = _common_config()
     logger.info(
@@ -1379,7 +1481,8 @@ def main() -> int:
                 # downstream joiner can compute out-of-sample IC + decile
                 # spread on the actual picks the app served users.
                 try:
-                    _append_forward_test_log(pid, r)
+                    if not NO_PUSH:
+                        _append_forward_test_log(pid, r)
                 except Exception as log_e:
                     logger.warning("Forward log append failed (%s): %s", pid, log_e)
             except Exception as e:
