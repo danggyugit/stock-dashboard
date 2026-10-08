@@ -768,12 +768,6 @@
     "cap_tier": "Large Cap"
   },
   {
-    "ticker": "CTVA",
-    "name": "Corteva",
-    "sector": "Materials",
-    "cap_tier": "Large Cap"
-  },
-  {
     "ticker": "CSGP",
     "name": "CoStar Group",
     "sector": "Real Estate",
@@ -2148,7 +2142,7 @@
     "cap_tier": "Large Cap"
   },
   {
-    "ticker": "PSKY",
+    "ticker": "SKYD",
     "name": "Paramount Skydance Corporation",
     "sector": "Communication Services",
     "cap_tier": "Large Cap"
@@ -2706,6 +2700,12 @@
     "cap_tier": "Large Cap"
   },
   {
+    "ticker": "TWLO",
+    "name": "Twilio",
+    "sector": "Information Technology",
+    "cap_tier": "Large Cap"
+  },
+  {
     "ticker": "TYL",
     "name": "Tyler Technologies",
     "sector": "Information Technology",
@@ -2868,6 +2868,12 @@
     "cap_tier": "Large Cap"
   },
   {
+    "ticker": "VYLR",
+    "name": "Vylor",
+    "sector": "Consumer Staples",
+    "cap_tier": "Large Cap"
+  },
+  {
     "ticker": "WRB",
     "name": "W. R. Berkley Corporation",
     "sector": "Financials",
@@ -2894,12 +2900,6 @@
   {
     "ticker": "DIS",
     "name": "Walt Disney Company (The)",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap"
-  },
-  {
-    "ticker": "WBD",
-    "name": "Warner Bros. Discovery",
     "sector": "Communication Services",
     "cap_tier": "Large Cap"
   },
@@ -5156,12 +5156,6 @@
   {
     "ticker": "TTMI",
     "name": "TTM Technologies",
-    "sector": "Information Technology",
-    "cap_tier": "Mid Cap"
-  },
-  {
-    "ticker": "TWLO",
-    "name": "Twilio",
     "sector": "Information Technology",
     "cap_tier": "Mid Cap"
   },
