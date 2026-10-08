@@ -1,50 +1,50 @@
 {
-  "cached_at": "2026-10-07T22:21:10.515987+00:00",
+  "cached_at": "2026-10-08T22:15:03.493090+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
       "series_id": "WALCL",
       "freq": "W",
-      "points": 300,
+      "points": 301,
       "latest": {
-        "date": "2026-09-30",
-        "value": 6743031.0
+        "date": "2026-10-07",
+        "value": 6747560.0
       }
     },
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1439,
+      "points": 1440,
       "latest": {
-        "date": "2026-10-07",
-        "value": 2.338
+        "date": "2026-10-08",
+        "value": 0.335
       }
     },
     "tga": {
       "series_id": "WTREGEN",
       "freq": "W",
-      "points": 300,
+      "points": 301,
       "latest": {
-        "date": "2026-09-30",
-        "value": 948674.0
+        "date": "2026-10-07",
+        "value": 880253.0
       }
     },
     "reserves": {
       "series_id": "WRESBAL",
       "freq": "W",
-      "points": 300,
+      "points": 301,
       "latest": {
-        "date": "2026-09-30",
-        "value": 2948090.0
+        "date": "2026-10-07",
+        "value": 3029659.0
       }
     },
     "hy_oas": {
       "series_id": "BAMLH0A0HYM2",
       "freq": "D",
-      "points": 785,
+      "points": 786,
       "latest": {
-        "date": "2026-10-06",
-        "value": 3.03
+        "date": "2026-10-07",
+        "value": 3.09
       }
     },
     "m1": {
@@ -67,51 +67,56 @@
     },
     "fed_funds": {
       "series_id": "FEDFUNDS",
-      "error": "curl exit 28: curl: (28) Operation timed out after 954796 milliseconds with 0 bytes received\n"
+      "freq": "M",
+      "points": 69,
+      "latest": {
+        "date": "2026-09-01",
+        "value": 3.75
+      }
     },
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1441,
+      "points": 1442,
       "latest": {
-        "date": "2026-10-06",
-        "value": 4.21
+        "date": "2026-10-07",
+        "value": 4.22
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1441,
+      "points": 1442,
       "latest": {
-        "date": "2026-10-06",
-        "value": 4.79
+        "date": "2026-10-07",
+        "value": 4.77
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1441,
+      "points": 1442,
       "latest": {
-        "date": "2026-10-06",
+        "date": "2026-10-07",
         "value": 5.03
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1441,
+      "points": 1442,
       "latest": {
-        "date": "2026-10-06",
-        "value": 5.27
+        "date": "2026-10-07",
+        "value": 5.28
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1441,
+      "points": 1442,
       "latest": {
-        "date": "2026-10-06",
-        "value": 5.64
+        "date": "2026-10-07",
+        "value": 5.67
       }
     },
     "cpi": {
@@ -125,7 +130,12 @@
     },
     "core_pce": {
       "series_id": "PCEPILFE",
-      "error": "curl exit 28: curl: (28) Operation timed out after 943872 milliseconds with 0 bytes received\n"
+      "freq": "M",
+      "points": 68,
+      "latest": {
+        "date": "2026-08-01",
+        "value": 130.455
+      }
     },
     "dxy": {
       "series_id": "DTWEXBGS",
