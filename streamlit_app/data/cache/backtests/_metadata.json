@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T18:04:50.737088+00:00",
+  "updated_at": "2026-10-08T18:26:26.291050+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap",
@@ -137,7 +137,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-08T03:04:48.019903+00:00"
+      "updated_at": "2026-10-08T18:25:26.445567+00:00"
     },
     "fin_momentum": {
       "name": "Financials Momentum-Weight (No Cash)",
@@ -146,7 +146,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-08T03:04:55.789123+00:00"
+      "updated_at": "2026-10-08T18:25:34.600909+00:00"
     },
     "fin_invvol": {
       "name": "Financials Inverse-Vol (No Cash)",
@@ -155,7 +155,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-08T03:05:03.477586+00:00"
+      "updated_at": "2026-10-08T18:25:43.953082+00:00"
     },
     "fin_ensemble": {
       "name": "Financials Ensemble ML + Inv-Vol",
@@ -164,7 +164,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-08T03:05:21.890078+00:00"
+      "updated_at": "2026-10-08T18:26:03.313257+00:00"
     },
     "fin_regime": {
       "name": "Financials Inv-Vol + Regime Cash",
@@ -173,7 +173,7 @@
         "Financials"
       ],
       "success": true,
-      "updated_at": "2026-10-08T03:05:40.402248+00:00"
+      "updated_at": "2026-10-08T18:26:26.270427+00:00"
     },
     "cd_equal": {
       "name": "Consumer Disc. Equal Weight (No Cash)",
