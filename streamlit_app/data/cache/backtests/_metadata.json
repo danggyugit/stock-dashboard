@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T03:09:27.328911+00:00",
+  "updated_at": "2026-10-08T03:12:21.161213+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -270,7 +270,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-06T18:06:01.556717+00:00"
+      "updated_at": "2026-10-08T03:11:37.429678+00:00"
     },
     "ind_momentum": {
       "name": "Industrials Momentum-Weight (No Cash)",
@@ -279,7 +279,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-06T18:06:09.914534+00:00"
+      "updated_at": "2026-10-08T03:11:45.194277+00:00"
     },
     "ind_invvol": {
       "name": "Industrials Inverse-Vol (No Cash)",
@@ -288,7 +288,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-06T18:06:18.495945+00:00"
+      "updated_at": "2026-10-08T03:11:52.229299+00:00"
     },
     "ind_ensemble": {
       "name": "Industrials Ensemble ML + Inv-Vol",
@@ -297,7 +297,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-06T18:06:41.690600+00:00"
+      "updated_at": "2026-10-08T03:12:07.817914+00:00"
     },
     "ind_regime": {
       "name": "Industrials Inv-Vol + Regime Cash",
@@ -306,7 +306,7 @@
         "Industrials"
       ],
       "success": true,
-      "updated_at": "2026-10-06T18:06:55.837480+00:00"
+      "updated_at": "2026-10-08T03:12:21.140361+00:00"
     },
     "staples_equal": {
       "name": "Consumer Stap. Equal Weight (No Cash)",
