@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-08T03:00:27.275595+00:00",
+  "updated_at": "2026-10-08T03:02:52.103366+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -90,7 +90,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-06T17:39:51.726967+00:00"
+      "updated_at": "2026-10-08T03:01:58.121672+00:00"
     },
     "hc_momentum": {
       "name": "Health Care Momentum-Weight (No Cash)",
@@ -99,7 +99,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-06T17:40:00.389921+00:00"
+      "updated_at": "2026-10-08T03:02:05.614330+00:00"
     },
     "hc_invvol": {
       "name": "Health Care Inverse-Vol (No Cash)",
@@ -108,7 +108,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-06T17:40:08.467201+00:00"
+      "updated_at": "2026-10-08T03:02:13.297418+00:00"
     },
     "hc_ensemble": {
       "name": "Health Care Ensemble ML + Inv-Vol",
@@ -117,7 +117,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-06T17:40:36.614618+00:00"
+      "updated_at": "2026-10-08T03:02:34.008523+00:00"
     },
     "hc_regime": {
       "name": "Health Care Inv-Vol + Regime Cash",
@@ -126,7 +126,7 @@
         "Health Care"
       ],
       "success": true,
-      "updated_at": "2026-10-06T17:40:54.614579+00:00"
+      "updated_at": "2026-10-08T03:02:52.078319+00:00"
     },
     "fin_equal": {
       "name": "Financials Equal Weight (No Cash)",
