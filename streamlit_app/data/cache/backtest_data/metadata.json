@@ -2142,12 +2142,6 @@
     "cap_tier": "Large Cap"
   },
   {
-    "ticker": "SKYD",
-    "name": "Paramount Skydance Corporation",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap"
-  },
-  {
     "ticker": "PH",
     "name": "Parker Hannifin",
     "sector": "Industrials",
@@ -2463,6 +2457,12 @@
     "ticker": "SPG",
     "name": "Simon Property Group",
     "sector": "Real Estate",
+    "cap_tier": "Large Cap"
+  },
+  {
+    "ticker": "SKYD",
+    "name": "Skydance Corporation",
+    "sector": "Communication Services",
     "cap_tier": "Large Cap"
   },
   {
@@ -3588,6 +3588,12 @@
     "cap_tier": "Mid Cap"
   },
   {
+    "ticker": "CTVA",
+    "name": "Corteva",
+    "sector": "Materials",
+    "cap_tier": "Mid Cap"
+  },
+  {
     "ticker": "CUBE",
     "name": "CubeSmart",
     "sector": "Real Estate",
@@ -3909,6 +3915,12 @@
     "ticker": "FNF",
     "name": "Fidelity National Financial",
     "sector": "Financials",
+    "cap_tier": "Mid Cap"
+  },
+  {
+    "ticker": "FORM",
+    "name": "FormFactor, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap"
   },
   {
@@ -4569,12 +4581,6 @@
     "ticker": "OLLI",
     "name": "Ollie's Bargain Outlet",
     "sector": "Consumer Discretionary",
-    "cap_tier": "Mid Cap"
-  },
-  {
-    "ticker": "OLN",
-    "name": "Olin Corporation",
-    "sector": "Materials",
     "cap_tier": "Mid Cap"
   },
   {
@@ -6657,12 +6663,6 @@
     "ticker": "FMC",
     "name": "FMC Corporation",
     "sector": "Materials",
-    "cap_tier": "Small Cap"
-  },
-  {
-    "ticker": "FORM",
-    "name": "FormFactor, Inc.",
-    "sector": "Information Technology",
     "cap_tier": "Small Cap"
   },
   {
