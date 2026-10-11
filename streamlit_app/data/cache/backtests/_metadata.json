@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-11T17:47:27.864104+00:00",
+  "updated_at": "2026-10-11T17:53:45.319620+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap",
@@ -182,7 +182,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-10T17:53:04.151781+00:00"
+      "updated_at": "2026-10-11T17:52:58.887799+00:00"
     },
     "cd_momentum": {
       "name": "Consumer Disc. Momentum-Weight (No Cash)",
@@ -191,7 +191,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-10T17:53:12.326629+00:00"
+      "updated_at": "2026-10-11T17:53:07.114158+00:00"
     },
     "cd_invvol": {
       "name": "Consumer Disc. Inverse-Vol (No Cash)",
@@ -200,7 +200,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-10T17:53:20.384071+00:00"
+      "updated_at": "2026-10-11T17:53:15.095603+00:00"
     },
     "cd_ensemble": {
       "name": "Consumer Disc. Ensemble ML + Inv-Vol",
@@ -209,7 +209,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-10T17:53:38.241998+00:00"
+      "updated_at": "2026-10-11T17:53:32.493247+00:00"
     },
     "cd_regime": {
       "name": "Consumer Disc. Inv-Vol + Regime Cash",
@@ -218,7 +218,7 @@
         "Consumer Discretionary"
       ],
       "success": true,
-      "updated_at": "2026-10-10T17:53:51.202910+00:00"
+      "updated_at": "2026-10-11T17:53:45.296464+00:00"
     },
     "cs_equal": {
       "name": "Comm. Services Equal Weight (No Cash)",
