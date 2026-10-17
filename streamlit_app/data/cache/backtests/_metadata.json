@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-17T08:09:41.183330+00:00",
+  "updated_at": "2026-10-17T10:45:46.218139+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -314,8 +314,8 @@
       "sectors": [
         "Consumer Staples"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-10-17T09:10:39.111398+00:00"
     },
     "staples_momentum": {
       "name": "Consumer Stap. Momentum-Weight (No Cash)",
@@ -323,8 +323,8 @@
       "sectors": [
         "Consumer Staples"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-10-17T09:26:25.088739+00:00"
     },
     "staples_invvol": {
       "name": "Consumer Stap. Inverse-Vol (No Cash)",
@@ -332,8 +332,8 @@
       "sectors": [
         "Consumer Staples"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-10-17T09:57:33.411367+00:00"
     },
     "staples_ensemble": {
       "name": "Consumer Stap. Ensemble ML + Inv-Vol",
@@ -341,8 +341,8 @@
       "sectors": [
         "Consumer Staples"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-10-17T10:29:22.382647+00:00"
     },
     "staples_regime": {
       "name": "Consumer Stap. Inv-Vol + Regime Cash",
@@ -350,8 +350,8 @@
       "sectors": [
         "Consumer Staples"
       ],
-      "success": false,
-      "updated_at": null
+      "success": true,
+      "updated_at": "2026-10-17T10:45:46.199351+00:00"
     },
     "en_equal": {
       "name": "Energy Equal Weight (No Cash)",
