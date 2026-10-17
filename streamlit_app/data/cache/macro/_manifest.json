@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-10-16T22:15:48.555645+00:00",
+  "cached_at": "2026-10-17T22:26:20.055276+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -85,12 +85,7 @@
     },
     "dgs2": {
       "series_id": "DGS2",
-      "freq": "D",
-      "points": 1447,
-      "latest": {
-        "date": "2026-10-15",
-        "value": 4.77
-      }
+      "error": "curl exit 28: curl: (28) Operation timed out after 1000827 milliseconds with 0 bytes received\n"
     },
     "dgs5": {
       "series_id": "DGS5",
@@ -103,7 +98,12 @@
     },
     "dgs10": {
       "series_id": "DGS10",
-      "error": "curl exit 28: curl: (28) Operation timed out after 944819 milliseconds with 0 bytes received\n"
+      "freq": "D",
+      "points": 1447,
+      "latest": {
+        "date": "2026-10-15",
+        "value": 5.1
+      }
     },
     "dgs30": {
       "series_id": "DGS30",
@@ -125,7 +125,12 @@
     },
     "core_pce": {
       "series_id": "PCEPILFE",
-      "error": "curl exit 28: curl: (28) Operation timed out after 399509 milliseconds with 0 bytes received\n"
+      "freq": "M",
+      "points": 68,
+      "latest": {
+        "date": "2026-08-01",
+        "value": 130.455
+      }
     },
     "dxy": {
       "series_id": "DTWEXBGS",
@@ -160,7 +165,7 @@
     },
     "natgas": {
       "series_id": "DHHNGSP",
-      "error": "curl exit 28: curl: (28) Operation timed out after 1039344 milliseconds with 0 bytes received\n"
+      "error": "curl exit 28: curl: (28) Operation timed out after 1029742 milliseconds with 0 bytes received\n"
     }
   }
 }
