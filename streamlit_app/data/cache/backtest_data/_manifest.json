@@ -1,8 +1,8 @@
 {
-  "cached_at": "2026-10-16T06:09:06.067630+00:00",
+  "cached_at": "2026-10-18T08:26:55.381144+00:00",
   "data_start": "2021-11-27",
-  "data_end": "2026-10-15",
-  "tickers_count": 561,
+  "data_end": "2026-10-16",
+  "tickers_count": 1278,
   "target_sectors": [
     "Information Technology",
     "Health Care",
@@ -20,7 +20,7 @@
     "Mid Cap",
     "Small Cap"
   ],
-  "pit_with_data": 279,
+  "pit_with_data": 393,
   "files": [
     "prices.pkl.gz",
     "fundamentals.pkl.gz",
