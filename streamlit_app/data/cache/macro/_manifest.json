@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-10-17T22:26:20.055276+00:00",
+  "cached_at": "2026-10-18T22:16:46.865416+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -85,7 +85,12 @@
     },
     "dgs2": {
       "series_id": "DGS2",
-      "error": "curl exit 28: curl: (28) Operation timed out after 1000827 milliseconds with 0 bytes received\n"
+      "freq": "D",
+      "points": 1447,
+      "latest": {
+        "date": "2026-10-15",
+        "value": 4.77
+      }
     },
     "dgs5": {
       "series_id": "DGS5",
@@ -165,7 +170,12 @@
     },
     "natgas": {
       "series_id": "DHHNGSP",
-      "error": "curl exit 28: curl: (28) Operation timed out after 1029742 milliseconds with 0 bytes received\n"
+      "freq": "D",
+      "points": 1445,
+      "latest": {
+        "date": "2026-10-14",
+        "value": 3.22
+      }
     }
   }
 }
