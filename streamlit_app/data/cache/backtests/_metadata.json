@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-20T04:56:38.165308+00:00",
+  "updated_at": "2026-10-20T09:04:23.432540+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap"
@@ -405,7 +405,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-18T06:27:31.681578+00:00"
+      "updated_at": "2026-10-20T06:53:12.131442+00:00"
     },
     "mat_momentum": {
       "name": "Materials Momentum-Weight (No Cash)",
@@ -414,7 +414,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-18T06:27:39.233221+00:00"
+      "updated_at": "2026-10-20T07:10:06.816394+00:00"
     },
     "mat_invvol": {
       "name": "Materials Inverse-Vol (No Cash)",
@@ -423,7 +423,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-18T06:27:46.291113+00:00"
+      "updated_at": "2026-10-20T07:42:51.250193+00:00"
     },
     "mat_ensemble": {
       "name": "Materials Ensemble ML + Inv-Vol",
@@ -432,7 +432,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-18T06:30:02.494951+00:00"
+      "updated_at": "2026-10-20T08:11:08.695518+00:00"
     },
     "mat_regime": {
       "name": "Materials Inv-Vol + Regime Cash",
@@ -441,7 +441,7 @@
         "Materials"
       ],
       "success": true,
-      "updated_at": "2026-10-18T06:33:41.790562+00:00"
+      "updated_at": "2026-10-20T09:04:23.413559+00:00"
     },
     "re_equal": {
       "name": "Real Estate Equal Weight (No Cash)",
