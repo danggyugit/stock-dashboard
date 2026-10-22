@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-22T16:50:24.503677+00:00",
+  "updated_at": "2026-10-22T17:44:23.858359+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap",
@@ -492,7 +492,7 @@
     },
     "all_equal": {
       "name": "Cross-Sector Equal Weight (No Cash)",
-      "description": "전 섹터 라지캡 통합 유니버스, 균등 가중, 현금 없음",
+      "description": "전 섹터 S&P 1500 통합 유니버스, 균등 가중, 현금 없음",
       "sectors": [
         "Information Technology",
         "Health Care",
@@ -506,11 +506,11 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-20T23:53:40.188800+00:00"
+      "updated_at": "2026-10-22T17:43:04.293432+00:00"
     },
     "all_momentum": {
       "name": "Cross-Sector Momentum-Weight (No Cash)",
-      "description": "전 섹터 라지캡 통합 유니버스, 모멘텀 비례 가중, 현금 없음",
+      "description": "전 섹터 S&P 1500 통합 유니버스, 모멘텀 비례 가중, 현금 없음",
       "sectors": [
         "Information Technology",
         "Health Care",
@@ -524,11 +524,11 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-21T00:03:04.327558+00:00"
+      "updated_at": "2026-10-22T17:43:17.578462+00:00"
     },
     "all_invvol": {
       "name": "Cross-Sector Inverse-Vol (No Cash)",
-      "description": "전 섹터 라지캡 통합 유니버스, Inverse-Vol 가중, 현금 없음",
+      "description": "전 섹터 S&P 1500 통합 유니버스, Inverse-Vol 가중, 현금 없음",
       "sectors": [
         "Information Technology",
         "Health Care",
@@ -542,11 +542,11 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-21T00:18:52.363446+00:00"
+      "updated_at": "2026-10-22T17:43:30.469320+00:00"
     },
     "all_ensemble": {
       "name": "Cross-Sector Ensemble ML + Inv-Vol",
-      "description": "전 섹터 라지캡 통합 유니버스, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
+      "description": "전 섹터 S&P 1500 통합 유니버스, 3-모델 앙상블 + Inverse-Vol, 현금 없음",
       "sectors": [
         "Information Technology",
         "Health Care",
@@ -560,11 +560,11 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-21T00:37:53.026387+00:00"
+      "updated_at": "2026-10-22T17:44:04.817517+00:00"
     },
     "all_regime": {
       "name": "Cross-Sector Inv-Vol + Regime Cash",
-      "description": "전 섹터 라지캡 통합 유니버스, Inverse-Vol 가중 + HMM 레짐 현금 전략",
+      "description": "전 섹터 S&P 1500 통합 유니버스, Inverse-Vol 가중 + HMM 레짐 현금 전략",
       "sectors": [
         "Information Technology",
         "Health Care",
@@ -578,7 +578,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-21T00:54:21.899021+00:00"
+      "updated_at": "2026-10-22T17:44:23.821124+00:00"
     }
   },
   "failures": []
