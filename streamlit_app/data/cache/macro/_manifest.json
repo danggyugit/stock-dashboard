@@ -1,41 +1,41 @@
 {
-  "cached_at": "2026-10-22T15:24:21.679187+00:00",
+  "cached_at": "2026-10-22T22:15:03.876855+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
       "series_id": "WALCL",
       "freq": "W",
-      "points": 302,
+      "points": 303,
       "latest": {
-        "date": "2026-10-14",
-        "value": 6755639.0
+        "date": "2026-10-21",
+        "value": 6753604.0
       }
     },
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1448,
+      "points": 1449,
       "latest": {
-        "date": "2026-10-21",
-        "value": 0.237
+        "date": "2026-10-22",
+        "value": 0.351
       }
     },
     "tga": {
       "series_id": "WTREGEN",
       "freq": "W",
-      "points": 302,
+      "points": 303,
       "latest": {
-        "date": "2026-10-14",
-        "value": 883373.0
+        "date": "2026-10-21",
+        "value": 952002.0
       }
     },
     "reserves": {
       "series_id": "WRESBAL",
       "freq": "W",
-      "points": 302,
+      "points": 303,
       "latest": {
-        "date": "2026-10-14",
-        "value": 3022140.0
+        "date": "2026-10-21",
+        "value": 2962607.0
       }
     },
     "hy_oas": {
@@ -77,45 +77,45 @@
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1450,
+      "points": 1451,
       "latest": {
-        "date": "2026-10-20",
-        "value": 4.26
+        "date": "2026-10-21",
+        "value": 4.25
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1450,
+      "points": 1451,
       "latest": {
-        "date": "2026-10-20",
-        "value": 4.79
+        "date": "2026-10-21",
+        "value": 4.81
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1450,
+      "points": 1451,
       "latest": {
-        "date": "2026-10-20",
-        "value": 4.94
+        "date": "2026-10-21",
+        "value": 4.95
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1450,
+      "points": 1451,
       "latest": {
-        "date": "2026-10-20",
-        "value": 5.12
+        "date": "2026-10-21",
+        "value": 5.13
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1450,
+      "points": 1451,
       "latest": {
-        "date": "2026-10-20",
+        "date": "2026-10-21",
         "value": 5.42
       }
     },
@@ -162,10 +162,10 @@
     "copper": {
       "series_id": "PCOPPUSDM",
       "freq": "M",
-      "points": 67,
+      "points": 69,
       "latest": {
-        "date": "2026-07-01",
-        "value": 13542.82086956522
+        "date": "2026-09-01",
+        "value": 14473.05590909091
       }
     },
     "natgas": {
