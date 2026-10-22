@@ -1,86 +1,181 @@
 {
-  "cached_at": "2026-10-20T22:28:55.463328+00:00",
+  "cached_at": "2026-10-22T15:24:21.679187+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
       "series_id": "WALCL",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "W",
+      "points": 302,
+      "latest": {
+        "date": "2026-10-14",
+        "value": 6755639.0
+      }
     },
     "rrp": {
       "series_id": "RRPONTSYD",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 1448,
+      "latest": {
+        "date": "2026-10-21",
+        "value": 0.237
+      }
     },
     "tga": {
       "series_id": "WTREGEN",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "W",
+      "points": 302,
+      "latest": {
+        "date": "2026-10-14",
+        "value": 883373.0
+      }
     },
     "reserves": {
       "series_id": "WRESBAL",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "W",
+      "points": 302,
+      "latest": {
+        "date": "2026-10-14",
+        "value": 3022140.0
+      }
     },
     "hy_oas": {
       "series_id": "BAMLH0A0HYM2",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 786,
+      "latest": {
+        "date": "2026-10-21",
+        "value": 3.27
+      }
     },
     "m1": {
       "series_id": "M1SL",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "M",
+      "points": 68,
+      "latest": {
+        "date": "2026-08-01",
+        "value": 19991.1
+      }
     },
     "m2": {
       "series_id": "M2SL",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "M",
+      "points": 68,
+      "latest": {
+        "date": "2026-08-01",
+        "value": 23342.8
+      }
     },
     "fed_funds": {
       "series_id": "FEDFUNDS",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "M",
+      "points": 69,
+      "latest": {
+        "date": "2026-09-01",
+        "value": 3.75
+      }
     },
     "dgs3mo": {
       "series_id": "DGS3MO",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 1450,
+      "latest": {
+        "date": "2026-10-20",
+        "value": 4.26
+      }
     },
     "dgs2": {
       "series_id": "DGS2",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 1450,
+      "latest": {
+        "date": "2026-10-20",
+        "value": 4.79
+      }
     },
     "dgs5": {
       "series_id": "DGS5",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 1450,
+      "latest": {
+        "date": "2026-10-20",
+        "value": 4.94
+      }
     },
     "dgs10": {
       "series_id": "DGS10",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 1450,
+      "latest": {
+        "date": "2026-10-20",
+        "value": 5.12
+      }
     },
     "dgs30": {
       "series_id": "DGS30",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 1450,
+      "latest": {
+        "date": "2026-10-20",
+        "value": 5.42
+      }
     },
     "cpi": {
       "series_id": "CPIAUCSL",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "M",
+      "points": 68,
+      "latest": {
+        "date": "2026-09-01",
+        "value": 336.298
+      }
     },
     "core_pce": {
       "series_id": "PCEPILFE",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "M",
+      "points": 68,
+      "latest": {
+        "date": "2026-08-01",
+        "value": 130.455
+      }
     },
     "dxy": {
       "series_id": "DTWEXBGS",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 1448,
+      "latest": {
+        "date": "2026-10-16",
+        "value": 121.4048
+      }
     },
     "gold": {
       "series_id": "GOLDPMGBD228NLBM",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "error": "Error tokenizing data. C error: Expected 1 fields in line 6, saw 2\n"
     },
     "wti": {
       "series_id": "DCOILWTICO",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 1449,
+      "latest": {
+        "date": "2026-10-20",
+        "value": 107.89
+      }
     },
     "copper": {
       "series_id": "PCOPPUSDM",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "M",
+      "points": 67,
+      "latest": {
+        "date": "2026-07-01",
+        "value": 13542.82086956522
+      }
     },
     "natgas": {
       "series_id": "DHHNGSP",
-      "error": "curl exit 6: curl: (6) Could not resolve host: fred.stlouisfed.org\n"
+      "freq": "D",
+      "points": 1449,
+      "latest": {
+        "date": "2026-10-20",
+        "value": 3.1
+      }
     }
   }
 }
