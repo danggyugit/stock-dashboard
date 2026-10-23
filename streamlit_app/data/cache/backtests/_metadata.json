@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-23T17:53:13.866733+00:00",
+  "updated_at": "2026-10-23T17:55:19.940997+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap",
@@ -227,7 +227,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-22T16:29:02.948455+00:00"
+      "updated_at": "2026-10-23T17:54:37.761077+00:00"
     },
     "cs_momentum": {
       "name": "Comm. Services Momentum-Weight (No Cash)",
@@ -236,7 +236,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-22T16:29:10.960075+00:00"
+      "updated_at": "2026-10-23T17:54:45.221949+00:00"
     },
     "cs_invvol": {
       "name": "Comm. Services Inverse-Vol (No Cash)",
@@ -245,7 +245,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-22T16:29:18.399508+00:00"
+      "updated_at": "2026-10-23T17:54:52.671208+00:00"
     },
     "cs_ensemble": {
       "name": "Comm. Services Ensemble ML + Inv-Vol",
@@ -254,7 +254,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-22T16:29:33.567638+00:00"
+      "updated_at": "2026-10-23T17:55:07.401518+00:00"
     },
     "cs_regime": {
       "name": "Comm. Services Inv-Vol + Regime Cash",
@@ -263,7 +263,7 @@
         "Communication Services"
       ],
       "success": true,
-      "updated_at": "2026-10-22T16:29:46.883565+00:00"
+      "updated_at": "2026-10-23T17:55:19.924966+00:00"
     },
     "ind_equal": {
       "name": "Industrials Equal Weight (No Cash)",
