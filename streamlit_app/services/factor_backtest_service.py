@@ -400,6 +400,15 @@ def run_backtest(
         metrics_at_rd = compute_returns_and_vol(prices[cand_list], rd)
         if metrics_at_rd.empty:
             continue
+        # Excess return over SPY for the same windows — the relative-strength
+        # inputs the rs_momentum strategy (and the screener) rank on.
+        if "SPY" in prices.columns:
+            spy_m = compute_returns_and_vol(prices[["SPY"]], rd)
+            if not spy_m.empty:
+                for w in ("1m", "3m", "6m", "12m"):
+                    col = f"ret_{w}"
+                    if col in metrics_at_rd.columns and col in spy_m.columns:
+                        metrics_at_rd[f"ex_{w}"] = metrics_at_rd[col] - float(spy_m[col].iloc[0])
 
         # PIT fundamentals (only if strategy needs them)
         if needs_fundamentals and not pit_df.empty:

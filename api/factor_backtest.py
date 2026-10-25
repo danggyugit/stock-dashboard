@@ -77,12 +77,28 @@ class FactorBacktestResult:
 def _compute_price_features(
     prices_by_ticker: dict[str, pd.DataFrame],
     as_of: pd.Timestamp,
+    spy: pd.Series | None = None,
 ) -> pd.DataFrame:
     """Build per-ticker features from daily prices up to `as_of`.
 
     Columns produced:
       close, ret_1m, ret_3m, ret_6m, ret_12m, ret_12_1, vol_90d, high_52w_dist
+    and, when `spy` is given, the excess return over SPY for the same
+    windows: ex_1m, ex_3m, ex_6m, ex_12m (the screener's relative-strength
+    inputs, computed the same way at every rebalance date).
     """
+    spy_ret: dict[str, float | None] = {}
+    if isinstance(spy, pd.Series) and not spy.empty:
+        s = spy.dropna()
+        s = s[s.index <= as_of]
+        if len(s) > 1:
+            s_cur = float(s.iloc[-1])
+            for label, days in (("1m", 21), ("3m", 63), ("6m", 126), ("12m", 252)):
+                if len(s) > days and float(s.iloc[-1 - days]) > 0:
+                    spy_ret[label] = s_cur / float(s.iloc[-1 - days]) - 1.0
+                else:
+                    spy_ret[label] = None
+
     rows: list[dict] = []
     for ticker, df in prices_by_ticker.items():
         if df is None or df.empty:
@@ -142,6 +158,13 @@ def _compute_price_features(
             "ret_12_1": ret_12_1,
             "vol_90d": vol_90d,
             "high_52w_dist": high_52w_dist,
+            **{
+                f"ex_{label}": (r - spy_ret[label])
+                if (r is not None and spy_ret.get(label) is not None) else None
+                for label, r in (("1m", ret_1m), ("3m", ret_3m),
+                                 ("6m", ret_6m), ("12m", ret_12m))
+                if spy_ret
+            },
         })
     if not rows:
         return pd.DataFrame()
@@ -416,7 +439,7 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
 
     for i, r_date in enumerate(rebal_dates):
         # Compute features as of r_date
-        price_features = _compute_price_features(universe_prices, r_date)
+        price_features = _compute_price_features(universe_prices, r_date, spy=spy)
         if price_features.empty:
             continue
 

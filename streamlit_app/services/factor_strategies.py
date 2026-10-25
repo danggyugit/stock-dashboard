@@ -116,6 +116,23 @@ def _score_deep_value(df: pd.DataFrame) -> pd.Series:
 
 # ── New price-based scorers (Tier A) ───────────────────────────────────
 
+def _score_rs_momentum(df: pd.DataFrame) -> pd.Series:
+    # Screener "RS 모멘텀" tab, as a strategy: rank by 3-month excess return
+    # over SPY, restricted to the screener's "Rising Leader" pattern — ahead
+    # of SPY over 1M, 3M and 6M at the same time. Names outside the pattern
+    # get NaN so the engine's dropna() removes them before the top-N cut.
+    leader = (df["ex_1m"] > 0) & (df["ex_3m"] > 0) & (df["ex_6m"] > 0)
+    return df["ex_3m"].where(leader)
+
+
+def _score_ibd_rs(df: pd.DataFrame) -> pd.Series:
+    # Screener "IBD RS" column: O'Neil-style 12-month weighted price change,
+    # most recent quarter weighted highest. Same approximation the screener
+    # uses from 3M/6M/12M returns (quarter 2 = 6M–3M, quarters 3+4 = 12M–6M).
+    r3, r6, r12 = df["ret_3m"], df["ret_6m"], df["ret_12m"]
+    return 0.4 * r3 + 0.3 * (r6 - r3) + 0.3 * (r12 - r6)
+
+
 def _score_52w_high(df: pd.DataFrame) -> pd.Series:
     # Closest to its trailing 12-month high → higher score
     return df["high_52w_prox"]
@@ -277,6 +294,37 @@ STRATEGIES: dict[str, Strategy] = {
         has_lookahead=False,
         rank_fn=_score_momentum_lowvol,
         requires=["ret_12m", "vol_90d"],
+    ),
+    "rs_momentum": Strategy(
+        key="rs_momentum",
+        name="RS 모멘텀 (스크리너 기준)",
+        short_description="SPY 대비 3M 초과수익 상위 — 1M·3M·6M 모두 SPY보다 강한 종목만",
+        long_description=(
+            "스크리너의 RS 모멘텀 탭과 같은 기준입니다. 각 리밸런싱 시점에 "
+            "1개월·3개월·6개월 수익률이 모두 SPY를 앞서는 종목(스크리너의 "
+            "'Rising Leader' 패턴)만 남기고, 그중 3개월 초과수익이 가장 큰 "
+            "종목을 보유합니다. 스크리너에 보이는 종목을 과거 시점마다 같은 "
+            "규칙으로 골랐을 때의 성과를 확인하는 용도입니다."
+        ),
+        category="price",
+        has_lookahead=False,
+        rank_fn=_score_rs_momentum,
+        requires=["ex_1m", "ex_3m", "ex_6m"],
+    ),
+    "ibd_rs": Strategy(
+        key="ibd_rs",
+        name="IBD RS (12M 가중)",
+        short_description="O'Neil 방식 12개월 가중 상대강도 상위 (최근 분기 40%)",
+        long_description=(
+            "스크리너의 IBD RS 컬럼과 같은 계산입니다. 최근 3개월에 40%, "
+            "그 이전 3개월에 30%, 나머지 6개월에 30%의 가중치를 둔 12개월 "
+            "가격 변화율로 순위를 매깁니다. 12개월 모멘텀보다 최근 추세를 "
+            "더 크게 반영하는 CANSLIM 계열 모멘텀입니다."
+        ),
+        category="price",
+        has_lookahead=False,
+        rank_fn=_score_ibd_rs,
+        requires=["ret_3m", "ret_6m", "ret_12m"],
     ),
     "dual_momentum": Strategy(
         key="dual_momentum",
