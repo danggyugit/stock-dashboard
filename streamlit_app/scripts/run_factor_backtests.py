@@ -147,6 +147,12 @@ def main() -> int:
                     )
                     try:
                         res = fb.run_factor_backtest(cfg)
+                        if not res.rebalance_history:
+                            # The API engine lacks a feature this strategy
+                            # needs (Tier-B PIT columns only the Streamlit
+                            # service computes) — an empty curve is not a
+                            # result, so leave it out of the grid.
+                            raise RuntimeError("no rebalances (missing feature?)")
                         payload = compact_result(res, cfg)
                         (sdir / f"{vid}.json").write_text(
                             json.dumps(payload, ensure_ascii=False, separators=(",", ":"),
@@ -165,7 +171,10 @@ def main() -> int:
                     except Exception as e:
                         logger.warning("%s/%s failed: %s", strat.key, vid, e)
                         failed += 1
-        index["strategies"][strat.key] = entry
+        if entry["variants"]:
+            index["strategies"][strat.key] = entry
+        else:
+            logger.warning("%-20s skipped — no usable variants", strat.key)
         logger.info("%-20s %d variants in %.0fs", strat.key, len(entry["variants"]), time.time() - t_s)
 
     if ok == 0:

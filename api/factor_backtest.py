@@ -158,6 +158,9 @@ def _compute_price_features(
             "ret_12_1": ret_12_1,
             "vol_90d": vol_90d,
             "high_52w_dist": high_52w_dist,
+            # Same number the Streamlit service exposes (close / 52w high);
+            # the high_52w strategy ranks on it.
+            "high_52w_prox": (1.0 + high_52w_dist) if high_52w_dist is not None else None,
             **{
                 f"ex_{label}": (r - spy_ret[label])
                 if (r is not None and spy_ret.get(label) is not None) else None
