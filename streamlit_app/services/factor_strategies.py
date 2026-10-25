@@ -125,6 +125,20 @@ def _score_rs_momentum(df: pd.DataFrame) -> pd.Series:
     return df["ex_3m"].where(leader)
 
 
+def _score_rs_momentum_broad(df: pd.DataFrame) -> pd.Series:
+    # Same ranking, wider gate: every pattern the screener guide reads as a
+    # buy — Rising Leader (1M↑ 3M↑ 6M↑), Hot 3M (1M↑ 3M↑ 6M↓) and Recovery
+    # (1M↑ 3M↓ 6M↑). Common factor: ahead of SPY over 1M and over at least
+    # one of 3M / 6M. Catches new leaders earlier at the cost of more noise.
+    buy = (df["ex_1m"] > 0) & ((df["ex_3m"] > 0) | (df["ex_6m"] > 0))
+    return df["ex_3m"].where(buy)
+
+
+def _score_rs_3m(df: pd.DataFrame) -> pd.Series:
+    # Screener's default view with no pattern filter: 3M excess return rank.
+    return df["ex_3m"]
+
+
 def _score_ibd_rs(df: pd.DataFrame) -> pd.Series:
     # Screener "IBD RS" column: O'Neil-style 12-month weighted price change,
     # most recent quarter weighted highest. Same approximation the screener
@@ -310,6 +324,39 @@ STRATEGIES: dict[str, Strategy] = {
         has_lookahead=False,
         rank_fn=_score_rs_momentum,
         requires=["ex_1m", "ex_3m", "ex_6m"],
+    ),
+    "rs_momentum_broad": Strategy(
+        key="rs_momentum_broad",
+        name="RS 모멘텀 확장 (매수 패턴 3종)",
+        short_description="Rising Leader + Hot 3M + Recovery 패턴 중 3M 초과수익 상위",
+        long_description=(
+            "RS 모멘텀과 같은 순위(SPY 대비 3M 초과수익)를 쓰되, 스크리너 "
+            "패턴 가이드가 매수 쪽으로 해석하는 세 패턴을 모두 허용합니다. "
+            "1개월은 SPY를 앞서고 3개월 또는 6개월 중 하나 이상 앞서면 "
+            "후보가 됩니다. 리버설 초기(Hot 3M)와 조정 후 반등(Recovery)을 "
+            "일찍 잡는 대신 잡음이 늘어납니다. 기본 RS 모멘텀과 비교해 "
+            "패턴 필터의 효과를 가늠하는 용도입니다."
+        ),
+        category="price",
+        has_lookahead=False,
+        rank_fn=_score_rs_momentum_broad,
+        requires=["ex_1m", "ex_3m", "ex_6m"],
+    ),
+    "rs_3m": Strategy(
+        key="rs_3m",
+        name="RS 3M 초과수익 (패턴 무관)",
+        short_description="패턴 필터 없이 SPY 대비 3M 초과수익 상위",
+        long_description=(
+            "스크리너 RS 모멘텀 탭의 기본 화면(패턴 필터 '전체')과 같습니다. "
+            "각 리밸런싱 시점에 SPY 대비 3개월 초과수익이 가장 큰 종목을 "
+            "보유합니다. 패턴 조건이 없는 순수 3개월 상대강도 전략으로, "
+            "RS 모멘텀·확장판과 나란히 보면 패턴 필터가 수익과 낙폭에 "
+            "어떤 영향을 줬는지 드러납니다."
+        ),
+        category="price",
+        has_lookahead=False,
+        rank_fn=_score_rs_3m,
+        requires=["ex_3m"],
     ),
     "ibd_rs": Strategy(
         key="ibd_rs",
