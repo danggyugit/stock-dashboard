@@ -2274,9 +2274,9 @@
     "cap_tier": "Large Cap"
   },
   {
-    "ticker": "PWR",
-    "name": "Quanta Services",
-    "sector": "Industrials",
+    "ticker": "Q",
+    "name": "Qnity Electronics",
+    "sector": "Information Technology",
     "cap_tier": "Large Cap"
   },
   {
@@ -2286,15 +2286,15 @@
     "cap_tier": "Large Cap"
   },
   {
-    "ticker": "DGX",
-    "name": "Quest Diagnostics",
-    "sector": "Health Care",
+    "ticker": "PWR",
+    "name": "Quanta Services",
+    "sector": "Industrials",
     "cap_tier": "Large Cap"
   },
   {
-    "ticker": "Q",
-    "name": "Qnity Electronics",
-    "sector": "Information Technology",
+    "ticker": "DGX",
+    "name": "Quest Diagnostics",
+    "sector": "Health Care",
     "cap_tier": "Large Cap"
   },
   {
@@ -2313,12 +2313,6 @@
     "ticker": "RDDT",
     "name": "Reddit",
     "sector": "Communication Services",
-    "cap_tier": "Large Cap"
-  },
-  {
-    "ticker": "RTX",
-    "name": "RTX Corporation",
-    "sector": "Industrials",
     "cap_tier": "Large Cap"
   },
   {
@@ -2400,6 +2394,12 @@
     "cap_tier": "Large Cap"
   },
   {
+    "ticker": "RTX",
+    "name": "RTX Corporation",
+    "sector": "Industrials",
+    "cap_tier": "Large Cap"
+  },
+  {
     "ticker": "SPGI",
     "name": "S&P Global",
     "sector": "Financials",
@@ -2461,7 +2461,7 @@
   },
   {
     "ticker": "SKYD",
-    "name": "Skydance Corporation",
+    "name": "Skydance",
     "sector": "Communication Services",
     "cap_tier": "Large Cap"
   },
