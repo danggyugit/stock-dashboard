@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-10-25T22:15:03.911909+00:00",
+  "cached_at": "2026-10-26T22:15:05.310130+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -14,9 +14,9 @@
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1450,
+      "points": 1451,
       "latest": {
-        "date": "2026-10-23",
+        "date": "2026-10-26",
         "value": 0.2
       }
     },
@@ -41,10 +41,10 @@
     "hy_oas": {
       "series_id": "BAMLH0A0HYM2",
       "freq": "D",
-      "points": 786,
+      "points": 784,
       "latest": {
-        "date": "2026-10-22",
-        "value": 3.4
+        "date": "2026-10-23",
+        "value": 3.38
       }
     },
     "m1": {
@@ -77,46 +77,46 @@
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1452,
+      "points": 1453,
       "latest": {
-        "date": "2026-10-22",
+        "date": "2026-10-23",
         "value": 4.22
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1452,
+      "points": 1453,
       "latest": {
-        "date": "2026-10-22",
-        "value": 4.65
+        "date": "2026-10-23",
+        "value": 4.69
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1452,
+      "points": 1453,
       "latest": {
-        "date": "2026-10-22",
-        "value": 4.78
+        "date": "2026-10-23",
+        "value": 4.82
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1452,
+      "points": 1453,
       "latest": {
-        "date": "2026-10-22",
-        "value": 4.96
+        "date": "2026-10-23",
+        "value": 5.0
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1452,
+      "points": 1453,
       "latest": {
-        "date": "2026-10-22",
-        "value": 5.29
+        "date": "2026-10-23",
+        "value": 5.33
       }
     },
     "cpi": {
@@ -140,10 +140,10 @@
     "dxy": {
       "series_id": "DTWEXBGS",
       "freq": "D",
-      "points": 1448,
+      "points": 1453,
       "latest": {
-        "date": "2026-10-16",
-        "value": 121.4048
+        "date": "2026-10-23",
+        "value": 121.3202
       }
     },
     "gold": {
