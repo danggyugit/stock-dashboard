@@ -2250,15 +2250,15 @@
     "cap_tier": "Large Cap"
   },
   {
-    "ticker": "PEG",
-    "name": "Public Service Enterprise Group",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap"
-  },
-  {
     "ticker": "PTC",
     "name": "PTC Inc.",
     "sector": "Information Technology",
+    "cap_tier": "Large Cap"
+  },
+  {
+    "ticker": "PEG",
+    "name": "Public Service Enterprise Group",
+    "sector": "Utilities",
     "cap_tier": "Large Cap"
   },
   {
