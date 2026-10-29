@@ -370,13 +370,17 @@ def _filter_universe(cfg: FactorBacktestConfig) -> list[str]:
 # ── Metrics ────────────────────────────────────────────────────────
 
 
-def _calc_metrics(equity: pd.Series, rf: float = 0.04) -> dict:
+def _calc_metrics(equity: pd.Series, rf: float = 0.04,
+                  period_returns: list[float] | None = None) -> dict:
     if len(equity) < 2:
         return {}
     total_return = float(equity.iloc[-1] / equity.iloc[0] - 1)
     years = (equity.index[-1] - equity.index[0]).days / 365.25
     cagr = (equity.iloc[-1] / equity.iloc[0]) ** (1 / years) - 1 if years > 0 else 0
+    # The curve is forward-filled over calendar days for charting; weekends
+    # and holidays contribute zero changes that would dilute volatility.
     daily_ret = equity.pct_change().dropna()
+    daily_ret = daily_ret[daily_ret != 0] if (daily_ret != 0).sum() >= 20 else daily_ret
     vol = float(daily_ret.std() * np.sqrt(252)) if len(daily_ret) > 0 else 0
     sharpe = (float(daily_ret.mean() * 252) - rf) / vol if vol > 0 else 0
 
@@ -385,9 +389,13 @@ def _calc_metrics(equity: pd.Series, rf: float = 0.04) -> dict:
     dd = (equity - running_max) / running_max
     max_dd = float(dd.min()) if len(dd) > 0 else 0
 
-    # Period win rate (of returns > 0)
-    monthly_ret = equity.resample("ME").last().pct_change().dropna()
-    win_rate = float((monthly_ret > 0).mean()) if len(monthly_ret) > 0 else 0
+    # Period win rate: share of holding periods with a positive return
+    # (monthly for a benchmark series that has no rebalance periods).
+    if period_returns:
+        win_rate = float(np.mean([r > 0 for r in period_returns]))
+    else:
+        monthly_ret = equity.resample("ME").last().pct_change().dropna()
+        win_rate = float((monthly_ret > 0).mean()) if len(monthly_ret) > 0 else 0
 
     return {
         "total_return_pct": round(total_return * 100, 2),
@@ -408,7 +416,15 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
         raise ValueError("종료일이 시작일보다 빨라야 합니다.")
 
     strategy = get_strategy(cfg.strategy_key)
-    warnings_out: list[str] = []
+    warnings_out: list[str] = [
+        # The universe is today's S&P 1500 membership with price history
+        # back-filled. Names that were added after a big run (and names
+        # that were dropped or delisted) are therefore mis-represented, which
+        # flatters every strategy — momentum on small caps most of all.
+        "유니버스는 현재 S&P 1500 구성 종목 기준입니다. 과거 시점의 실제 구성과 "
+        "달라(생존 편향) 수익률이 실제보다 높게, 특히 중소형주 모멘텀 전략에서 "
+        "크게 과대 평가될 수 있습니다.",
+    ]
     needs_pit = strategy.category in ("fundamentals", "hybrid")
 
     # 1. Universe
@@ -437,6 +453,7 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
     # at parity with SPY (which is normalized to 1.0 at the same point).
     equity_daily: dict[pd.Timestamp, float] = {rebal_dates[0]: 1.0}
     last_picks: list[str] = []
+    period_returns_hist: list[float] = []
 
     tc_rate = cfg.tc_pct / 100.0
 
@@ -465,9 +482,13 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
         picks = scores.sort_values(ascending=False).head(cfg.n_stocks).index.tolist()
         last_picks = picks
 
-        # Compute holding period return (r_date → next rebalance date or end)
+        # Holding period r_date → next rebalance date (or end). Each pick is
+        # bought at the first close on/after r_date and tracked daily, so the
+        # equity curve is marked to market inside the period — drawdown and
+        # volatility measured only at rebalance dates understated both (the
+        # 5-stock monthly RS grid showed -42% MDD at month ends, -49% daily).
         next_date = rebal_dates[i + 1] if i + 1 < len(rebal_dates) else pd.Timestamp(cfg.end_date)
-        period_returns: list[float] = []
+        paths: list[pd.Series] = []
         for t in picks:
             df = universe_prices[t]
             d = df.copy()
@@ -479,15 +500,21 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
             slice_ = d[(d.index >= r_date) & (d.index <= next_date)][close_col].dropna()
             if len(slice_) < 2:
                 continue
-            period_returns.append(float(slice_.iloc[-1] / slice_.iloc[0] - 1))
+            paths.append(slice_ / slice_.iloc[0])
 
-        if not period_returns:
+        if not paths:
             continue
 
-        period_return = float(np.mean(period_returns))
-        # Apply 2-way transaction cost on the whole portfolio
-        period_return -= 2 * tc_rate
-        portfolio_equity *= (1 + period_return)
+        # Equal weight at the start of the period, then let the weights drift
+        # (buy-and-hold until the next rebalance). 2-way transaction cost on
+        # the whole portfolio is charged up front.
+        port_path = pd.concat(paths, axis=1).ffill().mean(axis=1) * (1 - 2 * tc_rate)
+        period_return = float(port_path.iloc[-1] - 1)
+        start_equity = portfolio_equity
+        for d, v in port_path.items():
+            equity_daily[d] = start_equity * float(v)
+        portfolio_equity = start_equity * float(port_path.iloc[-1])
+        period_returns_hist.append(period_return)
 
         rebal_hist.append({
             "date": r_date.strftime("%Y-%m-%d"),
@@ -496,8 +523,6 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
             "picks": picks,
             "n_picks": len(picks),
         })
-        # Record the equity at the END of this holding period only. Overwriting
-        # r_date here would erase the seeded 1.0 start point.
         equity_daily[next_date] = portfolio_equity
 
     # 5. Build equity curve DataFrame
@@ -523,8 +548,10 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
             row["spy"] = round(float(spy_series[d]), 4)
         equity_curve.append(row)
 
-    # Metrics
-    metrics = _calc_metrics(equity_series)
+    # Metrics. Win rate counts holding periods, not calendar months — with a
+    # quarterly rebalance two of every three months showed no change and
+    # were counted as losses.
+    metrics = _calc_metrics(equity_series, period_returns=period_returns_hist)
     spy_metrics = _calc_metrics(spy_series) if spy_series is not None else {}
 
     return FactorBacktestResult(
