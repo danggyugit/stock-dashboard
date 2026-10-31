@@ -6,5 +6,605 @@
  "CAG": {
   "name": "ConAgra Brands, Inc.",
   "sector": "Consumer Staples"
+ },
+ "ABMD": {
+  "name": "ABMD",
+  "sector": "Unknown"
+ },
+ "ADS": {
+  "name": "ADS",
+  "sector": "Unknown"
+ },
+ "AET": {
+  "name": "AET",
+  "sector": "Unknown"
+ },
+ "AGN": {
+  "name": "AGN",
+  "sector": "Unknown"
+ },
+ "AIV": {
+  "name": "Apartment Investment and Manage",
+  "sector": "Real Estate"
+ },
+ "ALXN": {
+  "name": "ALXN",
+  "sector": "Unknown"
+ },
+ "ANSS": {
+  "name": "ANSS",
+  "sector": "Unknown"
+ },
+ "APC": {
+  "name": "ARKO Petroleum Corp.",
+  "sector": "Energy"
+ },
+ "ARNC": {
+  "name": "ARNC",
+  "sector": "Unknown"
+ },
+ "ATVI": {
+  "name": "ATVI",
+  "sector": "Unknown"
+ },
+ "AVB": {
+  "name": "AvalonBay Communities, Inc.",
+  "sector": "Real Estate"
+ },
+ "BLDR": {
+  "name": "Builders FirstSource, Inc.",
+  "sector": "Industrials"
+ },
+ "BMS": {
+  "name": "BMS",
+  "sector": "Unknown"
+ },
+ "CDAY": {
+  "name": "CDAY",
+  "sector": "Unknown"
+ },
+ "CELG": {
+  "name": "CELG",
+  "sector": "Unknown"
+ },
+ "CERN": {
+  "name": "CERN",
+  "sector": "Unknown"
+ },
+ "CMA": {
+  "name": "CMA",
+  "sector": "Unknown"
+ },
+ "COL": {
+  "name": "COL",
+  "sector": "Unknown"
+ },
+ "CPRI": {
+  "name": "Capri Holdings Limited",
+  "sector": "Consumer Discretionary"
+ },
+ "CTLT": {
+  "name": "CTLT",
+  "sector": "Unknown"
+ },
+ "CTRA": {
+  "name": "CTRA",
+  "sector": "Unknown"
+ },
+ "CTXS": {
+  "name": "CTXS",
+  "sector": "Unknown"
+ },
+ "CXO": {
+  "name": "CXO",
+  "sector": "Unknown"
+ },
+ "DAY": {
+  "name": "DAY",
+  "sector": "Unknown"
+ },
+ "DFS": {
+  "name": "DFS",
+  "sector": "Unknown"
+ },
+ "DISCA": {
+  "name": "DISCA",
+  "sector": "Unknown"
+ },
+ "DISCK": {
+  "name": "DISCK",
+  "sector": "Unknown"
+ },
+ "DISH": {
+  "name": "DISH",
+  "sector": "Unknown"
+ },
+ "DRE": {
+  "name": "DRE",
+  "sector": "Unknown"
+ },
+ "DWDP": {
+  "name": "DWDP",
+  "sector": "Unknown"
+ },
+ "EA": {
+  "name": "Electronic Arts Inc.",
+  "sector": "Communication Services"
+ },
+ "EQR": {
+  "name": "Equity Residential",
+  "sector": "Real Estate"
+ },
+ "ESRX": {
+  "name": "ESRX",
+  "sector": "Unknown"
+ },
+ "ETFC": {
+  "name": "ETFC",
+  "sector": "Unknown"
+ },
+ "FBHS": {
+  "name": "FBHS",
+  "sector": "Unknown"
+ },
+ "FL": {
+  "name": "FL",
+  "sector": "Unknown"
+ },
+ "FLIR": {
+  "name": "FLIR",
+  "sector": "Unknown"
+ },
+ "FLT": {
+  "name": "FLT",
+  "sector": "Unknown"
+ },
+ "FRC": {
+  "name": "FRC",
+  "sector": "Unknown"
+ },
+ "GPS": {
+  "name": "GPS",
+  "sector": "Unknown"
+ },
+ "HBI": {
+  "name": "HBI",
+  "sector": "Unknown"
+ },
+ "HES": {
+  "name": "HES",
+  "sector": "Unknown"
+ },
+ "HFC": {
+  "name": "HFC",
+  "sector": "Unknown"
+ },
+ "HOLX": {
+  "name": "HOLX",
+  "sector": "Unknown"
+ },
+ "INFO": {
+  "name": "Harbor PanAgora Dynamic Large C",
+  "sector": "Unknown"
+ },
+ "IPG": {
+  "name": "IPG",
+  "sector": "Unknown"
+ },
+ "JNPR": {
+  "name": "JNPR",
+  "sector": "Unknown"
+ },
+ "JWN": {
+  "name": "JWN",
+  "sector": "Unknown"
+ },
+ "K": {
+  "name": "K",
+  "sector": "Unknown"
+ },
+ "KSU": {
+  "name": "KSU",
+  "sector": "Unknown"
+ },
+ "LLL": {
+  "name": "LLL",
+  "sector": "Unknown"
+ },
+ "MRO": {
+  "name": "MRO",
+  "sector": "Unknown"
+ },
+ "MXIM": {
+  "name": "MXIM",
+  "sector": "Unknown"
+ },
+ "NBL": {
+  "name": "NBL",
+  "sector": "Unknown"
+ },
+ "NFX": {
+  "name": "Corgi NFLX 2x Daily ETF",
+  "sector": "Unknown"
+ },
+ "NKTR": {
+  "name": "Nektar Therapeutics",
+  "sector": "Health Care"
+ },
+ "NLSN": {
+  "name": "NLSN",
+  "sector": "Unknown"
+ },
+ "PBCT": {
+  "name": "PBCT",
+  "sector": "Unknown"
+ },
+ "PSKY": {
+  "name": "Paramount Skydance Corporation",
+  "sector": "Communication Services"
+ },
+ "PXD": {
+  "name": "PXD",
+  "sector": "Unknown"
+ },
+ "RE": {
+  "name": "RE",
+  "sector": "Unknown"
+ },
+ "RHT": {
+  "name": "RHT",
+  "sector": "Unknown"
+ },
+ "RTN": {
+  "name": "RTN",
+  "sector": "Unknown"
+ },
+ "SBNY": {
+  "name": "Signature Bank (New York, NY)",
+  "sector": "Financials"
+ },
+ "SCG": {
+  "name": "SCG",
+  "sector": "Unknown"
+ },
+ "SEE": {
+  "name": "SEE",
+  "sector": "Unknown"
+ },
+ "SIVB": {
+  "name": "SIVB",
+  "sector": "Unknown"
+ },
+ "SRCL": {
+  "name": "SRCL",
+  "sector": "Unknown"
+ },
+ "STI": {
+  "name": "Solidion Technology, Inc.",
+  "sector": "Industrials"
+ },
+ "TAP": {
+  "name": "Molson Coors Beverage Company",
+  "sector": "Consumer Staples"
+ },
+ "TIF": {
+  "name": "TIF",
+  "sector": "Unknown"
+ },
+ "TSS": {
+  "name": "TSS",
+  "sector": "Unknown"
+ },
+ "TTD": {
+  "name": "The Trade Desk, Inc.",
+  "sector": "Communication Services"
+ },
+ "TWTR": {
+  "name": "TWTR",
+  "sector": "Unknown"
+ },
+ "VAR": {
+  "name": "VAR",
+  "sector": "Unknown"
+ },
+ "VIAB": {
+  "name": "VIAB",
+  "sector": "Unknown"
+ },
+ "WBA": {
+  "name": "WBA",
+  "sector": "Unknown"
+ },
+ "WCG": {
+  "name": "WCG",
+  "sector": "Unknown"
+ },
+ "WLTW": {
+  "name": "WLTW",
+  "sector": "Unknown"
+ },
+ "XEC": {
+  "name": "XEC",
+  "sector": "Unknown"
+ },
+ "XLNX": {
+  "name": "XLNX",
+  "sector": "Unknown"
+ },
+ "XRX": {
+  "name": "Xerox Holdings Corporation",
+  "sector": "Industrials"
+ },
+ "ACC": {
+  "name": "ACC",
+  "sector": "Unknown"
+ },
+ "AHL": {
+  "name": "AHL",
+  "sector": "Unknown"
+ },
+ "AIRC": {
+  "name": "AIRC",
+  "sector": "Unknown"
+ },
+ "ALE": {
+  "name": "ALE",
+  "sector": "Unknown"
+ },
+ "ALEX": {
+  "name": "ALEX",
+  "sector": "Unknown"
+ },
+ "ALTM": {
+  "name": "ALTM",
+  "sector": "Unknown"
+ },
+ "ALTR": {
+  "name": "ALTR",
+  "sector": "Unknown"
+ },
+ "AMCX": {
+  "name": "AMC Global Media Inc.",
+  "sector": "Communication Services"
+ },
+ "AMED": {
+  "name": "AMED",
+  "sector": "Unknown"
+ },
+ "APPS": {
+  "name": "Digital Turbine, Inc.",
+  "sector": "Information Technology"
+ },
+ "ASGN": {
+  "name": "ASGN",
+  "sector": "Unknown"
+ },
+ "ATGE": {
+  "name": "ATGE",
+  "sector": "Unknown"
+ },
+ "AVNS": {
+  "name": "AVNS",
+  "sector": "Unknown"
+ },
+ "AZPN": {
+  "name": "AZPN",
+  "sector": "Unknown"
+ },
+ "BBBY": {
+  "name": "Bed Bath & Beyond, Inc.",
+  "sector": "Unknown"
+ },
+ "BERY": {
+  "name": "BERY",
+  "sector": "Unknown"
+ },
+ "BID": {
+  "name": "Tribeca Strategic Acquisition C",
+  "sector": "Financials"
+ },
+ "BLD": {
+  "name": "BLD",
+  "sector": "Unknown"
+ },
+ "BRBR": {
+  "name": "BellRing Brands, Inc.",
+  "sector": "Consumer Staples"
+ },
+ "CABO": {
+  "name": "Cable One, Inc.",
+  "sector": "Communication Services"
+ },
+ "CADE": {
+  "name": "CADE",
+  "sector": "Unknown"
+ },
+ "CARS": {
+  "name": "Cars.com Inc.",
+  "sector": "Communication Services"
+ },
+ "CCMP": {
+  "name": "CCMP",
+  "sector": "Unknown"
+ },
+ "CDK": {
+  "name": "CDK",
+  "sector": "Unknown"
+ },
+ "CHFC": {
+  "name": "CHFC",
+  "sector": "Unknown"
+ },
+ "CHK": {
+  "name": "CHK",
+  "sector": "Unknown"
+ },
+ "CHX": {
+  "name": "CHX",
+  "sector": "Unknown"
+ },
+ "CIT": {
+  "name": "CIT",
+  "sector": "Unknown"
+ },
+ "CIVI": {
+  "name": "CIVI",
+  "sector": "Unknown"
+ },
+ "CLB": {
+  "name": "Core Laboratories Inc.",
+  "sector": "Energy"
+ },
+ "CLGX": {
+  "name": "CLGX",
+  "sector": "Unknown"
+ },
+ "CLI": {
+  "name": "CLI",
+  "sector": "Unknown"
+ },
+ "CMD": {
+  "name": "CMD",
+  "sector": "Unknown"
+ },
+ "CMP": {
+  "name": "Compass Minerals Intl Inc",
+  "sector": "Materials"
+ },
+ "CONE": {
+  "name": "CONE",
+  "sector": "Unknown"
+ },
+ "CPE": {
+  "name": "CPE",
+  "sector": "Unknown"
+ },
+ "CRNC": {
+  "name": "Cerence Inc.",
+  "sector": "Information Technology"
+ },
+ "CVET": {
+  "name": "CVET",
+  "sector": "Unknown"
+ },
+ "CY": {
+  "name": "CY",
+  "sector": "Unknown"
+ },
+ "DDS": {
+  "name": "Dillard's, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "DHC": {
+  "name": "Diversified Healthcare Trust",
+  "sector": "Real Estate"
+ },
+ "DLPH": {
+  "name": "DLPH",
+  "sector": "Unknown"
+ },
+ "DNB": {
+  "name": "DNB",
+  "sector": "Unknown"
+ },
+ "DNKN": {
+  "name": "DNKN",
+  "sector": "Unknown"
+ },
+ "DRQ": {
+  "name": "DRQ",
+  "sector": "Unknown"
+ },
+ "EBS": {
+  "name": "Emergent BioSolutions Inc.",
+  "sector": "Health Care"
+ },
+ "ENV": {
+  "name": "ENV",
+  "sector": "Unknown"
+ },
+ "ETRN": {
+  "name": "ETRN",
+  "sector": "Unknown"
+ },
+ "EV": {
+  "name": "EV",
+  "sector": "Unknown"
+ },
+ "FYBR": {
+  "name": "FYBR",
+  "sector": "Unknown"
+ },
+ "GDOT": {
+  "name": "Green Dot Corporation",
+  "sector": "Financials"
+ },
+ "GRUB": {
+  "name": "GRUB",
+  "sector": "Unknown"
+ },
+ "GTLS": {
+  "name": "GTLS",
+  "sector": "Unknown"
+ },
+ "GWR": {
+  "name": "GWR",
+  "sector": "Unknown"
+ },
+ "HAIN": {
+  "name": "The Hain Celestial Group, Inc.",
+  "sector": "Consumer Staples"
+ },
+ "HELE": {
+  "name": "Helen of Troy Limited",
+  "sector": "Consumer Staples"
+ },
+ "HPP": {
+  "name": "Hudson Pacific Properties, Inc.",
+  "sector": "Real Estate"
+ },
+ "HRC": {
+  "name": "HRC",
+  "sector": "Unknown"
+ },
+ "HTZ": {
+  "name": "Hertz Global Holdings, Inc",
+  "sector": "Industrials"
+ },
+ "IAA": {
+  "name": "IAA",
+  "sector": "Unknown"
+ },
+ "IDTI": {
+  "name": "IDTI",
+  "sector": "Unknown"
+ },
+ "INGN": {
+  "name": "Inogen, Inc",
+  "sector": "Health Care"
+ },
+ "INT": {
+  "name": "Corgi INTC 2x Daily ETF",
+  "sector": "Unknown"
+ },
+ "ISCA": {
+  "name": "ISCA",
+  "sector": "Unknown"
+ },
+ "JACK": {
+  "name": "Jack In The Box Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "JHG": {
+  "name": "JHG",
+  "sector": "Unknown"
+ },
+ "KAR": {
+  "name": "KAR",
+  "sector": "Unknown"
+ },
+ "LHCG": {
+  "name": "LHCG",
+  "sector": "Unknown"
  }
 }
