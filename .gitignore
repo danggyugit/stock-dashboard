@@ -47,3 +47,14 @@ streamlit_app/data/cache/portfolio_alert_state.json
 # Claude Code agent worktrees
 .claude/worktrees/
 .venv-cache/
+
+# Backtest input pickles (prices/PIT/fundamentals/benchmarks): rebuilt nightly
+# on the Mac that runs the batches, 50-100 MB a day of non-delta blobs — too
+# much to keep in history. Only the small metadata / membership files are
+# tracked. (Render's on-demand /backtest + /factor-backtest endpoints need
+# these pickles and therefore no longer have data; the web app reads the
+# precomputed grids instead.)
+streamlit_app/data/cache/backtest_data/prices.pkl.gz
+streamlit_app/data/cache/backtest_data/pit.pkl.gz
+streamlit_app/data/cache/backtest_data/fundamentals.pkl.gz
+streamlit_app/data/cache/backtest_data/benchmarks.pkl.gz

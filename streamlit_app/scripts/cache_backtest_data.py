@@ -15,7 +15,8 @@ deploy.
 
 Universe: 10 SPDR sectors × BACKTEST_CAP_TIERS. Default Large Cap ≈ 470
 tickers; the launchd job sets "all" (S&P 1500 ≈ 1,440 tickers).
-Date range: 400-day warm-up before 2023-01-01 through yesterday.
+Date range: 400-day warm-up before BACKTEST_START (default 2020-01-01) through
+yesterday.
 Total output: ~10-30MB compressed.
 
 Companion: cache_backtest_data.bat (Task Scheduler wrapper that also
@@ -239,8 +240,17 @@ TARGET_SECTORS = [
 
 # Backtest lookback window: 400 warm-up days (RSI, momentum lookback need history)
 # before the earliest backtest start date (2023-01-01), through yesterday.
+# BACKTEST_START: first rebalance date the backtests may use. Price-based
+# strategies run from here; fundamentals strategies start later anyway
+# (yfinance PIT statements only reach back ~4 years). The 400-day warm-up
+# covers 12-month momentum and the 263-bar min_history before that date.
+BACKTEST_START = date.fromisoformat(os.environ.get("BACKTEST_START", "2020-01-01"))
 DATA_END = date.today() - timedelta(days=1)
-DATA_START = date(2023, 1, 1) - timedelta(days=400)
+DATA_START = BACKTEST_START - timedelta(days=400)
+
+# Former-member sector lookups (.info) per run — the rest wait for the next
+# night so they don't eat into the PIT request budget.
+REMOVED_META_PER_RUN = int(os.environ.get("REMOVED_META_PER_RUN", "150"))
 
 
 # ── Save helpers ────────────────────────────────────────────────
@@ -299,9 +309,11 @@ def _removed_ticker_metadata(rows: list[dict]) -> list[dict]:
     except Exception:
         cached = {}
     out = []
+    looked_up = 0
     for r in rows:
         t = r["ticker"]
-        if t not in cached:
+        if t not in cached and looked_up < REMOVED_META_PER_RUN:
+            looked_up += 1
             name, sector = t, "Unknown"
             try:
                 info = yf.Ticker(t).info or {}
@@ -310,8 +322,12 @@ def _removed_ticker_metadata(rows: list[dict]) -> list[dict]:
             except Exception:
                 pass
             cached[t] = {"name": name, "sector": sector}
-        out.append({"ticker": t, "name": cached[t]["name"], "sector": cached[t]["sector"],
+        meta = cached.get(t, {"name": t, "sector": "Unknown"})   # uncached → retried tomorrow
+        out.append({"ticker": t, "name": meta["name"], "sector": meta["sector"],
                     "industry": "", "cap_tier": r["cap_tier"], "universe": "former"})
+    if looked_up:
+        logger.info("Former members: %d sector lookups this run, %d still pending",
+                    looked_up, sum(1 for r in rows if r["ticker"] not in cached))
     cache_path.write_text(json.dumps(cached, ensure_ascii=False, indent=1), encoding="utf-8")
     return out
 
@@ -582,6 +598,7 @@ def main() -> None:
         "cached_at": datetime.now(timezone.utc).isoformat(),
         "data_start": DATA_START.isoformat(),
         "data_end": DATA_END.isoformat(),
+        "backtest_start": BACKTEST_START.isoformat(),
         "tickers_count": len(available),
         "target_sectors": TARGET_SECTORS,
         "cap_tiers": CAP_TIERS,
