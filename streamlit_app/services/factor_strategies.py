@@ -229,12 +229,13 @@ STRATEGIES: dict[str, Strategy] = {
     ),
     "momentum_3_12m": Strategy(
         key="momentum_3_12m",
-        name="3-12개월 모멘텀",
-        short_description="12개월 수익률 – 최근 1개월 (단기 반전 제거)",
+        name="12-1개월 모멘텀",
+        short_description="최근 1개월을 뺀 12개월 수익률 상위 (단기 반전 제거)",
         long_description=(
             "12개월 모멘텀의 표준 변형. 최근 1개월은 단기 평균회귀가 섞이기 때문에 "
-            "'1개월 전까지의 12개월 수익률'을 본다는 개념입니다. 학계에서 'standard "
-            "momentum'으로 불리는 포뮬러."
+            "'13개월 전부터 1개월 전까지'의 수익률로 순위를 매깁니다. 학계에서 "
+            "'12-1 momentum' 또는 'standard momentum'으로 불리는 포뮬러 "
+            "(Jegadeesh-Titman 1993)."
         ),
         category="price",
         has_lookahead=False,

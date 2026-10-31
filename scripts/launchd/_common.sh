@@ -36,6 +36,16 @@ export PYTHONWARNINGS="ignore::UserWarning:sklearn.utils.parallel"
 
 REPO="$HOME/claude/stock-dashboard"
 VENV_PY="$REPO/.venv-cache/bin/python"
+
+# ── TLS root certificates ────────────────────────────────────────
+# The python.org build has no CA bundle of its own, so every stdlib HTTPS
+# call (Telegram alerts via urllib) failed with CERTIFICATE_VERIFY_FAILED.
+# Point OpenSSL at certifi's bundle from the venv; requests/yfinance already
+# use it, so this only changes the stdlib path.
+_CERTIFI="$("$VENV_PY" -c 'import certifi; print(certifi.where())' 2>/dev/null)"
+if [ -n "$_CERTIFI" ] && [ -f "$_CERTIFI" ]; then
+  export SSL_CERT_FILE="$_CERTIFI"
+fi
 LOGDIR="$REPO/logs/launchd"
 mkdir -p "$LOGDIR"
 
