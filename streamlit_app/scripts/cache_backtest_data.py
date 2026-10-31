@@ -186,6 +186,9 @@ for _mod_name, _class_names in [
         logger.info("Stubbed module (native load failed or missing): %s", _mod_name)
 
 
+sys.path.insert(0, str(_APP_DIR))
+from services import index_membership as _membership  # noqa: E402
+
 # ── Load AI Quant Lab (batch mode) ──────────────────────────────
 
 _PAGE_PATH = _APP_DIR / "app_pages" / "2_AI_Quant_Lab.py"
@@ -264,6 +267,53 @@ def save_pickle_gz(obj, path: Path) -> None:
         raise
     size_mb = path.stat().st_size / 1_000_000
     logger.info("Saved %s (%.2f MB)", path.name, size_mb)
+
+
+# yfinance sector names → the GICS names the app filters on.
+_YF_SECTOR_TO_GICS = {
+    "Technology": "Information Technology",
+    "Healthcare": "Health Care",
+    "Financial Services": "Financials",
+    "Consumer Cyclical": "Consumer Discretionary",
+    "Communication Services": "Communication Services",
+    "Industrials": "Industrials",
+    "Consumer Defensive": "Consumer Staples",
+    "Energy": "Energy",
+    "Basic Materials": "Materials",
+    "Real Estate": "Real Estate",
+    "Utilities": "Utilities",
+}
+
+
+def _removed_ticker_metadata(rows: list[dict]) -> list[dict]:
+    """metadata.json rows for former index members (ticker, name, sector,
+    cap_tier, universe="former"). Sector lookups are cached so each name
+    costs one yfinance .info call once."""
+    if not rows:
+        return []
+    import yfinance as yf
+    cache_path = CACHE_DIR / "membership" / "removed_meta.json"
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        cached: dict = json.loads(cache_path.read_text(encoding="utf-8"))
+    except Exception:
+        cached = {}
+    out = []
+    for r in rows:
+        t = r["ticker"]
+        if t not in cached:
+            name, sector = t, "Unknown"
+            try:
+                info = yf.Ticker(t).info or {}
+                name = info.get("shortName") or info.get("longName") or t
+                sector = _YF_SECTOR_TO_GICS.get(str(info.get("sector") or ""), "Unknown")
+            except Exception:
+                pass
+            cached[t] = {"name": name, "sector": sector}
+        out.append({"ticker": t, "name": cached[t]["name"], "sector": cached[t]["sector"],
+                    "industry": "", "cap_tier": r["cap_tier"], "universe": "former"})
+    cache_path.write_text(json.dumps(cached, ensure_ascii=False, indent=1), encoding="utf-8")
+    return out
 
 
 def _load_prev_pickle(name: str):
@@ -423,20 +473,38 @@ def main() -> None:
     logger.info("Universe: %d tickers (%d sectors × %s)",
                 len(tickers), len(TARGET_SECTORS), " + ".join(CAP_TIERS))
 
-    # Full S&P 1500 metadata saved (API uses for sector_map / filter_universe)
+    # 2. Index membership history (S&P 500 / 400 / 600) for survivorship
+    #    correction. Each file is DataFrame[date, added_ticker, removed_ticker];
+    #    sp500_changes.pkl.gz keeps its historical name.
+    logger.info("Refreshing index membership history...")
+    removed_rows: list[dict] = []
+    for idx, info in _membership.INDEXES.items():
+        if info["cap_tier"] not in CAP_TIERS:
+            continue
+        changes = _membership.update_index_changes(idx, CACHE_DIR)
+        for t in _membership.removed_since(changes, pd.Timestamp(DATA_START)):
+            removed_rows.append({"ticker": t, "cap_tier": info["cap_tier"]})
+
+    # Names removed from an index since the data start were members for part
+    # of the window, so they need prices and metadata too. Their sector comes
+    # from yfinance (cached — one lookup per name, ever); delisted names that
+    # Yahoo no longer serves stay "Unknown" and only cross-sector runs see them.
+    known = set(sp1500_df["ticker"])
+    removed_meta = _removed_ticker_metadata(
+        [r for r in removed_rows if r["ticker"] not in known]
+    )
+    if removed_meta:
+        sp1500_df = pd.concat([sp1500_df, pd.DataFrame(removed_meta)], ignore_index=True)
+        extra = [r["ticker"] for r in removed_meta
+                 if r["sector"] in TARGET_SECTORS or r["sector"] == "Unknown"]
+        tickers = tickers + [t for t in extra if t not in tickers]
+        logger.info("Universe + %d former index members = %d tickers", len(extra), len(tickers))
+
+    # Full metadata saved (API uses it for sector_map / filter_universe)
     save_json(
         sp1500_df.to_dict(orient="records"),
         CACHE_DIR / "metadata.json",
     )
-
-    # 2. S&P 500 membership changes (for survivorship-bias correction)
-    logger.info("Fetching S&P 500 changes...")
-    sp500_changes = _lab.get_sp500_changes()
-    if sp500_changes is not None and not sp500_changes.empty:
-        save_pickle_gz(sp500_changes, CACHE_DIR / "sp500_changes.pkl.gz")
-    else:
-        logger.warning("sp500_changes empty — saving as None")
-        save_pickle_gz(None, CACHE_DIR / "sp500_changes.pkl.gz")
 
     # 3. Prices — main data payload (10-20 min for 500 tickers × 3 years)
     logger.info("Downloading prices for %d tickers (10-20 min)...", len(tickers))
@@ -446,6 +514,21 @@ def main() -> None:
         DATA_END.strftime("%Y-%m-%d"),
     )
     logger.info("Got prices for %d tickers", len(price_data))
+
+    # Keep yesterday's history for any universe name Yahoo stopped serving
+    # (delisted / acquired). Once a ticker has been in this cache its prices
+    # stay, so a backtest can still hold it up to its last print instead of
+    # silently never having owned it — the survivorship gap closes over time
+    # for everything that delists from here on.
+    prev_prices = _load_prev_pickle("prices.pkl.gz") or {}
+    carried = 0
+    wanted = set(tickers)
+    for t, df in prev_prices.items():
+        if t in wanted and t not in price_data and df is not None and not df.empty:
+            price_data[t] = df
+            carried += 1
+    if carried:
+        logger.info("Prices: carried forward %d delisted/unavailable tickers", carried)
     save_pickle_gz(price_data, CACHE_DIR / "prices.pkl.gz")
 
     available = list(price_data.keys())

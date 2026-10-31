@@ -354,6 +354,8 @@ def _rebalance_dates(start: date, end: date, months: int) -> list[pd.Timestamp]:
 
 
 def _filter_universe(cfg: FactorBacktestConfig) -> list[str]:
+    """Every name that was in the requested tier(s) at any point: current
+    members plus former members the cache carries (universe == "former")."""
     meta = cache_loader.load_metadata()
     df = meta.copy()
     if cfg.sector:
@@ -365,6 +367,44 @@ def _filter_universe(cfg: FactorBacktestConfig) -> list[str]:
     # Only keep tickers with cached price data
     prices = cache_loader.load_all_prices()
     return [t for t in tickers if t in prices]
+
+
+def _membership_at(cfg: FactorBacktestConfig) -> tuple[Any, list[str]]:
+    """Returns (eligible_fn, tiers_without_history).
+
+    eligible_fn(date) → set of tickers that were index members on that date,
+    reconstructed from today's lists and the add/remove history per tier.
+    Tiers with no history are returned separately so the caller can keep
+    them eligible throughout (and warn)."""
+    meta = cache_loader.load_metadata()
+    current = meta[meta["universe"] != "former"] if "universe" in meta.columns else meta
+    tiers = [cfg.cap_tier] if cfg.cap_tier else ["Large Cap", "Mid Cap", "Small Cap"]
+    tracked: list[tuple[set[str], pd.DataFrame]] = []
+    untracked_tiers: list[str] = []
+    always: set[str] = set()
+    for tier in tiers:
+        members_now = set(current[current["cap_tier"] == tier]["ticker"])
+        changes = cache_loader.load_index_changes(tier)
+        if changes is None:
+            untracked_tiers.append(tier)
+            always |= members_now
+        else:
+            tracked.append((members_now, changes))
+
+    def eligible(as_of: pd.Timestamp) -> set[str]:
+        out = set(always)
+        for members_now, changes in tracked:
+            members = set(members_now)
+            future = changes[changes["date"] > as_of].sort_values("date", ascending=False)
+            for _, row in future.iterrows():
+                if row["added_ticker"]:
+                    members.discard(row["added_ticker"])
+                if row["removed_ticker"]:
+                    members.add(row["removed_ticker"])
+            out |= members
+        return out
+
+    return eligible, untracked_tiers
 
 
 # ── Metrics ────────────────────────────────────────────────────────
@@ -416,21 +456,26 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
         raise ValueError("종료일이 시작일보다 빨라야 합니다.")
 
     strategy = get_strategy(cfg.strategy_key)
-    warnings_out: list[str] = [
-        # The universe is today's S&P 1500 membership with price history
-        # back-filled. Names that were added after a big run (and names
-        # that were dropped or delisted) are therefore mis-represented, which
-        # flatters every strategy — momentum on small caps most of all.
-        "유니버스는 현재 S&P 1500 구성 종목 기준입니다. 과거 시점의 실제 구성과 "
-        "달라(생존 편향) 수익률이 실제보다 높게, 특히 중소형주 모멘텀 전략에서 "
-        "크게 과대 평가될 수 있습니다.",
-    ]
+    warnings_out: list[str] = []
     needs_pit = strategy.category in ("fundamentals", "hybrid")
 
-    # 1. Universe
+    # 1. Universe — all names that were ever in the tier(s); the per-date
+    #    membership filter below decides who is eligible at each rebalance.
     universe = _filter_universe(cfg)
     if not universe:
         raise ValueError("Universe is empty after filters.")
+    eligible_at, untracked_tiers = _membership_at(cfg)
+    if untracked_tiers:
+        warnings_out.append(
+            f"{', '.join(untracked_tiers)}: 지수 편입·편출 이력이 없어 현재 구성 종목을 "
+            "전 기간에 적용했습니다 (생존 편향으로 수익률이 과대 평가될 수 있음)."
+        )
+    else:
+        warnings_out.append(
+            "각 리밸런싱 시점의 실제 지수 구성(S&P 편입·편출 이력)으로 후보를 제한했습니다. "
+            "상장폐지되어 가격 이력이 없는 종목은 포함되지 않아 생존 편향이 완전히 "
+            "제거되지는 않습니다."
+        )
 
     # 2. Load caches once
     all_prices = cache_loader.load_all_prices()
@@ -460,6 +505,11 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
     for i, r_date in enumerate(rebal_dates):
         # Compute features as of r_date
         price_features = _compute_price_features(universe_prices, r_date, spy=spy)
+        if price_features.empty:
+            continue
+        # Point-in-time membership: only names in the index on r_date.
+        members = eligible_at(r_date)
+        price_features = price_features[price_features.index.isin(members)]
         if price_features.empty:
             continue
 

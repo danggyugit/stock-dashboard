@@ -1656,6 +1656,7 @@ def run_backtest(
     precomputed_snapshots: dict | None = None,
     model_cache: dict | None = None,
     untracked_universe: list | None = None,
+    index_memberships: list | None = None,
 ) -> dict:
     """메인 백테스트 엔진.
     Ver4.3: + HMM Regime-Based Cash Allocation + Volatility Targeting.
@@ -1663,8 +1664,11 @@ def run_backtest(
     model_cache: 호출자가 넘기는 dict. 리밸런싱 날짜별로 학습된 모델을
         보관해, 같은 유니버스·스냅샷으로 여러 전략을 돌릴 때 재학습을
         건너뛴다 (Step 2 note 참고). None이면 매번 새로 학습.
-    untracked_universe: S&P 500 편입·편출 이력으로 추적되지 않는 종목
-        (Mid/Small Cap). 생존편향 보정 시에도 항상 유니버스에 포함된다.
+    untracked_universe: 편입·편출 이력이 없는 종목. 생존편향 보정 시에도
+        항상 유니버스에 포함된다.
+    index_memberships: [(현재 구성 종목 리스트, 변경 이력 DataFrame), ...]
+        지수별 멤버십. 주어지면 sp500_changes/current_sp500 대신 이것으로
+        각 리밸런싱 시점의 구성을 복원한다 (S&P 500 + 400 + 600 통합용).
     """
     n_dates = len(rebal_dates)
     feature_cols = FEAT_COLS
@@ -1688,11 +1692,15 @@ def run_backtest(
         next_date = rebal_dates[i + 1]
 
         # ── 생존자 편향 보정: 해당 날짜의 역사적 유니버스 ──
-        if sp500_changes is not None and current_sp500 is not None:
+        if index_memberships:
+            eligible = set(untracked_universe or [])
+            for members_now, changes in index_memberships:
+                eligible |= set(reconstruct_sp500_at_date(list(members_now), changes, date))
+            tickers = [t for t in price_data if t in eligible]
+        elif sp500_changes is not None and current_sp500 is not None:
             hist_members = reconstruct_sp500_at_date(current_sp500, sp500_changes, date)
-            # Membership history only covers the S&P 500. Names outside it
-            # (mid/small caps) have no history to reconstruct, so they stay
-            # eligible on every date instead of being dropped wholesale.
+            # Names with no membership history stay eligible on every date
+            # instead of being dropped wholesale.
             eligible = set(hist_members) | set(untracked_universe or [])
             tickers = [t for t in price_data if t in eligible]
         else:

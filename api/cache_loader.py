@@ -106,6 +106,24 @@ def load_sp500_changes():
     return _load("sp500_changes.pkl.gz")
 
 
+_CHANGES_FILE = {"Large Cap": "sp500_changes.pkl.gz",
+                 "Mid Cap": "sp400_changes.pkl.gz",
+                 "Small Cap": "sp600_changes.pkl.gz"}
+
+
+def load_index_changes(cap_tier: str):
+    """Membership history for one tier (DataFrame[date, added_ticker,
+    removed_ticker]) or None when the cache has none for it."""
+    name = _CHANGES_FILE.get(cap_tier)
+    if not name or not (CACHE_DIR / name).exists():
+        return None
+    try:
+        df = _load(name)
+    except Exception:
+        return None
+    return df if isinstance(df, pd.DataFrame) and not df.empty else None
+
+
 def filter_universe(cfg: dict) -> list[str]:
     """Ticker list matching cfg['sectors'] and cfg['cap_tiers']. Only returns
     tickers that also have price data cached."""

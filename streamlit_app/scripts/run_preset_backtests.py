@@ -483,12 +483,26 @@ def prepare_shared_data(cfg: dict):
             with gzip.open(cache_dir / name, "rb") as f:
                 return pickle.load(f)
 
+        def _changes(name):
+            p = cache_dir / name
+            if not p.exists():
+                return None
+            with gzip.open(p, "rb") as f:
+                df = pickle.load(f)
+            return df if isinstance(df, pd.DataFrame) and not df.empty else None
+
         _CACHE = {
             "prices": _pkl("prices.pkl.gz"),
             "fund": _pkl("fundamentals.pkl.gz"),
             "pit": _pkl("pit.pkl.gz"),
             "benchmarks": _pkl("benchmarks.pkl.gz"),
-            "sp500_changes": _pkl("sp500_changes.pkl.gz"),
+            "sp500_changes": _changes("sp500_changes.pkl.gz"),
+            # Mid/small caps: same shape, written by index_membership.py.
+            "index_changes": {
+                "Large Cap": _changes("sp500_changes.pkl.gz"),
+                "Mid Cap": _changes("sp400_changes.pkl.gz"),
+                "Small Cap": _changes("sp600_changes.pkl.gz"),
+            },
             "metadata": pd.DataFrame(
                 json.loads((cache_dir / "metadata.json").read_text(encoding="utf-8"))
             ),
@@ -503,31 +517,48 @@ def prepare_shared_data(cfg: dict):
     universe = cap_filter[cap_filter["sector"].isin(cfg["sectors"])]["ticker"].tolist()
     logger.info("Universe: %d tickers", len(universe))
 
-    # Survivorship bias fix (from cached sp500_changes)
+    # Survivorship bias fix: one (current members, change history) pair per
+    # cap tier that has a history file. Tiers without one stay "untracked"
+    # (eligible on every date). Former members removed inside the backtest
+    # window join the price universe so they can be picked while they were
+    # still in the index.
     sp500_changes = None
     current_sp500 = None
     extra_tickers = []
+    index_memberships: list = []
+    untracked_universe: list = []
     if cfg.get("use_surv_fix"):
         sp500_changes = _CACHE["sp500_changes"]
         current_sp500 = sp1500_df[sp1500_df["cap_tier"] == "Large Cap"]["ticker"].tolist()
-        if sp500_changes is not None and not sp500_changes.empty:
-            bt_start = pd.Timestamp(cfg["start"])
-            removed = sp500_changes[
-                (sp500_changes["date"] >= bt_start) &
-                (sp500_changes["removed_ticker"] != "")
+        bt_start = pd.Timestamp(cfg["start"])
+        sel_sectors = set(cfg["sectors"])
+        # Only names in the current index lists (universe != "former").
+        current_df = sp1500_df[sp1500_df.get("universe", "sp1500") != "former"] \
+            if "universe" in sp1500_df.columns else sp1500_df
+        for tier in cfg["cap_tiers"]:
+            changes = _CACHE["index_changes"].get(tier)
+            members_now = current_df[current_df["cap_tier"] == tier]["ticker"].tolist()
+            if changes is None:
+                untracked_universe += [t for t in universe if t in set(members_now)]
+                continue
+            index_memberships.append((members_now, changes))
+            removed = changes[
+                (changes["date"] >= bt_start) & (changes["removed_ticker"] != "")
             ]["removed_ticker"].unique().tolist()
-            sel_sectors = set(cfg["sectors"])
             for t in removed:
                 m = sp1500_df[sp1500_df["ticker"] == t]
                 if not m.empty and m.iloc[0].get("sector", "") in sel_sectors:
                     extra_tickers.append(t)
-            extra_tickers = [t for t in extra_tickers if t not in universe]
+        extra_tickers = [t for t in dict.fromkeys(extra_tickers) if t not in universe]
+        logger.info("Membership history: %s | untracked: %d",
+                    ", ".join(f"{t}={len(c)}" for (m, c), t in
+                              zip(index_memberships, [t for t in cfg["cap_tiers"]
+                                                      if _CACHE["index_changes"].get(t) is not None])),
+                    len(untracked_universe))
+    else:
+        untracked_universe = list(universe)
     all_tickers = list(set(universe + extra_tickers))
     logger.info("All tickers incl. historical: %d", len(all_tickers))
-    # Mid/small caps have no S&P 500 membership history — keep them eligible
-    # on every date rather than letting the reconstruction drop them.
-    _sp500_set = set(current_sp500 or [])
-    untracked_universe = [t for t in universe if t not in _sp500_set]
 
     # Filter cached prices/fundamentals/PIT to this sector's universe
     all_prices = _CACHE["prices"]
@@ -575,6 +606,7 @@ def prepare_shared_data(cfg: dict):
         "sp500_changes": sp500_changes,
         "current_sp500": current_sp500,
         "untracked_universe": untracked_universe,
+        "index_memberships": index_memberships,
         "available": available,
     }
 
@@ -791,6 +823,7 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict,
         model_cache=(snapshot_cache.setdefault("models", {})
                      if snapshot_cache is not None else None),
         untracked_universe=shared.get("untracked_universe"),
+        index_memberships=shared.get("index_memberships") or None,
     )
 
     # Hand the freshly-built snapshots back to the caller so the next
