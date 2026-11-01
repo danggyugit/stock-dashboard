@@ -30,18 +30,33 @@ docs/                 # PRD.md·TRD.md(현행) · *_legacy_react.md(구버전) �
 ```
 
 ## 데이터 흐름 (핵심)
-로컬 Windows 스케줄러가 데이터 수집·계산 → `data/cache/*.json` → **git push** → Streamlit Cloud 앱이 GitHub raw로 로드(15분 TTL).
+Mac launchd 배치가 데이터 수집·계산 → `data/cache/*.json` → **git push** → Streamlit Cloud 앱·aiquantlab-web이 GitHub raw로 로드(15분 TTL).
 Turso는 사용자 데이터(포트폴리오·워치리스트)만. 상세: `docs/TRD.md`.
 
-## 활성 스케줄 태스크 (Windows Task Scheduler)
-| 태스크 | 시각 | 스크립트 |
-|---|---|---|
-| StockDashboard-PresetBacktests | 매일 11:00 | run_preset_backtests.py |
-| StockDashboard-SecIntelligence | 매일 11:30 | fetch_sec_intelligence.py |
-| StockDashboard-Fundamentals | 매일 13:00 | fetch_cache.py |
-| StockDashboard-PortfolioRiskAlert | 매일 07:00 | portfolio_risk_alert.py |
-| StockDashboard-RebalancingAlert | 매월 1일 | send_rebalancing_alert.py |
-| (GitHub Actions) update_valuation_cache | 매일 | build_valuation_cache.py |
+백테스트 입력 캐시(`data/cache/backtest_data/`)는 **Mac 로컬 전용**(pickle·SEC facts는 gitignore).
+배치가 로컬에서 읽고 결과 JSON만 push한다 — Render API의 즉시 실행 엔드포인트(`/backtest`, `/factor-backtest`)는 이 때문에 데이터가 없다.
+- 유니버스: S&P 1500 + 2008년 이후 퇴출 종목 (`services/index_membership.py` — Wikipedia 편입·편출 이력으로 시점별 구성 복원)
+- PIT 재무: SEC EDGAR companyfacts (`services/sec_fundamentals.py`, 실제 제출일 기준) + yfinance 폴백
+- 가격: yfinance, `Close`(조정)로 수익률 / `Close_Raw`(배당 미조정)로 밸류에이션, `Stock Splits`로 SEC 주당 항목 조정
+
+## 활성 스케줄 (macOS launchd — Windows Task Scheduler는 폐기)
+plist: `~/Library/LaunchAgents/com.danggyu.stockdash.*.plist`, 래퍼: `scripts/launchd/*.sh`, 로그: `logs/launchd/`
+
+| 시각(KST) | job | 스크립트 | 비고 |
+|---|---|---|---|
+| 02:00 | backtest-data | cache_backtest_data.py | 가격·재무·SEC PIT·멤버십, ~1h |
+| 02:30 | preset-backtests | run_preset_backtests.py | 02:00 완료 대기, 섹터당 학습 1회 공유, ~1h40m |
+| 04:00 | forward-returns | compute_forward_returns.py | |
+| 05:00 | factor-backtests | run_factor_backtests.py | 룰 기반 그리드 → `data/cache/factor_backtests/`, ~2-3h |
+| 07:00 | fetch-cache | fetch_cache.py | heatmap/snapshot/stocks/meta |
+| 07:15 | macro | cache_macro_data.py | FRED |
+| 07:20 | sec-intelligence | fetch_sec_intelligence.py | 13F |
+| 07:30 | portfolio-alert | portfolio_risk_alert.py | Telegram |
+| 10:30 | rotation-backtest | rotation_backtest.py | |
+| 매월 1일 08:00 | rebalancing-alert | send_rebalancing_alert.py | |
+| (GitHub Actions) | update_valuation_cache | build_valuation_cache.py | 매일 |
+
+백테스트 시작일: 가격 전략 × Large Cap 2010, 가격 × 전체 2020(S&P 600 이력 한계), 펀더멘털 2012(SEC PIT 적용 시), AI 프리셋 2023.
 
 ## ⛔ 절대 삭제/이동 금지
 - `streamlit_app/scripts/`의 모든 `.py`·`.bat` (위 태스크가 절대경로로 호출)
@@ -58,9 +73,9 @@ Turso는 사용자 데이터(포트폴리오·워치리스트)만. 상세: `docs
 5. 정기 배치가 필요하면 scripts/에 .py+.bat 쌍 추가 후 schtasks 등록
 
 ## 백테스트 무결성 (수정 시 반드시 유지)
-- **PIT**: 재무는 보고지연(연간 90일) 반영, 스냅샷은 평가일 이전 데이터만
+- **PIT**: SEC 제출일(`filed`) 기준 사용 가능 판정, 제출일 없는 yfinance 데이터만 보고지연(45/75/90일) 가정. 스냅샷은 평가일 이전 데이터만
 - **Embargo**: ML 학습·검증 21일 갭 / **min_history**: 평가일 기준 263봉
-- **생존편향**: 멤버십 복원 + 상폐 종목 마지막가/-30% 청산 반영
+- **생존편향**: S&P 500/400/600 멤버십 시점별 복원(`index_memberships`) + 퇴출 종목 가격 보존 + 상폐 종목 마지막가/-30% 청산 반영
 - 근거 없는 수치·기능 날조 금지 (인스타 카드 포함)
 
 ## Git 규칙
