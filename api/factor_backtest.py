@@ -124,6 +124,12 @@ def _compute_price_features(
             continue
 
         cur = float(closes.iloc[-1])
+        # Dividend-unadjusted close for valuation ratios (falls back to cur)
+        cur_raw = cur
+        if "Close_Raw" in d.columns:
+            raw_s = d["Close_Raw"].dropna()
+            if len(raw_s) and raw_s.index[-1] == closes.index[-1]:
+                cur_raw = float(raw_s.iloc[-1])
 
         # 20-day average dollar volume for the liquidity filter
         vol_col = "Volume" if "Volume" in d.columns else ("volume" if "volume" in d.columns else None)
@@ -163,6 +169,7 @@ def _compute_price_features(
         rows.append({
             "ticker": ticker,
             "close": cur,
+            "close_raw": cur_raw,
             "ret_1m": ret_1m,
             "ret_3m": ret_3m,
             "ret_6m": ret_6m,
@@ -221,8 +228,11 @@ def _compute_pit_features(
         div = pit.get("dividends")
 
         # Compute latest + prior annual rows
-        row = _latest_annual_row(income, balance, cutoff)
-        prior = _latest_annual_row(income, balance, cutoff, prior=True)
+        # SEC-sourced entries carry real filing dates; use them instead of
+        # the 90-day lag so a 10-K counts from the day it was filed.
+        filed = pit.get("annual_filed") if pit.get("annual_income") is not None else pit.get("filed")
+        row = _latest_annual_row(income, balance, cutoff, filed=filed, as_of=as_of)
+        prior = _latest_annual_row(income, balance, cutoff, prior=True, filed=filed, as_of=as_of)
         if row is None:
             continue
 
@@ -231,7 +241,7 @@ def _compute_pit_features(
         rps = row.get("rps")
         roe = row.get("roe")
         de = row.get("de")
-        price = features.at[ticker, "close"]
+        price = features.at[ticker, "close_raw"] if "close_raw" in features.columns else features.at[ticker, "close"]
 
         features.at[ticker, "eps"] = eps
         features.at[ticker, "book_value_per_share"] = bvps
@@ -271,6 +281,8 @@ def _latest_annual_row(
     income: pd.DataFrame | None,
     balance: pd.DataFrame | None,
     cutoff: pd.Timestamp,
+    filed: dict | None = None,
+    as_of: pd.Timestamp | None = None,
     prior: bool = False,
 ) -> dict | None:
     """Get {eps, bvps, rps, roe, de} for the latest (or prior) annual
@@ -310,9 +322,14 @@ def _latest_annual_row(
         "Common Stock Shares Issued",
     ])
 
-    # Periods are columns; pick most recent one at or before cutoff
+    # Periods are columns; pick the most recent one that was public: by its
+    # filing date when known, else period end + lag (cutoff).
     cols = pd.to_datetime(income.columns, errors="coerce")
-    valid = [c for c in cols if pd.notna(c) and c <= cutoff]
+    if filed and as_of is not None:
+        valid = [c for c in cols if pd.notna(c) and
+                 ((c in filed and filed[c] <= as_of) or (c not in filed and c <= cutoff))]
+    else:
+        valid = [c for c in cols if pd.notna(c) and c <= cutoff]
     if not valid:
         return None
     valid.sort(reverse=True)

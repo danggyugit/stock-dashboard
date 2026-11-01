@@ -59,7 +59,26 @@ from services.factor_strategies import list_strategies  # noqa: E402
 #   fundamentals/hybrid FUND_START        — yfinance PIT statements reach ~4 y
 PRICE_START_LARGE = date.fromisoformat(os.environ.get("FACTOR_PRICE_START_LARGE", "2010-01-01"))
 PRICE_START_ALL = date.fromisoformat(os.environ.get("FACTOR_PRICE_START_ALL", "2020-01-01"))
-FUND_START = date.fromisoformat(os.environ.get("FACTOR_FUND_START", "2023-01-01"))
+# Fundamentals reach back to 2012 only with SEC company-facts PIT data (XBRL
+# filing became universal in 2011); on the older yfinance-sourced cache the
+# start falls back to 2023 so the grid never shows a decade of empty months.
+FUND_START_SEC = date.fromisoformat(os.environ.get("FACTOR_FUND_START", "2012-01-01"))
+FUND_START_YF = date(2023, 1, 1)
+
+
+def _pit_is_sec(cache_dir: Path) -> bool:
+    try:
+        import gzip
+        import pickle
+        with gzip.open(cache_dir / "pit.pkl.gz", "rb") as f:
+            pit = pickle.load(f)
+        n = sum(1 for v in pit.values() if isinstance(v, dict) and v.get("source") == "sec")
+        return n >= 0.5 * max(1, len(pit))
+    except Exception:
+        return False
+
+
+FUND_START = FUND_START_SEC if _pit_is_sec(_APP_DIR / "data" / "cache" / "backtest_data") else FUND_START_YF
 
 
 def start_for(category: str, cap_slug: str) -> date:
@@ -123,7 +142,9 @@ def main() -> int:
         return 1
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     data_end = date.fromisoformat(manifest["data_end"])
-    logger.info("Data as of %s (%s tickers)", data_end, manifest.get("tickers_count"))
+    logger.info("Data as of %s (%s tickers) | starts: price-large %s, price-all %s, fundamentals %s (%s PIT)",
+                data_end, manifest.get("tickers_count"), PRICE_START_LARGE, PRICE_START_ALL,
+                FUND_START, "SEC" if FUND_START == FUND_START_SEC else "yfinance")
 
     strategies = list_strategies()
     only = {s.strip() for s in os.environ.get("FACTOR_STRATEGIES", "").split(",") if s.strip()}

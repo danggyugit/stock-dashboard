@@ -861,12 +861,24 @@ def _safe_get_multi(df, col, row_names):
     return np.nan
 
 
-def _avail_cols(df, cutoff):
-    """cutoff 이전에 공시된 컬럼(분기/연도) 목록 (최신순)."""
-    return sorted(
-        [c for c in df.columns if _to_ts(c) is not pd.NaT and _to_ts(c) <= cutoff],
-        key=_to_ts, reverse=True
-    )
+def _avail_cols(df, cutoff, filed=None, date=None):
+    """cutoff 이전에 공시된 컬럼(분기/연도) 목록 (최신순).
+
+    filed: {기간말 Timestamp → 실제 제출일} (SEC companyfacts 기반 PIT 데이터).
+    주어지면 해당 기간은 제출일 <= date 일 때 사용 가능으로 판정하고,
+    제출일이 없는 기간만 기존의 보고 지연(cutoff) 규칙으로 처리한다.
+    """
+    out = []
+    for c in df.columns:
+        ts = _to_ts(c)
+        if ts is pd.NaT:
+            continue
+        if filed and date is not None and ts in filed:
+            if filed[ts] <= date:
+                out.append(c)
+        elif ts <= cutoff:
+            out.append(c)
+    return sorted(out, key=_to_ts, reverse=True)
 
 
 def _ttm_sum(df, cols, row_name):
@@ -903,7 +915,9 @@ def _get_pit_values(pit_data: dict, date: pd.Timestamp) -> dict:
     cutoff = date - pd.Timedelta(days=REPORT_LAG)
 
     # ── 분기 손익계산서 ──────────────────────────────────
-    avail_inc = _avail_cols(income, cutoff) if not income.empty else []
+    _filed = pit_data.get("filed")
+    _afiled = pit_data.get("annual_filed")
+    avail_inc = _avail_cols(income, cutoff, _filed, date) if not income.empty else []
 
     ttm_rev = ttm_gross = ttm_op = ttm_net = np.nan
     ttm_ebit = ttm_ebitda = ttm_interest = ttm_eps = np.nan
@@ -928,7 +942,7 @@ def _get_pit_values(pit_data: dict, date: pd.Timestamp) -> dict:
     # ── 분기 대차대조표 ──────────────────────────────────
     ta = eq = cur_a = cur_l = total_debt = cash = shares_out = np.nan
     if not balance.empty:
-        avail_bal = _avail_cols(balance, cutoff)
+        avail_bal = _avail_cols(balance, cutoff, _filed, date)
         if avail_bal:
             bc = avail_bal[0]
             ta = _safe_get(balance, bc, "Total Assets")
@@ -949,7 +963,7 @@ def _get_pit_values(pit_data: dict, date: pd.Timestamp) -> dict:
     # ── 분기 현금흐름표 ──────────────────────────────────
     ttm_ocf = ttm_capex = ttm_fcf = np.nan
     if not cashflow.empty:
-        avail_cf = _avail_cols(cashflow, cutoff)
+        avail_cf = _avail_cols(cashflow, cutoff, _filed, date)
         if avail_cf:
             ttm_ocf   = _ttm_sum(cashflow, avail_cf, "Operating Cash Flow")
             ttm_capex = _ttm_sum(cashflow, avail_cf, "Capital Expenditure")
@@ -965,7 +979,7 @@ def _get_pit_values(pit_data: dict, date: pd.Timestamp) -> dict:
 
     # 손익 폴백
     if np.isnan(ttm_rev) and not annual_inc.empty:
-        a_inc = _avail_cols(annual_inc, cutoff_a)
+        a_inc = _avail_cols(annual_inc, cutoff_a, _afiled, date)
         if a_inc:
             ac = a_inc[0]  # 최신 연간
             ttm_rev      = _safe_get(annual_inc, ac, "Total Revenue")
@@ -987,7 +1001,7 @@ def _get_pit_values(pit_data: dict, date: pd.Timestamp) -> dict:
 
     # 대차대조표 폴백
     if np.isnan(ta) and not annual_bal.empty:
-        a_bal = _avail_cols(annual_bal, cutoff_a)
+        a_bal = _avail_cols(annual_bal, cutoff_a, _afiled, date)
         if a_bal:
             abc = a_bal[0]
             ta = _safe_get(annual_bal, abc, "Total Assets")
@@ -1008,7 +1022,7 @@ def _get_pit_values(pit_data: dict, date: pd.Timestamp) -> dict:
 
     # 현금흐름 폴백
     if np.isnan(ttm_ocf) and not annual_cf.empty:
-        a_cf = _avail_cols(annual_cf, cutoff_a)
+        a_cf = _avail_cols(annual_cf, cutoff_a, _afiled, date)
         if a_cf:
             acf = a_cf[0]
             ttm_ocf   = _safe_get(annual_cf, acf, "Operating Cash Flow")
@@ -1257,7 +1271,13 @@ def build_snapshot_df(
             ohlcv = price_data[t]
             mask_p = ohlcv.index <= date
             if mask_p.any():
-                hist_price = float(ohlcv.loc[mask_p, "Close"].iloc[-1])
+                # Close_Raw (split-adjusted, dividends not folded in) matches
+                # reported per-share figures; the adjusted Close is for returns.
+                _pcol = "Close_Raw" if "Close_Raw" in ohlcv.columns else "Close"
+                _last = ohlcv.loc[mask_p, _pcol].iloc[-1]
+                if pd.isna(_last) and _pcol != "Close":
+                    _last = ohlcv.loc[mask_p, "Close"].iloc[-1]
+                hist_price = float(_last)
 
         pit_data = pit_map.get(t) if pit_map else None
         feat = snapshot_at_date(

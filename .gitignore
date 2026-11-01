@@ -58,3 +58,7 @@ streamlit_app/data/cache/backtest_data/prices.pkl.gz
 streamlit_app/data/cache/backtest_data/pit.pkl.gz
 streamlit_app/data/cache/backtest_data/fundamentals.pkl.gz
 streamlit_app/data/cache/backtest_data/benchmarks.pkl.gz
+
+# SEC company-facts cache (per-ticker pickles, ~200 MB): local only, same
+# reason as the input pickles above.
+streamlit_app/data/cache/backtest_data/sec/facts/

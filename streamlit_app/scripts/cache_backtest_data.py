@@ -32,6 +32,7 @@ import logging
 import os
 import pickle
 import sys
+import time
 import types
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -189,6 +190,7 @@ for _mod_name, _class_names in [
 
 sys.path.insert(0, str(_APP_DIR))
 from services import index_membership as _membership  # noqa: E402
+from services import sec_fundamentals as _sec  # noqa: E402
 
 # ── Load AI Quant Lab (batch mode) ──────────────────────────────
 
@@ -252,6 +254,7 @@ DATA_START = BACKTEST_START - timedelta(days=400)
 # Former-member sector lookups (.info) per run — the rest wait for the next
 # night so they don't eat into the PIT request budget.
 REMOVED_META_PER_RUN = int(os.environ.get("REMOVED_META_PER_RUN", "150"))
+SEC_BUDGET_MIN = int(os.environ.get("SEC_BUDGET_MIN", "45"))
 
 
 # ── Save helpers ────────────────────────────────────────────────
@@ -331,6 +334,40 @@ def _removed_ticker_metadata(rows: list[dict]) -> list[dict]:
                     looked_up, sum(1 for r in rows if r["ticker"] not in cached))
     cache_path.write_text(json.dumps(cached, ensure_ascii=False, indent=1), encoding="utf-8")
     return out
+
+
+def _add_raw_close_and_splits(price_data: dict, start: date, end: date,
+                              batch: int = 50) -> None:
+    """Attach 'Close_Raw' (dividend-unadjusted) and 'Stock Splits' columns to
+    each price frame, in place. Failures leave the frame as it was."""
+    import yfinance as yf
+    tickers = list(price_data.keys())
+    done = 0
+    for i in range(0, len(tickers), batch):
+        chunk = tickers[i:i + batch]
+        raw = None
+        for attempt in range(3):
+            try:
+                raw = yf.download(chunk, start=start.isoformat(), end=end.isoformat(),
+                                  auto_adjust=False, actions=True, progress=False,
+                                  group_by="ticker", threads=True)
+                break
+            except Exception:
+                time.sleep(2.0 * (attempt + 1))
+        if raw is None or raw.empty:
+            continue
+        for t in chunk:
+            try:
+                sub = raw[t] if isinstance(raw.columns, pd.MultiIndex) else raw
+                df = price_data[t]
+                if "Close" in sub.columns:
+                    df["Close_Raw"] = sub["Close"].reindex(df.index)
+                if "Stock Splits" in sub.columns:
+                    df["Stock Splits"] = sub["Stock Splits"].reindex(df.index).fillna(0.0)
+                done += 1
+            except Exception:
+                pass
+    logger.info("Raw close + splits attached for %d/%d tickers", done, len(tickers))
 
 
 def _load_prev_pickle(name: str):
@@ -532,6 +569,13 @@ def main() -> None:
     )
     logger.info("Got prices for %d tickers", len(price_data))
 
+    # Valuation needs a price on the same basis as the reported numbers:
+    # auto_adjust=True folds dividends into Close, which over 15 years makes
+    # historical P/E, P/B, P/S look cheaper than they were. A second pass
+    # adds Close_Raw (split-adjusted only) and the split history, which the
+    # SEC per-share figures (as reported, pre-split) are adjusted with.
+    _add_raw_close_and_splits(price_data, DATA_START, DATA_END)
+
     # Keep yesterday's history for any universe name Yahoo stopped serving
     # (delisted / acquired). Once a ticker has been in this cache its prices
     # stay, so a backtest can still hold it up to its last print instead of
@@ -565,9 +609,23 @@ def main() -> None:
                 sum(1 for v in fund_map.values() if not _fund_is_empty(v)), kept)
     save_pickle_gz(fund_map, CACHE_DIR / "fundamentals.pkl.gz")
 
-    # 5. Point-in-Time financials (SEC EDGAR — slow, 5-15 min)
-    logger.info("Downloading PIT financials (5-15 min)...")
-    pit_map = collect_pit(available)
+    # 5. Point-in-Time financials. SEC EDGAR company facts are the primary
+    #    source (every period since ~2009 with its real filing date); yfinance
+    #    statements remain a fallback for names EDGAR doesn't cover.
+    logger.info("Refreshing SEC company facts...")
+    _sec.refresh(available, CACHE_DIR, budget_min=SEC_BUDGET_MIN)
+    pit_map = _sec.build_pit_map(available, CACHE_DIR)
+    # SEC per-share items are as reported; bring them onto today's share
+    # basis so they line up with split-adjusted prices.
+    for t, entry in pit_map.items():
+        df = price_data.get(t)
+        if df is not None and "Stock Splits" in df.columns:
+            _sec.split_adjust(entry, df["Stock Splits"])
+    sec_n = len(pit_map)
+    rest = [t for t in available if t not in pit_map]
+    logger.info("PIT from SEC: %d tickers; yfinance fallback for %d", sec_n, len(rest))
+    if rest:
+        pit_map.update(collect_pit(rest))
     with_data = sum(1 for v in pit_map.values()
                     if not v.get("income", pd.DataFrame()).empty)
     logger.info("PIT: %d/%d tickers with income statements", with_data, len(available))
