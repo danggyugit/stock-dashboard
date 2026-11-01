@@ -14161,8 +14161,8 @@
   },
   {
     "ticker": "BMR",
-    "name": "BMR",
-    "sector": "Unknown",
+    "name": "Beamr Imaging Ltd.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14409,8 +14409,8 @@
   },
   {
     "ticker": "CNL",
-    "name": "CNL",
-    "sector": "Unknown",
+    "name": "Collective Mining Ltd.",
+    "sector": "Materials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14505,8 +14505,8 @@
   },
   {
     "ticker": "CVEO",
-    "name": "CVEO",
-    "sector": "Unknown",
+    "name": "Civeo Corporation (Canada)",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14537,16 +14537,16 @@
   },
   {
     "ticker": "CYH",
-    "name": "CYH",
-    "sector": "Unknown",
+    "name": "Community Health Systems, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "CYN",
-    "name": "CYN",
-    "sector": "Unknown",
+    "name": "Cyngn Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14569,8 +14569,8 @@
   },
   {
     "ticker": "DDD",
-    "name": "DDD",
-    "sector": "Unknown",
+    "name": "3D Systems Corporation",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14849,8 +14849,8 @@
   },
   {
     "ticker": "GPRO",
-    "name": "GPRO",
-    "sector": "Unknown",
+    "name": "GoPro, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15025,8 +15025,8 @@
   },
   {
     "ticker": "IPI",
-    "name": "IPI",
-    "sector": "Unknown",
+    "name": "Intrepid Potash, Inc",
+    "sector": "Materials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15169,7 +15169,7 @@
   },
   {
     "ticker": "LNW",
-    "name": "LNW",
+    "name": "Light & Wonder, Inc.",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -15217,8 +15217,8 @@
   },
   {
     "ticker": "LTM",
-    "name": "LTM",
-    "sector": "Unknown",
+    "name": "LATAM Airlines Group S.A.",
+    "sector": "Industrials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15273,8 +15273,8 @@
   },
   {
     "ticker": "MDRX",
-    "name": "MDRX",
-    "sector": "Unknown",
+    "name": "Veradigm Inc.",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15337,8 +15337,8 @@
   },
   {
     "ticker": "MRX",
-    "name": "MRX",
-    "sector": "Unknown",
+    "name": "Marex Group Limited",
+    "sector": "Financials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15409,8 +15409,8 @@
   },
   {
     "ticker": "NUS",
-    "name": "NUS",
-    "sector": "Unknown",
+    "name": "Nu Skin Enterprises, Inc.",
+    "sector": "Consumer Staples",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15449,8 +15449,8 @@
   },
   {
     "ticker": "OIS",
-    "name": "OIS",
-    "sector": "Unknown",
+    "name": "Oil States International, Inc.",
+    "sector": "Energy",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15473,8 +15473,8 @@
   },
   {
     "ticker": "PAY",
-    "name": "PAY",
-    "sector": "Unknown",
+    "name": "Paymentus Holdings, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15665,8 +15665,8 @@
   },
   {
     "ticker": "RGS",
-    "name": "RGS",
-    "sector": "Unknown",
+    "name": "Regis Corporation",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15721,8 +15721,8 @@
   },
   {
     "ticker": "RYAM",
-    "name": "RYAM",
-    "sector": "Unknown",
+    "name": "Rayonier Advanced Materials Inc",
+    "sector": "Materials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15737,24 +15737,24 @@
   },
   {
     "ticker": "SAIL",
-    "name": "SAIL",
-    "sector": "Unknown",
+    "name": "SailPoint, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "SAM",
-    "name": "SAM",
-    "sector": "Unknown",
+    "name": "Boston Beer Company, Inc. (The)",
+    "sector": "Consumer Staples",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "SATS",
-    "name": "SATS",
-    "sector": "Unknown",
+    "name": "Strive, Inc. - 15.00% Series A ",
+    "sector": "Financials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15769,16 +15769,16 @@
   },
   {
     "ticker": "SCOR",
-    "name": "SCOR",
-    "sector": "Unknown",
+    "name": "comScore, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "SFD",
-    "name": "SFD",
-    "sector": "Unknown",
+    "name": "Smithfield Foods, Inc.",
+    "sector": "Consumer Staples",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15801,7 +15801,7 @@
   },
   {
     "ticker": "SHAW",
-    "name": "SHAW",
+    "name": "Shawbrook Group Plc",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -15881,8 +15881,8 @@
   },
   {
     "ticker": "SPWR",
-    "name": "SPWR",
-    "sector": "Unknown",
+    "name": "SunPower Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15937,16 +15937,16 @@
   },
   {
     "ticker": "SUNE",
-    "name": "SUNE",
-    "sector": "Unknown",
+    "name": "SUNation Energy, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "SVC",
-    "name": "SVC",
-    "sector": "Unknown",
+    "name": "Service Properties Trust",
+    "sector": "Real Estate",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16049,7 +16049,7 @@
   },
   {
     "ticker": "TIME",
-    "name": "TIME",
+    "name": "Clockwise U.S. Core Equity ETF",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -17201,8 +17201,8 @@
   },
   {
     "ticker": "CYH",
-    "name": "CYH",
-    "sector": "Unknown",
+    "name": "Community Health Systems, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17225,8 +17225,8 @@
   },
   {
     "ticker": "DDD",
-    "name": "DDD",
-    "sector": "Unknown",
+    "name": "3D Systems Corporation",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -18217,8 +18217,8 @@
   },
   {
     "ticker": "MDRX",
-    "name": "MDRX",
-    "sector": "Unknown",
+    "name": "Veradigm Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -18449,8 +18449,8 @@
   },
   {
     "ticker": "NUS",
-    "name": "NUS",
-    "sector": "Unknown",
+    "name": "Nu Skin Enterprises, Inc.",
+    "sector": "Consumer Staples",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -18521,8 +18521,8 @@
   },
   {
     "ticker": "OIS",
-    "name": "OIS",
-    "sector": "Unknown",
+    "name": "Oil States International, Inc.",
+    "sector": "Energy",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -18817,8 +18817,8 @@
   },
   {
     "ticker": "RGS",
-    "name": "RGS",
-    "sector": "Unknown",
+    "name": "Regis Corporation",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -18905,16 +18905,16 @@
   },
   {
     "ticker": "RYAM",
-    "name": "RYAM",
-    "sector": "Unknown",
+    "name": "Rayonier Advanced Materials Inc",
+    "sector": "Materials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "SATS",
-    "name": "SATS",
-    "sector": "Unknown",
+    "name": "Strive, Inc. - 15.00% Series A ",
+    "sector": "Financials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19049,8 +19049,8 @@
   },
   {
     "ticker": "SPWR",
-    "name": "SPWR",
-    "sector": "Unknown",
+    "name": "SunPower Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19105,8 +19105,8 @@
   },
   {
     "ticker": "SVC",
-    "name": "SVC",
-    "sector": "Unknown",
+    "name": "Service Properties Trust",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
