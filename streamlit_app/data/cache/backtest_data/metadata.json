@@ -12032,6 +12032,22 @@
     "universe": "former"
   },
   {
+    "ticker": "ACAS",
+    "name": "ACAS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ACE",
+    "name": "ACE",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ADS",
     "name": "ADS",
     "sector": "Unknown",
@@ -12064,8 +12080,40 @@
     "universe": "former"
   },
   {
+    "ticker": "AKS",
+    "name": "AKS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ALTR",
+    "name": "ALTR",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ALXN",
     "name": "ALXN",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ANDV",
+    "name": "ANDV",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ANR",
+    "name": "ANR",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12083,6 +12131,22 @@
     "ticker": "APC",
     "name": "ARKO Petroleum Corp.",
     "sector": "Energy",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "APOL",
+    "name": "APOL",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ARG",
+    "name": "ARG",
+    "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -12112,6 +12176,70 @@
     "universe": "former"
   },
   {
+    "ticker": "AVP",
+    "name": "AVP",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "AYE",
+    "name": "AYE",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BBBY",
+    "name": "Bed Bath & Beyond, Inc.",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BCR",
+    "name": "BCR",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BEAM",
+    "name": "Beam Therapeutics Inc.",
+    "sector": "Health Care",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BHI",
+    "name": "BHI",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BIG",
+    "name": "BIG",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BJS",
+    "name": "BJS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "BLDR",
     "name": "Builders FirstSource, Inc.",
     "sector": "Industrials",
@@ -12120,8 +12248,64 @@
     "universe": "former"
   },
   {
+    "ticker": "BMC",
+    "name": "BMC",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "BMS",
     "name": "BMS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BRCM",
+    "name": "BRCM",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BXLT",
+    "name": "BXLT",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CA",
+    "name": "CA",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CAM",
+    "name": "AB California Intermediate Muni",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CBE",
+    "name": "CBE",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CCE",
+    "name": "CCE",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12144,8 +12328,32 @@
     "universe": "former"
   },
   {
+    "ticker": "CEPH",
+    "name": "CEPH",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CERN",
     "name": "CERN",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CFN",
+    "name": "CFN",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CHK",
+    "name": "CHK",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12160,8 +12368,32 @@
     "universe": "former"
   },
   {
+    "ticker": "CMCSK",
+    "name": "CMCSK",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "COL",
     "name": "COL",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "COV",
+    "name": "COV",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CPGX",
+    "name": "CPGX",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12171,6 +12403,30 @@
     "ticker": "CPRI",
     "name": "Capri Holdings Limited",
     "sector": "Consumer Discretionary",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CPWR",
+    "name": "Ocean Thermal Energy Corp.",
+    "sector": "Utilities",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CSC",
+    "name": "CSC",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CSRA",
+    "name": "Cohen & Steers Real Assets Acti",
+    "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -12192,8 +12448,40 @@
     "universe": "former"
   },
   {
+    "ticker": "CTX",
+    "name": "CTX",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CTXS",
     "name": "CTXS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CVC",
+    "name": "CVC",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CVG",
+    "name": "CVG",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CVH",
+    "name": "CVH",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12210,6 +12498,14 @@
   {
     "ticker": "DAY",
     "name": "DAY",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DF",
+    "name": "DF",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12248,8 +12544,48 @@
     "universe": "former"
   },
   {
+    "ticker": "DNB",
+    "name": "DNB",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DNR",
+    "name": "DNR",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DO",
+    "name": "DO",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DPS",
+    "name": "DPS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "DRE",
     "name": "DRE",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DTV",
+    "name": "DTV",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12264,9 +12600,49 @@
     "universe": "former"
   },
   {
+    "ticker": "DYN",
+    "name": "Dyne Therapeutics, Inc.",
+    "sector": "Health Care",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "EA",
     "name": "Electronic Arts Inc.",
     "sector": "Communication Services",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "EK",
+    "name": "EK",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "EMC",
+    "name": "Global X Emerging Markets Great",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ENDP",
+    "name": "ENDP",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "EP",
+    "name": "Empire Petroleum Corporation",
+    "sector": "Energy",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -12288,6 +12664,14 @@
     "universe": "former"
   },
   {
+    "ticker": "ESV",
+    "name": "ESV",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ETFC",
     "name": "ETFC",
     "sector": "Unknown",
@@ -12296,8 +12680,32 @@
     "universe": "former"
   },
   {
+    "ticker": "EVHC",
+    "name": "EVHC",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "FBHS",
     "name": "FBHS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FDO",
+    "name": "FDO",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FII",
+    "name": "FII",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12328,8 +12736,64 @@
     "universe": "former"
   },
   {
+    "ticker": "FOSL",
+    "name": "Fossil Group, Inc.",
+    "sector": "Consumer Discretionary",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "FRC",
     "name": "FRC",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FRX",
+    "name": "FRX",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FTR",
+    "name": "FTR",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GAS",
+    "name": "GAS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GENZ",
+    "name": "VanEck Digital Native Economy E",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GGP",
+    "name": "GGP",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GMCR",
+    "name": "GMCR",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12344,8 +12808,32 @@
     "universe": "former"
   },
   {
+    "ticker": "GR",
+    "name": "1040989",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "HAR",
+    "name": "HAR",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "HBI",
     "name": "HBI",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "HCBK",
+    "name": "HCBK",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12368,8 +12856,40 @@
     "universe": "former"
   },
   {
+    "ticker": "HNZ",
+    "name": "HNZ",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "HOLX",
     "name": "HOLX",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "HOT",
+    "name": "HOT",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "HSP",
+    "name": "HSP",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "IGT",
+    "name": "IGT",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12392,8 +12912,48 @@
     "universe": "former"
   },
   {
+    "ticker": "JCP",
+    "name": "JCP",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "JDSU",
+    "name": "JDSU",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "JNPR",
     "name": "JNPR",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "JNS",
+    "name": "JNS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "JNY",
+    "name": "JNY",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "JOY",
+    "name": "JOY",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12416,9 +12976,41 @@
     "universe": "former"
   },
   {
+    "ticker": "KFT",
+    "name": "KFT",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "KG",
+    "name": "Kestrel Group, Ltd.",
+    "sector": "Financials",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "KRFT",
+    "name": "KRFT",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "KSU",
     "name": "KSU",
     "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LIFE",
+    "name": "Ethos Technologies Inc.",
+    "sector": "Financials",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -12432,8 +13024,152 @@
     "universe": "former"
   },
   {
+    "ticker": "LLTC",
+    "name": "LLTC",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LM",
+    "name": "LM",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LO",
+    "name": "LO",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LSI",
+    "name": "LSI",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LVLT",
+    "name": "LVLT",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LXK",
+    "name": "LXK",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MBI",
+    "name": "MBIA Inc.",
+    "sector": "Financials",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MDP",
+    "name": "MDP",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MEE",
+    "name": "MEE",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MFE",
+    "name": "MFE",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MHS",
+    "name": "MHS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MI",
+    "name": "NFT Limited",
+    "sector": "Consumer Discretionary",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MIL",
+    "name": "MIL",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MJN",
+    "name": "MJN",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MNK",
+    "name": "MNK",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MOLX",
+    "name": "MOLX",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MON",
+    "name": "MON",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "MRO",
     "name": "MRO",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MWW",
+    "name": "MWW",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12451,6 +13187,14 @@
     "ticker": "NBL",
     "name": "NBL",
     "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "NBR",
+    "name": "Nabors Industries Ltd.",
+    "sector": "Energy",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -12480,9 +13224,113 @@
     "universe": "former"
   },
   {
+    "ticker": "NOVL",
+    "name": "NOVL",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "NSM",
+    "name": "NSM",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "NVLS",
+    "name": "NVLS",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "NYX",
+    "name": "NYIAX, Inc. Common Stock",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ODP",
+    "name": "ODP",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "PBCT",
     "name": "PBCT",
     "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PCL",
+    "name": "PGIM Corporate Bond 10+ Year ET",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PCP",
+    "name": "PCP",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PCS",
+    "name": "PGIM Corporate Bond 0-5 Year ET",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PDCO",
+    "name": "PDCO",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PETM",
+    "name": "PETM",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PGN",
+    "name": "PGN",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PLL",
+    "name": "PLL",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "POM",
+    "name": "POMDOCTOR LIMITED",
+    "sector": "Health Care",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -12496,8 +13344,40 @@
     "universe": "former"
   },
   {
+    "ticker": "PTV",
+    "name": "PTV",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "PXD",
     "name": "PXD",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "QEP",
+    "name": "QEP",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RAI",
+    "name": "RAI",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RDC",
+    "name": "RDC",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12520,8 +13400,56 @@
     "universe": "former"
   },
   {
+    "ticker": "RIG",
+    "name": "Transocean Ltd (Switzerland)",
+    "sector": "Energy",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RRD",
+    "name": "RRD",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RSH",
+    "name": "RSH",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "RTN",
     "name": "RTN",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RX",
+    "name": "RX",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "S",
+    "name": "SentinelOne, Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SAI",
+    "name": "SAI",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12544,6 +13472,14 @@
     "universe": "former"
   },
   {
+    "ticker": "SE",
+    "name": "Sea Limited",
+    "sector": "Consumer Discretionary",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "SEE",
     "name": "SEE",
     "sector": "Unknown",
@@ -12552,8 +13488,64 @@
     "universe": "former"
   },
   {
+    "ticker": "SGP",
+    "name": "SpyGlass Pharma, Inc.",
+    "sector": "Health Care",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SHLD",
+    "name": "Global X Defense Tech ETF",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SIAL",
+    "name": "SIAL",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SII",
+    "name": "Sprott Inc.",
+    "sector": "Financials",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "SIVB",
     "name": "SIVB",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SLE",
+    "name": "Super League Enterprise, Inc.",
+    "sector": "Communication Services",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SNI",
+    "name": "SNI",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SPLS",
+    "name": "PIMCO US Stocks PLUS Active Bon",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12576,6 +13568,54 @@
     "universe": "former"
   },
   {
+    "ticker": "STJ",
+    "name": "STJ",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "STR",
+    "name": "STR",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SUN",
+    "name": "Sunoco LP",
+    "sector": "Energy",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SVU",
+    "name": "SVU",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SWN",
+    "name": "SWN",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SWY",
+    "name": "SWY",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "TAP",
     "name": "Molson Coors Beverage Company",
     "sector": "Consumer Staples",
@@ -12584,8 +13624,48 @@
     "universe": "former"
   },
   {
+    "ticker": "TE",
+    "name": "T1 Energy Inc.",
+    "sector": "Industrials",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TEG",
+    "name": "TEG",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TGNA",
+    "name": "TGNA",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TIE",
+    "name": "TIE",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "TIF",
     "name": "TIF",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TLAB",
+    "name": "TLAB",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12608,8 +13688,32 @@
     "universe": "former"
   },
   {
+    "ticker": "TWC",
+    "name": "TWC",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "TWTR",
     "name": "TWTR",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TWX",
+    "name": "TWX",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TYC",
+    "name": "TYC",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12627,6 +13731,14 @@
     "ticker": "VIAB",
     "name": "VIAB",
     "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WB",
+    "name": "Weibo Corporation",
+    "sector": "Communication Services",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -12656,6 +13768,30 @@
     "universe": "former"
   },
   {
+    "ticker": "WFM",
+    "name": "WFM",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WFR",
+    "name": "WFR",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WIN",
+    "name": "WIN",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "WLTW",
     "name": "WLTW",
     "sector": "Unknown",
@@ -12664,8 +13800,40 @@
     "universe": "former"
   },
   {
+    "ticker": "WPX",
+    "name": "WPX",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WYN",
+    "name": "WYN",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "X",
+    "name": "X",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "XEC",
     "name": "XEC",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "XL",
+    "name": "XL",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12688,6 +13856,30 @@
     "universe": "former"
   },
   {
+    "ticker": "XTO",
+    "name": "3315965",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "YHOO",
+    "name": "YHOO",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ABMD",
+    "name": "ABMD",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ACC",
     "name": "ACC",
     "sector": "Unknown",
@@ -12696,8 +13888,40 @@
     "universe": "former"
   },
   {
+    "ticker": "ADS",
+    "name": "ADS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ADTN",
+    "name": "ADTRAN Holdings, Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "AGP",
+    "name": "AGP",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "AHL",
     "name": "AHL",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "AINV",
+    "name": "AINV",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -12760,6 +13984,38 @@
     "universe": "former"
   },
   {
+    "ticker": "ANR",
+    "name": "ANR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ANSS",
+    "name": "ANSS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "AOL",
+    "name": "AOL",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "APOL",
+    "name": "APOL",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "APPS",
     "name": "Digital Turbine, Inc.",
     "sector": "Information Technology",
@@ -12776,6 +14032,14 @@
     "universe": "former"
   },
   {
+    "ticker": "ASNA",
+    "name": "ASNA",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ATGE",
     "name": "ATGE",
     "sector": "Unknown",
@@ -12784,8 +14048,32 @@
     "universe": "former"
   },
   {
+    "ticker": "ATML",
+    "name": "ATML",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ATW",
+    "name": "ATW",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "AVNS",
     "name": "AVNS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "AVP",
+    "name": "AVP",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -12808,6 +14096,22 @@
     "universe": "former"
   },
   {
+    "ticker": "BBG",
+    "name": "BBG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BEAV",
+    "name": "BEAV",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "BERY",
     "name": "BERY",
     "sector": "Unknown",
@@ -12819,6 +14123,22 @@
     "ticker": "BID",
     "name": "Tribeca Strategic Acquisition C",
     "sector": "Financials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BIVV",
+    "name": "BIVV",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BKS",
+    "name": "BKS",
+    "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -12840,8 +14160,24 @@
     "universe": "former"
   },
   {
+    "ticker": "BMR",
+    "name": "BMR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "BMS",
     "name": "BMS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BOBE",
+    "name": "BOBE",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -12851,6 +14187,54 @@
     "ticker": "BRBR",
     "name": "BellRing Brands, Inc.",
     "sector": "Consumer Staples",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BRCD",
+    "name": "BRCD",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BRE",
+    "name": "BRE",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BWLD",
+    "name": "BWLD",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BYI",
+    "name": "BYI",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CAA",
+    "name": "CAA",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CAB",
+    "name": "CAB",
+    "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -12888,6 +14272,14 @@
     "universe": "former"
   },
   {
+    "ticker": "CCP",
+    "name": "CCP",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CDAY",
     "name": "CDAY",
     "sector": "Unknown",
@@ -12904,6 +14296,14 @@
     "universe": "former"
   },
   {
+    "ticker": "CEB",
+    "name": "CEB",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CHFC",
     "name": "CHFC",
     "sector": "Unknown",
@@ -12914,6 +14314,14 @@
   {
     "ticker": "CHK",
     "name": "CHK",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CHS",
+    "name": "CHS",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -12947,6 +14355,14 @@
     "ticker": "CLB",
     "name": "Core Laboratories Inc.",
     "sector": "Energy",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CLC",
+    "name": "CLC",
+    "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -12992,6 +14408,30 @@
     "universe": "former"
   },
   {
+    "ticker": "CNL",
+    "name": "CNL",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CNQR",
+    "name": "CNQR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CNVR",
+    "name": "CNVR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CONE",
     "name": "CONE",
     "sector": "Unknown",
@@ -13016,6 +14456,14 @@
     "universe": "former"
   },
   {
+    "ticker": "CPWR",
+    "name": "Ocean Thermal Energy Corp.",
+    "sector": "Utilities",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CRNC",
     "name": "Cerence Inc.",
     "sector": "Information Technology",
@@ -13024,8 +14472,40 @@
     "universe": "former"
   },
   {
+    "ticker": "CSC",
+    "name": "CSC",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CST",
+    "name": "CST",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CTB",
+    "name": "CTB",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CTLT",
     "name": "CTLT",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CVEO",
+    "name": "CVEO",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13040,8 +14520,56 @@
     "universe": "former"
   },
   {
+    "ticker": "CVG",
+    "name": "CVG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CY",
     "name": "CY",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CYH",
+    "name": "CYH",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CYN",
+    "name": "CYN",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CYT",
+    "name": "CYT",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DCT",
+    "name": "DCT",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DDD",
+    "name": "DDD",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13051,6 +14579,14 @@
     "ticker": "DDS",
     "name": "Dillard's, Inc.",
     "sector": "Consumer Discretionary",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DF",
+    "name": "DF",
+    "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -13088,8 +14624,48 @@
     "universe": "former"
   },
   {
+    "ticker": "DNR",
+    "name": "DNR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DRC",
+    "name": "DRC",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DRE",
+    "name": "DRE",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "DRQ",
     "name": "DRQ",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DST",
+    "name": "DST",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DWA",
+    "name": "DWA",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13104,8 +14680,40 @@
     "universe": "former"
   },
   {
+    "ticker": "EDR",
+    "name": "EDR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ENDP",
+    "name": "ENDP",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ENH",
+    "name": "ENH",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ENV",
     "name": "ENV",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "EQY",
+    "name": "EQY",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13128,8 +14736,64 @@
     "universe": "former"
   },
   {
+    "ticker": "FBHS",
+    "name": "FBHS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FCS",
+    "name": "FCS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "FL",
     "name": "FL",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FMER",
+    "name": "FMER",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FNFG",
+    "name": "FNFG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FOSL",
+    "name": "Fossil Group, Inc.",
+    "sector": "Consumer Discretionary",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FST",
+    "name": "FST",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FTR",
+    "name": "FTR",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13144,9 +14808,49 @@
     "universe": "former"
   },
   {
+    "ticker": "GDI",
+    "name": "GDI",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "GDOT",
     "name": "Green Dot Corporation",
     "sector": "Financials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GES",
+    "name": "GES",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GHL",
+    "name": "GHL",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GMCR",
+    "name": "GMCR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GPRO",
+    "name": "GPRO",
+    "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -13170,6 +14874,14 @@
   {
     "ticker": "GWR",
     "name": "GWR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GXP",
+    "name": "GXP",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13200,6 +14912,30 @@
     "universe": "former"
   },
   {
+    "ticker": "HFC",
+    "name": "HFC",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "HLS",
+    "name": "HLS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "HMA",
+    "name": "HMA",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "HPP",
     "name": "Hudson Pacific Properties, Inc.",
     "sector": "Real Estate",
@@ -13210,6 +14946,30 @@
   {
     "ticker": "HRC",
     "name": "HRC",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "HSH",
+    "name": "HSH",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "HSNI",
+    "name": "HSNI",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "HTSI",
+    "name": "HTSI",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13240,6 +15000,14 @@
     "universe": "former"
   },
   {
+    "ticker": "ILG",
+    "name": "ILG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "INGN",
     "name": "Inogen, Inc",
     "sector": "Health Care",
@@ -13256,8 +15024,24 @@
     "universe": "former"
   },
   {
+    "ticker": "IPI",
+    "name": "IPI",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ISCA",
     "name": "ISCA",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ISIL",
+    "name": "ISIL",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13272,8 +15056,32 @@
     "universe": "former"
   },
   {
+    "ticker": "JAH",
+    "name": "JAH",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "JCP",
+    "name": "JCP",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "JHG",
     "name": "JHG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "JOY",
+    "name": "JOY",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13296,6 +15104,38 @@
     "universe": "former"
   },
   {
+    "ticker": "KATE",
+    "name": "KATE",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "KLXI",
+    "name": "KLXI",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "KSU",
+    "name": "KSU",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "KWK",
+    "name": "KWK",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "LHCG",
     "name": "LHCG",
     "sector": "Unknown",
@@ -13306,6 +15146,22 @@
   {
     "ticker": "LM",
     "name": "LM",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LNCE",
+    "name": "LNCE",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LNCR",
+    "name": "LNCR",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13328,6 +15184,22 @@
     "universe": "former"
   },
   {
+    "ticker": "LPNT",
+    "name": "LPNT",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LPS",
+    "name": "LPS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "LPT",
     "name": "LPT",
     "sector": "Unknown",
@@ -13344,6 +15216,22 @@
     "universe": "former"
   },
   {
+    "ticker": "LTM",
+    "name": "LTM",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LXK",
+    "name": "LXK",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "MASI",
     "name": "MASI",
     "sector": "Unknown",
@@ -13354,6 +15242,14 @@
   {
     "ticker": "MBFI",
     "name": "MBFI",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MCRS",
+    "name": "MCRS",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13386,6 +15282,14 @@
   {
     "ticker": "MDSO",
     "name": "MDSO",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MENT",
+    "name": "MENT",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13432,6 +15336,22 @@
     "universe": "former"
   },
   {
+    "ticker": "MRX",
+    "name": "MRX",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MSCC",
+    "name": "MSCC",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "NARI",
     "name": "NARI",
     "sector": "Unknown",
@@ -13449,7 +15369,15 @@
   },
   {
     "ticker": "NBR",
-    "name": "NBR",
+    "name": "Nabors Industries Ltd.",
+    "sector": "Energy",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "NDN",
+    "name": "NDN",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13472,6 +15400,14 @@
     "universe": "former"
   },
   {
+    "ticker": "NSR",
+    "name": "NSR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "NUS",
     "name": "NUS",
     "sector": "Unknown",
@@ -13488,8 +15424,40 @@
     "universe": "former"
   },
   {
+    "ticker": "NVE",
+    "name": "NVE",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "OA",
+    "name": "OA",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "OAS",
     "name": "OAS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "OIS",
+    "name": "OIS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "OMI",
+    "name": "OMI",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13504,8 +15472,24 @@
     "universe": "former"
   },
   {
+    "ticker": "PAY",
+    "name": "PAY",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "PCH",
     "name": "PCH",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PCX",
+    "name": "PCX",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13528,8 +15512,32 @@
     "universe": "former"
   },
   {
+    "ticker": "PETM",
+    "name": "PETM",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PLCM",
+    "name": "PLCM",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "PLT",
     "name": "PLT",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PNRA",
+    "name": "PNRA",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13552,8 +15560,48 @@
     "universe": "former"
   },
   {
+    "ticker": "PRXL",
+    "name": "PRXL",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "PSB",
     "name": "PSB",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PSS",
+    "name": "PSS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PVTB",
+    "name": "PVTB",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PXP",
+    "name": "PXP",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "QCP",
+    "name": "QCP",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13568,6 +15616,38 @@
     "universe": "former"
   },
   {
+    "ticker": "QLGC",
+    "name": "QLGC",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RAH",
+    "name": "RAH",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RAX",
+    "name": "RAX",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RCII",
+    "name": "RCII",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "RCM",
     "name": "RCM",
     "sector": "Unknown",
@@ -13576,9 +15656,25 @@
     "universe": "former"
   },
   {
-    "ticker": "RIG",
-    "name": "RIG",
+    "ticker": "RE",
+    "name": "RE",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RGS",
+    "name": "RGS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RIG",
+    "name": "Transocean Ltd (Switzerland)",
+    "sector": "Energy",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -13586,6 +15682,46 @@
   {
     "ticker": "RLGY",
     "name": "RLGY",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ROVI",
+    "name": "ROVI",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RRD",
+    "name": "RRD",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RSH",
+    "name": "RSH",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RVBD",
+    "name": "RVBD",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RYAM",
+    "name": "RYAM",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13632,8 +15768,72 @@
     "universe": "former"
   },
   {
+    "ticker": "SCOR",
+    "name": "SCOR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SFD",
+    "name": "SFD",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SFG",
+    "name": "SFG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SGMS",
+    "name": "SGMS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SHAW",
+    "name": "SHAW",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SIRO",
+    "name": "SIRO",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SIVB",
+    "name": "SIVB",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "SIX",
     "name": "SIX",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SKS",
+    "name": "SKS",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13648,8 +15848,32 @@
     "universe": "former"
   },
   {
+    "ticker": "SLH",
+    "name": "SLH",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SLXP",
+    "name": "SLXP",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "SNV",
     "name": "SNV",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SPN",
+    "name": "SPN",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13696,6 +15920,30 @@
     "universe": "former"
   },
   {
+    "ticker": "STR",
+    "name": "STR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SUG",
+    "name": "SUG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SUNE",
+    "name": "SUNE",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "SVC",
     "name": "SVC",
     "sector": "Unknown",
@@ -13704,8 +15952,24 @@
     "universe": "former"
   },
   {
+    "ticker": "SVU",
+    "name": "SVU",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "SWAV",
     "name": "SWAV",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SWI",
+    "name": "SWI",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13752,6 +16016,14 @@
     "universe": "former"
   },
   {
+    "ticker": "TGI",
+    "name": "TGI",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "TGNA",
     "name": "TGNA",
     "sector": "Unknown",
@@ -13768,8 +16040,48 @@
     "universe": "former"
   },
   {
+    "ticker": "TIBX",
+    "name": "TIBX",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TIME",
+    "name": "TIME",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TLAB",
+    "name": "TLAB",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "TMHC",
     "name": "TMHC",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TMST",
+    "name": "TMST",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TNB",
+    "name": "TNB",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13794,6 +16106,22 @@
   {
     "ticker": "TUP",
     "name": "TUP",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TW",
+    "name": "TW",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TWTC",
+    "name": "TWTC",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13832,8 +16160,40 @@
     "universe": "former"
   },
   {
+    "ticker": "UNT",
+    "name": "UNT",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "UNVR",
     "name": "UNVR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "URS",
+    "name": "URS",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "UTIW",
+    "name": "UTIW",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "VCI",
+    "name": "VCI",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13856,8 +16216,24 @@
     "universe": "former"
   },
   {
+    "ticker": "VSTO",
+    "name": "VSTO",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "VVC",
     "name": "VVC",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WBMD",
+    "name": "WBMD",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13872,6 +16248,54 @@
     "universe": "former"
   },
   {
+    "ticker": "WCG",
+    "name": "WCG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WDR",
+    "name": "WDR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WETF",
+    "name": "WETF",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WGL",
+    "name": "WGL",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WIN",
+    "name": "WIN",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WNR",
+    "name": "WNR",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "WOLF",
     "name": "WOLF",
     "sector": "Unknown",
@@ -13880,8 +16304,32 @@
     "universe": "former"
   },
   {
+    "ticker": "WOOF",
+    "name": "WOOF",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WPG",
+    "name": "WPG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "WPX",
     "name": "WPX",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WR",
+    "name": "WR",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13904,6 +16352,14 @@
     "universe": "former"
   },
   {
+    "ticker": "WWAV",
+    "name": "WWAV",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "X",
     "name": "X",
     "sector": "Unknown",
@@ -13914,6 +16370,14 @@
   {
     "ticker": "XEC",
     "name": "XEC",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "XLS",
+    "name": "XLS",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -13977,8 +16441,8 @@
   },
   {
     "ticker": "ADTN",
-    "name": "ADTN",
-    "sector": "Unknown",
+    "name": "ADTRAN Holdings, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -15081,8 +17545,8 @@
   },
   {
     "ticker": "FOSL",
-    "name": "FOSL",
-    "sector": "Unknown",
+    "name": "Fossil Group, Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -15913,8 +18377,8 @@
   },
   {
     "ticker": "NBR",
-    "name": "NBR",
-    "sector": "Unknown",
+    "name": "Nabors Industries Ltd.",
+    "sector": "Energy",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"

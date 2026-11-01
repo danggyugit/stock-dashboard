@@ -606,5 +606,605 @@
  "LHCG": {
   "name": "LHCG",
   "sector": "Unknown"
+ },
+ "ACAS": {
+  "name": "ACAS",
+  "sector": "Unknown"
+ },
+ "ACE": {
+  "name": "ACE",
+  "sector": "Unknown"
+ },
+ "AKS": {
+  "name": "AKS",
+  "sector": "Unknown"
+ },
+ "ANDV": {
+  "name": "ANDV",
+  "sector": "Unknown"
+ },
+ "ANR": {
+  "name": "ANR",
+  "sector": "Unknown"
+ },
+ "APOL": {
+  "name": "APOL",
+  "sector": "Unknown"
+ },
+ "ARG": {
+  "name": "ARG",
+  "sector": "Unknown"
+ },
+ "AVP": {
+  "name": "AVP",
+  "sector": "Unknown"
+ },
+ "AYE": {
+  "name": "AYE",
+  "sector": "Unknown"
+ },
+ "BCR": {
+  "name": "BCR",
+  "sector": "Unknown"
+ },
+ "BEAM": {
+  "name": "Beam Therapeutics Inc.",
+  "sector": "Health Care"
+ },
+ "BHI": {
+  "name": "BHI",
+  "sector": "Unknown"
+ },
+ "BIG": {
+  "name": "BIG",
+  "sector": "Unknown"
+ },
+ "BJS": {
+  "name": "BJS",
+  "sector": "Unknown"
+ },
+ "BMC": {
+  "name": "BMC",
+  "sector": "Unknown"
+ },
+ "BRCM": {
+  "name": "BRCM",
+  "sector": "Unknown"
+ },
+ "BXLT": {
+  "name": "BXLT",
+  "sector": "Unknown"
+ },
+ "CA": {
+  "name": "CA",
+  "sector": "Unknown"
+ },
+ "CAM": {
+  "name": "AB California Intermediate Muni",
+  "sector": "Unknown"
+ },
+ "CBE": {
+  "name": "CBE",
+  "sector": "Unknown"
+ },
+ "CCE": {
+  "name": "CCE",
+  "sector": "Unknown"
+ },
+ "CEPH": {
+  "name": "CEPH",
+  "sector": "Unknown"
+ },
+ "CFN": {
+  "name": "CFN",
+  "sector": "Unknown"
+ },
+ "CMCSK": {
+  "name": "CMCSK",
+  "sector": "Unknown"
+ },
+ "COV": {
+  "name": "COV",
+  "sector": "Unknown"
+ },
+ "CPGX": {
+  "name": "CPGX",
+  "sector": "Unknown"
+ },
+ "CPWR": {
+  "name": "Ocean Thermal Energy Corp.",
+  "sector": "Utilities"
+ },
+ "CSC": {
+  "name": "CSC",
+  "sector": "Unknown"
+ },
+ "CSRA": {
+  "name": "Cohen & Steers Real Assets Acti",
+  "sector": "Unknown"
+ },
+ "CTX": {
+  "name": "CTX",
+  "sector": "Unknown"
+ },
+ "CVC": {
+  "name": "CVC",
+  "sector": "Unknown"
+ },
+ "CVG": {
+  "name": "CVG",
+  "sector": "Unknown"
+ },
+ "CVH": {
+  "name": "CVH",
+  "sector": "Unknown"
+ },
+ "DF": {
+  "name": "DF",
+  "sector": "Unknown"
+ },
+ "DNR": {
+  "name": "DNR",
+  "sector": "Unknown"
+ },
+ "DO": {
+  "name": "DO",
+  "sector": "Unknown"
+ },
+ "DPS": {
+  "name": "DPS",
+  "sector": "Unknown"
+ },
+ "DTV": {
+  "name": "DTV",
+  "sector": "Unknown"
+ },
+ "DYN": {
+  "name": "Dyne Therapeutics, Inc.",
+  "sector": "Health Care"
+ },
+ "EK": {
+  "name": "EK",
+  "sector": "Unknown"
+ },
+ "EMC": {
+  "name": "Global X Emerging Markets Great",
+  "sector": "Unknown"
+ },
+ "ENDP": {
+  "name": "ENDP",
+  "sector": "Unknown"
+ },
+ "EP": {
+  "name": "Empire Petroleum Corporation",
+  "sector": "Energy"
+ },
+ "ESV": {
+  "name": "ESV",
+  "sector": "Unknown"
+ },
+ "EVHC": {
+  "name": "EVHC",
+  "sector": "Unknown"
+ },
+ "FDO": {
+  "name": "FDO",
+  "sector": "Unknown"
+ },
+ "FII": {
+  "name": "FII",
+  "sector": "Unknown"
+ },
+ "FOSL": {
+  "name": "Fossil Group, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "FRX": {
+  "name": "FRX",
+  "sector": "Unknown"
+ },
+ "FTR": {
+  "name": "FTR",
+  "sector": "Unknown"
+ },
+ "GAS": {
+  "name": "GAS",
+  "sector": "Unknown"
+ },
+ "GENZ": {
+  "name": "VanEck Digital Native Economy E",
+  "sector": "Unknown"
+ },
+ "GGP": {
+  "name": "GGP",
+  "sector": "Unknown"
+ },
+ "GMCR": {
+  "name": "GMCR",
+  "sector": "Unknown"
+ },
+ "GR": {
+  "name": "1040989",
+  "sector": "Unknown"
+ },
+ "HAR": {
+  "name": "HAR",
+  "sector": "Unknown"
+ },
+ "HCBK": {
+  "name": "HCBK",
+  "sector": "Unknown"
+ },
+ "HNZ": {
+  "name": "HNZ",
+  "sector": "Unknown"
+ },
+ "HOT": {
+  "name": "HOT",
+  "sector": "Unknown"
+ },
+ "HSP": {
+  "name": "HSP",
+  "sector": "Unknown"
+ },
+ "IGT": {
+  "name": "IGT",
+  "sector": "Unknown"
+ },
+ "JCP": {
+  "name": "JCP",
+  "sector": "Unknown"
+ },
+ "JDSU": {
+  "name": "JDSU",
+  "sector": "Unknown"
+ },
+ "JNS": {
+  "name": "JNS",
+  "sector": "Unknown"
+ },
+ "JNY": {
+  "name": "JNY",
+  "sector": "Unknown"
+ },
+ "JOY": {
+  "name": "JOY",
+  "sector": "Unknown"
+ },
+ "KFT": {
+  "name": "KFT",
+  "sector": "Unknown"
+ },
+ "KG": {
+  "name": "Kestrel Group, Ltd.",
+  "sector": "Financials"
+ },
+ "KRFT": {
+  "name": "KRFT",
+  "sector": "Unknown"
+ },
+ "LIFE": {
+  "name": "Ethos Technologies Inc.",
+  "sector": "Financials"
+ },
+ "LLTC": {
+  "name": "LLTC",
+  "sector": "Unknown"
+ },
+ "LM": {
+  "name": "LM",
+  "sector": "Unknown"
+ },
+ "LO": {
+  "name": "LO",
+  "sector": "Unknown"
+ },
+ "LSI": {
+  "name": "LSI",
+  "sector": "Unknown"
+ },
+ "LVLT": {
+  "name": "LVLT",
+  "sector": "Unknown"
+ },
+ "LXK": {
+  "name": "LXK",
+  "sector": "Unknown"
+ },
+ "MBI": {
+  "name": "MBIA Inc.",
+  "sector": "Financials"
+ },
+ "MDP": {
+  "name": "MDP",
+  "sector": "Unknown"
+ },
+ "MEE": {
+  "name": "MEE",
+  "sector": "Unknown"
+ },
+ "MFE": {
+  "name": "MFE",
+  "sector": "Unknown"
+ },
+ "MHS": {
+  "name": "MHS",
+  "sector": "Unknown"
+ },
+ "MI": {
+  "name": "NFT Limited",
+  "sector": "Consumer Discretionary"
+ },
+ "MIL": {
+  "name": "MIL",
+  "sector": "Unknown"
+ },
+ "MJN": {
+  "name": "MJN",
+  "sector": "Unknown"
+ },
+ "MNK": {
+  "name": "MNK",
+  "sector": "Unknown"
+ },
+ "MOLX": {
+  "name": "MOLX",
+  "sector": "Unknown"
+ },
+ "MON": {
+  "name": "MON",
+  "sector": "Unknown"
+ },
+ "MWW": {
+  "name": "MWW",
+  "sector": "Unknown"
+ },
+ "NBR": {
+  "name": "Nabors Industries Ltd.",
+  "sector": "Energy"
+ },
+ "NOVL": {
+  "name": "NOVL",
+  "sector": "Unknown"
+ },
+ "NSM": {
+  "name": "NSM",
+  "sector": "Unknown"
+ },
+ "NVLS": {
+  "name": "NVLS",
+  "sector": "Unknown"
+ },
+ "NYX": {
+  "name": "NYIAX, Inc. Common Stock",
+  "sector": "Unknown"
+ },
+ "ODP": {
+  "name": "ODP",
+  "sector": "Unknown"
+ },
+ "PCL": {
+  "name": "PGIM Corporate Bond 10+ Year ET",
+  "sector": "Unknown"
+ },
+ "PCP": {
+  "name": "PCP",
+  "sector": "Unknown"
+ },
+ "PCS": {
+  "name": "PGIM Corporate Bond 0-5 Year ET",
+  "sector": "Unknown"
+ },
+ "PDCO": {
+  "name": "PDCO",
+  "sector": "Unknown"
+ },
+ "PETM": {
+  "name": "PETM",
+  "sector": "Unknown"
+ },
+ "PGN": {
+  "name": "PGN",
+  "sector": "Unknown"
+ },
+ "PLL": {
+  "name": "PLL",
+  "sector": "Unknown"
+ },
+ "POM": {
+  "name": "POMDOCTOR LIMITED",
+  "sector": "Health Care"
+ },
+ "PTV": {
+  "name": "PTV",
+  "sector": "Unknown"
+ },
+ "QEP": {
+  "name": "QEP",
+  "sector": "Unknown"
+ },
+ "RAI": {
+  "name": "RAI",
+  "sector": "Unknown"
+ },
+ "RDC": {
+  "name": "RDC",
+  "sector": "Unknown"
+ },
+ "RIG": {
+  "name": "Transocean Ltd (Switzerland)",
+  "sector": "Energy"
+ },
+ "RRD": {
+  "name": "RRD",
+  "sector": "Unknown"
+ },
+ "RSH": {
+  "name": "RSH",
+  "sector": "Unknown"
+ },
+ "RX": {
+  "name": "RX",
+  "sector": "Unknown"
+ },
+ "S": {
+  "name": "SentinelOne, Inc.",
+  "sector": "Information Technology"
+ },
+ "SAI": {
+  "name": "SAI",
+  "sector": "Unknown"
+ },
+ "SE": {
+  "name": "Sea Limited",
+  "sector": "Consumer Discretionary"
+ },
+ "SGP": {
+  "name": "SpyGlass Pharma, Inc.",
+  "sector": "Health Care"
+ },
+ "SHLD": {
+  "name": "Global X Defense Tech ETF",
+  "sector": "Unknown"
+ },
+ "SIAL": {
+  "name": "SIAL",
+  "sector": "Unknown"
+ },
+ "SII": {
+  "name": "Sprott Inc.",
+  "sector": "Financials"
+ },
+ "SLE": {
+  "name": "Super League Enterprise, Inc.",
+  "sector": "Communication Services"
+ },
+ "SNI": {
+  "name": "SNI",
+  "sector": "Unknown"
+ },
+ "SPLS": {
+  "name": "PIMCO US Stocks PLUS Active Bon",
+  "sector": "Unknown"
+ },
+ "STJ": {
+  "name": "STJ",
+  "sector": "Unknown"
+ },
+ "STR": {
+  "name": "STR",
+  "sector": "Unknown"
+ },
+ "SUN": {
+  "name": "Sunoco LP",
+  "sector": "Energy"
+ },
+ "SVU": {
+  "name": "SVU",
+  "sector": "Unknown"
+ },
+ "SWN": {
+  "name": "SWN",
+  "sector": "Unknown"
+ },
+ "SWY": {
+  "name": "SWY",
+  "sector": "Unknown"
+ },
+ "TE": {
+  "name": "T1 Energy Inc.",
+  "sector": "Industrials"
+ },
+ "TEG": {
+  "name": "TEG",
+  "sector": "Unknown"
+ },
+ "TGNA": {
+  "name": "TGNA",
+  "sector": "Unknown"
+ },
+ "TIE": {
+  "name": "TIE",
+  "sector": "Unknown"
+ },
+ "TLAB": {
+  "name": "TLAB",
+  "sector": "Unknown"
+ },
+ "TWC": {
+  "name": "TWC",
+  "sector": "Unknown"
+ },
+ "TWX": {
+  "name": "TWX",
+  "sector": "Unknown"
+ },
+ "TYC": {
+  "name": "TYC",
+  "sector": "Unknown"
+ },
+ "WB": {
+  "name": "Weibo Corporation",
+  "sector": "Communication Services"
+ },
+ "WFM": {
+  "name": "WFM",
+  "sector": "Unknown"
+ },
+ "WFR": {
+  "name": "WFR",
+  "sector": "Unknown"
+ },
+ "WIN": {
+  "name": "WIN",
+  "sector": "Unknown"
+ },
+ "WPX": {
+  "name": "WPX",
+  "sector": "Unknown"
+ },
+ "WYN": {
+  "name": "WYN",
+  "sector": "Unknown"
+ },
+ "X": {
+  "name": "X",
+  "sector": "Unknown"
+ },
+ "XL": {
+  "name": "XL",
+  "sector": "Unknown"
+ },
+ "XTO": {
+  "name": "3315965",
+  "sector": "Unknown"
+ },
+ "YHOO": {
+  "name": "YHOO",
+  "sector": "Unknown"
+ },
+ "ADTN": {
+  "name": "ADTRAN Holdings, Inc.",
+  "sector": "Information Technology"
+ },
+ "AGP": {
+  "name": "AGP",
+  "sector": "Unknown"
+ },
+ "AINV": {
+  "name": "AINV",
+  "sector": "Unknown"
+ },
+ "AOL": {
+  "name": "AOL",
+  "sector": "Unknown"
+ },
+ "ASNA": {
+  "name": "ASNA",
+  "sector": "Unknown"
+ },
+ "ATML": {
+  "name": "ATML",
+  "sector": "Unknown"
  }
 }
