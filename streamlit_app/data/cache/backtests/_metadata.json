@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-01T18:21:28.116340+00:00",
+  "updated_at": "2026-11-01T19:14:34.124895+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap",
@@ -506,7 +506,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-31T19:01:41.553811+00:00"
+      "updated_at": "2026-11-01T19:12:46.250454+00:00"
     },
     "all_momentum": {
       "name": "Cross-Sector Momentum-Weight (No Cash)",
@@ -524,7 +524,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-31T19:01:55.967291+00:00"
+      "updated_at": "2026-11-01T19:13:03.086548+00:00"
     },
     "all_invvol": {
       "name": "Cross-Sector Inverse-Vol (No Cash)",
@@ -542,7 +542,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-31T19:02:08.433482+00:00"
+      "updated_at": "2026-11-01T19:13:16.796930+00:00"
     },
     "all_ensemble": {
       "name": "Cross-Sector Ensemble ML + Inv-Vol",
@@ -560,7 +560,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-31T19:02:39.711012+00:00"
+      "updated_at": "2026-11-01T19:13:48.127077+00:00"
     },
     "all_regime": {
       "name": "Cross-Sector Inv-Vol + Regime Cash",
@@ -578,7 +578,7 @@
         "Real Estate"
       ],
       "success": true,
-      "updated_at": "2026-10-31T19:02:59.976096+00:00"
+      "updated_at": "2026-11-01T19:14:34.082148+00:00"
     }
   },
   "failures": []
