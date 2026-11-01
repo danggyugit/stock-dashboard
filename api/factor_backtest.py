@@ -53,6 +53,10 @@ class FactorBacktestConfig:
     rebalance_months: int = 3
     n_stocks: int = 20
     tc_pct: float = 0.3
+    # Liquidity floor: 20-day average dollar volume at the rebalance date.
+    # Same $10M rule the AI-ensemble engine applies; without it the S&P 600
+    # names with the thinnest trading float to the top of momentum ranks.
+    min_dollar_vol: float = 10_000_000
     sector: str | None = None      # None = all sectors
     cap_tier: str | None = None     # None = all tiers
 
@@ -121,6 +125,14 @@ def _compute_price_features(
 
         cur = float(closes.iloc[-1])
 
+        # 20-day average dollar volume for the liquidity filter
+        vol_col = "Volume" if "Volume" in d.columns else ("volume" if "volume" in d.columns else None)
+        adv_20d = None
+        if vol_col is not None:
+            recent = d[[close_col, vol_col]].dropna().tail(20)
+            if len(recent) >= 20:
+                adv_20d = float((recent[close_col] * recent[vol_col]).mean())
+
         def _ret(days: int) -> float | None:
             if len(closes) <= days:
                 return None
@@ -158,6 +170,7 @@ def _compute_price_features(
             "ret_12_1": ret_12_1,
             "vol_90d": vol_90d,
             "high_52w_dist": high_52w_dist,
+            "adv_20d": adv_20d,
             # Same number the Streamlit service exposes (close / 52w high);
             # the high_52w strategy ranks on it.
             "high_52w_prox": (1.0 + high_52w_dist) if high_52w_dist is not None else None,
@@ -510,6 +523,9 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
         # Point-in-time membership: only names in the index on r_date.
         members = eligible_at(r_date)
         price_features = price_features[price_features.index.isin(members)]
+        # Liquidity: drop names below the dollar-volume floor on r_date.
+        if cfg.min_dollar_vol > 0 and "adv_20d" in price_features.columns:
+            price_features = price_features[price_features["adv_20d"] >= cfg.min_dollar_vol]
         if price_features.empty:
             continue
 

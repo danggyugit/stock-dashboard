@@ -111,6 +111,7 @@ def compact_result(res: fb.FactorBacktestResult, cfg: fb.FactorBacktestConfig) -
         "n_stocks": cfg.n_stocks,
         "tc_pct": cfg.tc_pct,
         "cap_tier": cfg.cap_tier,
+        "min_dollar_vol": cfg.min_dollar_vol,
     }
     return _json_safe(d)
 
@@ -143,6 +144,7 @@ def main() -> int:
         },
         "end_date": data_end.isoformat(),
         "tc_pct": TC_PCT,
+        "min_dollar_vol": 10_000_000,
         "variants": {
             "cap_tiers": [{"id": slug, "label": label or "전체"} for slug, label in CAP_TIERS],
             "rebalance_months": REBALANCE_MONTHS,
