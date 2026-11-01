@@ -14,8 +14,8 @@ Grid (per enabled strategy):
     cap tier        all | Large Cap
     rebalance       1m | 3m
     holdings        5 | 10 | 20
-    period          price strategies 2020-01-01 →, fundamentals 2023-01-01 →
-                    data end, tc 0.3%, all sectors
+    period          price × Large Cap 2010-01-01 →, price × all 2020-01-01 →,
+                    fundamentals 2023-01-01 → data end; tc 0.3%, all sectors
 → 12 variants × ~25 strategies ≈ 300 runs, a few seconds each.
 
 Output: data/cache/factor_backtests/<strategy>/<cap>_<rebal>m_<n>.json
@@ -52,15 +52,20 @@ sys.path.insert(0, str(_APP_DIR))
 import factor_backtest as fb  # noqa: E402  (api/)
 from services.factor_strategies import list_strategies  # noqa: E402
 
-# Price-based strategies run from PRICE_START; fundamentals / hybrid ones
-# from FUND_START, because yfinance PIT statements only reach back ~4 years
-# and an earlier start would just be months with no scoreable names.
-PRICE_START = date.fromisoformat(os.environ.get("FACTOR_PRICE_START", "2020-01-01"))
+# Start dates follow the data each cell can be corrected for:
+#   price × Large Cap   PRICE_START_LARGE — S&P 500 membership history reaches
+#                       back to 1976, so survivorship is handled all the way
+#   price × all tiers   PRICE_START_ALL   — S&P 600 history starts 2019-12
+#   fundamentals/hybrid FUND_START        — yfinance PIT statements reach ~4 y
+PRICE_START_LARGE = date.fromisoformat(os.environ.get("FACTOR_PRICE_START_LARGE", "2010-01-01"))
+PRICE_START_ALL = date.fromisoformat(os.environ.get("FACTOR_PRICE_START_ALL", "2020-01-01"))
 FUND_START = date.fromisoformat(os.environ.get("FACTOR_FUND_START", "2023-01-01"))
 
 
-def start_for(category: str) -> date:
-    return PRICE_START if category == "price" else FUND_START
+def start_for(category: str, cap_slug: str) -> date:
+    if category != "price":
+        return FUND_START
+    return PRICE_START_LARGE if cap_slug == "large" else PRICE_START_ALL
 
 
 CAP_TIERS = [("all", None), ("large", "Large Cap")]
@@ -130,8 +135,12 @@ def main() -> int:
     index: dict = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "data_as_of": data_end.isoformat(),
-        "start_date": PRICE_START.isoformat(),
-        "start_dates": {"price": PRICE_START.isoformat(), "fundamentals": FUND_START.isoformat()},
+        "start_date": PRICE_START_ALL.isoformat(),
+        "start_dates": {
+            "price_large": PRICE_START_LARGE.isoformat(),
+            "price_all": PRICE_START_ALL.isoformat(),
+            "fundamentals": FUND_START.isoformat(),
+        },
         "end_date": data_end.isoformat(),
         "tc_pct": TC_PCT,
         "variants": {
@@ -144,8 +153,7 @@ def main() -> int:
     ok = failed = 0
     t_all = time.time()
     for strat in strategies:
-        entry = {"name": strat.name, "category": strat.category,
-                 "start_date": start_for(strat.category).isoformat(), "variants": {}}
+        entry = {"name": strat.name, "category": strat.category, "variants": {}}
         sdir = OUT_DIR / strat.key
         sdir.mkdir(exist_ok=True)
         t_s = time.time()
@@ -154,7 +162,8 @@ def main() -> int:
                 for n in N_STOCKS:
                     vid = variant_id(cap_slug, rebal, n)
                     cfg = fb.FactorBacktestConfig(
-                        strategy_key=strat.key, start_date=start_for(strat.category),
+                        strategy_key=strat.key,
+                        start_date=start_for(strat.category, cap_slug),
                         end_date=data_end,
                         rebalance_months=rebal, n_stocks=n, tc_pct=TC_PCT,
                         sector=None, cap_tier=cap_tier,
@@ -174,6 +183,7 @@ def main() -> int:
                             encoding="utf-8",
                         )
                         entry["variants"][vid] = {
+                            "start_date": cfg.start_date.isoformat(),
                             "metrics": payload["metrics"],
                             "spy": (payload.get("benchmark_metrics") or {}).get("SPY", {}),
                             "universe_size": payload["universe_size"],

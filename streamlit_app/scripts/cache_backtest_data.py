@@ -240,11 +240,12 @@ TARGET_SECTORS = [
 
 # Backtest lookback window: 400 warm-up days (RSI, momentum lookback need history)
 # before the earliest backtest start date (2023-01-01), through yesterday.
-# BACKTEST_START: first rebalance date the backtests may use. Price-based
-# strategies run from here; fundamentals strategies start later anyway
-# (yfinance PIT statements only reach back ~4 years). The 400-day warm-up
+# BACKTEST_START: earliest rebalance date any backtest may use. Large-cap
+# price strategies run from here (S&P 500 membership history goes back to
+# 1976); the all-tier grid starts 2020 (S&P 600 history begins 2019-12) and
+# fundamentals strategies 2023 (yfinance PIT reach). The 400-day warm-up
 # covers 12-month momentum and the 263-bar min_history before that date.
-BACKTEST_START = date.fromisoformat(os.environ.get("BACKTEST_START", "2020-01-01"))
+BACKTEST_START = date.fromisoformat(os.environ.get("BACKTEST_START", "2010-01-01"))
 DATA_END = date.today() - timedelta(days=1)
 DATA_START = BACKTEST_START - timedelta(days=400)
 
