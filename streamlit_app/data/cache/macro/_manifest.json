@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-11-01T22:15:05.179571+00:00",
+  "cached_at": "2026-11-02T22:15:04.880552+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -14,10 +14,10 @@
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1455,
+      "points": 1456,
       "latest": {
-        "date": "2026-10-30",
-        "value": 4.375
+        "date": "2026-11-02",
+        "value": 5.087
       }
     },
     "tga": {
@@ -41,10 +41,10 @@
     "hy_oas": {
       "series_id": "BAMLH0A0HYM2",
       "freq": "D",
-      "points": 786,
+      "points": 784,
       "latest": {
-        "date": "2026-10-29",
-        "value": 3.26
+        "date": "2026-10-30",
+        "value": 3.44
       }
     },
     "m1": {
@@ -68,55 +68,55 @@
     "fed_funds": {
       "series_id": "FEDFUNDS",
       "freq": "M",
-      "points": 69,
+      "points": 70,
       "latest": {
-        "date": "2026-09-01",
-        "value": 3.75
+        "date": "2026-10-01",
+        "value": 3.88
       }
     },
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1457,
+      "points": 1458,
       "latest": {
-        "date": "2026-10-29",
-        "value": 4.18
+        "date": "2026-10-30",
+        "value": 4.16
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1457,
+      "points": 1458,
       "latest": {
-        "date": "2026-10-29",
-        "value": 4.61
+        "date": "2026-10-30",
+        "value": 4.56
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1457,
+      "points": 1458,
       "latest": {
-        "date": "2026-10-29",
-        "value": 4.78
+        "date": "2026-10-30",
+        "value": 4.71
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1457,
+      "points": 1458,
       "latest": {
-        "date": "2026-10-29",
-        "value": 4.98
+        "date": "2026-10-30",
+        "value": 4.94
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1457,
+      "points": 1458,
       "latest": {
-        "date": "2026-10-29",
-        "value": 5.32
+        "date": "2026-10-30",
+        "value": 5.31
       }
     },
     "cpi": {
@@ -140,10 +140,10 @@
     "dxy": {
       "series_id": "DTWEXBGS",
       "freq": "D",
-      "points": 1453,
+      "points": 1458,
       "latest": {
-        "date": "2026-10-23",
-        "value": 121.3202
+        "date": "2026-10-30",
+        "value": 121.6656
       }
     },
     "gold": {
