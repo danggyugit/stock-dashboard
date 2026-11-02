@@ -34,6 +34,9 @@ import pickle
 import sys
 import time
 import types
+
+import numpy as np
+import pandas as pd
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -336,13 +339,20 @@ def _removed_ticker_metadata(rows: list[dict]) -> list[dict]:
     return out
 
 
-def _add_raw_close_and_splits(price_data: dict, start: date, end: date,
-                              batch: int = 50) -> None:
-    """Attach 'Close_Raw' (dividend-unadjusted) and 'Stock Splits' columns to
-    each price frame, in place. Failures leave the frame as it was."""
+def download_prices_full(tickers: list[str], start: date, end: date,
+                         batch: int = 20) -> dict:
+    """OHLCV frames in the engines' shape (Open/High/Low/Close/Volume, all
+    dividend- and split-adjusted like yfinance auto_adjust) plus two extra
+    columns from the same download: Close_Raw (split-adjusted only — the
+    price basis reported per-share figures live on) and Stock Splits (to put
+    SEC's as-reported EPS/share counts on today's basis).
+
+    A single auto_adjust=False, actions=True pass replaces the earlier two
+    downloads; the second one was rate-limited straight after the first and
+    silently attached nothing.
+    """
     import yfinance as yf
-    tickers = list(price_data.keys())
-    done = 0
+    out: dict = {}
     for i in range(0, len(tickers), batch):
         chunk = tickers[i:i + batch]
         raw = None
@@ -352,22 +362,33 @@ def _add_raw_close_and_splits(price_data: dict, start: date, end: date,
                                   auto_adjust=False, actions=True, progress=False,
                                   group_by="ticker", threads=True)
                 break
-            except Exception:
+            except Exception as e:
+                logger.warning("download chunk %d failed (%s) — retry %d", i // batch, e, attempt + 1)
                 time.sleep(2.0 * (attempt + 1))
         if raw is None or raw.empty:
             continue
         for t in chunk:
             try:
                 sub = raw[t] if isinstance(raw.columns, pd.MultiIndex) else raw
-                df = price_data[t]
-                if "Close" in sub.columns:
-                    df["Close_Raw"] = sub["Close"].reindex(df.index)
-                if "Stock Splits" in sub.columns:
-                    df["Stock Splits"] = sub["Stock Splits"].reindex(df.index).fillna(0.0)
-                done += 1
-            except Exception:
-                pass
-    logger.info("Raw close + splits attached for %d/%d tickers", done, len(tickers))
+                sub = sub.dropna(subset=["Close"]) if "Close" in sub.columns else sub
+                if len(sub) < 60 or "Adj Close" not in sub.columns:
+                    continue
+                factor = (sub["Adj Close"] / sub["Close"]).replace([np.inf, -np.inf], np.nan).ffill().bfill()
+                df = pd.DataFrame({
+                    "Close": sub["Adj Close"],
+                    "High": sub["High"] * factor,
+                    "Low": sub["Low"] * factor,
+                    "Open": sub["Open"] * factor,
+                    "Volume": sub["Volume"],
+                    "Close_Raw": sub["Close"],
+                    "Stock Splits": sub["Stock Splits"].fillna(0.0) if "Stock Splits" in sub.columns else 0.0,
+                })
+                df.index = pd.to_datetime(df.index)
+                df.index.name = "Date"
+                out[t] = df
+            except Exception as e:
+                logger.debug("skip %s: %s", t, e)
+    return out
 
 
 def _load_prev_pickle(name: str):
@@ -562,19 +583,8 @@ def main() -> None:
 
     # 3. Prices — main data payload (10-20 min for 500 tickers × 3 years)
     logger.info("Downloading prices for %d tickers (10-20 min)...", len(tickers))
-    price_data = _lab.download_price_data(
-        tuple(tickers),
-        DATA_START.strftime("%Y-%m-%d"),
-        DATA_END.strftime("%Y-%m-%d"),
-    )
+    price_data = download_prices_full(tickers, DATA_START, DATA_END)
     logger.info("Got prices for %d tickers", len(price_data))
-
-    # Valuation needs a price on the same basis as the reported numbers:
-    # auto_adjust=True folds dividends into Close, which over 15 years makes
-    # historical P/E, P/B, P/S look cheaper than they were. A second pass
-    # adds Close_Raw (split-adjusted only) and the split history, which the
-    # SEC per-share figures (as reported, pre-split) are adjusted with.
-    _add_raw_close_and_splits(price_data, DATA_START, DATA_END)
 
     # Keep yesterday's history for any universe name Yahoo stopped serving
     # (delisted / acquired). Once a ticker has been in this cache its prices

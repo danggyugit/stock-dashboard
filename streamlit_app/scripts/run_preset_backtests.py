@@ -256,6 +256,14 @@ def _cap_tiers_from_env() -> list[str]:
 
 
 CAP_TIERS = _cap_tiers_from_env()
+# PRESET_START: first rebalance date. 2012 needs the SEC-sourced PIT cache
+# (fundamentals features back to 2009); the 12-month rolling window means
+# the first prediction lands a year later.
+PRESET_START = date.fromisoformat(os.environ.get("PRESET_START", "2010-01-01"))
+# Fitted models of the last rebalance per preset, so refresh_preset_picks.py
+# can re-score today's snapshot every day without re-running the backtest.
+MODELS_DIR = Path(os.environ.get("PRESET_MODELS_DIR", "").strip()
+                  or _APP_DIR / "data" / "cache" / "backtest_data" / "models")
 _DATA_DIR_ENV = os.environ.get("BACKTEST_DATA_DIR", "").strip()
 _OUTPUT_DIR_ENV = os.environ.get("PRESET_OUTPUT_DIR", "").strip()
 NO_PUSH = os.environ.get("PRESET_NO_PUSH", "").strip() == "1"
@@ -266,7 +274,7 @@ def _common_config() -> dict:
     because each preset targets a single sector (10-sector matrix)."""
     today = date.today()
     end_dt = today - timedelta(days=1)           # yesterday
-    start_dt = date(2023, 1, 1)
+    start_dt = PRESET_START
     return {
         "cap_tiers": list(CAP_TIERS),
         # sectors set per-sector iteration in main()
@@ -1000,6 +1008,30 @@ def run_single_preset(preset_id: str, preset: dict, common: dict, shared: dict,
     except Exception as e:
         logger.warning("Today-prediction failed for %s: %s", preset_id, e)
         today_picks_data = {}
+
+    # Persist what _predict_today needs so the daily picks refresh can run
+    # without the multi-hour backtest (models are small: RF depth ≤ 7).
+    try:
+        import gzip as _gz
+        import pickle as _pk
+        MODELS_DIR.mkdir(parents=True, exist_ok=True)
+        artifacts = {k: results.get(k) for k in (
+            "last_model_rf", "last_model_xgb", "last_model_lgbm", "last_imputer",
+            "last_avail_cols", "last_all_cols", "last_win_bounds", "last_miss_src",
+            "use_ensemble", "cash_strategy", "label_kind",
+        )}
+        artifacts["cfg"] = cfg
+        artifacts["sectors"] = list(cfg["sectors"])
+        artifacts["trained_at"] = datetime.now(timezone.utc).isoformat()
+        artifacts["last_rebalance_date"] = (
+            rebal_hist[-1]["rebalance_date"].strftime("%Y-%m-%d") if rebal_hist else None
+        )
+        tmp = MODELS_DIR / f"{preset_id}.pkl.gz.tmp"
+        with _gz.open(tmp, "wb") as f:
+            _pk.dump(artifacts, f, protocol=_pk.HIGHEST_PROTOCOL)
+        tmp.replace(MODELS_DIR / f"{preset_id}.pkl.gz")
+    except Exception as e:
+        logger.warning("Could not save model artifacts for %s: %s", preset_id, e)
 
     return {
         "preset_id": preset_id,

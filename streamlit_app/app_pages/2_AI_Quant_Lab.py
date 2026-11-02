@@ -1715,6 +1715,11 @@ def run_backtest(
         if index_memberships:
             eligible = set(untracked_universe or [])
             for members_now, changes in index_memberships:
+                # No history yet for this index on `date` (S&P 400 from 2012,
+                # S&P 600 from 2019-12) → leave the tier out rather than use
+                # today's survivors.
+                if changes is not None and not changes.empty and date < changes["date"].min():
+                    continue
                 eligible |= set(reconstruct_sp500_at_date(list(members_now), changes, date))
             tickers = [t for t in price_data if t in eligible]
         elif sp500_changes is not None and current_sp500 is not None:

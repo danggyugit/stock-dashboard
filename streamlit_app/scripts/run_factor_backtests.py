@@ -58,11 +58,14 @@ from services.factor_strategies import list_strategies  # noqa: E402
 #   price × all tiers   PRICE_START_ALL   — S&P 600 history starts 2019-12
 #   fundamentals/hybrid FUND_START        — yfinance PIT statements reach ~4 y
 PRICE_START_LARGE = date.fromisoformat(os.environ.get("FACTOR_PRICE_START_LARGE", "2010-01-01"))
-PRICE_START_ALL = date.fromisoformat(os.environ.get("FACTOR_PRICE_START_ALL", "2020-01-01"))
+# All tiers also start 2010: mid caps join when their history begins (2012),
+# small caps when theirs does (2019-12) — the engine leaves a tier out until
+# its membership can be reconstructed instead of using today's survivors.
+PRICE_START_ALL = date.fromisoformat(os.environ.get("FACTOR_PRICE_START_ALL", "2010-01-01"))
 # Fundamentals reach back to 2012 only with SEC company-facts PIT data (XBRL
 # filing became universal in 2011); on the older yfinance-sourced cache the
 # start falls back to 2023 so the grid never shows a decade of empty months.
-FUND_START_SEC = date.fromisoformat(os.environ.get("FACTOR_FUND_START", "2012-01-01"))
+FUND_START_SEC = date.fromisoformat(os.environ.get("FACTOR_FUND_START", "2010-01-01"))
 FUND_START_YF = date(2023, 1, 1)
 
 

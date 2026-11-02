@@ -399,6 +399,45 @@ def _filter_universe(cfg: FactorBacktestConfig) -> list[str]:
     return [t for t in tickers if t in prices]
 
 
+# ── Per-process caches for the nightly grid ──────────────────────
+# The grid runs ~25 strategies × 12 variants over the same universe and
+# rebalance dates; features at a date depend only on (tier, sector, date),
+# not on the strategy or the holdings count, so they are computed once.
+_FEATURE_CACHE: dict[tuple, pd.DataFrame] = {}
+_PIT_FEATURE_CACHE: dict[tuple, pd.DataFrame] = {}
+_CLOSE_CACHE: dict[int, dict[str, pd.Series]] = {}
+
+
+def _close_series(universe_prices: dict[str, pd.DataFrame]) -> dict[str, pd.Series]:
+    """Daily close per ticker with a DatetimeIndex, built once per price dict."""
+    key = id(universe_prices)
+    cached = _CLOSE_CACHE.get(key)
+    if cached is not None:
+        return cached
+    out: dict[str, pd.Series] = {}
+    for t, df in universe_prices.items():
+        d = df
+        if not isinstance(d.index, pd.DatetimeIndex):
+            if "date" in d.columns:
+                d = d.set_index("date")
+            d.index = pd.to_datetime(d.index)
+        close_col = "Close" if "Close" in d.columns else "close"
+        out[t] = d[close_col].dropna()
+    _CLOSE_CACHE.clear()
+    _CLOSE_CACHE[key] = out
+    return out
+
+
+def _tier_history_starts(cfg: FactorBacktestConfig) -> dict[str, pd.Timestamp]:
+    tiers = [cfg.cap_tier] if cfg.cap_tier else ["Large Cap", "Mid Cap", "Small Cap"]
+    out = {}
+    for tier in tiers:
+        changes = cache_loader.load_index_changes(tier)
+        if changes is not None:
+            out[tier] = pd.Timestamp(changes["date"].min())
+    return out
+
+
 def _membership_at(cfg: FactorBacktestConfig) -> tuple[Any, list[str]]:
     """Returns (eligible_fn, tiers_without_history).
 
@@ -409,7 +448,7 @@ def _membership_at(cfg: FactorBacktestConfig) -> tuple[Any, list[str]]:
     meta = cache_loader.load_metadata()
     current = meta[meta["universe"] != "former"] if "universe" in meta.columns else meta
     tiers = [cfg.cap_tier] if cfg.cap_tier else ["Large Cap", "Mid Cap", "Small Cap"]
-    tracked: list[tuple[set[str], pd.DataFrame]] = []
+    tracked: list[tuple[set[str], pd.DataFrame, pd.Timestamp]] = []
     untracked_tiers: list[str] = []
     always: set[str] = set()
     for tier in tiers:
@@ -419,11 +458,16 @@ def _membership_at(cfg: FactorBacktestConfig) -> tuple[Any, list[str]]:
             untracked_tiers.append(tier)
             always |= members_now
         else:
-            tracked.append((members_now, changes))
+            # Membership can only be reconstructed back to the first recorded
+            # change (S&P 400: 2012, S&P 600: 2019-12). Before that the tier
+            # is left out rather than filled with today's survivors.
+            tracked.append((members_now, changes, pd.Timestamp(changes["date"].min())))
 
     def eligible(as_of: pd.Timestamp) -> set[str]:
         out = set(always)
-        for members_now, changes in tracked:
+        for members_now, changes, history_start in tracked:
+            if as_of < history_start:
+                continue
             members = set(members_now)
             future = changes[changes["date"] > as_of].sort_values("date", ascending=False)
             for _, row in future.iterrows():
@@ -495,6 +539,14 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
     if not universe:
         raise ValueError("Universe is empty after filters.")
     eligible_at, untracked_tiers = _membership_at(cfg)
+    tier_starts = _tier_history_starts(cfg)
+    late = {t: d for t, d in tier_starts.items() if d > pd.Timestamp(cfg.start_date)}
+    if late:
+        warnings_out.append(
+            "지수 편입·편출 이력이 시작되는 시점부터 해당 구간이 포함됩니다: "
+            + ", ".join(f"{t} {d.date()}" for t, d in late.items())
+            + ". 그 이전 구간은 이력이 있는 구간(Large Cap 등)만으로 계산했습니다."
+        )
     if untracked_tiers:
         warnings_out.append(
             f"{', '.join(untracked_tiers)}: 지수 편입·편출 이력이 없어 현재 구성 종목을 "
@@ -533,8 +585,15 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
     tc_rate = cfg.tc_pct / 100.0
 
     for i, r_date in enumerate(rebal_dates):
-        # Compute features as of r_date
-        price_features = _compute_price_features(universe_prices, r_date, spy=spy)
+        # Features as of r_date — cached across strategies/variants that share
+        # the universe (the nightly grid), recomputed per request in the API.
+        fkey = (cfg.cap_tier, cfg.sector, r_date)
+        price_features = _FEATURE_CACHE.get(fkey)
+        if price_features is None:
+            price_features = _compute_price_features(universe_prices, r_date, spy=spy)
+            if len(_FEATURE_CACHE) > 600:
+                _FEATURE_CACHE.clear()
+            _FEATURE_CACHE[fkey] = price_features
         if price_features.empty:
             continue
         # Point-in-time membership: only names in the index on r_date.
@@ -546,10 +605,19 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
         if price_features.empty:
             continue
 
-        features = (
-            _compute_pit_features(universe_pit, price_features, r_date)
-            if needs_pit else price_features
-        )
+        if needs_pit:
+            pkey = (cfg.cap_tier, cfg.sector, r_date)
+            pit_full = _PIT_FEATURE_CACHE.get(pkey)
+            if pit_full is None:
+                # Computed on the unfiltered feature frame so every variant
+                # (membership/liquidity filters differ only by rows) can reuse it.
+                pit_full = _compute_pit_features(universe_pit, _FEATURE_CACHE[fkey], r_date)
+                if len(_PIT_FEATURE_CACHE) > 600:
+                    _PIT_FEATURE_CACHE.clear()
+                _PIT_FEATURE_CACHE[pkey] = pit_full
+            features = pit_full.loc[pit_full.index.isin(price_features.index)]
+        else:
+            features = price_features
 
         # Score using strategy's rank_fn
         try:
@@ -571,16 +639,13 @@ def run_factor_backtest(cfg: FactorBacktestConfig) -> FactorBacktestResult:
         # volatility measured only at rebalance dates understated both (the
         # 5-stock monthly RS grid showed -42% MDD at month ends, -49% daily).
         next_date = rebal_dates[i + 1] if i + 1 < len(rebal_dates) else pd.Timestamp(cfg.end_date)
+        closes = _close_series(universe_prices)
         paths: list[pd.Series] = []
         for t in picks:
-            df = universe_prices[t]
-            d = df.copy()
-            if not isinstance(d.index, pd.DatetimeIndex):
-                if "date" in d.columns:
-                    d = d.set_index("date")
-                d.index = pd.to_datetime(d.index)
-            close_col = "Close" if "Close" in d.columns else "close"
-            slice_ = d[(d.index >= r_date) & (d.index <= next_date)][close_col].dropna()
+            c = closes.get(t)
+            if c is None:
+                continue
+            slice_ = c.loc[r_date:next_date]
             if len(slice_) < 2:
                 continue
             paths.append(slice_ / slice_.iloc[0])

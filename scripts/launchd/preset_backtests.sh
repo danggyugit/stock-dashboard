@@ -21,8 +21,20 @@ for _ in $(seq 1 180); do
   sleep 60
 done
 
-run_and_commit \
-  "preset_backtests" \
-  "streamlit_app/scripts/run_preset_backtests.py" \
-  "chore(cache): daily preset backtest matrix" \
-  streamlit_app/data/cache/backtests
+# Full matrix from 2012 takes ~6 h, so it runs once a week (Sunday night)
+# and whenever no saved models exist yet (first run after a reset). Other
+# nights only re-score today's snapshot with the saved models (minutes).
+MODELS_DIR="$REPO/streamlit_app/data/cache/backtest_data/models"
+if [ "$(date +%u)" = "7" ] || [ -z "$(ls "$MODELS_DIR"/*.pkl.gz 2>/dev/null)" ]; then
+  run_and_commit \
+    "preset_backtests" \
+    "streamlit_app/scripts/run_preset_backtests.py" \
+    "chore(cache): weekly preset backtest matrix" \
+    streamlit_app/data/cache/backtests streamlit_app/data/cache/forward_test
+else
+  run_and_commit \
+    "preset_backtests" \
+    "streamlit_app/scripts/refresh_preset_picks.py" \
+    "chore(cache): daily preset picks refresh" \
+    streamlit_app/data/cache/backtests streamlit_app/data/cache/forward_test
+fi
