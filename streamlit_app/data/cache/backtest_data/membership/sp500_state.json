@@ -1,7 +1,7 @@
 {
  "table_as_of": "2026-07-19",
  "table_source": "revision",
- "snapshot_as_of": "2026-11-02",
+ "snapshot_as_of": "2026-11-03",
  "snapshot_members": [
   "A",
   "AAPL",
@@ -507,6 +507,6 @@
   "ZBRA",
   "ZTS"
  ],
- "updated_at": "2026-11-01T17:00:09.801567+00:00",
+ "updated_at": "2026-11-02T17:00:08.680308+00:00",
  "rows": 424
 }

@@ -1806,5 +1806,605 @@
  "TMST": {
   "name": "TMST",
   "sector": "Unknown"
+ },
+ "TNB": {
+  "name": "TNB",
+  "sector": "Unknown"
+ },
+ "TPH": {
+  "name": "TPH",
+  "sector": "Unknown"
+ },
+ "TREE": {
+  "name": "LendingTree, Inc.",
+  "sector": "Financials"
+ },
+ "TUP": {
+  "name": "TUP",
+  "sector": "Unknown"
+ },
+ "TW": {
+  "name": "Tradeweb Markets Inc.",
+  "sector": "Financials"
+ },
+ "TWTC": {
+  "name": "TWTC",
+  "sector": "Unknown"
+ },
+ "UAA/UA": {
+  "name": "UAA/UA",
+  "sector": "Unknown"
+ },
+ "UFS": {
+  "name": "UFS",
+  "sector": "Unknown"
+ },
+ "ULTI": {
+  "name": "REX IncomeMax Option Strategy E",
+  "sector": "Unknown"
+ },
+ "UMPQ": {
+  "name": "UMPQ",
+  "sector": "Unknown"
+ },
+ "UNT": {
+  "name": "UNT",
+  "sector": "Unknown"
+ },
+ "UNVR": {
+  "name": "UNVR",
+  "sector": "Unknown"
+ },
+ "URS": {
+  "name": "URS",
+  "sector": "Unknown"
+ },
+ "UTIW": {
+  "name": "UTIW",
+  "sector": "Unknown"
+ },
+ "VCI": {
+  "name": "VCI",
+  "sector": "Unknown"
+ },
+ "VSCO (NOW VSXY)": {
+  "name": "VSCO (NOW VSXY)",
+  "sector": "Unknown"
+ },
+ "VSM": {
+  "name": "VSM",
+  "sector": "Unknown"
+ },
+ "VSTO": {
+  "name": "VSTO",
+  "sector": "Unknown"
+ },
+ "VVC": {
+  "name": "VVC",
+  "sector": "Unknown"
+ },
+ "WBMD": {
+  "name": "WBMD",
+  "sector": "Unknown"
+ },
+ "WBS": {
+  "name": "Webster Financial Corporation",
+  "sector": "Financials"
+ },
+ "WDR": {
+  "name": "WDR",
+  "sector": "Unknown"
+ },
+ "WETF": {
+  "name": "WETF",
+  "sector": "Unknown"
+ },
+ "WGL": {
+  "name": "WGL",
+  "sector": "Unknown"
+ },
+ "WNR": {
+  "name": "WNR",
+  "sector": "Unknown"
+ },
+ "WOLF": {
+  "name": "Wolfspeed, Inc.",
+  "sector": "Information Technology"
+ },
+ "WOOF": {
+  "name": "Petco Health and Wellness Compa",
+  "sector": "Consumer Discretionary"
+ },
+ "WPG": {
+  "name": "WPG",
+  "sector": "Unknown"
+ },
+ "WR": {
+  "name": "Corgi U.S. War Machine ETF",
+  "sector": "Unknown"
+ },
+ "WRI": {
+  "name": "WRI",
+  "sector": "Unknown"
+ },
+ "WW": {
+  "name": "WW International, Inc.",
+  "sector": "Health Care"
+ },
+ "WWAV": {
+  "name": "WWAV",
+  "sector": "Unknown"
+ },
+ "XLS": {
+  "name": "XLS",
+  "sector": "Unknown"
+ },
+ "Y": {
+  "name": "Y",
+  "sector": "Unknown"
+ },
+ "AAN": {
+  "name": "AAN",
+  "sector": "Unknown"
+ },
+ "AAOI": {
+  "name": "Applied Optoelectronics, Inc.",
+  "sector": "Information Technology"
+ },
+ "AAWW": {
+  "name": "AAWW",
+  "sector": "Unknown"
+ },
+ "ABTX": {
+  "name": "ABTX",
+  "sector": "Unknown"
+ },
+ "ACOR": {
+  "name": "ACOR",
+  "sector": "Unknown"
+ },
+ "AEGN": {
+  "name": "AEGN",
+  "sector": "Unknown"
+ },
+ "AEL": {
+  "name": "AEL",
+  "sector": "Unknown"
+ },
+ "AGTI": {
+  "name": "AGTI",
+  "sector": "Unknown"
+ },
+ "AHRT": {
+  "name": "AH Realty Trust, Inc.",
+  "sector": "Real Estate"
+ },
+ "AJRD": {
+  "name": "AJRD",
+  "sector": "Unknown"
+ },
+ "AKRX": {
+  "name": "AKRX",
+  "sector": "Unknown"
+ },
+ "AL": {
+  "name": "AL",
+  "sector": "Unknown"
+ },
+ "AMAG": {
+  "name": "AMAG",
+  "sector": "Unknown"
+ },
+ "AMBC": {
+  "name": "AMBC",
+  "sector": "Unknown"
+ },
+ "AMWD": {
+  "name": "AMWD",
+  "sector": "Unknown"
+ },
+ "ANGI": {
+  "name": "Angi Inc.",
+  "sector": "Communication Services"
+ },
+ "ANGO": {
+  "name": "AngioDynamics, Inc.",
+  "sector": "Health Care"
+ },
+ "APEI": {
+  "name": "American Public Education, Inc.",
+  "sector": "Consumer Staples"
+ },
+ "APLS": {
+  "name": "APLS",
+  "sector": "Unknown"
+ },
+ "ARCH": {
+  "name": "ARCH",
+  "sector": "Unknown"
+ },
+ "ARI": {
+  "name": "Apollo Commercial Real Estate F",
+  "sector": "Real Estate"
+ },
+ "ASIX": {
+  "name": "AdvanSix Inc.",
+  "sector": "Materials"
+ },
+ "ATNI": {
+  "name": "ATN International, Inc.",
+  "sector": "Communication Services"
+ },
+ "AVD": {
+  "name": "American Vanguard Corporation",
+  "sector": "Materials"
+ },
+ "AVID": {
+  "name": "AVID",
+  "sector": "Unknown"
+ },
+ "AVTA": {
+  "name": "AVTA",
+  "sector": "Unknown"
+ },
+ "AXE": {
+  "name": "AXE",
+  "sector": "Unknown"
+ },
+ "B": {
+  "name": "Barrick Mining Corporation",
+  "sector": "Materials"
+ },
+ "BDN": {
+  "name": "Brandywine Realty Trust",
+  "sector": "Real Estate"
+ },
+ "BEAT": {
+  "name": "Heartbeam, Inc.",
+  "sector": "Health Care"
+ },
+ "BELFB": {
+  "name": "Bel Fuse Inc.",
+  "sector": "Information Technology"
+ },
+ "BGG": {
+  "name": "BGG",
+  "sector": "Unknown"
+ },
+ "BGS": {
+  "name": "B&G Foods, Inc.",
+  "sector": "Consumer Staples"
+ },
+ "BLMN": {
+  "name": "Bloomin' Brands, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "BNED": {
+  "name": "Barnes & Noble Education, Inc",
+  "sector": "Consumer Discretionary"
+ },
+ "BOOM": {
+  "name": "DMC Global Inc.",
+  "sector": "Industrials"
+ },
+ "BPFH": {
+  "name": "BPFH",
+  "sector": "Unknown"
+ },
+ "BRKL": {
+  "name": "Corgi BRKB 2x Daily ETF",
+  "sector": "Unknown"
+ },
+ "BRKS": {
+  "name": "BRKS",
+  "sector": "Unknown"
+ },
+ "CAL": {
+  "name": "Caleres, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "CAMP": {
+  "name": "CAMP4 THERAPEUTICS CORPORATION",
+  "sector": "Health Care"
+ },
+ "CARA": {
+  "name": "CARA",
+  "sector": "Unknown"
+ },
+ "CATM": {
+  "name": "CATM",
+  "sector": "Unknown"
+ },
+ "CATO": {
+  "name": "Cato Corporation (The)",
+  "sector": "Consumer Discretionary"
+ },
+ "CBB": {
+  "name": "CBB",
+  "sector": "Unknown"
+ },
+ "CBL": {
+  "name": "CBL & Associates Properties, In",
+  "sector": "Real Estate"
+ },
+ "CCRN": {
+  "name": "CCRN",
+  "sector": "Unknown"
+ },
+ "CCSI": {
+  "name": "Consensus Cloud Solutions, Inc.",
+  "sector": "Information Technology"
+ },
+ "CDMO": {
+  "name": "CDMO",
+  "sector": "Unknown"
+ },
+ "CDR": {
+  "name": "CDR",
+  "sector": "Unknown"
+ },
+ "CEVA": {
+  "name": "CEVA, Inc.",
+  "sector": "Information Technology"
+ },
+ "CHCT": {
+  "name": "Community Healthcare Trust Inco",
+  "sector": "Real Estate"
+ },
+ "CHRS": {
+  "name": "Coherus Oncology, Inc.",
+  "sector": "Health Care"
+ },
+ "CHUY": {
+  "name": "CHUY",
+  "sector": "Unknown"
+ },
+ "CIR": {
+  "name": "Corgi CRCL 2x Daily ETF",
+  "sector": "Unknown"
+ },
+ "CKH": {
+  "name": "CKH",
+  "sector": "Unknown"
+ },
+ "CLDT": {
+  "name": "Chatham Lodging Trust (REIT)",
+  "sector": "Real Estate"
+ },
+ "CLFD": {
+  "name": "Clearfield, Inc.",
+  "sector": "Information Technology"
+ },
+ "CLW": {
+  "name": "Clearwater Paper Corporation",
+  "sector": "Materials"
+ },
+ "CMO": {
+  "name": "CMO",
+  "sector": "Unknown"
+ },
+ "CMTL": {
+  "name": "Comtech Telecommunications Corp",
+  "sector": "Information Technology"
+ },
+ "CNSL": {
+  "name": "CNSL",
+  "sector": "Unknown"
+ },
+ "CONN": {
+  "name": "CONN",
+  "sector": "Unknown"
+ },
+ "COOP": {
+  "name": "COOP",
+  "sector": "Unknown"
+ },
+ "CORE": {
+  "name": "CORE",
+  "sector": "Unknown"
+ },
+ "CPRX": {
+  "name": "CPRX",
+  "sector": "Unknown"
+ },
+ "CPS": {
+  "name": "Cooper-Standard Holdings Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "CPSI": {
+  "name": "CPSI",
+  "sector": "Unknown"
+ },
+ "CRCM": {
+  "name": "CRCM",
+  "sector": "Unknown"
+ },
+ "CRMT": {
+  "name": "America's Car-Mart, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "CRZO": {
+  "name": "CRZO",
+  "sector": "Unknown"
+ },
+ "CSGS": {
+  "name": "CSGS",
+  "sector": "Unknown"
+ },
+ "CSII": {
+  "name": "CSII",
+  "sector": "Unknown"
+ },
+ "CTKB": {
+  "name": "Cytek Biosciences, Inc.",
+  "sector": "Health Care"
+ },
+ "CUB": {
+  "name": "Lionheart Holdings",
+  "sector": "Financials"
+ },
+ "CUTR": {
+  "name": "CUTR",
+  "sector": "Unknown"
+ },
+ "CVGW": {
+  "name": "CVGW",
+  "sector": "Unknown"
+ },
+ "DAKT": {
+  "name": "Daktronics, Inc.",
+  "sector": "Information Technology"
+ },
+ "DBI": {
+  "name": "Designer Brands Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "DIN": {
+  "name": "Dine Brands Global, Inc. Common",
+  "sector": "Consumer Discretionary"
+ },
+ "DOUG": {
+  "name": "Douglas Elliman Inc.",
+  "sector": "Real Estate"
+ },
+ "DPLO": {
+  "name": "DPLO",
+  "sector": "Unknown"
+ },
+ "DSPG": {
+  "name": "DSPG",
+  "sector": "Unknown"
+ },
+ "DVAX": {
+  "name": "DVAX",
+  "sector": "Unknown"
+ },
+ "EBIX": {
+  "name": "EBIX",
+  "sector": "Unknown"
+ },
+ "ECOL": {
+  "name": "ECOL",
+  "sector": "Unknown"
+ },
+ "EE": {
+  "name": "Excelerate Energy, Inc.",
+  "sector": "Energy"
+ },
+ "EGHT": {
+  "name": "8x8 Inc",
+  "sector": "Information Technology"
+ },
+ "EGOV": {
+  "name": "EGOV",
+  "sector": "Unknown"
+ },
+ "EGRX": {
+  "name": "Eagle Pharmaceuticals, Inc.",
+  "sector": "Health Care"
+ },
+ "EHAB": {
+  "name": "EHAB",
+  "sector": "Unknown"
+ },
+ "EHTH": {
+  "name": "eHealth, Inc.",
+  "sector": "Financials"
+ },
+ "ELME": {
+  "name": "Elme Communities",
+  "sector": "Real Estate"
+ },
+ "ELY": {
+  "name": "ELY",
+  "sector": "Unknown"
+ },
+ "EMBC": {
+  "name": "Embecta Corp.",
+  "sector": "Health Care"
+ },
+ "EPAY": {
+  "name": "EPAY",
+  "sector": "Unknown"
+ },
+ "ETD": {
+  "name": "Ethan Allen Interiors Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "EXPI": {
+  "name": "EXPI",
+  "sector": "Unknown"
+ },
+ "EXPR": {
+  "name": "EXPR",
+  "sector": "Unknown"
+ },
+ "EXTN": {
+  "name": "EXTN",
+  "sector": "Unknown"
+ },
+ "FARO": {
+  "name": "FARO",
+  "sector": "Unknown"
+ },
+ "FBC": {
+  "name": "FBC",
+  "sector": "Unknown"
+ },
+ "FBM": {
+  "name": "FBM",
+  "sector": "Unknown"
+ },
+ "FDP": {
+  "name": "FDP",
+  "sector": "Unknown"
+ },
+ "FF": {
+  "name": "FutureFuel Corp.",
+  "sector": "Materials"
+ },
+ "FLGT": {
+  "name": "Fulgent Genetics, Inc.",
+  "sector": "Health Care"
+ },
+ "FLOW": {
+  "name": "Global X U.S. Cash Flow Kings 1",
+  "sector": "Unknown"
+ },
+ "FMBI": {
+  "name": "FMBI",
+  "sector": "Unknown"
+ },
+ "FOE": {
+  "name": "FOE",
+  "sector": "Unknown"
+ },
+ "FORR": {
+  "name": "Forrester Research, Inc.",
+  "sector": "Industrials"
+ },
+ "FRGI": {
+  "name": "FRGI",
+  "sector": "Unknown"
+ },
+ "FSB": {
+  "name": "FSB",
+  "sector": "Unknown"
+ },
+ "FSP": {
+  "name": "Franklin Street Properties Corp",
+  "sector": "Real Estate"
+ },
+ "FWRD": {
+  "name": "Forward Air Corporation",
+  "sector": "Industrials"
+ },
+ "GCI": {
+  "name": "GCI",
+  "sector": "Unknown"
+ },
+ "GCO": {
+  "name": "Genesco Inc.",
+  "sector": "Consumer Discretionary"
  }
 }

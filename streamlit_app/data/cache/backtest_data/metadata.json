@@ -16097,8 +16097,8 @@
   },
   {
     "ticker": "TREE",
-    "name": "TREE",
-    "sector": "Unknown",
+    "name": "LendingTree, Inc.",
+    "sector": "Financials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16113,8 +16113,8 @@
   },
   {
     "ticker": "TW",
-    "name": "TW",
-    "sector": "Unknown",
+    "name": "Tradeweb Markets Inc.",
+    "sector": "Financials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16145,7 +16145,7 @@
   },
   {
     "ticker": "ULTI",
-    "name": "ULTI",
+    "name": "REX IncomeMax Option Strategy E",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -16241,8 +16241,8 @@
   },
   {
     "ticker": "WBS",
-    "name": "WBS",
-    "sector": "Unknown",
+    "name": "Webster Financial Corporation",
+    "sector": "Financials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16297,16 +16297,16 @@
   },
   {
     "ticker": "WOLF",
-    "name": "WOLF",
-    "sector": "Unknown",
+    "name": "Wolfspeed, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "WOOF",
-    "name": "WOOF",
-    "sector": "Unknown",
+    "name": "Petco Health and Wellness Compa",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16329,7 +16329,7 @@
   },
   {
     "ticker": "WR",
-    "name": "WR",
+    "name": "Corgi U.S. War Machine ETF",
     "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
@@ -16345,8 +16345,8 @@
   },
   {
     "ticker": "WW",
-    "name": "WW",
-    "sector": "Unknown",
+    "name": "WW International, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16409,8 +16409,8 @@
   },
   {
     "ticker": "AAOI",
-    "name": "AAOI",
-    "sector": "Unknown",
+    "name": "Applied Optoelectronics, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16473,8 +16473,8 @@
   },
   {
     "ticker": "AHRT",
-    "name": "AHRT",
-    "sector": "Unknown",
+    "name": "AH Realty Trust, Inc.",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16545,24 +16545,24 @@
   },
   {
     "ticker": "ANGI",
-    "name": "ANGI",
-    "sector": "Unknown",
+    "name": "Angi Inc.",
+    "sector": "Communication Services",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "ANGO",
-    "name": "ANGO",
-    "sector": "Unknown",
+    "name": "AngioDynamics, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "APEI",
-    "name": "APEI",
-    "sector": "Unknown",
+    "name": "American Public Education, Inc.",
+    "sector": "Consumer Staples",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16593,8 +16593,8 @@
   },
   {
     "ticker": "ARI",
-    "name": "ARI",
-    "sector": "Unknown",
+    "name": "Apollo Commercial Real Estate F",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16617,24 +16617,24 @@
   },
   {
     "ticker": "ASIX",
-    "name": "ASIX",
-    "sector": "Unknown",
+    "name": "AdvanSix Inc.",
+    "sector": "Materials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "ATNI",
-    "name": "ATNI",
-    "sector": "Unknown",
+    "name": "ATN International, Inc.",
+    "sector": "Communication Services",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "AVD",
-    "name": "AVD",
-    "sector": "Unknown",
+    "name": "American Vanguard Corporation",
+    "sector": "Materials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16673,8 +16673,8 @@
   },
   {
     "ticker": "B",
-    "name": "B",
-    "sector": "Unknown",
+    "name": "Barrick Mining Corporation",
+    "sector": "Materials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16689,24 +16689,24 @@
   },
   {
     "ticker": "BDN",
-    "name": "BDN",
-    "sector": "Unknown",
+    "name": "Brandywine Realty Trust",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "BEAT",
-    "name": "BEAT",
-    "sector": "Unknown",
+    "name": "Heartbeam, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "BELFB",
-    "name": "BELFB",
-    "sector": "Unknown",
+    "name": "Bel Fuse Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16721,8 +16721,8 @@
   },
   {
     "ticker": "BGS",
-    "name": "BGS",
-    "sector": "Unknown",
+    "name": "B&G Foods, Inc.",
+    "sector": "Consumer Staples",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16745,24 +16745,24 @@
   },
   {
     "ticker": "BLMN",
-    "name": "BLMN",
-    "sector": "Unknown",
+    "name": "Bloomin' Brands, Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "BNED",
-    "name": "BNED",
-    "sector": "Unknown",
+    "name": "Barnes & Noble Education, Inc",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "BOOM",
-    "name": "BOOM",
-    "sector": "Unknown",
+    "name": "DMC Global Inc.",
+    "sector": "Industrials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16777,7 +16777,7 @@
   },
   {
     "ticker": "BRKL",
-    "name": "BRKL",
+    "name": "Corgi BRKB 2x Daily ETF",
     "sector": "Unknown",
     "cap_tier": "Small Cap",
     "industry": "",
@@ -16809,16 +16809,16 @@
   },
   {
     "ticker": "CAL",
-    "name": "CAL",
-    "sector": "Unknown",
+    "name": "Caleres, Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "CAMP",
-    "name": "CAMP",
-    "sector": "Unknown",
+    "name": "CAMP4 THERAPEUTICS CORPORATION",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16849,8 +16849,8 @@
   },
   {
     "ticker": "CATO",
-    "name": "CATO",
-    "sector": "Unknown",
+    "name": "Cato Corporation (The)",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16865,8 +16865,8 @@
   },
   {
     "ticker": "CBL",
-    "name": "CBL",
-    "sector": "Unknown",
+    "name": "CBL & Associates Properties, In",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16881,8 +16881,8 @@
   },
   {
     "ticker": "CCSI",
-    "name": "CCSI",
-    "sector": "Unknown",
+    "name": "Consensus Cloud Solutions, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16905,24 +16905,24 @@
   },
   {
     "ticker": "CEVA",
-    "name": "CEVA",
-    "sector": "Unknown",
+    "name": "CEVA, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "CHCT",
-    "name": "CHCT",
-    "sector": "Unknown",
+    "name": "Community Healthcare Trust Inco",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "CHRS",
-    "name": "CHRS",
-    "sector": "Unknown",
+    "name": "Coherus Oncology, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -16945,7 +16945,7 @@
   },
   {
     "ticker": "CIR",
-    "name": "CIR",
+    "name": "Corgi CRCL 2x Daily ETF",
     "sector": "Unknown",
     "cap_tier": "Small Cap",
     "industry": "",
@@ -16977,24 +16977,24 @@
   },
   {
     "ticker": "CLDT",
-    "name": "CLDT",
-    "sector": "Unknown",
+    "name": "Chatham Lodging Trust (REIT)",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "CLFD",
-    "name": "CLFD",
-    "sector": "Unknown",
+    "name": "Clearfield, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "CLW",
-    "name": "CLW",
-    "sector": "Unknown",
+    "name": "Clearwater Paper Corporation",
+    "sector": "Materials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17025,8 +17025,8 @@
   },
   {
     "ticker": "CMTL",
-    "name": "CMTL",
-    "sector": "Unknown",
+    "name": "Comtech Telecommunications Corp",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17089,8 +17089,8 @@
   },
   {
     "ticker": "CPS",
-    "name": "CPS",
-    "sector": "Unknown",
+    "name": "Cooper-Standard Holdings Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17113,8 +17113,8 @@
   },
   {
     "ticker": "CRMT",
-    "name": "CRMT",
-    "sector": "Unknown",
+    "name": "America's Car-Mart, Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17161,16 +17161,16 @@
   },
   {
     "ticker": "CTKB",
-    "name": "CTKB",
-    "sector": "Unknown",
+    "name": "Cytek Biosciences, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "CUB",
-    "name": "CUB",
-    "sector": "Unknown",
+    "name": "Lionheart Holdings",
+    "sector": "Financials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17209,16 +17209,16 @@
   },
   {
     "ticker": "DAKT",
-    "name": "DAKT",
-    "sector": "Unknown",
+    "name": "Daktronics, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "DBI",
-    "name": "DBI",
-    "sector": "Unknown",
+    "name": "Designer Brands Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17241,8 +17241,8 @@
   },
   {
     "ticker": "DIN",
-    "name": "DIN",
-    "sector": "Unknown",
+    "name": "Dine Brands Global, Inc. Common",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17265,8 +17265,8 @@
   },
   {
     "ticker": "DOUG",
-    "name": "DOUG",
-    "sector": "Unknown",
+    "name": "Douglas Elliman Inc.",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17329,16 +17329,16 @@
   },
   {
     "ticker": "EE",
-    "name": "EE",
-    "sector": "Unknown",
+    "name": "Excelerate Energy, Inc.",
+    "sector": "Energy",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "EGHT",
-    "name": "EGHT",
-    "sector": "Unknown",
+    "name": "8x8 Inc",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17353,8 +17353,8 @@
   },
   {
     "ticker": "EGRX",
-    "name": "EGRX",
-    "sector": "Unknown",
+    "name": "Eagle Pharmaceuticals, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17369,16 +17369,16 @@
   },
   {
     "ticker": "EHTH",
-    "name": "EHTH",
-    "sector": "Unknown",
+    "name": "eHealth, Inc.",
+    "sector": "Financials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "ELME",
-    "name": "ELME",
-    "sector": "Unknown",
+    "name": "Elme Communities",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17393,8 +17393,8 @@
   },
   {
     "ticker": "EMBC",
-    "name": "EMBC",
-    "sector": "Unknown",
+    "name": "Embecta Corp.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17425,8 +17425,8 @@
   },
   {
     "ticker": "ETD",
-    "name": "ETD",
-    "sector": "Unknown",
+    "name": "Ethan Allen Interiors Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17489,8 +17489,8 @@
   },
   {
     "ticker": "FF",
-    "name": "FF",
-    "sector": "Unknown",
+    "name": "FutureFuel Corp.",
+    "sector": "Materials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17505,15 +17505,15 @@
   },
   {
     "ticker": "FLGT",
-    "name": "FLGT",
-    "sector": "Unknown",
+    "name": "Fulgent Genetics, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "FLOW",
-    "name": "FLOW",
+    "name": "Global X U.S. Cash Flow Kings 1",
     "sector": "Unknown",
     "cap_tier": "Small Cap",
     "industry": "",
@@ -17537,8 +17537,8 @@
   },
   {
     "ticker": "FORR",
-    "name": "FORR",
-    "sector": "Unknown",
+    "name": "Forrester Research, Inc.",
+    "sector": "Industrials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17569,8 +17569,8 @@
   },
   {
     "ticker": "FSP",
-    "name": "FSP",
-    "sector": "Unknown",
+    "name": "Franklin Street Properties Corp",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17585,8 +17585,8 @@
   },
   {
     "ticker": "FWRD",
-    "name": "FWRD",
-    "sector": "Unknown",
+    "name": "Forward Air Corporation",
+    "sector": "Industrials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -17601,8 +17601,8 @@
   },
   {
     "ticker": "GCO",
-    "name": "GCO",
-    "sector": "Unknown",
+    "name": "Genesco Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19233,8 +19233,8 @@
   },
   {
     "ticker": "TREE",
-    "name": "TREE",
-    "sector": "Unknown",
+    "name": "LendingTree, Inc.",
+    "sector": "Financials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19537,8 +19537,8 @@
   },
   {
     "ticker": "WOLF",
-    "name": "WOLF",
-    "sector": "Unknown",
+    "name": "Wolfspeed, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19561,8 +19561,8 @@
   },
   {
     "ticker": "WW",
-    "name": "WW",
-    "sector": "Unknown",
+    "name": "WW International, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
