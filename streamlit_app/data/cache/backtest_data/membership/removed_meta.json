@@ -2406,5 +2406,605 @@
  "GCO": {
   "name": "Genesco Inc.",
   "sector": "Consumer Discretionary"
+ },
+ "GCP": {
+  "name": "GCP",
+  "sector": "Unknown"
+ },
+ "GDEN": {
+  "name": "GDEN",
+  "sector": "Unknown"
+ },
+ "GDYN": {
+  "name": "Grid Dynamics Holdings, Inc.",
+  "sector": "Information Technology"
+ },
+ "GEAR": {
+  "name": "GEAR",
+  "sector": "Unknown"
+ },
+ "GEOS": {
+  "name": "Geospace Technologies Corporati",
+  "sector": "Energy"
+ },
+ "GLT": {
+  "name": "GLT",
+  "sector": "Unknown"
+ },
+ "GLUU": {
+  "name": "GLUU",
+  "sector": "Unknown"
+ },
+ "GMS": {
+  "name": "GMS",
+  "sector": "Unknown"
+ },
+ "GOGO": {
+  "name": "Gogo Inc.",
+  "sector": "Communication Services"
+ },
+ "GPMT": {
+  "name": "Granite Point Mortgage Trust In",
+  "sector": "Real Estate"
+ },
+ "GPRE": {
+  "name": "Green Plains, Inc.",
+  "sector": "Materials"
+ },
+ "GTX": {
+  "name": "Garrett Motion Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "GWB": {
+  "name": "GWB",
+  "sector": "Unknown"
+ },
+ "HA": {
+  "name": "HA",
+  "sector": "Unknown"
+ },
+ "HAYN": {
+  "name": "HAYN",
+  "sector": "Unknown"
+ },
+ "HI": {
+  "name": "HI",
+  "sector": "Unknown"
+ },
+ "HIBB": {
+  "name": "HIBB",
+  "sector": "Unknown"
+ },
+ "HMST": {
+  "name": "HMST",
+  "sector": "Unknown"
+ },
+ "HMSY": {
+  "name": "HMSY",
+  "sector": "Unknown"
+ },
+ "HNGR": {
+  "name": "HNGR",
+  "sector": "Unknown"
+ },
+ "HOUS": {
+  "name": "HOUS",
+  "sector": "Unknown"
+ },
+ "HPR": {
+  "name": "HPR",
+  "sector": "Unknown"
+ },
+ "HSII": {
+  "name": "HSII",
+  "sector": "Unknown"
+ },
+ "HSKA": {
+  "name": "HSKA",
+  "sector": "Unknown"
+ },
+ "HT": {
+  "name": "HT",
+  "sector": "Unknown"
+ },
+ "HVT": {
+  "name": "Haverty Furniture Companies, In",
+  "sector": "Consumer Discretionary"
+ },
+ "IBTX": {
+  "name": "IBTX",
+  "sector": "Unknown"
+ },
+ "IIIN": {
+  "name": "Insteel Industries, Inc.",
+  "sector": "Industrials"
+ },
+ "ILPT": {
+  "name": "Industrial Logistics Properties",
+  "sector": "Real Estate"
+ },
+ "INN": {
+  "name": "Summit Hotel Properties, Inc.",
+  "sector": "Real Estate"
+ },
+ "IRBT": {
+  "name": "IRBT",
+  "sector": "Unknown"
+ },
+ "IRWD": {
+  "name": "Ironwood Pharmaceuticals, Inc.",
+  "sector": "Health Care"
+ },
+ "ISBC": {
+  "name": "ISBC",
+  "sector": "Unknown"
+ },
+ "ITOS": {
+  "name": "ITOS",
+  "sector": "Unknown"
+ },
+ "IVC": {
+  "name": "IVC",
+  "sector": "Unknown"
+ },
+ "IVR": {
+  "name": "INVESCO MORTGAGE CAPITAL INC",
+  "sector": "Real Estate"
+ },
+ "JBT": {
+  "name": "JBT",
+  "sector": "Unknown"
+ },
+ "JRVR": {
+  "name": "James River Group Holdings, Inc",
+  "sector": "Financials"
+ },
+ "JYNT": {
+  "name": "The Joint Corp.",
+  "sector": "Health Care"
+ },
+ "KAMN": {
+  "name": "KAMN",
+  "sector": "Unknown"
+ },
+ "KELYA": {
+  "name": "Kelly Services, Inc.",
+  "sector": "Industrials"
+ },
+ "KLG": {
+  "name": "KLG",
+  "sector": "Unknown"
+ },
+ "KRA": {
+  "name": "KRA",
+  "sector": "Unknown"
+ },
+ "KREF": {
+  "name": "KKR Real Estate Finance Trust I",
+  "sector": "Real Estate"
+ },
+ "KW": {
+  "name": "KW",
+  "sector": "Unknown"
+ },
+ "LCI": {
+  "name": "LCI",
+  "sector": "Unknown"
+ },
+ "LDL": {
+  "name": "LDL",
+  "sector": "Unknown"
+ },
+ "LESL": {
+  "name": "Leslie's, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "LL": {
+  "name": "LL",
+  "sector": "Unknown"
+ },
+ "LMNX": {
+  "name": "Defiance Daily Target 2x Long L",
+  "sector": "Unknown"
+ },
+ "LOCO": {
+  "name": "El Pollo Loco Holdings, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "LPSN": {
+  "name": "LivePerson, Inc.",
+  "sector": "Information Technology"
+ },
+ "LTHM": {
+  "name": "LTHM",
+  "sector": "Unknown"
+ },
+ "LXU": {
+  "name": "LSB Industries, Inc.",
+  "sector": "Materials"
+ },
+ "LYLT": {
+  "name": "LYLT",
+  "sector": "Unknown"
+ },
+ "MANT": {
+  "name": "MANT",
+  "sector": "Unknown"
+ },
+ "MATV": {
+  "name": "Mativ Holdings, Inc.",
+  "sector": "Materials"
+ },
+ "MCS": {
+  "name": "Marcus Corporation (The)",
+  "sector": "Communication Services"
+ },
+ "MCW": {
+  "name": "MCW",
+  "sector": "Unknown"
+ },
+ "MDC": {
+  "name": "MDC",
+  "sector": "Unknown"
+ },
+ "MED": {
+  "name": "MEDIFAST INC",
+  "sector": "Consumer Discretionary"
+ },
+ "MEI": {
+  "name": "Methode Electronics, Inc.",
+  "sector": "Information Technology"
+ },
+ "MERC": {
+  "name": "Mercer International Inc.",
+  "sector": "Materials"
+ },
+ "MGLN": {
+  "name": "MGLN",
+  "sector": "Unknown"
+ },
+ "MGPI": {
+  "name": "MGP Ingredients, Inc.",
+  "sector": "Consumer Staples"
+ },
+ "MLAB": {
+  "name": "Mesa Laboratories, Inc.",
+  "sector": "Information Technology"
+ },
+ "MNRO": {
+  "name": "Monro, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "MNTA": {
+  "name": "MNTA",
+  "sector": "Unknown"
+ },
+ "MODV": {
+  "name": "MODV",
+  "sector": "Unknown"
+ },
+ "MOV": {
+  "name": "Movado Group Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "MPAA": {
+  "name": "Motorcar Parts of America, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "MSTR": {
+  "name": "Strategy Inc",
+  "sector": "Information Technology"
+ },
+ "MTOR": {
+  "name": "MTOR",
+  "sector": "Unknown"
+ },
+ "MTRX": {
+  "name": "Matrix Service Company",
+  "sector": "Industrials"
+ },
+ "MTSC": {
+  "name": "MTSC",
+  "sector": "Unknown"
+ },
+ "MYE": {
+  "name": "Myers Industries, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "MYGN": {
+  "name": "Myriad Genetics, Inc.",
+  "sector": "Health Care"
+ },
+ "NEX": {
+  "name": "NEX",
+  "sector": "Unknown"
+ },
+ "NFBK": {
+  "name": "Northfield Bancorp, Inc.",
+  "sector": "Financials"
+ },
+ "NP": {
+  "name": "Neptune Insurance Holdings Inc.",
+  "sector": "Financials"
+ },
+ "NR": {
+  "name": "NR",
+  "sector": "Unknown"
+ },
+ "NTGR": {
+  "name": "NETGEAR, Inc.",
+  "sector": "Information Technology"
+ },
+ "NTUS": {
+  "name": "NTUS",
+  "sector": "Unknown"
+ },
+ "NVEE": {
+  "name": "NVEE",
+  "sector": "Unknown"
+ },
+ "NVRI": {
+  "name": "Enviri Corporation",
+  "sector": "Industrials"
+ },
+ "NXGN": {
+  "name": "NXGN",
+  "sector": "Unknown"
+ },
+ "NYMT": {
+  "name": "NYMT",
+  "sector": "Unknown"
+ },
+ "OFIX": {
+  "name": "Orthofix Medical Inc.",
+  "sector": "Health Care"
+ },
+ "ONL": {
+  "name": "Orion Properties Inc.",
+  "sector": "Real Estate"
+ },
+ "OPB": {
+  "name": "OPB",
+  "sector": "Unknown"
+ },
+ "OPI": {
+  "name": "Office Properties Income Trust",
+  "sector": "Real Estate"
+ },
+ "OPRX": {
+  "name": "OptimizeRx Corporation",
+  "sector": "Health Care"
+ },
+ "ORGO": {
+  "name": "Organogenesis Holdings Inc.",
+  "sector": "Health Care"
+ },
+ "OSPN": {
+  "name": "OneSpan Inc.",
+  "sector": "Information Technology"
+ },
+ "OSUR": {
+  "name": "OraSure Technologies, Inc.",
+  "sector": "Health Care"
+ },
+ "OXM": {
+  "name": "Oxford Industries, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "PEI": {
+  "name": "PEI",
+  "sector": "Unknown"
+ },
+ "PETS": {
+  "name": "PetMed Express, Inc.",
+  "sector": "Health Care"
+ },
+ "PGTI": {
+  "name": "PGTI",
+  "sector": "Unknown"
+ },
+ "PINC": {
+  "name": "PGIM Securitized Income ETF",
+  "sector": "Unknown"
+ },
+ "PKE": {
+  "name": "Park Aerospace Corp.",
+  "sector": "Industrials"
+ },
+ "PLAY": {
+  "name": "Dave & Buster's Entertainment, ",
+  "sector": "Communication Services"
+ },
+ "PLCE": {
+  "name": "Children's Place, Inc. (The)",
+  "sector": "Consumer Discretionary"
+ },
+ "PNTG": {
+  "name": "The Pennant Group, Inc.",
+  "sector": "Health Care"
+ },
+ "POLY": {
+  "name": "POLY",
+  "sector": "Unknown"
+ },
+ "PPBI": {
+  "name": "PPBI",
+  "sector": "Unknown"
+ },
+ "PRA": {
+  "name": "PRA",
+  "sector": "Unknown"
+ },
+ "PRAA": {
+  "name": "PRA Group, Inc.",
+  "sector": "Financials"
+ },
+ "PRFT": {
+  "name": "PRFT",
+  "sector": "Unknown"
+ },
+ "PUMP": {
+  "name": "ProPetro Holding Corp.",
+  "sector": "Energy"
+ },
+ "QURE": {
+  "name": "uniQure N.V.",
+  "sector": "Health Care"
+ },
+ "RAVN": {
+  "name": "RAVN",
+  "sector": "Unknown"
+ },
+ "RC": {
+  "name": "Ready Capital Corporation",
+  "sector": "Real Estate"
+ },
+ "REGI": {
+  "name": "REGI",
+  "sector": "Unknown"
+ },
+ "REI": {
+  "name": "Ring Energy, Inc.",
+  "sector": "Energy"
+ },
+ "RGNX": {
+  "name": "REGENXBIO Inc.",
+  "sector": "Health Care"
+ },
+ "RGP": {
+  "name": "Resources Connection, Inc.",
+  "sector": "Industrials"
+ },
+ "RGR": {
+  "name": "Sturm, Ruger & Company, Inc.",
+  "sector": "Industrials"
+ },
+ "RILY": {
+  "name": "BRC Group Holdings, Inc.",
+  "sector": "Financials"
+ },
+ "RMAX": {
+  "name": "RE/MAX Holdings, Inc.",
+  "sector": "Real Estate"
+ },
+ "ROCC": {
+  "name": "ROCC",
+  "sector": "Unknown"
+ },
+ "ROIC": {
+  "name": "ROIC",
+  "sector": "Unknown"
+ },
+ "RPAI": {
+  "name": "RPAI",
+  "sector": "Unknown"
+ },
+ "RPT": {
+  "name": "Rithm Property Trust Inc.",
+  "sector": "Real Estate"
+ },
+ "RRGB": {
+  "name": "Red Robin Gourmet Burgers, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "RUTH": {
+  "name": "RUTH",
+  "sector": "Unknown"
+ },
+ "RWT": {
+  "name": "Redwood Trust, Inc.",
+  "sector": "Real Estate"
+ },
+ "SCVL": {
+  "name": "SCVL",
+  "sector": "Unknown"
+ },
+ "SEM": {
+  "name": "SEM",
+  "sector": "Unknown"
+ },
+ "SENEA": {
+  "name": "Seneca Foods Corp.",
+  "sector": "Consumer Staples"
+ },
+ "SGH": {
+  "name": "SGH",
+  "sector": "Unknown"
+ },
+ "SITC": {
+  "name": "SITE Centers Corp.",
+  "sector": "Real Estate"
+ },
+ "SJI": {
+  "name": "SJI",
+  "sector": "Unknown"
+ },
+ "SJW": {
+  "name": "SJW",
+  "sector": "Unknown"
+ },
+ "SLCA": {
+  "name": "SLCA",
+  "sector": "Unknown"
+ },
+ "SLP": {
+  "name": "Simulations Plus, Inc.",
+  "sector": "Health Care"
+ },
+ "SLQT": {
+  "name": "SelectQuote, Inc.",
+  "sector": "Financials"
+ },
+ "SNBR": {
+  "name": "SNBR",
+  "sector": "Unknown"
+ },
+ "SNCY": {
+  "name": "SNCY",
+  "sector": "Unknown"
+ },
+ "SPOK": {
+  "name": "Spok Holdings, Inc.",
+  "sector": "Health Care"
+ },
+ "SPPI": {
+  "name": "SPPI",
+  "sector": "Unknown"
+ },
+ "SPTN": {
+  "name": "SPTN",
+  "sector": "Unknown"
+ },
+ "SRDX": {
+  "name": "SRDX",
+  "sector": "Unknown"
+ },
+ "SSP": {
+  "name": "E.W. Scripps Company (The)",
+  "sector": "Communication Services"
+ },
+ "SSTK": {
+  "name": "Shutterstock, Inc.",
+  "sector": "Communication Services"
+ },
+ "STAR": {
+  "name": "STAR",
+  "sector": "Unknown"
+ },
+ "STEL": {
+  "name": "STEL",
+  "sector": "Unknown"
+ },
+ "STMP": {
+  "name": "STMP",
+  "sector": "Unknown"
+ },
+ "SXC": {
+  "name": "SunCoke Energy, Inc.",
+  "sector": "Materials"
+ },
+ "SYKE": {
+  "name": "SYKE",
+  "sector": "Unknown"
  }
 }
