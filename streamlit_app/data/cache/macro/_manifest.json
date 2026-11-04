@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-11-03T22:15:04.928150+00:00",
+  "cached_at": "2026-11-04T22:15:05.561252+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -14,10 +14,10 @@
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1457,
+      "points": 1458,
       "latest": {
-        "date": "2026-11-03",
-        "value": 0.427
+        "date": "2026-11-04",
+        "value": 0.225
       }
     },
     "tga": {
@@ -41,10 +41,10 @@
     "hy_oas": {
       "series_id": "BAMLH0A0HYM2",
       "freq": "D",
-      "points": 784,
+      "points": 785,
       "latest": {
-        "date": "2026-11-02",
-        "value": 3.43
+        "date": "2026-11-03",
+        "value": 3.4
       }
     },
     "m1": {
@@ -77,46 +77,46 @@
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1459,
+      "points": 1460,
       "latest": {
-        "date": "2026-11-02",
+        "date": "2026-11-03",
         "value": 4.21
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1459,
+      "points": 1460,
       "latest": {
-        "date": "2026-11-02",
-        "value": 4.59
+        "date": "2026-11-03",
+        "value": 4.61
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1459,
+      "points": 1460,
       "latest": {
-        "date": "2026-11-02",
-        "value": 4.7
+        "date": "2026-11-03",
+        "value": 4.74
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1459,
+      "points": 1460,
       "latest": {
-        "date": "2026-11-02",
-        "value": 4.91
+        "date": "2026-11-03",
+        "value": 4.95
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1459,
+      "points": 1460,
       "latest": {
-        "date": "2026-11-02",
-        "value": 5.28
+        "date": "2026-11-03",
+        "value": 5.32
       }
     },
     "cpi": {
@@ -153,10 +153,10 @@
     "wti": {
       "series_id": "DCOILWTICO",
       "freq": "D",
-      "points": 1454,
+      "points": 1459,
       "latest": {
-        "date": "2026-10-27",
-        "value": 103.37
+        "date": "2026-11-03",
+        "value": 99.64
       }
     },
     "copper": {
@@ -171,10 +171,10 @@
     "natgas": {
       "series_id": "DHHNGSP",
       "freq": "D",
-      "points": 1454,
+      "points": 1459,
       "latest": {
-        "date": "2026-10-27",
-        "value": 2.76
+        "date": "2026-11-03",
+        "value": 2.63
       }
     }
   }
