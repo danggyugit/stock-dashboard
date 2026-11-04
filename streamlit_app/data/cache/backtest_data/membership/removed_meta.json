@@ -3006,5 +3006,193 @@
  "SYKE": {
   "name": "SYKE",
   "sector": "Unknown"
+ },
+ "TBI": {
+  "name": "TrueBlue, Inc.",
+  "sector": "Industrials"
+ },
+ "TCMD": {
+  "name": "Tactile Systems Technology, Inc",
+  "sector": "Health Care"
+ },
+ "TG": {
+  "name": "Tredegar Corporation",
+  "sector": "Industrials"
+ },
+ "THRY": {
+  "name": "Thryv Holdings, Inc.",
+  "sector": "Information Technology"
+ },
+ "TISI": {
+  "name": "Team, Inc.",
+  "sector": "Industrials"
+ },
+ "TIVO": {
+  "name": "TIVO",
+  "sector": "Unknown"
+ },
+ "TLRD": {
+  "name": "TLRD",
+  "sector": "Unknown"
+ },
+ "TRHC": {
+  "name": "TRHC",
+  "sector": "Unknown"
+ },
+ "TSE": {
+  "name": "TSE",
+  "sector": "Unknown"
+ },
+ "TTEC": {
+  "name": "TTEC Holdings, Inc.",
+  "sector": "Information Technology"
+ },
+ "TTGT": {
+  "name": "TechTarget, Inc.",
+  "sector": "Information Technology"
+ },
+ "TTI": {
+  "name": "Tetra Technologies, Inc.",
+  "sector": "Energy"
+ },
+ "TVTY": {
+  "name": "TVTY",
+  "sector": "Unknown"
+ },
+ "TWI": {
+  "name": "Titan International, Inc. (DE)",
+  "sector": "Industrials"
+ },
+ "TWNK": {
+  "name": "TWNK",
+  "sector": "Unknown"
+ },
+ "TWO": {
+  "name": "Two Harbors Investment Corp",
+  "sector": "Real Estate"
+ },
+ "UBA": {
+  "name": "UBA",
+  "sector": "Unknown"
+ },
+ "UEIC": {
+  "name": "Universal Electronics Inc.",
+  "sector": "Information Technology"
+ },
+ "UFI": {
+  "name": "Unifi, Inc. New",
+  "sector": "Consumer Discretionary"
+ },
+ "UHT": {
+  "name": "Universal Health Realty Income ",
+  "sector": "Real Estate"
+ },
+ "UIHC": {
+  "name": "UIHC",
+  "sector": "Unknown"
+ },
+ "UIS": {
+  "name": "Unisys Corporation New",
+  "sector": "Information Technology"
+ },
+ "USCR": {
+  "name": "USCR",
+  "sector": "Unknown"
+ },
+ "USNA": {
+  "name": "USANA Health Sciences, Inc.",
+  "sector": "Consumer Staples"
+ },
+ "UVE": {
+  "name": "UNIVERSAL INSURANCE HOLDINGS IN",
+  "sector": "Financials"
+ },
+ "VBTX": {
+  "name": "VBTX",
+  "sector": "Unknown"
+ },
+ "VG": {
+  "name": "Venture Global, Inc.",
+  "sector": "Energy"
+ },
+ "VGR": {
+  "name": "VGR",
+  "sector": "Unknown"
+ },
+ "VITL": {
+  "name": "Vital Farms, Inc.",
+  "sector": "Consumer Staples"
+ },
+ "VIVO": {
+  "name": "VivoPower PLC",
+  "sector": "Information Technology"
+ },
+ "VNDA": {
+  "name": "Vanda Pharmaceuticals Inc.",
+  "sector": "Health Care"
+ },
+ "VRA": {
+  "name": "Vera Bradley, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "VRE": {
+  "name": "VRE",
+  "sector": "Unknown"
+ },
+ "VREX": {
+  "name": "Varex Imaging Corporation",
+  "sector": "Health Care"
+ },
+ "VRTU": {
+  "name": "VRTU",
+  "sector": "Unknown"
+ },
+ "VRTV": {
+  "name": "VRTV",
+  "sector": "Unknown"
+ },
+ "VSI": {
+  "name": "VSI",
+  "sector": "Unknown"
+ },
+ "VTLE": {
+  "name": "VTLE",
+  "sector": "Unknown"
+ },
+ "WIRE": {
+  "name": "WIRE",
+  "sector": "Unknown"
+ },
+ "WLH": {
+  "name": "WLH",
+  "sector": "Unknown"
+ },
+ "WNC": {
+  "name": "Wabash National Corporation",
+  "sector": "Industrials"
+ },
+ "WSR": {
+  "name": "Whitestone REIT",
+  "sector": "Real Estate"
+ },
+ "XPER": {
+  "name": "Xperi Inc.",
+  "sector": "Information Technology"
+ },
+ "ZEUS": {
+  "name": "ZEUS",
+  "sector": "Unknown"
+ },
+ "ZIMV": {
+  "name": "ZIMV",
+  "sector": "Unknown"
+ },
+ "ZUMZ": {
+  "name": "Zumiez Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "ZYXI": {
+  "name": "ZYXI",
+  "sector": "Unknown"
  }
 }

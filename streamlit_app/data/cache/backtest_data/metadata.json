@@ -19145,24 +19145,24 @@
   },
   {
     "ticker": "TBI",
-    "name": "TBI",
-    "sector": "Unknown",
+    "name": "TrueBlue, Inc.",
+    "sector": "Industrials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "TCMD",
-    "name": "TCMD",
-    "sector": "Unknown",
+    "name": "Tactile Systems Technology, Inc",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "TG",
-    "name": "TG",
-    "sector": "Unknown",
+    "name": "Tredegar Corporation",
+    "sector": "Industrials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19185,8 +19185,8 @@
   },
   {
     "ticker": "THRY",
-    "name": "THRY",
-    "sector": "Unknown",
+    "name": "Thryv Holdings, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19201,8 +19201,8 @@
   },
   {
     "ticker": "TISI",
-    "name": "TISI",
-    "sector": "Unknown",
+    "name": "Team, Inc.",
+    "sector": "Industrials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19257,24 +19257,24 @@
   },
   {
     "ticker": "TTEC",
-    "name": "TTEC",
-    "sector": "Unknown",
+    "name": "TTEC Holdings, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "TTGT",
-    "name": "TTGT",
-    "sector": "Unknown",
+    "name": "TechTarget, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "TTI",
-    "name": "TTI",
-    "sector": "Unknown",
+    "name": "Tetra Technologies, Inc.",
+    "sector": "Energy",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19297,8 +19297,8 @@
   },
   {
     "ticker": "TWI",
-    "name": "TWI",
-    "sector": "Unknown",
+    "name": "Titan International, Inc. (DE)",
+    "sector": "Industrials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19313,8 +19313,8 @@
   },
   {
     "ticker": "TWO",
-    "name": "TWO",
-    "sector": "Unknown",
+    "name": "Two Harbors Investment Corp",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19329,16 +19329,16 @@
   },
   {
     "ticker": "UEIC",
-    "name": "UEIC",
-    "sector": "Unknown",
+    "name": "Universal Electronics Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "UFI",
-    "name": "UFI",
-    "sector": "Unknown",
+    "name": "Unifi, Inc. New",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19353,8 +19353,8 @@
   },
   {
     "ticker": "UHT",
-    "name": "UHT",
-    "sector": "Unknown",
+    "name": "Universal Health Realty Income ",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19369,8 +19369,8 @@
   },
   {
     "ticker": "UIS",
-    "name": "UIS",
-    "sector": "Unknown",
+    "name": "Unisys Corporation New",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19385,16 +19385,16 @@
   },
   {
     "ticker": "USNA",
-    "name": "USNA",
-    "sector": "Unknown",
+    "name": "USANA Health Sciences, Inc.",
+    "sector": "Consumer Staples",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "UVE",
-    "name": "UVE",
-    "sector": "Unknown",
+    "name": "UNIVERSAL INSURANCE HOLDINGS IN",
+    "sector": "Financials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19409,8 +19409,8 @@
   },
   {
     "ticker": "VG",
-    "name": "VG",
-    "sector": "Unknown",
+    "name": "Venture Global, Inc.",
+    "sector": "Energy",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19425,32 +19425,32 @@
   },
   {
     "ticker": "VITL",
-    "name": "VITL",
-    "sector": "Unknown",
+    "name": "Vital Farms, Inc.",
+    "sector": "Consumer Staples",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "VIVO",
-    "name": "VIVO",
-    "sector": "Unknown",
+    "name": "VivoPower PLC",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "VNDA",
-    "name": "VNDA",
-    "sector": "Unknown",
+    "name": "Vanda Pharmaceuticals Inc.",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
   },
   {
     "ticker": "VRA",
-    "name": "VRA",
-    "sector": "Unknown",
+    "name": "Vera Bradley, Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19465,8 +19465,8 @@
   },
   {
     "ticker": "VREX",
-    "name": "VREX",
-    "sector": "Unknown",
+    "name": "Varex Imaging Corporation",
+    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19529,8 +19529,8 @@
   },
   {
     "ticker": "WNC",
-    "name": "WNC",
-    "sector": "Unknown",
+    "name": "Wabash National Corporation",
+    "sector": "Industrials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19553,8 +19553,8 @@
   },
   {
     "ticker": "WSR",
-    "name": "WSR",
-    "sector": "Unknown",
+    "name": "Whitestone REIT",
+    "sector": "Real Estate",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19569,8 +19569,8 @@
   },
   {
     "ticker": "XPER",
-    "name": "XPER",
-    "sector": "Unknown",
+    "name": "Xperi Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19601,8 +19601,8 @@
   },
   {
     "ticker": "ZUMZ",
-    "name": "ZUMZ",
-    "sector": "Unknown",
+    "name": "Zumiez Inc.",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
