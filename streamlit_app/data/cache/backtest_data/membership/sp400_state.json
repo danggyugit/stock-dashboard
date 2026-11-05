@@ -1,7 +1,7 @@
 {
- "table_as_of": "2026-11-05",
+ "table_as_of": "2026-11-06",
  "table_source": "live",
- "snapshot_as_of": "2026-11-05",
+ "snapshot_as_of": "2026-11-06",
  "snapshot_members": [
   "AA",
   "AAL",
@@ -164,6 +164,7 @@
   "GEF",
   "GGG",
   "GHC",
+  "GKOS",
   "GLPI",
   "GME",
   "GMED",
@@ -261,7 +262,6 @@
   "OGE",
   "OGS",
   "OHI",
-  "OKTA",
   "OLED",
   "OLLI",
   "ONB",
@@ -404,6 +404,6 @@
   "YETI",
   "ZION"
  ],
- "updated_at": "2026-11-04T17:00:16.407375+00:00",
- "rows": 592
+ "updated_at": "2026-11-05T17:00:13.959263+00:00",
+ "rows": 595
 }

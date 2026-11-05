@@ -3194,5 +3194,13 @@
  "ZYXI": {
   "name": "ZYXI",
   "sector": "Unknown"
+ },
+ "KVUE": {
+  "name": "Kenvue Inc.",
+  "sector": "Consumer Staples"
+ },
+ "OLN": {
+  "name": "Olin Corporation",
+  "sector": "Materials"
  }
 }

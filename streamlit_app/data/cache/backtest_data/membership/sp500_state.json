@@ -1,7 +1,7 @@
 {
  "table_as_of": "2026-07-19",
  "table_source": "revision",
- "snapshot_as_of": "2026-11-05",
+ "snapshot_as_of": "2026-11-06",
  "snapshot_members": [
   "A",
   "AAPL",
@@ -276,7 +276,6 @@
   "KMI",
   "KO",
   "KR",
-  "KVUE",
   "L",
   "LDOS",
   "LEN",
@@ -350,6 +349,7 @@
   "O",
   "ODFL",
   "OKE",
+  "OKTA",
   "OMC",
   "ON",
   "ORCL",
@@ -507,6 +507,6 @@
   "ZBRA",
   "ZTS"
  ],
- "updated_at": "2026-11-04T17:00:15.415578+00:00",
- "rows": 424
+ "updated_at": "2026-11-05T17:00:13.044802+00:00",
+ "rows": 426
 }

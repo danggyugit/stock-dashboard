@@ -2152,14 +2152,6 @@
     "universe": NaN
   },
   {
-    "ticker": "KVUE",
-    "name": "Kenvue",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
     "ticker": "KDP",
     "name": "Keurig Dr Pepper",
     "sector": "Consumer Staples",
@@ -2771,6 +2763,14 @@
     "ticker": "OXY",
     "name": "Occidental Petroleum",
     "sector": "Energy",
+    "cap_tier": "Large Cap",
+    "industry": NaN,
+    "universe": NaN
+  },
+  {
+    "ticker": "OKTA",
+    "name": "Okta, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Large Cap",
     "industry": NaN,
     "universe": NaN
@@ -5225,7 +5225,7 @@
   },
   {
     "ticker": "FORM",
-    "name": "FormFactor, Inc.",
+    "name": "FormFactor",
     "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": NaN,
@@ -5307,6 +5307,14 @@
     "ticker": "GHC",
     "name": "Graham Holdings",
     "sector": "Consumer Discretionary",
+    "cap_tier": "Mid Cap",
+    "industry": NaN,
+    "universe": NaN
+  },
+  {
+    "ticker": "GKOS",
+    "name": "Glaukos",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": NaN,
     "universe": NaN
@@ -6083,14 +6091,6 @@
     "ticker": "OHI",
     "name": "Omega Healthcare Investors",
     "sector": "Real Estate",
-    "cap_tier": "Mid Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "OKTA",
-    "name": "Okta, Inc.",
-    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": NaN,
     "universe": NaN
@@ -8979,14 +8979,6 @@
     "ticker": "GIII",
     "name": "G-III Apparel Group, Ltd.",
     "sector": "Consumer Discretionary",
-    "cap_tier": "Small Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GKOS",
-    "name": "Glaukos Corp.",
-    "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": NaN,
     "universe": NaN
@@ -13008,6 +13000,14 @@
     "universe": "former"
   },
   {
+    "ticker": "KVUE",
+    "name": "Kenvue Inc.",
+    "sector": "Consumer Staples",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "LIFE",
     "name": "Ethos Technologies Inc.",
     "sector": "Financials",
@@ -15451,6 +15451,14 @@
     "ticker": "OIS",
     "name": "Oil States International, Inc.",
     "sector": "Energy",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "OLN",
+    "name": "Olin Corporation",
+    "sector": "Materials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
