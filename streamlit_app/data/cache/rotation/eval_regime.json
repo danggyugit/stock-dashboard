@@ -53245,13 +53245,13 @@
         "sector": "re",
         "score": 0.020459028840761118,
         "today_picks": [
-          "WELL",
-          "JLL",
           "MMI",
-          "AHRT",
-          "XHR"
+          "EQIX",
+          "CBRE",
+          "IVT",
+          "WELL"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "it",
@@ -53259,11 +53259,11 @@
         "today_picks": [
           "DELL",
           "RNG",
-          "IT",
           "HPQ",
-          "GDDY"
+          "IT",
+          "CMTL"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "mat",
@@ -53271,23 +53271,23 @@
         "today_picks": [
           "MP",
           "KALU",
+          "AA",
           "CNL",
-          "CENX",
-          "HL"
+          "CENX"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "fin",
         "score": -0.022813503626341936,
         "today_picks": [
+          "EHTH",
           "ABR",
+          "KG",
           "RILY",
-          "SBNY",
-          "SLM",
-          "EHTH"
+          "SBNY"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "hc",
@@ -53296,10 +53296,10 @@
           "POM",
           "ORGO",
           "CHRS",
-          "NKTR",
-          "QURE"
+          "WW",
+          "NKTR"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       }
     ],
     "mom_3m": [
@@ -53310,46 +53310,46 @@
           "POM",
           "ORGO",
           "CHRS",
-          "NKTR",
-          "QURE"
+          "WW",
+          "NKTR"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "fin",
         "score": 0.03113586971426563,
         "today_picks": [
+          "EHTH",
           "ABR",
+          "KG",
           "RILY",
-          "SBNY",
-          "SLM",
-          "EHTH"
+          "SBNY"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "en",
         "score": 0.031069751319671157,
         "today_picks": [
-          "AESI",
-          "TTI",
-          "GEOS",
           "PUMP",
-          "CLB"
+          "AESI",
+          "BTU",
+          "RES",
+          "EP"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "staples",
         "score": 0.018223572799149546,
         "today_picks": [
           "PSMT",
-          "CHEF",
           "TGT",
-          "PFGC",
-          "IPAR"
+          "IPAR",
+          "CHEF",
+          "EPC"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "mat",
@@ -53357,11 +53357,11 @@
         "today_picks": [
           "MP",
           "KALU",
+          "AA",
           "CNL",
-          "CENX",
-          "HL"
+          "CENX"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       }
     ],
     "conf": [
@@ -53369,25 +53369,25 @@
         "sector": "re",
         "score": 1.0,
         "today_picks": [
-          "WELL",
-          "JLL",
           "MMI",
-          "AHRT",
-          "XHR"
+          "EQIX",
+          "CBRE",
+          "IVT",
+          "WELL"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "staples",
         "score": 0.6,
         "today_picks": [
           "PSMT",
-          "CHEF",
           "TGT",
-          "PFGC",
-          "IPAR"
+          "IPAR",
+          "CHEF",
+          "EPC"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "mat",
@@ -53395,11 +53395,11 @@
         "today_picks": [
           "MP",
           "KALU",
+          "AA",
           "CNL",
-          "CENX",
-          "HL"
+          "CENX"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "it",
@@ -53407,11 +53407,11 @@
         "today_picks": [
           "DELL",
           "RNG",
-          "IT",
           "HPQ",
-          "GDDY"
+          "IT",
+          "CMTL"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       },
       {
         "sector": "hc",
@@ -53420,12 +53420,12 @@
           "POM",
           "ORGO",
           "CHRS",
-          "NKTR",
-          "QURE"
+          "WW",
+          "NKTR"
         ],
-        "picks_at": "2026-11-05T00:00:00"
+        "picks_at": "2026-11-06T00:00:00"
       }
     ]
   },
-  "updated_at": "2026-11-05T01:30:09.668206+00:00"
+  "updated_at": "2026-11-06T01:30:08.665795+00:00"
 }
