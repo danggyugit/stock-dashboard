@@ -10024,8 +10024,8 @@
     "universe": NaN
   },
   {
-    "ticker": "MSGS",
-    "name": "Madison Square Garden Sports Corp.",
+    "ticker": "MSGK",
+    "name": "MSG Knickerbockers Corp.",
     "sector": "Communication Services",
     "cap_tier": "Small Cap",
     "industry": NaN,
@@ -11289,7 +11289,7 @@
   },
   {
     "ticker": "SUPN",
-    "name": "Supernus Pharmaceuticals, Inc.",
+    "name": "Supernus, Inc.",
     "sector": "Health Care",
     "cap_tier": "Small Cap",
     "industry": NaN,
