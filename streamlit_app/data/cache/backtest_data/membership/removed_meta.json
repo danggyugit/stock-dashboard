@@ -3202,5 +3202,9 @@
  "OLN": {
   "name": "Olin Corporation",
   "sector": "Materials"
+ },
+ "ROKU": {
+  "name": "Roku, Inc.",
+  "sector": "Communication Services"
  }
 }

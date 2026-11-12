@@ -5584,6 +5584,14 @@
     "universe": NaN
   },
   {
+    "ticker": "JHX",
+    "name": "James Hardie Industries",
+    "sector": "Materials",
+    "cap_tier": "Mid Cap",
+    "industry": NaN,
+    "universe": NaN
+  },
+  {
     "ticker": "JLL",
     "name": "Jones Lang LaSalle",
     "sector": "Real Estate",
@@ -6435,14 +6443,6 @@
     "ticker": "ROIV",
     "name": "Roivant Sciences",
     "sector": "Health Care",
-    "cap_tier": "Mid Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ROKU",
-    "name": "Roku, Inc.",
-    "sector": "Communication Services",
     "cap_tier": "Mid Cap",
     "industry": NaN,
     "universe": NaN
@@ -15691,6 +15691,14 @@
     "ticker": "RLGY",
     "name": "RLGY",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ROKU",
+    "name": "Roku, Inc.",
+    "sector": "Communication Services",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"

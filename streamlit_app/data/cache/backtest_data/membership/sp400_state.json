@@ -1,7 +1,7 @@
 {
- "table_as_of": "2026-11-12",
+ "table_as_of": "2026-11-13",
  "table_source": "live",
- "snapshot_as_of": "2026-11-12",
+ "snapshot_as_of": "2026-11-13",
  "snapshot_members": [
   "AA",
   "AAL",
@@ -198,6 +198,7 @@
   "ITT",
   "JAZZ",
   "JEF",
+  "JHX",
   "JLL",
   "KBH",
   "KBR",
@@ -305,7 +306,6 @@
   "RMBS",
   "RNR",
   "ROIV",
-  "ROKU",
   "RPM",
   "RRC",
   "RRX",
@@ -404,6 +404,6 @@
   "YETI",
   "ZION"
  ],
- "updated_at": "2026-11-11T17:00:14.847807+00:00",
- "rows": 595
+ "updated_at": "2026-11-12T17:00:13.572262+00:00",
+ "rows": 596
 }
