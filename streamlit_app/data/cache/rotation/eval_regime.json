@@ -53247,11 +53247,11 @@
         "today_picks": [
           "PK",
           "CLDT",
+          "JOE",
           "EQIX",
-          "CBL",
-          "CDP"
+          "ESS"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "mat",
@@ -53261,21 +53261,21 @@
           "MP",
           "CENX",
           "ESI",
-          "HL"
+          "AA"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "cd",
         "score": -0.0143892491211709,
         "today_picks": [
-          "BURL",
           "TPR",
           "HGV",
-          "PLNT",
-          "CRI"
+          "CRI",
+          "LOW",
+          "VC"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "it",
@@ -53283,23 +53283,23 @@
         "today_picks": [
           "DELL",
           "RNG",
-          "IT",
+          "HPQ",
           "GDDY",
-          "HPQ"
+          "IT"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "fin",
         "score": -0.029948994953133745,
         "today_picks": [
-          "SBNY",
           "EHTH",
+          "SBNY",
           "RILY",
-          "KG",
-          "SLM"
+          "SLM",
+          "PRAA"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       }
     ],
     "mom_3m": [
@@ -53307,49 +53307,49 @@
         "sector": "fin",
         "score": 0.006499459228631821,
         "today_picks": [
-          "SBNY",
           "EHTH",
+          "SBNY",
           "RILY",
-          "KG",
-          "SLM"
+          "SLM",
+          "PRAA"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "en",
         "score": 0.004221803679119285,
         "today_picks": [
           "LEU",
-          "GEOS",
           "AESI",
-          "TTI",
-          "REI"
+          "GEOS",
+          "REI",
+          "TTI"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "hc",
         "score": -0.007352814834745369,
         "today_picks": [
-          "POM",
-          "ORGO",
-          "WW",
           "CHRS",
-          "PETS"
+          "ORGO",
+          "POM",
+          "EGRX",
+          "RCUS"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "staples",
         "score": -0.02147387032670567,
         "today_picks": [
           "ANDE",
-          "SFM",
+          "TGT",
           "PSMT",
           "PM",
           "CHEF"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "mat",
@@ -53359,9 +53359,9 @@
           "MP",
           "CENX",
           "ESI",
-          "HL"
+          "AA"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       }
     ],
     "conf": [
@@ -53371,11 +53371,11 @@
         "today_picks": [
           "PK",
           "CLDT",
+          "JOE",
           "EQIX",
-          "CBL",
-          "CDP"
+          "ESS"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "mat",
@@ -53385,47 +53385,47 @@
           "MP",
           "CENX",
           "ESI",
-          "HL"
+          "AA"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "staples",
         "score": 0.6,
         "today_picks": [
           "ANDE",
-          "SFM",
+          "TGT",
           "PSMT",
           "PM",
           "CHEF"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "hc",
         "score": 0.4,
         "today_picks": [
-          "POM",
-          "ORGO",
-          "WW",
           "CHRS",
-          "PETS"
+          "ORGO",
+          "POM",
+          "EGRX",
+          "RCUS"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       },
       {
         "sector": "fin",
         "score": 0.4,
         "today_picks": [
-          "SBNY",
           "EHTH",
+          "SBNY",
           "RILY",
-          "KG",
-          "SLM"
+          "SLM",
+          "PRAA"
         ],
-        "picks_at": "2026-11-11T00:00:00"
+        "picks_at": "2026-11-12T00:00:00"
       }
     ]
   },
-  "updated_at": "2026-11-11T01:30:08.345224+00:00"
+  "updated_at": "2026-11-12T01:30:08.606830+00:00"
 }
