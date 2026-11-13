@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-11-12T22:15:06.127364+00:00",
+  "cached_at": "2026-11-13T22:15:06.044774+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -14,10 +14,10 @@
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1463,
+      "points": 1464,
       "latest": {
-        "date": "2026-11-12",
-        "value": 0.25
+        "date": "2026-11-13",
+        "value": 0.325
       }
     },
     "tga": {
@@ -43,8 +43,8 @@
       "freq": "D",
       "points": 785,
       "latest": {
-        "date": "2026-11-11",
-        "value": 3.3
+        "date": "2026-11-12",
+        "value": 3.2
       }
     },
     "m1": {
@@ -77,46 +77,46 @@
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1465,
+      "points": 1466,
       "latest": {
-        "date": "2026-11-10",
-        "value": 4.3
+        "date": "2026-11-12",
+        "value": 4.32
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1465,
+      "points": 1466,
       "latest": {
-        "date": "2026-11-10",
-        "value": 4.73
+        "date": "2026-11-12",
+        "value": 4.86
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1465,
+      "points": 1466,
       "latest": {
-        "date": "2026-11-10",
-        "value": 4.81
+        "date": "2026-11-12",
+        "value": 4.95
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1465,
+      "points": 1466,
       "latest": {
-        "date": "2026-11-10",
-        "value": 4.98
+        "date": "2026-11-12",
+        "value": 5.1
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1465,
+      "points": 1466,
       "latest": {
-        "date": "2026-11-10",
-        "value": 5.35
+        "date": "2026-11-12",
+        "value": 5.43
       }
     },
     "cpi": {
@@ -153,10 +153,10 @@
     "wti": {
       "series_id": "DCOILWTICO",
       "freq": "D",
-      "points": 1459,
+      "points": 1465,
       "latest": {
-        "date": "2026-11-03",
-        "value": 99.64
+        "date": "2026-11-11",
+        "value": 89.62
       }
     },
     "copper": {
