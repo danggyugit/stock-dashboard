@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-13T17:33:02.078482+00:00",
+  "updated_at": "2026-11-15T06:36:04.299981+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap",
@@ -17,7 +17,7 @@
     "use_mom_filter": false,
     "use_turnover_buffer": true,
     "start": "2010-01-01T00:00:00",
-    "end": "2026-11-13T00:00:00",
+    "end": "2026-11-14T00:00:00",
     "min_test": 5
   },
   "sectors": [
@@ -47,7 +47,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:30:46.891306+00:00"
+      "updated_at": "2026-11-15T06:31:00.014965+00:00"
     },
     "it_momentum": {
       "name": "IT Momentum-Weight (No Cash)",
@@ -56,7 +56,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:30:47.444030+00:00"
+      "updated_at": "2026-11-15T06:31:32.146398+00:00"
     },
     "it_invvol": {
       "name": "IT Inverse-Vol (No Cash)",
@@ -65,7 +65,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:30:47.983497+00:00"
+      "updated_at": "2026-11-15T06:32:03.470491+00:00"
     },
     "it_ensemble": {
       "name": "IT Ensemble ML + Inv-Vol",
@@ -74,7 +74,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:30:48.584262+00:00"
+      "updated_at": "2026-11-15T06:33:26.929336+00:00"
     },
     "it_regime": {
       "name": "IT Inv-Vol + Regime Cash",
@@ -83,7 +83,7 @@
         "Information Technology"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:30:50.470091+00:00"
+      "updated_at": "2026-11-15T06:36:04.144935+00:00"
     },
     "hc_equal": {
       "name": "Health Care Equal Weight (No Cash)",
