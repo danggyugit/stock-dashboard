@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-15T08:55:16.734521+00:00",
+  "updated_at": "2026-11-15T09:07:29.868607+00:00",
   "common_config": {
     "cap_tiers": [
       "Large Cap",
@@ -362,7 +362,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:31:46.077598+00:00"
+      "updated_at": "2026-11-15T09:02:25.467058+00:00"
     },
     "en_momentum": {
       "name": "Energy Momentum-Weight (No Cash)",
@@ -371,7 +371,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:31:46.410874+00:00"
+      "updated_at": "2026-11-15T09:03:08.061806+00:00"
     },
     "en_invvol": {
       "name": "Energy Inverse-Vol (No Cash)",
@@ -380,7 +380,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:31:46.719159+00:00"
+      "updated_at": "2026-11-15T09:03:50.371331+00:00"
     },
     "en_ensemble": {
       "name": "Energy Ensemble ML + Inv-Vol",
@@ -389,7 +389,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:31:47.090282+00:00"
+      "updated_at": "2026-11-15T09:05:13.994510+00:00"
     },
     "en_regime": {
       "name": "Energy Inv-Vol + Regime Cash",
@@ -398,7 +398,7 @@
         "Energy"
       ],
       "success": true,
-      "updated_at": "2026-11-13T17:31:48.132515+00:00"
+      "updated_at": "2026-11-15T09:07:29.731591+00:00"
     },
     "mat_equal": {
       "name": "Materials Equal Weight (No Cash)",
