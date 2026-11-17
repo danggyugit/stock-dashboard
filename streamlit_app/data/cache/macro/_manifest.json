@@ -1,5 +1,5 @@
 {
-  "cached_at": "2026-11-16T22:15:06.072779+00:00",
+  "cached_at": "2026-11-17T22:15:05.377487+00:00",
   "start": "2021-01-01",
   "series": {
     "walcl": {
@@ -14,10 +14,10 @@
     "rrp": {
       "series_id": "RRPONTSYD",
       "freq": "D",
-      "points": 1465,
+      "points": 1466,
       "latest": {
-        "date": "2026-11-16",
-        "value": 0.182
+        "date": "2026-11-17",
+        "value": 0.351
       }
     },
     "tga": {
@@ -43,8 +43,8 @@
       "freq": "D",
       "points": 784,
       "latest": {
-        "date": "2026-11-13",
-        "value": 3.23
+        "date": "2026-11-16",
+        "value": 3.34
       }
     },
     "m1": {
@@ -77,46 +77,46 @@
     "dgs3mo": {
       "series_id": "DGS3MO",
       "freq": "D",
-      "points": 1467,
+      "points": 1468,
       "latest": {
-        "date": "2026-11-13",
-        "value": 4.32
+        "date": "2026-11-16",
+        "value": 4.34
       }
     },
     "dgs2": {
       "series_id": "DGS2",
       "freq": "D",
-      "points": 1467,
+      "points": 1468,
       "latest": {
-        "date": "2026-11-13",
-        "value": 4.88
+        "date": "2026-11-16",
+        "value": 4.83
       }
     },
     "dgs5": {
       "series_id": "DGS5",
       "freq": "D",
-      "points": 1467,
+      "points": 1468,
       "latest": {
-        "date": "2026-11-13",
-        "value": 4.98
+        "date": "2026-11-16",
+        "value": 4.93
       }
     },
     "dgs10": {
       "series_id": "DGS10",
       "freq": "D",
-      "points": 1467,
+      "points": 1468,
       "latest": {
-        "date": "2026-11-13",
-        "value": 5.15
+        "date": "2026-11-16",
+        "value": 5.12
       }
     },
     "dgs30": {
       "series_id": "DGS30",
       "freq": "D",
-      "points": 1467,
+      "points": 1468,
       "latest": {
-        "date": "2026-11-13",
-        "value": 5.47
+        "date": "2026-11-16",
+        "value": 5.46
       }
     },
     "cpi": {
