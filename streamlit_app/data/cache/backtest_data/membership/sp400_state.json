@@ -1,7 +1,7 @@
 {
- "table_as_of": "2026-11-18",
+ "table_as_of": "2026-11-19",
  "table_source": "live",
- "snapshot_as_of": "2026-11-18",
+ "snapshot_as_of": "2026-11-19",
  "snapshot_members": [
   "AA",
   "AAL",
@@ -51,7 +51,6 @@
   "BILL",
   "BIO",
   "BJ",
-  "BKH",
   "BMRN",
   "BRKR",
   "BROS",
@@ -188,6 +187,7 @@
   "HUBS",
   "HWC",
   "HXL",
+  "HZN",
   "IBOC",
   "IDA",
   "IDCC",
@@ -404,6 +404,6 @@
   "YETI",
   "ZION"
  ],
- "updated_at": "2026-11-17T17:00:14.110160+00:00",
+ "updated_at": "2026-11-18T17:00:10.787973+00:00",
  "rows": 596
 }
