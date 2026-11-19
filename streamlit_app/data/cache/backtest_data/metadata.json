@@ -4408,14 +4408,6 @@
     "universe": NaN
   },
   {
-    "ticker": "HZN",
-    "name": "Bright Horizon Energy Corporation",
-    "sector": "Utilities",
-    "cap_tier": "Mid Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
     "ticker": "BMRN",
     "name": "BioMarin Pharmaceutical",
     "sector": "Health Care",
@@ -4635,6 +4627,14 @@
     "ticker": "CHWY",
     "name": "Chewy",
     "sector": "Consumer Discretionary",
+    "cap_tier": "Mid Cap",
+    "industry": NaN,
+    "universe": NaN
+  },
+  {
+    "ticker": "CHYM",
+    "name": "Chime Financial",
+    "sector": "Financials",
     "cap_tier": "Mid Cap",
     "industry": NaN,
     "universe": NaN
@@ -5504,6 +5504,14 @@
     "universe": NaN
   },
   {
+    "ticker": "HZN",
+    "name": "Bright Horizon Energy Corporation",
+    "sector": "Utilities",
+    "cap_tier": "Mid Cap",
+    "industry": NaN,
+    "universe": NaN
+  },
+  {
     "ticker": "IBOC",
     "name": "Intl Bancshares Corp",
     "sector": "Financials",
@@ -6035,14 +6043,6 @@
     "ticker": "NVT",
     "name": "nVent Electric plc",
     "sector": "Industrials",
-    "cap_tier": "Mid Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NWE",
-    "name": "NorthWestern Energy",
-    "sector": "Utilities",
     "cap_tier": "Mid Cap",
     "industry": NaN,
     "universe": NaN
@@ -15427,6 +15427,14 @@
     "ticker": "NVE",
     "name": "NVE",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "NWE",
+    "name": "NorthWestern Energy Group, Inc.",
+    "sector": "Utilities",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"

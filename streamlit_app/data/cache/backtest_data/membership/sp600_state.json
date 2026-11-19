@@ -1,7 +1,7 @@
 {
- "table_as_of": "2026-11-19",
+ "table_as_of": "2026-11-20",
  "table_source": "live",
- "snapshot_as_of": "2026-11-19",
+ "snapshot_as_of": "2026-11-20",
  "snapshot_members": [
   "AAMI",
   "AAP",
@@ -607,6 +607,6 @@
   "ZD",
   "ZWS"
  ],
- "updated_at": "2026-11-18T17:00:11.792108+00:00",
+ "updated_at": "2026-11-19T17:00:15.645203+00:00",
  "rows": 491
 }
