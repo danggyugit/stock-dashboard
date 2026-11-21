@@ -53247,23 +53247,23 @@
         "today_picks": [
           "SVC",
           "HPP",
-          "ONL",
-          "IRM",
-          "ADAM"
+          "GPMT",
+          "MPT",
+          "ONL"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "it",
         "score": 0.01748858458319713,
         "today_picks": [
           "AAOI",
-          "MSTR",
           "AOSL",
-          "CRNC",
-          "MARA"
+          "MSTR",
+          "MARA",
+          "CRNC"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "mat",
@@ -53271,23 +53271,23 @@
         "today_picks": [
           "HL",
           "CENX",
-          "KALU",
+          "CDE",
           "CNL",
-          "CDE"
+          "KALU"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "fin",
         "score": -0.022813503626341936,
         "today_picks": [
-          "BEN",
           "VCTR",
           "RELY",
-          "DAVE",
+          "BEN",
+          "SNEX",
           "EVR"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "en",
@@ -53297,9 +53297,9 @@
           "LEU",
           "GEOS",
           "LBRT",
-          "PUMP"
+          "AESI"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       }
     ],
     "mom_3m": [
@@ -53311,9 +53311,9 @@
           "POM",
           "ARWR",
           "ORGO",
-          "EGRX"
+          "WW"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "en",
@@ -53323,9 +53323,9 @@
           "LEU",
           "GEOS",
           "LBRT",
-          "PUMP"
+          "AESI"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "staples",
@@ -53334,34 +53334,34 @@
           "EL",
           "ELF",
           "CHEF",
-          "DG",
-          "GO"
+          "GO",
+          "DG"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "fin",
         "score": 0.013903058477000574,
         "today_picks": [
-          "BEN",
           "VCTR",
           "RELY",
-          "DAVE",
+          "BEN",
+          "SNEX",
           "EVR"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "it",
         "score": -0.01937820919034583,
         "today_picks": [
           "AAOI",
-          "MSTR",
           "AOSL",
-          "CRNC",
-          "MARA"
+          "MSTR",
+          "MARA",
+          "CRNC"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       }
     ],
     "conf": [
@@ -53371,11 +53371,11 @@
         "today_picks": [
           "SVC",
           "HPP",
-          "ONL",
-          "IRM",
-          "ADAM"
+          "GPMT",
+          "MPT",
+          "ONL"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "staples",
@@ -53384,10 +53384,10 @@
           "EL",
           "ELF",
           "CHEF",
-          "DG",
-          "GO"
+          "GO",
+          "DG"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "mat",
@@ -53395,23 +53395,23 @@
         "today_picks": [
           "HL",
           "CENX",
-          "KALU",
+          "CDE",
           "CNL",
-          "CDE"
+          "KALU"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "it",
         "score": 0.4,
         "today_picks": [
           "AAOI",
-          "MSTR",
           "AOSL",
-          "CRNC",
-          "MARA"
+          "MSTR",
+          "MARA",
+          "CRNC"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       },
       {
         "sector": "hc",
@@ -53421,11 +53421,11 @@
           "POM",
           "ARWR",
           "ORGO",
-          "EGRX"
+          "WW"
         ],
-        "picks_at": "2026-11-20T00:00:00"
+        "picks_at": "2026-11-21T00:00:00"
       }
     ]
   },
-  "updated_at": "2026-11-20T01:30:08.675928+00:00"
+  "updated_at": "2026-11-21T01:30:09.702718+00:00"
 }
