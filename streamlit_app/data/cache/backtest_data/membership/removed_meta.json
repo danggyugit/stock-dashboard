@@ -3210,5 +3210,413 @@
  "NWE": {
   "name": "NorthWestern Energy Group, Inc.",
   "sector": "Utilities"
+ },
+ "AMD": {
+  "name": "Advanced Micro Devices, Inc.",
+  "sector": "Information Technology"
+ },
+ "CEG": {
+  "name": "Constellation Energy Corporatio",
+  "sector": "Utilities"
+ },
+ "CIEN": {
+  "name": "Ciena Corporation",
+  "sector": "Information Technology"
+ },
+ "DD": {
+  "name": "DuPont de Nemours, Inc.",
+  "sector": "Materials"
+ },
+ "DELL": {
+  "name": "Dell Technologies Inc.",
+  "sector": "Information Technology"
+ },
+ "DOW": {
+  "name": "DOW",
+  "sector": "Unknown"
+ },
+ "EQT": {
+  "name": "EQT Corporation",
+  "sector": "Energy"
+ },
+ "FOX": {
+  "name": "Fox Corporation",
+  "sector": "Communication Services"
+ },
+ "FOXA": {
+  "name": "Fox Corporation",
+  "sector": "Communication Services"
+ },
+ "FSLR": {
+  "name": "First Solar, Inc.",
+  "sector": "Information Technology"
+ },
+ "ILMN": {
+  "name": "Illumina, Inc.",
+  "sector": "Health Care"
+ },
+ "JBL": {
+  "name": "Jabil Inc.",
+  "sector": "Information Technology"
+ },
+ "PCG": {
+  "name": "Pacific Gas & Electric Co.",
+  "sector": "Utilities"
+ },
+ "Q": {
+  "name": "Q",
+  "sector": "Unknown"
+ },
+ "SNDK": {
+  "name": "Sandisk Corporation",
+  "sector": "Information Technology"
+ },
+ "TEL": {
+  "name": "TE Connectivity plc",
+  "sector": "Information Technology"
+ },
+ "TER": {
+  "name": "Teradyne, Inc.",
+  "sector": "Information Technology"
+ },
+ "AJG": {
+  "name": "Arthur J. Gallagher & Co.",
+  "sector": "Financials"
+ },
+ "ALB": {
+  "name": "Albemarle Corporation",
+  "sector": "Materials"
+ },
+ "ALGN": {
+  "name": "Align Technology, Inc.",
+  "sector": "Health Care"
+ },
+ "AME": {
+  "name": "AMETEK, Inc.",
+  "sector": "Industrials"
+ },
+ "AOS": {
+  "name": "A.O. Smith Corporation",
+  "sector": "Industrials"
+ },
+ "ARE": {
+  "name": "Alexandria Real Estate Equities",
+  "sector": "Real Estate"
+ },
+ "AXON": {
+  "name": "Axon Enterprise, Inc.",
+  "sector": "Industrials"
+ },
+ "BR": {
+  "name": "Broadridge Financial Solutions,",
+  "sector": "Information Technology"
+ },
+ "BRO": {
+  "name": "Brown & Brown, Inc.",
+  "sector": "Financials"
+ },
+ "CASY": {
+  "name": "CASY",
+  "sector": "Unknown"
+ },
+ "CBOE": {
+  "name": "Cboe Global Markets, Inc.",
+  "sector": "Financials"
+ },
+ "CDNS": {
+  "name": "Cadence Design Systems, Inc.",
+  "sector": "Information Technology"
+ },
+ "CHD": {
+  "name": "Church & Dwight Company, Inc.",
+  "sector": "Consumer Staples"
+ },
+ "COHR": {
+  "name": "Coherent Corp.",
+  "sector": "Information Technology"
+ },
+ "COR": {
+  "name": "Cencora, Inc.",
+  "sector": "Health Care"
+ },
+ "CPRT": {
+  "name": "Copart, Inc.",
+  "sector": "Industrials"
+ },
+ "CPT": {
+  "name": "CPT",
+  "sector": "Unknown"
+ },
+ "CRL": {
+  "name": "Charles River Laboratories Inte",
+  "sector": "Health Care"
+ },
+ "DECK": {
+  "name": "Deckers Outdoor Corporation",
+  "sector": "Consumer Discretionary"
+ },
+ "DOC": {
+  "name": "Healthpeak Properties, Inc.",
+  "sector": "Real Estate"
+ },
+ "DPZ": {
+  "name": "Domino's Pizza Inc",
+  "sector": "Consumer Discretionary"
+ },
+ "EME": {
+  "name": "EMCOR Group, Inc.",
+  "sector": "Industrials"
+ },
+ "ERIE": {
+  "name": "Erie Indemnity Company",
+  "sector": "Financials"
+ },
+ "ESS": {
+  "name": "Essex Property Trust, Inc.",
+  "sector": "Real Estate"
+ },
+ "EXE": {
+  "name": "Expand Energy Corporation",
+  "sector": "Energy"
+ },
+ "EXR": {
+  "name": "Extra Space Storage Inc",
+  "sector": "Real Estate"
+ },
+ "FDS": {
+  "name": "FactSet Research Systems Inc.",
+  "sector": "Financials"
+ },
+ "FICO": {
+  "name": "Fair Isaac Corporation",
+  "sector": "Information Technology"
+ },
+ "FIX": {
+  "name": "Comfort Systems USA, Inc.",
+  "sector": "Industrials"
+ },
+ "FLEX": {
+  "name": "Flex Ltd.",
+  "sector": "Information Technology"
+ },
+ "FRT": {
+  "name": "FRT",
+  "sector": "Unknown"
+ },
+ "FTNT": {
+  "name": "Fortinet, Inc.",
+  "sector": "Information Technology"
+ },
+ "GDDY": {
+  "name": "GoDaddy Inc.",
+  "sector": "Information Technology"
+ },
+ "GNRC": {
+  "name": "Generac Holdlings Inc.",
+  "sector": "Industrials"
+ },
+ "GPN": {
+  "name": "Global Payments Inc.",
+  "sector": "Industrials"
+ },
+ "HII": {
+  "name": "Huntington Ingalls Industries, ",
+  "sector": "Industrials"
+ },
+ "HUBB": {
+  "name": "Hubbell Inc",
+  "sector": "Industrials"
+ },
+ "IBKR": {
+  "name": "Interactive Brokers Group, Inc.",
+  "sector": "Financials"
+ },
+ "IDXX": {
+  "name": "IDEXX Laboratories, Inc.",
+  "sector": "Health Care"
+ },
+ "IT": {
+  "name": "IT",
+  "sector": "Unknown"
+ },
+ "LII": {
+  "name": "Lennox International, Inc.",
+  "sector": "Industrials"
+ },
+ "LITE": {
+  "name": "Lumentum Holdings Inc.",
+  "sector": "Information Technology"
+ },
+ "LNT": {
+  "name": "Alliant Energy Corporation",
+  "sector": "Utilities"
+ },
+ "LYV": {
+  "name": "Live Nation Entertainment, Inc.",
+  "sector": "Communication Services"
+ },
+ "MLM": {
+  "name": "Martin Marietta Materials, Inc.",
+  "sector": "Materials"
+ },
+ "MNST": {
+  "name": "Monster Beverage Corporation",
+  "sector": "Consumer Staples"
+ },
+ "MPWR": {
+  "name": "Monolithic Power Systems, Inc.",
+  "sector": "Information Technology"
+ },
+ "MSCI": {
+  "name": "MSCI",
+  "sector": "Unknown"
+ },
+ "MTD": {
+  "name": "Mettler-Toledo International, I",
+  "sector": "Health Care"
+ },
+ "NDSN": {
+  "name": "Nordson Corporation",
+  "sector": "Industrials"
+ },
+ "NVR": {
+  "name": "NVR, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "ODFL": {
+  "name": "Old Dominion Freight Line, Inc.",
+  "sector": "Industrials"
+ },
+ "OKTA": {
+  "name": "Okta, Inc.",
+  "sector": "Information Technology"
+ },
+ "P": {
+  "name": "Everpure, Inc.",
+  "sector": "Information Technology"
+ },
+ "PKG": {
+  "name": "PKG",
+  "sector": "Unknown"
+ },
+ "PNR": {
+  "name": "Pentair plc.",
+  "sector": "Industrials"
+ },
+ "PTC": {
+  "name": "PTC Inc.",
+  "sector": "Information Technology"
+ },
+ "REG": {
+  "name": "Regency Centers Corporation",
+  "sector": "Real Estate"
+ },
+ "REGN": {
+  "name": "Regeneron Pharmaceuticals, Inc.",
+  "sector": "Health Care"
+ },
+ "RJF": {
+  "name": "Raymond James Financial, Inc.",
+  "sector": "Financials"
+ },
+ "RMD": {
+  "name": "ResMed Inc.",
+  "sector": "Health Care"
+ },
+ "SMCI": {
+  "name": "Super Micro Computer, Inc.",
+  "sector": "Information Technology"
+ },
+ "SNPS": {
+  "name": "Synopsys, Inc.",
+  "sector": "Information Technology"
+ },
+ "STE": {
+  "name": "STE",
+  "sector": "Unknown"
+ },
+ "STLD": {
+  "name": "Steel Dynamics, Inc.",
+  "sector": "Materials"
+ },
+ "TDY": {
+  "name": "Teledyne Technologies Incorpora",
+  "sector": "Information Technology"
+ },
+ "TECH": {
+  "name": "Bio-Techne Corp",
+  "sector": "Health Care"
+ },
+ "TKO": {
+  "name": "TKO Group Holdings, Inc.",
+  "sector": "Communication Services"
+ },
+ "TPL": {
+  "name": "Texas Pacific Land Corporation",
+  "sector": "Energy"
+ },
+ "TRGP": {
+  "name": "Targa Resources, Inc.",
+  "sector": "Energy"
+ },
+ "TRMB": {
+  "name": "Trimble Inc.",
+  "sector": "Information Technology"
+ },
+ "TSCO": {
+  "name": "Tractor Supply Company",
+  "sector": "Consumer Discretionary"
+ },
+ "TTWO": {
+  "name": "TTWO",
+  "sector": "Unknown"
+ },
+ "TWLO": {
+  "name": "Twilio Inc.",
+  "sector": "Information Technology"
+ },
+ "TYL": {
+  "name": "Tyler Technologies, Inc.",
+  "sector": "Information Technology"
+ },
+ "UDR": {
+  "name": "UDR, Inc.",
+  "sector": "Real Estate"
+ },
+ "UHS": {
+  "name": "Universal Health Services, Inc.",
+  "sector": "Health Care"
+ },
+ "URI": {
+  "name": "United Rentals, Inc.",
+  "sector": "Industrials"
+ },
+ "VRTX": {
+  "name": "Vertex Pharmaceuticals Incorpor",
+  "sector": "Health Care"
+ },
+ "VST": {
+  "name": "Vistra Corp.",
+  "sector": "Utilities"
+ },
+ "WRB": {
+  "name": "W.R. Berkley Corporation",
+  "sector": "Financials"
+ },
+ "WSM": {
+  "name": "Williams-Sonoma, Inc.",
+  "sector": "Consumer Discretionary"
+ },
+ "WST": {
+  "name": "West Pharmaceutical Services, I",
+  "sector": "Health Care"
+ },
+ "ZBRA": {
+  "name": "Zebra Technologies Corporation",
+  "sector": "Information Technology"
+ },
+ "ECHO": {
+  "name": "EchoStar Corporation",
+  "sector": "Communication Services"
  }
 }

@@ -1,4029 +1,5 @@
 [
   {
-    "ticker": "MMM",
-    "name": "3M",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AOS",
-    "name": "A. O. Smith",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ABT",
-    "name": "Abbott Laboratories",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ABBV",
-    "name": "AbbVie",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ACN",
-    "name": "Accenture",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ADBE",
-    "name": "Adobe Inc.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AMD",
-    "name": "Advanced Micro Devices",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AES",
-    "name": "AES Corporation",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AFL",
-    "name": "Aflac",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "A",
-    "name": "Agilent Technologies",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "APD",
-    "name": "Air Products",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ABNB",
-    "name": "Airbnb",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AKAM",
-    "name": "Akamai Technologies",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ALB",
-    "name": "Albemarle Corporation",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ARE",
-    "name": "Alexandria Real Estate Equities",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ALGN",
-    "name": "Align Technology",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ALLE",
-    "name": "Allegion",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LNT",
-    "name": "Alliant Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ALL",
-    "name": "Allstate",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GOOGL",
-    "name": "Alphabet Inc. (Class A)",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GOOG",
-    "name": "Alphabet Inc. (Class C)",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MO",
-    "name": "Altria",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AMZN",
-    "name": "Amazon",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AMCR",
-    "name": "Amcor",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AEE",
-    "name": "Ameren",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AEP",
-    "name": "American Electric Power",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AXP",
-    "name": "American Express",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AIG",
-    "name": "American International Group",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AMT",
-    "name": "American Tower",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AWK",
-    "name": "American Water Works",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AMP",
-    "name": "Ameriprise Financial",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AME",
-    "name": "Ametek",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AMGN",
-    "name": "Amgen",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "APH",
-    "name": "Amphenol",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ADI",
-    "name": "Analog Devices",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AON",
-    "name": "Aon plc",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "APA",
-    "name": "APA Corporation",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "APO",
-    "name": "Apollo Global Management",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AAPL",
-    "name": "Apple Inc.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AMAT",
-    "name": "Applied Materials",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "APP",
-    "name": "AppLovin",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "APTV",
-    "name": "Aptiv",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ACGL",
-    "name": "Arch Capital Group",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ADM",
-    "name": "Archer Daniels Midland",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ARES",
-    "name": "Ares Management",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ANET",
-    "name": "Arista Networks",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AJG",
-    "name": "Arthur J. Gallagher & Co.",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AIZ",
-    "name": "Assurant",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "T",
-    "name": "AT&T",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ATO",
-    "name": "Atmos Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ADSK",
-    "name": "Autodesk",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ADP",
-    "name": "Automatic Data Processing",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AZO",
-    "name": "AutoZone",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AVY",
-    "name": "Avery Dennison",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AXON",
-    "name": "Axon Enterprise",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BKR",
-    "name": "Baker Hughes",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BALL",
-    "name": "Ball Corporation",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BAC",
-    "name": "Bank of America",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BAX",
-    "name": "Baxter International",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BDX",
-    "name": "Becton Dickinson",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BRK-B",
-    "name": "Berkshire Hathaway",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BBY",
-    "name": "Best Buy",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TECH",
-    "name": "Bio-Techne",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BIIB",
-    "name": "Biogen",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BLK",
-    "name": "BlackRock",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BX",
-    "name": "Blackstone Inc.",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "XYZ",
-    "name": "Block, Inc.",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BE",
-    "name": "Bloom Energy",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BNY",
-    "name": "BNY Mellon",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BA",
-    "name": "Boeing",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BKNG",
-    "name": "Booking Holdings",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BSX",
-    "name": "Boston Scientific",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BMY",
-    "name": "Bristol Myers Squibb",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "AVGO",
-    "name": "Broadcom",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BR",
-    "name": "Broadridge Financial Solutions",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BRO",
-    "name": "Brown & Brown",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BF-B",
-    "name": "Brown\u2013Forman",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BG",
-    "name": "Bunge Global",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BXP",
-    "name": "BXP, Inc.",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CHRW",
-    "name": "C.H. Robinson",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CDNS",
-    "name": "Cadence Design Systems",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CPT",
-    "name": "Camden Property Trust",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "COF",
-    "name": "Capital One",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CAH",
-    "name": "Cardinal Health",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CCL",
-    "name": "Carnival Corporation",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CARR",
-    "name": "Carrier Global",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CVNA",
-    "name": "Carvana",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CASY",
-    "name": "Casey's",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CAT",
-    "name": "Caterpillar Inc.",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CBOE",
-    "name": "Cboe Global Markets",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CBRE",
-    "name": "CBRE Group",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CDW",
-    "name": "CDW Corporation",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "COR",
-    "name": "Cencora",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CNC",
-    "name": "Centene Corporation",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CNP",
-    "name": "CenterPoint Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CF",
-    "name": "CF Industries",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CRL",
-    "name": "Charles River Laboratories",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SCHW",
-    "name": "Charles Schwab Corporation",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CHTR",
-    "name": "Charter Communications",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CVX",
-    "name": "Chevron Corporation",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CMG",
-    "name": "Chipotle Mexican Grill",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CB",
-    "name": "Chubb Limited",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CHD",
-    "name": "Church & Dwight",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CIEN",
-    "name": "Ciena",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CI",
-    "name": "Cigna",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CINF",
-    "name": "Cincinnati Financial",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CTAS",
-    "name": "Cintas",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CSCO",
-    "name": "Cisco",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "C",
-    "name": "Citigroup",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CFG",
-    "name": "Citizens Financial Group",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CLX",
-    "name": "Clorox",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CME",
-    "name": "CME Group",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CMS",
-    "name": "CMS Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KO",
-    "name": "Coca-Cola Company (The)",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CTSH",
-    "name": "Cognizant",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "COHR",
-    "name": "Coherent Corp.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "COIN",
-    "name": "Coinbase",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CL",
-    "name": "Colgate-Palmolive",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CMCSA",
-    "name": "Comcast",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FIX",
-    "name": "Comfort Systems USA",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "COP",
-    "name": "ConocoPhillips",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ED",
-    "name": "Consolidated Edison",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "STZ",
-    "name": "Constellation Brands",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CEG",
-    "name": "Constellation Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "COO",
-    "name": "Cooper Companies (The)",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CPRT",
-    "name": "Copart",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GLW",
-    "name": "Corning Inc.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CPAY",
-    "name": "Corpay",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CSGP",
-    "name": "CoStar Group",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "COST",
-    "name": "Costco",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CRH",
-    "name": "CRH plc",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CRWD",
-    "name": "CrowdStrike",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CCI",
-    "name": "Crown Castle",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CSX",
-    "name": "CSX Corporation",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CMI",
-    "name": "Cummins",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CVS",
-    "name": "CVS Health",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DHR",
-    "name": "Danaher Corporation",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DRI",
-    "name": "Darden Restaurants",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DDOG",
-    "name": "Datadog",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DVA",
-    "name": "DaVita",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DECK",
-    "name": "Deckers Brands",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DE",
-    "name": "Deere & Company",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DELL",
-    "name": "Dell Technologies",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DAL",
-    "name": "Delta Air Lines",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DVN",
-    "name": "Devon Energy",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DXCM",
-    "name": "Dexcom",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FANG",
-    "name": "Diamondback Energy",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DLR",
-    "name": "Digital Realty",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DG",
-    "name": "Dollar General",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DLTR",
-    "name": "Dollar Tree",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "D",
-    "name": "Dominion Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DPZ",
-    "name": "Domino's",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DASH",
-    "name": "DoorDash",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DOV",
-    "name": "Dover Corporation",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DOW",
-    "name": "Dow Inc.",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DHI",
-    "name": "D. R. Horton",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DTE",
-    "name": "DTE Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DUK",
-    "name": "Duke Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DD",
-    "name": "DuPont",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ETN",
-    "name": "Eaton Corporation",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EBAY",
-    "name": "eBay Inc.",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ECHO",
-    "name": "EchoStar",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ECL",
-    "name": "Ecolab",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EIX",
-    "name": "Edison International",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EW",
-    "name": "Edwards Lifesciences",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ELV",
-    "name": "Elevance Health",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EME",
-    "name": "Emcor",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EMR",
-    "name": "Emerson Electric",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ETR",
-    "name": "Entergy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EOG",
-    "name": "EOG Resources",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EQT",
-    "name": "EQT Corporation",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EFX",
-    "name": "Equifax",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EQIX",
-    "name": "Equinix",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ERIE",
-    "name": "Erie Indemnity",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ESS",
-    "name": "Essex Property Trust",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EL",
-    "name": "Est\u00e9e Lauder Companies (The)",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EG",
-    "name": "Everest Group",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EVRG",
-    "name": "Evergy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "P",
-    "name": "Everpure",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ES",
-    "name": "Eversource Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EXC",
-    "name": "Exelon",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EXE",
-    "name": "Expand Energy",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EXPE",
-    "name": "Expedia Group",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EXPD",
-    "name": "Expeditors International",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "EXR",
-    "name": "Extra Space Storage",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "XOM",
-    "name": "ExxonMobil",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FFIV",
-    "name": "F5, Inc.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FDS",
-    "name": "FactSet",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FICO",
-    "name": "Fair Isaac",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FAST",
-    "name": "Fastenal",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FRT",
-    "name": "Federal Realty Investment Trust",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FDX",
-    "name": "FedEx",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FDXF",
-    "name": "FedEx Freight",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FERG",
-    "name": "Ferguson Enterprises",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FIS",
-    "name": "Fidelity National Information Services",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FITB",
-    "name": "Fifth Third Bancorp",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FSLR",
-    "name": "First Solar",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FE",
-    "name": "FirstEnergy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FISV",
-    "name": "Fiserv",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FLEX",
-    "name": "Flex Ltd.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "F",
-    "name": "Ford Motor Company",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FTNT",
-    "name": "Fortinet",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FTV",
-    "name": "Fortive",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FOXA",
-    "name": "Fox Corporation (Class A)",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FOX",
-    "name": "Fox Corporation (Class B)",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "BEN",
-    "name": "Franklin Resources",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "FCX",
-    "name": "Freeport-McMoRan",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GRMN",
-    "name": "Garmin",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IT",
-    "name": "Gartner",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GE",
-    "name": "GE Aerospace",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GEHC",
-    "name": "GE HealthCare",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GEV",
-    "name": "GE Vernova",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GEN",
-    "name": "Gen Digital",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GNRC",
-    "name": "Generac",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GD",
-    "name": "General Dynamics",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GIS",
-    "name": "General Mills",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GM",
-    "name": "General Motors",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GPC",
-    "name": "Genuine Parts Company",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GILD",
-    "name": "Gilead Sciences",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GPN",
-    "name": "Global Payments",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GL",
-    "name": "Globe Life",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GDDY",
-    "name": "GoDaddy",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GS",
-    "name": "Goldman Sachs",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HAL",
-    "name": "Halliburton",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HIG",
-    "name": "Hartford (The)",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HAS",
-    "name": "Hasbro",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HCA",
-    "name": "HCA Healthcare",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DOC",
-    "name": "Healthpeak Properties",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HSIC",
-    "name": "Henry Schein",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HSY",
-    "name": "Hershey Company (The)",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HPE",
-    "name": "Hewlett Packard Enterprise",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HLT",
-    "name": "Hilton Worldwide",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HD",
-    "name": "Home Depot (The)",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HONA",
-    "name": "Honeywell Aerospace",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HON",
-    "name": "Honeywell Technologies",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HRL",
-    "name": "Hormel Foods",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HST",
-    "name": "Host Hotels & Resorts",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HWM",
-    "name": "Howmet Aerospace",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HPQ",
-    "name": "HP Inc.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HUBB",
-    "name": "Hubbell Incorporated",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HUM",
-    "name": "Humana",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HBAN",
-    "name": "Huntington Bancshares",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HII",
-    "name": "Huntington Ingalls Industries",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IBM",
-    "name": "IBM",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IEX",
-    "name": "IDEX Corporation",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IDXX",
-    "name": "Idexx Laboratories",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ITW",
-    "name": "Illinois Tool Works",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ILMN",
-    "name": "Illumina, Inc.",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "INCY",
-    "name": "Incyte",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IR",
-    "name": "Ingersoll Rand",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PODD",
-    "name": "Insulet Corporation",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "INTC",
-    "name": "Intel",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IBKR",
-    "name": "Interactive Brokers",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ICE",
-    "name": "Intercontinental Exchange",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IFF",
-    "name": "International Flavors & Fragrances",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IP",
-    "name": "International Paper",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "INTU",
-    "name": "Intuit",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ISRG",
-    "name": "Intuitive Surgical",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IVZ",
-    "name": "Invesco",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "INVH",
-    "name": "Invitation Homes",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IQV",
-    "name": "IQVIA",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "IRM",
-    "name": "Iron Mountain",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "JBHT",
-    "name": "J.B. Hunt",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "JBL",
-    "name": "Jabil",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "JKHY",
-    "name": "Jack Henry & Associates",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "J",
-    "name": "Jacobs Solutions",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "JNJ",
-    "name": "Johnson & Johnson",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "JCI",
-    "name": "Johnson Controls",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "JPM",
-    "name": "JPMorgan Chase",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KDP",
-    "name": "Keurig Dr Pepper",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KEY",
-    "name": "KeyCorp",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KEYS",
-    "name": "Keysight Technologies",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KMB",
-    "name": "Kimberly-Clark",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KIM",
-    "name": "Kimco Realty",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KMI",
-    "name": "Kinder Morgan",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KKR",
-    "name": "KKR & Co.",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KLAC",
-    "name": "KLA Corporation",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KHC",
-    "name": "Kraft Heinz",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "KR",
-    "name": "Kroger",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LHX",
-    "name": "L3Harris",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LH",
-    "name": "Labcorp",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LRCX",
-    "name": "Lam Research",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LVS",
-    "name": "Las Vegas Sands",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LDOS",
-    "name": "Leidos",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LEN",
-    "name": "Lennar",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LII",
-    "name": "Lennox International",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LLY",
-    "name": "Lilly (Eli)",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LIN",
-    "name": "Linde plc",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LYV",
-    "name": "Live Nation Entertainment",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LMT",
-    "name": "Lockheed Martin",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "L",
-    "name": "Loews Corporation",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LOW",
-    "name": "Lowe's",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LULU",
-    "name": "Lululemon Athletica",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LITE",
-    "name": "Lumentum",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LYB",
-    "name": "LyondellBasell",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MTB",
-    "name": "M&T Bank",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MPC",
-    "name": "Marathon Petroleum",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MAR",
-    "name": "Marriott International",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MRSH",
-    "name": "Marsh McLennan",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MLM",
-    "name": "Martin Marietta Materials",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MRVL",
-    "name": "Marvell Technology",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MAS",
-    "name": "Masco",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MA",
-    "name": "Mastercard",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MKC",
-    "name": "McCormick & Company",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MCD",
-    "name": "McDonald's",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MCK",
-    "name": "McKesson",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MDT",
-    "name": "Medtronic",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MRK",
-    "name": "Merck & Co.",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "META",
-    "name": "Meta Platforms",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MET",
-    "name": "MetLife",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MTD",
-    "name": "Mettler Toledo",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MGM",
-    "name": "MGM Resorts",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MCHP",
-    "name": "Microchip Technology",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MU",
-    "name": "Micron Technology",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MSFT",
-    "name": "Microsoft",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MAA",
-    "name": "Mid-America Apartment Communities",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MRNA",
-    "name": "Moderna",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MDLZ",
-    "name": "Mondelez International",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MPWR",
-    "name": "Monolithic Power Systems",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MNST",
-    "name": "Monster Beverage",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MCO",
-    "name": "Moody's Corporation",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MS",
-    "name": "Morgan Stanley",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MOS",
-    "name": "Mosaic Company (The)",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MSI",
-    "name": "Motorola Solutions",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "MSCI",
-    "name": "MSCI",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NDAQ",
-    "name": "Nasdaq, Inc.",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NTAP",
-    "name": "NetApp",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NFLX",
-    "name": "Netflix",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NEM",
-    "name": "Newmont",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NWSA",
-    "name": "News Corp (Class A)",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NWS",
-    "name": "News Corp (Class B)",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NEE",
-    "name": "NextEra Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NKE",
-    "name": "Nike, Inc.",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NI",
-    "name": "NiSource",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NDSN",
-    "name": "Nordson Corporation",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NSC",
-    "name": "Norfolk Southern",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NTRS",
-    "name": "Northern Trust",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NOC",
-    "name": "Northrop Grumman",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NCLH",
-    "name": "Norwegian Cruise Line Holdings",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NRG",
-    "name": "NRG Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NUE",
-    "name": "Nucor",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NVDA",
-    "name": "Nvidia",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NVR",
-    "name": "NVR, Inc.",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NXPI",
-    "name": "NXP Semiconductors",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ORLY",
-    "name": "O'Reilly Automotive",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "OXY",
-    "name": "Occidental Petroleum",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "OKTA",
-    "name": "Okta, Inc.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ODFL",
-    "name": "Old Dominion",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "OMC",
-    "name": "Omnicom Group",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ON",
-    "name": "ON Semiconductor",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "OKE",
-    "name": "Oneok",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ORCL",
-    "name": "Oracle Corporation",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "OTIS",
-    "name": "Otis Worldwide",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PCAR",
-    "name": "Paccar",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PKG",
-    "name": "Packaging Corporation of America",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PLTR",
-    "name": "Palantir Technologies",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PANW",
-    "name": "Palo Alto Networks",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PH",
-    "name": "Parker Hannifin",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PAYX",
-    "name": "Paychex",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PYPL",
-    "name": "PayPal",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PNR",
-    "name": "Pentair",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PEP",
-    "name": "PepsiCo",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PFE",
-    "name": "Pfizer",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PCG",
-    "name": "PG&E Corporation",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PM",
-    "name": "Philip Morris International",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PSX",
-    "name": "Phillips 66",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PNW",
-    "name": "Pinnacle West Capital",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PNC",
-    "name": "PNC Financial Services",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PPG",
-    "name": "PPG Industries",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PPL",
-    "name": "PPL Corporation",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PFG",
-    "name": "Principal Financial Group",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PG",
-    "name": "Procter & Gamble",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PGR",
-    "name": "Progressive Corporation",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PLD",
-    "name": "Prologis",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PRU",
-    "name": "Prudential Financial",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PTC",
-    "name": "PTC Inc.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PEG",
-    "name": "Public Service Enterprise Group",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PSA",
-    "name": "Public Storage",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PHM",
-    "name": "PulteGroup",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "Q",
-    "name": "Qnity Electronics",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "QCOM",
-    "name": "Qualcomm",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "PWR",
-    "name": "Quanta Services",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DGX",
-    "name": "Quest Diagnostics",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "RL",
-    "name": "Ralph Lauren Corporation",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "RJF",
-    "name": "Raymond James Financial",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "RDDT",
-    "name": "Reddit",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "O",
-    "name": "Realty Income",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "REG",
-    "name": "Regency Centers",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "REGN",
-    "name": "Regeneron Pharmaceuticals",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "RF",
-    "name": "Regions Financial Corporation",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "RSG",
-    "name": "Republic Services",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "RMD",
-    "name": "ResMed",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "RVTY",
-    "name": "Revvity",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "HOOD",
-    "name": "Robinhood Markets",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ROK",
-    "name": "Rockwell Automation",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ROL",
-    "name": "Rollins, Inc.",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ROP",
-    "name": "Roper Technologies",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ROST",
-    "name": "Ross Stores",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "RCL",
-    "name": "Royal Caribbean Group",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "RTX",
-    "name": "RTX Corporation",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SPGI",
-    "name": "S&P Global",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "CRM",
-    "name": "Salesforce",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SNDK",
-    "name": "Sandisk",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SBAC",
-    "name": "SBA Communications",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SLB",
-    "name": "Schlumberger",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "STX",
-    "name": "Seagate Technology",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SRE",
-    "name": "Sempra",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "NOW",
-    "name": "ServiceNow",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SHW",
-    "name": "Sherwin-Williams",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SPG",
-    "name": "Simon Property Group",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SKYD",
-    "name": "Skydance",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SWKS",
-    "name": "Skyworks Solutions",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SJM",
-    "name": "J.M. Smucker Company (The)",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SW",
-    "name": "Smurfit Westrock",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SNA",
-    "name": "Snap-on",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SOLV",
-    "name": "Solventum",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SO",
-    "name": "Southern Company",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "LUV",
-    "name": "Southwest Airlines",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SWK",
-    "name": "Stanley Black & Decker",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SBUX",
-    "name": "Starbucks",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "STT",
-    "name": "State Street Corporation",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "STLD",
-    "name": "Steel Dynamics",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "STE",
-    "name": "Steris",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SYK",
-    "name": "Stryker Corporation",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SMCI",
-    "name": "Supermicro",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SYF",
-    "name": "Synchrony Financial",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SNPS",
-    "name": "Synopsys",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "SYY",
-    "name": "Sysco",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TMUS",
-    "name": "T-Mobile US",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TROW",
-    "name": "T. Rowe Price",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TTWO",
-    "name": "Take-Two Interactive",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TPR",
-    "name": "Tapestry, Inc.",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TRGP",
-    "name": "Targa Resources",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TGT",
-    "name": "Target Corporation",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TEL",
-    "name": "TE Connectivity",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TDY",
-    "name": "Teledyne Technologies",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TER",
-    "name": "Teradyne",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TSLA",
-    "name": "Tesla, Inc.",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TXN",
-    "name": "Texas Instruments",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TPL",
-    "name": "Texas Pacific Land Corporation",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TXT",
-    "name": "Textron",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TMO",
-    "name": "Thermo Fisher Scientific",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TJX",
-    "name": "TJX Companies",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TKO",
-    "name": "TKO Group Holdings",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TSCO",
-    "name": "Tractor Supply",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TT",
-    "name": "Trane Technologies",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TDG",
-    "name": "TransDigm Group",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TRV",
-    "name": "Travelers Companies (The)",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TRMB",
-    "name": "Trimble Inc.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TFC",
-    "name": "Truist Financial",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TWLO",
-    "name": "Twilio",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TYL",
-    "name": "Tyler Technologies",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "TSN",
-    "name": "Tyson Foods",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "USB",
-    "name": "U.S. Bancorp",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "UBER",
-    "name": "Uber",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "UDR",
-    "name": "UDR, Inc.",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ULTA",
-    "name": "Ulta Beauty",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "UNP",
-    "name": "Union Pacific Corporation",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "UAL",
-    "name": "United Airlines Holdings",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "UPS",
-    "name": "United Parcel Service",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "URI",
-    "name": "United Rentals",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "UNH",
-    "name": "UnitedHealth Group",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "UHS",
-    "name": "Universal Health Services",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VLO",
-    "name": "Valero Energy",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VEEV",
-    "name": "Veeva Systems",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VTR",
-    "name": "Ventas",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VLTO",
-    "name": "Veralto",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VRSN",
-    "name": "Verisign",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VRSK",
-    "name": "Verisk Analytics",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VZ",
-    "name": "Verizon",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VRTX",
-    "name": "Vertex Pharmaceuticals",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VRT",
-    "name": "Vertiv",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VTRS",
-    "name": "Viatris",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VICI",
-    "name": "Vici Properties",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "V",
-    "name": "Visa Inc.",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VST",
-    "name": "Vistra Corp.",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VMRK",
-    "name": "Vivmark Residential",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VMC",
-    "name": "Vulcan Materials Company",
-    "sector": "Materials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "VYLR",
-    "name": "Vylor",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WRB",
-    "name": "W. R. Berkley Corporation",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "GWW",
-    "name": "W. W. Grainger",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WAB",
-    "name": "Wabtec",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WMT",
-    "name": "Walmart",
-    "sector": "Consumer Staples",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "DIS",
-    "name": "Walt Disney Company (The)",
-    "sector": "Communication Services",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WM",
-    "name": "Waste Management",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WAT",
-    "name": "Waters Corporation",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WEC",
-    "name": "WEC Energy Group",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WFC",
-    "name": "Wells Fargo",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WELL",
-    "name": "Welltower",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WST",
-    "name": "West Pharmaceutical Services",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WDC",
-    "name": "Western Digital",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WY",
-    "name": "Weyerhaeuser",
-    "sector": "Real Estate",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WSM",
-    "name": "Williams-Sonoma, Inc.",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WMB",
-    "name": "Williams Companies",
-    "sector": "Energy",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WTW",
-    "name": "Willis Towers Watson",
-    "sector": "Financials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WDAY",
-    "name": "Workday, Inc.",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "WYNN",
-    "name": "Wynn Resorts",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "XEL",
-    "name": "Xcel Energy",
-    "sector": "Utilities",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "XYL",
-    "name": "Xylem Inc.",
-    "sector": "Industrials",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "YUM",
-    "name": "Yum! Brands",
-    "sector": "Consumer Discretionary",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ZBRA",
-    "name": "Zebra Technologies",
-    "sector": "Information Technology",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ZBH",
-    "name": "Zimmer Biomet",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
-    "ticker": "ZTS",
-    "name": "Zoetis",
-    "sector": "Health Care",
-    "cap_tier": "Large Cap",
-    "industry": NaN,
-    "universe": NaN
-  },
-  {
     "ticker": "AA",
     "name": "Alcoa",
     "sector": "Materials",
@@ -12096,6 +8072,14 @@
     "universe": "former"
   },
   {
+    "ticker": "AMD",
+    "name": "Advanced Micro Devices, Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ANDV",
     "name": "ANDV",
     "sector": "Unknown",
@@ -12312,6 +8296,14 @@
     "universe": "former"
   },
   {
+    "ticker": "CEG",
+    "name": "Constellation Energy Corporatio",
+    "sector": "Utilities",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CELG",
     "name": "CELG",
     "sector": "Unknown",
@@ -12347,6 +8339,14 @@
     "ticker": "CHK",
     "name": "CHK",
     "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CIEN",
+    "name": "Ciena Corporation",
+    "sector": "Information Technology",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -12496,6 +8496,22 @@
     "universe": "former"
   },
   {
+    "ticker": "DD",
+    "name": "DuPont de Nemours, Inc.",
+    "sector": "Materials",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DELL",
+    "name": "Dell Technologies Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "DF",
     "name": "DF",
     "sector": "Unknown",
@@ -12554,6 +8570,14 @@
   {
     "ticker": "DO",
     "name": "DO",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DOW",
+    "name": "DOW",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -12648,6 +8672,14 @@
     "universe": "former"
   },
   {
+    "ticker": "EQT",
+    "name": "EQT Corporation",
+    "sector": "Energy",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ESRX",
     "name": "ESRX",
     "sector": "Unknown",
@@ -12736,6 +8768,22 @@
     "universe": "former"
   },
   {
+    "ticker": "FOX",
+    "name": "Fox Corporation",
+    "sector": "Communication Services",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FOXA",
+    "name": "Fox Corporation",
+    "sector": "Communication Services",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "FRC",
     "name": "FRC",
     "sector": "Unknown",
@@ -12747,6 +8795,14 @@
     "ticker": "FRX",
     "name": "FRX",
     "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FSLR",
+    "name": "First Solar, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -12888,6 +8944,14 @@
     "universe": "former"
   },
   {
+    "ticker": "ILMN",
+    "name": "Illumina, Inc.",
+    "sector": "Health Care",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "INFO",
     "name": "Harbor PanAgora Dynamic Large C",
     "sector": "Unknown",
@@ -12899,6 +8963,14 @@
     "ticker": "IPG",
     "name": "IPG",
     "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "JBL",
+    "name": "Jabil Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -13272,6 +9344,14 @@
     "universe": "former"
   },
   {
+    "ticker": "PCG",
+    "name": "Pacific Gas & Electric Co.",
+    "sector": "Utilities",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "PCL",
     "name": "PGIM Corporate Bond 10+ Year ET",
     "sector": "Unknown",
@@ -13354,6 +9434,14 @@
   {
     "ticker": "PXD",
     "name": "PXD",
+    "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "Q",
+    "name": "Q",
     "sector": "Unknown",
     "cap_tier": "Large Cap",
     "industry": "",
@@ -13536,6 +9624,14 @@
     "universe": "former"
   },
   {
+    "ticker": "SNDK",
+    "name": "Sandisk Corporation",
+    "sector": "Information Technology",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "SNI",
     "name": "SNI",
     "sector": "Unknown",
@@ -13635,6 +9731,22 @@
     "ticker": "TEG",
     "name": "TEG",
     "sector": "Unknown",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TEL",
+    "name": "TE Connectivity plc",
+    "sector": "Information Technology",
+    "cap_tier": "Large Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TER",
+    "name": "Teradyne, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Large Cap",
     "industry": "",
     "universe": "former"
@@ -13936,6 +10048,22 @@
     "universe": "former"
   },
   {
+    "ticker": "AJG",
+    "name": "Arthur J. Gallagher & Co.",
+    "sector": "Financials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ALB",
+    "name": "Albemarle Corporation",
+    "sector": "Materials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ALE",
     "name": "ALE",
     "sector": "Unknown",
@@ -13947,6 +10075,14 @@
     "ticker": "ALEX",
     "name": "ALEX",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ALGN",
+    "name": "Align Technology, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -13971,6 +10107,22 @@
     "ticker": "AMCX",
     "name": "AMC Global Media Inc.",
     "sector": "Communication Services",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "AMD",
+    "name": "Advanced Micro Devices, Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "AME",
+    "name": "AMETEK, Inc.",
+    "sector": "Industrials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14008,6 +10160,14 @@
     "universe": "former"
   },
   {
+    "ticker": "AOS",
+    "name": "A.O. Smith Corporation",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "APOL",
     "name": "APOL",
     "sector": "Unknown",
@@ -14019,6 +10179,14 @@
     "ticker": "APPS",
     "name": "Digital Turbine, Inc.",
     "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ARE",
+    "name": "Alexandria Real Estate Equities",
+    "sector": "Real Estate",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14075,6 +10243,14 @@
     "ticker": "AVP",
     "name": "AVP",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "AXON",
+    "name": "Axon Enterprise, Inc.",
+    "sector": "Industrials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14184,6 +10360,14 @@
     "universe": "former"
   },
   {
+    "ticker": "BR",
+    "name": "Broadridge Financial Solutions,",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "BRBR",
     "name": "BellRing Brands, Inc.",
     "sector": "Consumer Staples",
@@ -14203,6 +10387,14 @@
     "ticker": "BRE",
     "name": "BRE",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "BRO",
+    "name": "Brown & Brown, Inc.",
+    "sector": "Financials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14264,6 +10456,22 @@
     "universe": "former"
   },
   {
+    "ticker": "CASY",
+    "name": "CASY",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CBOE",
+    "name": "Cboe Global Markets, Inc.",
+    "sector": "Financials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CCMP",
     "name": "CCMP",
     "sector": "Unknown",
@@ -14296,9 +10504,25 @@
     "universe": "former"
   },
   {
+    "ticker": "CDNS",
+    "name": "Cadence Design Systems, Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CEB",
     "name": "CEB",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CHD",
+    "name": "Church & Dwight Company, Inc.",
+    "sector": "Consumer Staples",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14331,6 +10555,14 @@
     "ticker": "CHX",
     "name": "CHX",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CIEN",
+    "name": "Ciena Corporation",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14432,9 +10664,25 @@
     "universe": "former"
   },
   {
+    "ticker": "COHR",
+    "name": "Coherent Corp.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CONE",
     "name": "CONE",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "COR",
+    "name": "Cencora, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14456,9 +10704,33 @@
     "universe": "former"
   },
   {
+    "ticker": "CPRT",
+    "name": "Copart, Inc.",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CPT",
+    "name": "CPT",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "CPWR",
     "name": "Ocean Thermal Energy Corp.",
     "sector": "Utilities",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "CRL",
+    "name": "Charles River Laboratories Inte",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14584,6 +10856,14 @@
     "universe": "former"
   },
   {
+    "ticker": "DECK",
+    "name": "Deckers Outdoor Corporation",
+    "sector": "Consumer Discretionary",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "DF",
     "name": "DF",
     "sector": "Unknown",
@@ -14627,6 +10907,22 @@
     "ticker": "DNR",
     "name": "DNR",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DOC",
+    "name": "Healthpeak Properties, Inc.",
+    "sector": "Real Estate",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "DPZ",
+    "name": "Domino's Pizza Inc",
+    "sector": "Consumer Discretionary",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14688,6 +10984,14 @@
     "universe": "former"
   },
   {
+    "ticker": "EME",
+    "name": "EMCOR Group, Inc.",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ENDP",
     "name": "ENDP",
     "sector": "Unknown",
@@ -14712,9 +11016,33 @@
     "universe": "former"
   },
   {
+    "ticker": "EQT",
+    "name": "EQT Corporation",
+    "sector": "Energy",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "EQY",
     "name": "EQY",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ERIE",
+    "name": "Erie Indemnity Company",
+    "sector": "Financials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ESS",
+    "name": "Essex Property Trust, Inc.",
+    "sector": "Real Estate",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14736,6 +11064,22 @@
     "universe": "former"
   },
   {
+    "ticker": "EXE",
+    "name": "Expand Energy Corporation",
+    "sector": "Energy",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "EXR",
+    "name": "Extra Space Storage Inc",
+    "sector": "Real Estate",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "FBHS",
     "name": "FBHS",
     "sector": "Unknown",
@@ -14752,9 +11096,41 @@
     "universe": "former"
   },
   {
+    "ticker": "FDS",
+    "name": "FactSet Research Systems Inc.",
+    "sector": "Financials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FICO",
+    "name": "Fair Isaac Corporation",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FIX",
+    "name": "Comfort Systems USA, Inc.",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "FL",
     "name": "FL",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FLEX",
+    "name": "Flex Ltd.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14784,9 +11160,33 @@
     "universe": "former"
   },
   {
+    "ticker": "FRT",
+    "name": "FRT",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FSLR",
+    "name": "First Solar, Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "FST",
     "name": "FST",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FTNT",
+    "name": "Fortinet, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14803,6 +11203,14 @@
     "ticker": "FYBR",
     "name": "FYBR",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GDDY",
+    "name": "GoDaddy Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14843,6 +11251,22 @@
     "ticker": "GMCR",
     "name": "GMCR",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GNRC",
+    "name": "Generac Holdlings Inc.",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "GPN",
+    "name": "Global Payments Inc.",
+    "sector": "Industrials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -14920,6 +11344,14 @@
     "universe": "former"
   },
   {
+    "ticker": "HII",
+    "name": "Huntington Ingalls Industries, ",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "HLS",
     "name": "HLS",
     "sector": "Unknown",
@@ -14984,9 +11416,25 @@
     "universe": "former"
   },
   {
+    "ticker": "HUBB",
+    "name": "Hubbell Inc",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "IAA",
     "name": "IAA",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "IBKR",
+    "name": "Interactive Brokers Group, Inc.",
+    "sector": "Financials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15000,9 +11448,25 @@
     "universe": "former"
   },
   {
+    "ticker": "IDXX",
+    "name": "IDEXX Laboratories, Inc.",
+    "sector": "Health Care",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ILG",
     "name": "ILG",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ILMN",
+    "name": "Illumina, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15048,6 +11512,14 @@
     "universe": "former"
   },
   {
+    "ticker": "IT",
+    "name": "IT",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "JACK",
     "name": "Jack In The Box Inc.",
     "sector": "Consumer Discretionary",
@@ -15059,6 +11531,14 @@
     "ticker": "JAH",
     "name": "JAH",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "JBL",
+    "name": "Jabil Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15144,6 +11624,22 @@
     "universe": "former"
   },
   {
+    "ticker": "LII",
+    "name": "Lennox International, Inc.",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LITE",
+    "name": "Lumentum Holdings Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "LM",
     "name": "LM",
     "sector": "Unknown",
@@ -15163,6 +11659,14 @@
     "ticker": "LNCR",
     "name": "LNCR",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LNT",
+    "name": "Alliant Energy Corporation",
+    "sector": "Utilities",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15227,6 +11731,14 @@
     "ticker": "LXK",
     "name": "LXK",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "LYV",
+    "name": "Live Nation Entertainment, Inc.",
+    "sector": "Communication Services",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15312,9 +11824,25 @@
     "universe": "former"
   },
   {
+    "ticker": "MLM",
+    "name": "Martin Marietta Materials, Inc.",
+    "sector": "Materials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "MNK",
     "name": "MNK",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MNST",
+    "name": "Monster Beverage Corporation",
+    "sector": "Consumer Staples",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15336,6 +11864,14 @@
     "universe": "former"
   },
   {
+    "ticker": "MPWR",
+    "name": "Monolithic Power Systems, Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "MRX",
     "name": "Marex Group Limited",
     "sector": "Financials",
@@ -15347,6 +11883,22 @@
     "ticker": "MSCC",
     "name": "MSCC",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MSCI",
+    "name": "MSCI",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "MTD",
+    "name": "Mettler-Toledo International, I",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15379,6 +11931,14 @@
     "ticker": "NDN",
     "name": "NDN",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "NDSN",
+    "name": "Nordson Corporation",
+    "sector": "Industrials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15432,6 +11992,14 @@
     "universe": "former"
   },
   {
+    "ticker": "NVR",
+    "name": "NVR, Inc.",
+    "sector": "Consumer Discretionary",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "NWE",
     "name": "NorthWestern Energy Group, Inc.",
     "sector": "Utilities",
@@ -15456,9 +12024,25 @@
     "universe": "former"
   },
   {
+    "ticker": "ODFL",
+    "name": "Old Dominion Freight Line, Inc.",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "OIS",
     "name": "Oil States International, Inc.",
     "sector": "Energy",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "OKTA",
+    "name": "Okta, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15475,6 +12059,14 @@
     "ticker": "OMI",
     "name": "OMI",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "P",
+    "name": "Everpure, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15536,6 +12128,14 @@
     "universe": "former"
   },
   {
+    "ticker": "PKG",
+    "name": "PKG",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "PLCM",
     "name": "PLCM",
     "sector": "Unknown",
@@ -15547,6 +12147,14 @@
     "ticker": "PLT",
     "name": "PLT",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PNR",
+    "name": "Pentair plc.",
+    "sector": "Industrials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15595,6 +12203,14 @@
     "ticker": "PSS",
     "name": "PSS",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "PTC",
+    "name": "PTC Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15680,6 +12296,22 @@
     "universe": "former"
   },
   {
+    "ticker": "REG",
+    "name": "Regency Centers Corporation",
+    "sector": "Real Estate",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "REGN",
+    "name": "Regeneron Pharmaceuticals, Inc.",
+    "sector": "Health Care",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "RGS",
     "name": "Regis Corporation",
     "sector": "Consumer Discretionary",
@@ -15696,9 +12328,25 @@
     "universe": "former"
   },
   {
+    "ticker": "RJF",
+    "name": "Raymond James Financial, Inc.",
+    "sector": "Financials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "RLGY",
     "name": "RLGY",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "RMD",
+    "name": "ResMed Inc.",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -15888,6 +12536,22 @@
     "universe": "former"
   },
   {
+    "ticker": "SMCI",
+    "name": "Super Micro Computer, Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SNPS",
+    "name": "Synopsys, Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "SNV",
     "name": "SNV",
     "sector": "Unknown",
@@ -15928,9 +12592,25 @@
     "universe": "former"
   },
   {
+    "ticker": "STE",
+    "name": "STE",
+    "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "STL",
     "name": "STL",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "STLD",
+    "name": "Steel Dynamics, Inc.",
+    "sector": "Materials",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16032,9 +12712,33 @@
     "universe": "former"
   },
   {
+    "ticker": "TDY",
+    "name": "Teledyne Technologies Incorpora",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "TECD",
     "name": "TECD",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TECH",
+    "name": "Bio-Techne Corp",
+    "sector": "Health Care",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TER",
+    "name": "Teradyne, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16080,6 +12784,14 @@
     "universe": "former"
   },
   {
+    "ticker": "TKO",
+    "name": "TKO Group Holdings, Inc.",
+    "sector": "Communication Services",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "TLAB",
     "name": "TLAB",
     "sector": "Unknown",
@@ -16120,9 +12832,49 @@
     "universe": "former"
   },
   {
+    "ticker": "TPL",
+    "name": "Texas Pacific Land Corporation",
+    "sector": "Energy",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "TREE",
     "name": "LendingTree, Inc.",
     "sector": "Financials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TRGP",
+    "name": "Targa Resources, Inc.",
+    "sector": "Energy",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TRMB",
+    "name": "Trimble Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TSCO",
+    "name": "Tractor Supply Company",
+    "sector": "Consumer Discretionary",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TTWO",
+    "name": "TTWO",
+    "sector": "Unknown",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16144,9 +12896,25 @@
     "universe": "former"
   },
   {
+    "ticker": "TWLO",
+    "name": "Twilio Inc.",
+    "sector": "Information Technology",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "TWTC",
     "name": "TWTC",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "TYL",
+    "name": "Tyler Technologies, Inc.",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16160,9 +12928,25 @@
     "universe": "former"
   },
   {
+    "ticker": "UDR",
+    "name": "UDR, Inc.",
+    "sector": "Real Estate",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "UFS",
     "name": "UFS",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "UHS",
+    "name": "Universal Health Services, Inc.",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16200,6 +12984,14 @@
     "universe": "former"
   },
   {
+    "ticker": "URI",
+    "name": "United Rentals, Inc.",
+    "sector": "Industrials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "URS",
     "name": "URS",
     "sector": "Unknown",
@@ -16224,6 +13016,14 @@
     "universe": "former"
   },
   {
+    "ticker": "VRTX",
+    "name": "Vertex Pharmaceuticals Incorpor",
+    "sector": "Health Care",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "VSCO (NOW VSXY)",
     "name": "VSCO (NOW VSXY)",
     "sector": "Unknown",
@@ -16235,6 +13035,14 @@
     "ticker": "VSM",
     "name": "VSM",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "VST",
+    "name": "Vistra Corp.",
+    "sector": "Utilities",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16360,9 +13168,33 @@
     "universe": "former"
   },
   {
+    "ticker": "WRB",
+    "name": "W.R. Berkley Corporation",
+    "sector": "Financials",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "WRI",
     "name": "WRI",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WSM",
+    "name": "Williams-Sonoma, Inc.",
+    "sector": "Consumer Discretionary",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "WST",
+    "name": "West Pharmaceutical Services, I",
+    "sector": "Health Care",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -16419,6 +13251,14 @@
     "ticker": "Y",
     "name": "Y",
     "sector": "Unknown",
+    "cap_tier": "Mid Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "ZBRA",
+    "name": "Zebra Technologies Corporation",
+    "sector": "Information Technology",
     "cap_tier": "Mid Cap",
     "industry": "",
     "universe": "former"
@@ -17344,6 +14184,14 @@
     "universe": "former"
   },
   {
+    "ticker": "ECHO",
+    "name": "EchoStar Corporation",
+    "sector": "Communication Services",
+    "cap_tier": "Small Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
     "ticker": "ECOL",
     "name": "ECOL",
     "sector": "Unknown",
@@ -17515,6 +14363,14 @@
     "ticker": "FF",
     "name": "FutureFuel Corp.",
     "sector": "Materials",
+    "cap_tier": "Small Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "FIX",
+    "name": "Comfort Systems USA, Inc.",
+    "sector": "Industrials",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"
@@ -19043,6 +15899,14 @@
     "ticker": "SNCY",
     "name": "SNCY",
     "sector": "Unknown",
+    "cap_tier": "Small Cap",
+    "industry": "",
+    "universe": "former"
+  },
+  {
+    "ticker": "SNDK",
+    "name": "Sandisk Corporation",
+    "sector": "Information Technology",
     "cap_tier": "Small Cap",
     "industry": "",
     "universe": "former"

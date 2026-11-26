@@ -1,7 +1,7 @@
 {
- "table_as_of": "2026-11-25",
+ "table_as_of": "2026-11-26",
  "table_source": "live",
- "snapshot_as_of": "2026-11-25",
+ "snapshot_as_of": "2026-11-26",
  "snapshot_members": [
   "AA",
   "AAL",
@@ -404,6 +404,6 @@
   "YETI",
   "ZION"
  ],
- "updated_at": "2026-11-24T17:00:15.530134+00:00",
+ "updated_at": "2026-11-25T17:27:09.054358+00:00",
  "rows": 597
 }
